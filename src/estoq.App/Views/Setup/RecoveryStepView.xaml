@@ -1,0 +1,41 @@
+<UserControl
+    x:Class="Estoq.App.Views.Setup.RecoveryStepView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:services="using:Estoq.App.Services">
+
+  <StackPanel Spacing="20" HorizontalAlignment="Stretch">
+    <!-- The key, shown once. -->
+    <Border Style="{StaticResource EqCardStyle}" Padding="24">
+      <StackPanel Spacing="16">
+        <TextBlock Text="{x:Bind ViewModel.RecoveryKey, Mode=OneWay}" FontFamily="Consolas" FontSize="26"
+                   CharacterSpacing="80" IsTextSelectionEnabled="True" TextWrapping="Wrap"
+                   AutomationProperties.Name="{x:Bind services:Loc.Get('Recovery_Heading')}" />
+        <StackPanel Orientation="Horizontal" Spacing="12">
+          <Button Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind ViewModel.CopyText, Mode=OneWay}"
+                  Command="{x:Bind ViewModel.CopyKeyCommand}" />
+          <Button Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Recovery_Print')}"
+                  Command="{x:Bind ViewModel.PrintKeyCommand}" />
+        </StackPanel>
+        <TextBlock Text="{x:Bind ViewModel.PrintMessage, Mode=OneWay}" FontSize="13" TextWrapping="Wrap"
+                   Foreground="{ThemeResource EqDangerBrush}" />
+      </StackPanel>
+    </Border>
+
+    <!-- Plain warning: this is the only way back in. -->
+    <Border Style="{StaticResource EqCardStyle}" Padding="16" BorderBrush="{ThemeResource EqWarningBrush}">
+      <Grid ColumnSpacing="12">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <FontIcon Glyph="&#xF083;" FontFamily="{StaticResource EqIconFontFilled}" FontSize="24"
+                  Foreground="{ThemeResource EqWarningBrush}" VerticalAlignment="Top" />
+        <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Recovery_Warning')}" TextWrapping="Wrap" FontSize="14" />
+      </Grid>
+    </Border>
+
+    <CheckBox IsChecked="{x:Bind ViewModel.HasConfirmed, Mode=TwoWay}"
+              Content="{x:Bind services:Loc.Get('Recovery_Confirm')}" />
+  </StackPanel>
+</UserControl>

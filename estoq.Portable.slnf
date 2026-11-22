@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "estoq.sln",
+    "projects": [
+      "src\\estoq.Core\\estoq.Core.csproj",
+      "tests\\estoq.Core.Tests\\estoq.Core.Tests.csproj"
+    ]
+  }
+}

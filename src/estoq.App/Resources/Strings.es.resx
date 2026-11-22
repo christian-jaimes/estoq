@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Español. Mismas claves que Strings.resx. -->
+  <data name="Label_Optional" xml:space="preserve"><value>(opcional)</value></data>
+  <data name="Common_Copy" xml:space="preserve"><value>Copiar</value></data>
+  <data name="Common_Copied" xml:space="preserve"><value>Copiado</value></data>
+  <data name="Language_English" xml:space="preserve"><value>English</value></data>
+  <data name="Language_Spanish" xml:space="preserve"><value>Español</value></data>
+
+  <data name="Wizard_Title" xml:space="preserve"><value>Asistente de configuración</value></data>
+  <data name="Wizard_Tagline" xml:space="preserve"><value>Preparemos tu tienda. Solo toma unos minutos.</value></data>
+  <data name="Wizard_StepOf" xml:space="preserve"><value>Paso {0} de {1}</value></data>
+  <data name="Wizard_Back" xml:space="preserve"><value>Atrás</value></data>
+  <data name="Wizard_Next" xml:space="preserve"><value>Siguiente</value></data>
+  <data name="Wizard_Start" xml:space="preserve"><value>Comenzar</value></data>
+  <data name="Wizard_Finish" xml:space="preserve"><value>Finalizar</value></data>
+  <data name="Wizard_FinishError" xml:space="preserve"><value>No se pudo completar la configuración. Revisa los campos marcados e inténtalo de nuevo.</value></data>
+
+  <data name="Step_Welcome_Title" xml:space="preserve"><value>Bienvenida</value></data>
+  <data name="Step_Welcome_Subtitle" xml:space="preserve"><value>Idioma y primer vistazo</value></data>
+  <data name="Step_Owner_Title" xml:space="preserve"><value>Información del propietario</value></data>
+  <data name="Step_Owner_Subtitle" xml:space="preserve"><value>Tu cuenta de administrador</value></data>
+  <data name="Step_Store_Title" xml:space="preserve"><value>Información de la tienda</value></data>
+  <data name="Step_Store_Subtitle" xml:space="preserve"><value>Datos básicos de tu negocio</value></data>
+  <data name="Step_Preferences_Title" xml:space="preserve"><value>Preferencias</value></data>
+  <data name="Step_Preferences_Subtitle" xml:space="preserve"><value>Moneda e impuesto</value></data>
+  <data name="Step_Recovery_Title" xml:space="preserve"><value>Clave de recuperación</value></data>
+  <data name="Step_Recovery_Subtitle" xml:space="preserve"><value>Guárdala en un lugar seguro</value></data>
+
+  <data name="Welcome_Heading" xml:space="preserve"><value>Te damos la bienvenida a estoq</value></data>
+  <data name="Welcome_Description" xml:space="preserve"><value>Punto de venta e inventario para tu tienda de ropa, sin necesidad de internet. La configuración toma cuatro pasos cortos.</value></data>
+  <data name="Welcome_Language" xml:space="preserve"><value>Idioma</value></data>
+  <data name="Welcome_LanguageHelp" xml:space="preserve"><value>Será el idioma de la aplicación. Puedes cambiarlo después en Configuración.</value></data>
+  <data name="Welcome_LocalNote" xml:space="preserve"><value>Tus datos permanecen en este equipo. estoq funciona sin conexión a internet.</value></data>
+
+  <data name="Owner_Heading" xml:space="preserve"><value>Información del propietario</value></data>
+  <data name="Owner_Description" xml:space="preserve"><value>El propietario administra la tienda. Iniciarás sesión con un código de seis dígitos.</value></data>
+  <data name="Owner_FullName" xml:space="preserve"><value>Nombre completo</value></data>
+  <data name="Owner_Email" xml:space="preserve"><value>Correo electrónico</value></data>
+  <data name="Owner_Password" xml:space="preserve"><value>Contraseña</value></data>
+  <data name="Owner_ConfirmPassword" xml:space="preserve"><value>Confirmar contraseña</value></data>
+  <data name="Owner_UserCode" xml:space="preserve"><value>Tu código de usuario</value></data>
+  <data name="Owner_UserCodeHelp" xml:space="preserve"><value>Usa este código de seis dígitos para iniciar sesión. Anótalo.</value></data>
+
+  <data name="Store_Heading" xml:space="preserve"><value>Información de la tienda</value></data>
+  <data name="Store_Description" xml:space="preserve"><value>Cuéntanos sobre tu negocio. Solo el nombre de la tienda es obligatorio.</value></data>
+  <data name="Store_AddLogo" xml:space="preserve"><value>Agregar logo</value></data>
+  <data name="Store_ChangeLogo" xml:space="preserve"><value>Cambiar logo</value></data>
+  <data name="Store_RemoveLogo" xml:space="preserve"><value>Quitar</value></data>
+  <data name="Store_LogoHint" xml:space="preserve"><value>PNG, JPG (máx. 2 MB)</value></data>
+  <data name="Store_Name" xml:space="preserve"><value>Nombre de la tienda</value></data>
+  <data name="Store_TaxId" xml:space="preserve"><value>Número de registro / identificación fiscal</value></data>
+  <data name="Store_Address" xml:space="preserve"><value>Dirección</value></data>
+  <data name="Store_City" xml:space="preserve"><value>Ciudad</value></data>
+  <data name="Store_PostalCode" xml:space="preserve"><value>Código postal</value></data>
+  <data name="Store_Country" xml:space="preserve"><value>País</value></data>
+  <data name="Store_CountryPlaceholder" xml:space="preserve"><value>Selecciona un país</value></data>
+  <data name="Store_Phone" xml:space="preserve"><value>Teléfono</value></data>
+  <data name="Store_Email" xml:space="preserve"><value>Correo electrónico</value></data>
+
+  <data name="Prefs_Heading" xml:space="preserve"><value>Preferencias</value></data>
+  <data name="Prefs_Description" xml:space="preserve"><value>Moneda e impuesto de tu tienda. Puedes cambiar todo esto después en Configuración.</value></data>
+  <data name="Prefs_BaseCurrency" xml:space="preserve"><value>Moneda base y predeterminada</value></data>
+  <data name="Prefs_AcceptedCurrencies" xml:space="preserve"><value>Aceptar también</value></data>
+  <data name="Prefs_TaxRate" xml:space="preserve"><value>Tasa de impuesto sobre ventas</value></data>
+  <data name="Prefs_TaxRateHelp" xml:space="preserve"><value>Se aplica a las ventas. Deja 0 si no cobras impuesto.</value></data>
+
+  <data name="Recovery_Heading" xml:space="preserve"><value>Tu clave de recuperación</value></data>
+  <data name="Recovery_Description" xml:space="preserve"><value>Guarda esta clave en un lugar seguro antes de terminar.</value></data>
+  <data name="Recovery_Warning" xml:space="preserve"><value>Esta clave es la única forma de recuperar el acceso del propietario y tus datos cifrados. Se muestra una sola vez y no se puede mostrar de nuevo. Imprímela o anótala y guárdala en un lugar seguro, no en este equipo. Si la pierdes y pierdes esta cuenta de Windows, tus datos no se podrán recuperar.</value></data>
+  <data name="Recovery_Print" xml:space="preserve"><value>Imprimir</value></data>
+  <data name="Recovery_PrintFailed" xml:space="preserve"><value>La impresión no está disponible ahora. Anota la clave a mano.</value></data>
+  <data name="Recovery_PrintTitle" xml:space="preserve"><value>Clave de recuperación de estoq</value></data>
+  <data name="Recovery_PrintNote" xml:space="preserve"><value>Guarda esta página en un lugar seguro. No la guardes en este equipo.</value></data>
+  <data name="Recovery_Confirm" xml:space="preserve"><value>He guardado mi clave de recuperación en un lugar seguro</value></data>
+
+  <data name="Error_Required" xml:space="preserve"><value>Este campo es obligatorio.</value></data>
+  <data name="Error_InvalidEmail" xml:space="preserve"><value>Ingresa un correo electrónico válido.</value></data>
+  <data name="Error_PasswordTooShort" xml:space="preserve"><value>Usa al menos {0} caracteres.</value></data>
+  <data name="Error_PasswordMismatch" xml:space="preserve"><value>Las contraseñas no coinciden.</value></data>
+  <data name="Error_InvalidTaxRate" xml:space="preserve"><value>Ingresa una tasa de 0 a 100, con hasta dos decimales.</value></data>
+  <data name="Error_LogoUnsupportedType" xml:space="preserve"><value>Usa una imagen PNG o JPG.</value></data>
+  <data name="Error_LogoTooLarge" xml:space="preserve"><value>La imagen pesa más de 2 MB.</value></data>
+  <data name="Prefs_BaseCurrencyHelp" xml:space="preserve"><value>Los precios y reportes usan esta moneda. Dólar estadounidense salvo que la cambies.</value></data>
+  <data name="Prefs_AcceptedSearch" xml:space="preserve"><value>Busca una moneda por código o nombre</value></data>
+  <data name="Prefs_AcceptedNone" xml:space="preserve"><value>Sin monedas adicionales. Solo se acepta {0}. Las tasas de cambio se configuran después en Configuración.</value></data>
+  <data name="Prefs_RemoveCurrency" xml:space="preserve"><value>Quitar moneda</value></data>
+  <data name="Prefs_TaxIncluded" xml:space="preserve"><value>Precios e impuesto</value></data>
+  <data name="Prefs_TaxIncludedOn" xml:space="preserve"><value>Impuesto incluido en el precio de los productos</value></data>
+  <data name="Prefs_TaxIncludedOff" xml:space="preserve"><value>Impuesto no incluido en el precio de los productos (esto se agregará más tarde)</value></data>
+  <data name="Store_Language" xml:space="preserve"><value>Idioma de la tienda</value></data>
+  <data name="Store_LanguageHelp" xml:space="preserve"><value>Se usa en recibos y etiquetas. Empieza con el idioma que elegiste en la bienvenida.</value></data>
+  <data name="Error_InvalidCurrency" xml:space="preserve"><value>Elige una moneda.</value></data>
+</root>

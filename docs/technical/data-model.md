@@ -31,7 +31,7 @@ Planned for the back-end phase. Nothing is implemented yet. Draw and review the 
 | | `product_images` | image path, sort order |
 | Stock | `stock_adjustments` | adjustment_id, adjustment type, reason, reference, notes, user_id; one type per adjustment |
 | | `stock_movements` | movement_id, variant_id, movement_type, change_quantity, after_quantity, adjustment_id, user_id, created_at; append-only |
-| Money | `currencies` | USD, EUR, COP, VES; code, symbol, is_active |
+| Money | `currencies` | any ISO currency the owner accepts (base chosen in setup, USD default); code, symbol, is_active |
 | | `payment_methods` | Cash, Card, Transfer, Zelle, USDT, Mobile payment, PayPal, Other, with sort order |
 | | `exchange_rates` | currency, rate to base, effective_at, user_id; append-only |
 | Sales | `sales` | receipt number, status (completed, voided), totals, discount, tax, user_id, void reason, approver, voided_at; no customer data in the MVP |

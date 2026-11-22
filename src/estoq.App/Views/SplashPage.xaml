@@ -1,0 +1,12 @@
+<Page
+    x:Class="Estoq.App.Views.SplashPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    RequestedTheme="Dark">
+
+  <!-- Splash: always dark, gold lockup (Q mark and wordmark) centred. Shown for 2 seconds at launch. -->
+  <Grid Background="{ThemeResource EqBgBrush}">
+    <Image Width="340" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
+           Source="ms-appx:///Assets/Logos/estoq-lockup-gold.png" AutomationProperties.Name="estoq" />
+  </Grid>
+</Page>

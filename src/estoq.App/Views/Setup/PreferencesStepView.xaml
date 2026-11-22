@@ -1,0 +1,115 @@
+﻿<UserControl
+    x:Class="Estoq.App.Views.Setup.PreferencesStepView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Estoq.App.Controls"
+    xmlns:services="using:Estoq.App.Services">
+
+  <StackPanel Spacing="28" HorizontalAlignment="Stretch">
+    <!-- Base and default currency: USD until the owner picks another. -->
+    <StackPanel Spacing="6">
+      <TextBlock Text="{x:Bind services:Loc.Get('Prefs_BaseCurrency')}" Style="{StaticResource EqLabelStyle}" />
+      <Border Style="{StaticResource EqInputContainerStyle}" Padding="4,0">
+        <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
+                  ItemsSource="{x:Bind ViewModel.AllCurrencies}" DisplayMemberPath="Display" SelectedValuePath="Code"
+                  SelectedValue="{x:Bind ViewModel.BaseCurrencyCode, Mode=TwoWay}"
+                  AutomationProperties.Name="{x:Bind services:Loc.Get('Prefs_BaseCurrency')}" />
+      </Border>
+      <TextBlock Text="{x:Bind ViewModel.BaseCurrencyError, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource EqDangerBrush}" />
+      <TextBlock Text="{x:Bind services:Loc.Get('Prefs_BaseCurrencyHelp')}" Style="{StaticResource EqSecondaryStyle}" />
+    </StackPanel>
+
+    <!-- Also accepted: search, pick, shown as removable chips. -->
+    <StackPanel Spacing="8">
+      <TextBlock Text="{x:Bind services:Loc.Get('Prefs_AcceptedCurrencies')}" Style="{StaticResource EqLabelStyle}" />
+      <Border Style="{StaticResource EqInputContainerStyle}">
+        <Grid ColumnSpacing="8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <Grid.Resources>
+            <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
+            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+            <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
+            <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
+            <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+          </Grid.Resources>
+          <FontIcon Glyph="&#xEF7A;" FontFamily="{StaticResource EqIconFont}" FontSize="20"
+                    Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
+          <AutoSuggestBox Grid.Column="1" VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
+                          PlaceholderText="{x:Bind services:Loc.Get('Prefs_AcceptedSearch')}"
+                          ItemsSource="{x:Bind ViewModel.Suggestions}" UpdateTextOnSelect="False"
+                          TextChanged="OnSearchTextChanged" SuggestionChosen="OnSuggestionChosen"
+                          QuerySubmitted="OnQuerySubmitted"
+                          AutomationProperties.Name="{x:Bind services:Loc.Get('Prefs_AcceptedSearch')}">
+            <AutoSuggestBox.ItemTemplate>
+              <DataTemplate x:DataType="services:CurrencyItem">
+                <TextBlock Text="{x:Bind Display}" />
+              </DataTemplate>
+            </AutoSuggestBox.ItemTemplate>
+          </AutoSuggestBox>
+        </Grid>
+      </Border>
+
+      <ItemsRepeater ItemsSource="{x:Bind ViewModel.Accepted}" Visibility="{x:Bind ViewModel.HasAccepted, Mode=OneWay}">
+        <ItemsRepeater.Layout>
+          <UniformGridLayout MinItemWidth="200" MinRowSpacing="8" MinColumnSpacing="8" ItemsStretch="Fill" />
+        </ItemsRepeater.Layout>
+        <ItemsRepeater.ItemTemplate>
+          <DataTemplate x:DataType="services:CurrencyItem">
+            <Border Background="{ThemeResource EqGoldTintBrush}" BorderBrush="{ThemeResource EqGoldBrush}" BorderThickness="1"
+                    CornerRadius="{StaticResource EqRadiusLg}" Padding="12,4,4,4">
+              <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center">
+                  <TextBlock Text="{x:Bind Code}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14" />
+                  <TextBlock Text="{x:Bind Name}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+                <Button Grid.Column="1" Style="{StaticResource EqPlainIconButtonStyle}" Width="28" Height="28"
+                        Tag="{x:Bind Code}" Click="OnRemoveCurrency"
+                        AutomationProperties.Name="{x:Bind services:Loc.Get('Prefs_RemoveCurrency')}"
+                        ToolTipService.ToolTip="{x:Bind services:Loc.Get('Prefs_RemoveCurrency')}">
+                  <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+                </Button>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsRepeater.ItemTemplate>
+      </ItemsRepeater>
+      <TextBlock Text="{x:Bind ViewModel.NoAcceptedText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}"
+                 Visibility="{x:Bind ViewModel.HasNoAccepted, Mode=OneWay}" />
+    </StackPanel>
+
+    <!-- Sales tax: rate, and whether entered prices already include it. -->
+    <Grid ColumnSpacing="24" MinHeight="84">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="240" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <controls:EqField Label="{x:Bind services:Loc.Get('Prefs_TaxRate')}" IsRequired="True" Suffix="%"
+                        Text="{x:Bind ViewModel.TaxRateText, Mode=TwoWay}"
+                        ErrorText="{x:Bind ViewModel.TaxRateError, Mode=OneWay}" />
+      <StackPanel Grid.Column="1" Spacing="6">
+        <TextBlock Text="{x:Bind services:Loc.Get('Prefs_TaxIncluded')}" Style="{StaticResource EqLabelStyle}" />
+        <Grid ColumnSpacing="12">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <ToggleSwitch MinWidth="0" OnContent="" OffContent="" IsOn="{x:Bind ViewModel.PricesIncludeTax, Mode=TwoWay}"
+                        AutomationProperties.Name="{x:Bind services:Loc.Get('Prefs_TaxIncluded')}" />
+          <TextBlock Grid.Column="1" VerticalAlignment="Center" TextWrapping="Wrap" FontSize="14"
+                     Text="{x:Bind ViewModel.TaxModeText, Mode=OneWay}" />
+        </Grid>
+      </StackPanel>
+    </Grid>
+    <TextBlock Margin="0,-20,0,0" Text="{x:Bind services:Loc.Get('Prefs_TaxRateHelp')}" Style="{StaticResource EqSecondaryStyle}" />
+  </StackPanel>
+</UserControl>

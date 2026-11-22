@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- English (neutral). Keys: Area_Name. Every key must also exist in Strings.es.resx. -->
+  <data name="Label_Optional" xml:space="preserve"><value>(optional)</value></data>
+  <data name="Common_Copy" xml:space="preserve"><value>Copy</value></data>
+  <data name="Common_Copied" xml:space="preserve"><value>Copied</value></data>
+  <data name="Language_English" xml:space="preserve"><value>English</value></data>
+  <data name="Language_Spanish" xml:space="preserve"><value>Español</value></data>
+
+  <data name="Wizard_Title" xml:space="preserve"><value>Setup wizard</value></data>
+  <data name="Wizard_Tagline" xml:space="preserve"><value>Let's get your store ready. It only takes a few minutes.</value></data>
+  <data name="Wizard_StepOf" xml:space="preserve"><value>Step {0} of {1}</value></data>
+  <data name="Wizard_Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Wizard_Next" xml:space="preserve"><value>Next</value></data>
+  <data name="Wizard_Start" xml:space="preserve"><value>Start</value></data>
+  <data name="Wizard_Finish" xml:space="preserve"><value>Finish</value></data>
+  <data name="Wizard_FinishError" xml:space="preserve"><value>Setup could not be completed. Check the highlighted fields and try again.</value></data>
+
+  <data name="Step_Welcome_Title" xml:space="preserve"><value>Welcome</value></data>
+  <data name="Step_Welcome_Subtitle" xml:space="preserve"><value>Language and first look</value></data>
+  <data name="Step_Owner_Title" xml:space="preserve"><value>Owner information</value></data>
+  <data name="Step_Owner_Subtitle" xml:space="preserve"><value>Your administrator account</value></data>
+  <data name="Step_Store_Title" xml:space="preserve"><value>Store information</value></data>
+  <data name="Step_Store_Subtitle" xml:space="preserve"><value>Basic details about your business</value></data>
+  <data name="Step_Preferences_Title" xml:space="preserve"><value>Preferences</value></data>
+  <data name="Step_Preferences_Subtitle" xml:space="preserve"><value>Currency and tax</value></data>
+  <data name="Step_Recovery_Title" xml:space="preserve"><value>Recovery key</value></data>
+  <data name="Step_Recovery_Subtitle" xml:space="preserve"><value>Keep it somewhere safe</value></data>
+
+  <data name="Welcome_Heading" xml:space="preserve"><value>Welcome to estoq</value></data>
+  <data name="Welcome_Description" xml:space="preserve"><value>Point of sale and inventory for your clothing store, working fully offline. Setup takes four short steps.</value></data>
+  <data name="Welcome_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Welcome_LanguageHelp" xml:space="preserve"><value>This becomes your app language. You can change it later in Settings.</value></data>
+  <data name="Welcome_LocalNote" xml:space="preserve"><value>Your data stays on this computer. estoq works without an internet connection.</value></data>
+
+  <data name="Owner_Heading" xml:space="preserve"><value>Owner information</value></data>
+  <data name="Owner_Description" xml:space="preserve"><value>The owner administers the store. You will sign in with a six-digit code.</value></data>
+  <data name="Owner_FullName" xml:space="preserve"><value>Full name</value></data>
+  <data name="Owner_Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Owner_Password" xml:space="preserve"><value>Password</value></data>
+  <data name="Owner_ConfirmPassword" xml:space="preserve"><value>Confirm password</value></data>
+  <data name="Owner_UserCode" xml:space="preserve"><value>Your user code</value></data>
+  <data name="Owner_UserCodeHelp" xml:space="preserve"><value>Use this six-digit code to sign in. Write it down.</value></data>
+
+  <data name="Store_Heading" xml:space="preserve"><value>Store information</value></data>
+  <data name="Store_Description" xml:space="preserve"><value>Tell us about your business. Only the store name is required.</value></data>
+  <data name="Store_AddLogo" xml:space="preserve"><value>Add logo</value></data>
+  <data name="Store_ChangeLogo" xml:space="preserve"><value>Change logo</value></data>
+  <data name="Store_RemoveLogo" xml:space="preserve"><value>Remove</value></data>
+  <data name="Store_LogoHint" xml:space="preserve"><value>PNG, JPG (max 2 MB)</value></data>
+  <data name="Store_Name" xml:space="preserve"><value>Store name</value></data>
+  <data name="Store_TaxId" xml:space="preserve"><value>Registration number / tax ID</value></data>
+  <data name="Store_Address" xml:space="preserve"><value>Address</value></data>
+  <data name="Store_City" xml:space="preserve"><value>City</value></data>
+  <data name="Store_PostalCode" xml:space="preserve"><value>Postal code</value></data>
+  <data name="Store_Country" xml:space="preserve"><value>Country</value></data>
+  <data name="Store_CountryPlaceholder" xml:space="preserve"><value>Select a country</value></data>
+  <data name="Store_Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Store_Email" xml:space="preserve"><value>Email</value></data>
+
+  <data name="Prefs_Heading" xml:space="preserve"><value>Preferences</value></data>
+  <data name="Prefs_Description" xml:space="preserve"><value>Currency and tax for your store. You can change all of this later in Settings.</value></data>
+  <data name="Prefs_BaseCurrency" xml:space="preserve"><value>Base and default currency</value></data>
+  <data name="Prefs_AcceptedCurrencies" xml:space="preserve"><value>Also accept</value></data>
+  <data name="Prefs_TaxRate" xml:space="preserve"><value>Sales tax rate</value></data>
+  <data name="Prefs_TaxRateHelp" xml:space="preserve"><value>Applies to sales. Leave 0 if you do not charge tax.</value></data>
+
+  <data name="Recovery_Heading" xml:space="preserve"><value>Your recovery key</value></data>
+  <data name="Recovery_Description" xml:space="preserve"><value>Store this key safely before you finish.</value></data>
+  <data name="Recovery_Warning" xml:space="preserve"><value>This key is the only way to recover owner access and your encrypted data. It is shown once and cannot be shown again. Print it or write it down and keep it in a secure place, not on this computer. If you lose it and this Windows account, your data cannot be recovered.</value></data>
+  <data name="Recovery_Print" xml:space="preserve"><value>Print</value></data>
+  <data name="Recovery_PrintFailed" xml:space="preserve"><value>Printing is not available right now. Write the key down instead.</value></data>
+  <data name="Recovery_PrintTitle" xml:space="preserve"><value>estoq recovery key</value></data>
+  <data name="Recovery_PrintNote" xml:space="preserve"><value>Keep this page in a secure place. Do not store it on this computer.</value></data>
+  <data name="Recovery_Confirm" xml:space="preserve"><value>I have stored my recovery key safely</value></data>
+
+  <data name="Error_Required" xml:space="preserve"><value>This field is required.</value></data>
+  <data name="Error_InvalidEmail" xml:space="preserve"><value>Enter a valid email address.</value></data>
+  <data name="Error_PasswordTooShort" xml:space="preserve"><value>Use at least {0} characters.</value></data>
+  <data name="Error_PasswordMismatch" xml:space="preserve"><value>The passwords do not match.</value></data>
+  <data name="Error_InvalidTaxRate" xml:space="preserve"><value>Enter a rate from 0 to 100, with up to two decimals.</value></data>
+  <data name="Error_LogoUnsupportedType" xml:space="preserve"><value>Use a PNG or JPG image.</value></data>
+  <data name="Error_LogoTooLarge" xml:space="preserve"><value>The image is larger than 2 MB.</value></data>
+  <data name="Prefs_BaseCurrencyHelp" xml:space="preserve"><value>Prices and reports use this currency. The US dollar unless you change it.</value></data>
+  <data name="Prefs_AcceptedSearch" xml:space="preserve"><value>Search a currency by code or name</value></data>
+  <data name="Prefs_AcceptedNone" xml:space="preserve"><value>No extra currencies. Only {0} is accepted. Exchange rates are set later in Settings.</value></data>
+  <data name="Prefs_RemoveCurrency" xml:space="preserve"><value>Remove currency</value></data>
+  <data name="Prefs_TaxIncluded" xml:space="preserve"><value>Prices and tax</value></data>
+  <data name="Prefs_TaxIncludedOn" xml:space="preserve"><value>Tax included in prices</value></data>
+  <data name="Prefs_TaxIncludedOff" xml:space="preserve"><value>Tax not included in prices (this will be added later)</value></data>
+  <data name="Store_Language" xml:space="preserve"><value>Store language</value></data>
+  <data name="Store_LanguageHelp" xml:space="preserve"><value>Used on receipts and labels. Starts as the language you chose on Welcome.</value></data>
+  <data name="Error_InvalidCurrency" xml:space="preserve"><value>Choose a currency.</value></data>
+</root>

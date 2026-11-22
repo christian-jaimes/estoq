@@ -2,6 +2,8 @@
 
 Three roles: Owner, Manager, Cashier. Account status: Active or Inactive. There is exactly one owner, who is the administrator and must have an email. Permissions are enforced in application services, never only by hiding controls.
 
+Implemented in `estoq.Core` as `RolePermissions` with unit tests that mirror this table; change both together.
+
 Legend: Yes, No, Own (own records only), Approve (a manager or owner signs in on the same screen; the approver is recorded).
 
 | Capability | Cashier | Manager | Owner |

@@ -8,11 +8,11 @@ Local-first Windows desktop app: WinUI 3, .NET 10, C#, MVVM (CommunityToolkit.Mv
 estoq.App            WinUI 3 views, view models, navigation, theme, pop-ups, composition root  (Windows only)  BUILT
 estoq.Application    use cases, service interfaces, Result type, permission checks       -> Core          PLANNED
 estoq.Infrastructure SQLite data access, migrations, encryption, paths, logging, backup  -> Core, Application PLANNED
-estoq.Core           entities, enums, pure business rules (stock, money, permissions)    -> nothing       PLANNED
-tests/*              xUnit per layer; Infrastructure tests use a real SQLite file                         PLANNED
+estoq.Core           entities, enums, pure business rules (stock, money, permissions)    -> nothing       STARTED (roles, setup rules)
+tests/*              xUnit per layer; Infrastructure tests use a real SQLite file                         STARTED (estoq.Core.Tests)
 ```
 
-Only `estoq.App` is in `estoq.sln` today; the other folders hold build leftovers only.
+`estoq.App`, `estoq.Core` and `estoq.Core.Tests` are in `estoq.sln`; the Application and Infrastructure folders hold build leftovers only.
 
 Dependency rule: references point inward. Core knows nothing about the database, WinUI or the file system. Views never query data; view models call service interfaces.
 
@@ -37,7 +37,7 @@ During the front-end phase ([[roadmap]]) each view model depends on an interface
 - **Money**: `decimal` in code, stored as integers scaled by 10,000; multi-currency with rate snapshots.
 - **Time**: stored UTC, shown local.
 - **Security**: whole database, local backups and images encrypted at rest (SQLite3 Multiple Ciphers, MIT licence, loaded through SQLitePCLRaw; see [[encryption]]). Key generated at setup, protected with Windows DPAPI at machine scope so every Windows account on the PC opens the same database; the recovery key also unlocks it. Keys never logged. No cardholder data stored.
-- **Localisation**: all user-facing text in resource files; English and Spanish both ship in the MVP, English is the fallback. Allow about 30 % longer Spanish text in layouts.
+- **Localisation**: all user-facing text in resource files (`.resx`, read through `ILocalizer`); English and Spanish both ship in the MVP, English is the fallback. Core returns codes, never text. Allow about 30 % longer Spanish text in layouts.
 - **Offline**: [[backup]] is the only network feature; it defers when offline.
 - **Logging**: Microsoft.Extensions.Logging with a daily rolling file in `%ProgramData%\estoq\Logs`, 14 days kept. Never log passwords, codes, keys or tokens.
 - **Errors**: expected business failures return `Result`/error values, not exceptions.
