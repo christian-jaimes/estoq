@@ -1,0 +1,12 @@
+<!-- @dsCard group="Forms" height=200 subtitle="Text field with label, hint and error" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{margin:0} .stage{padding:24px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;background:var(--bg);box-sizing:border-box} .col{display:flex;flex-direction:column;gap:12px}</style></head>
+<body class="eq-root">
+<div class="stage" style="flex-direction:column;gap:20px">
+<div><div style="display:flex;gap:16px;flex-wrap:wrap">
+ <label class="eq-field" style="min-width:240px"><span class="eq-field__label">Product name</span><span class="eq-input"><input value="Linen shirt — Navy"></span><span class="eq-field__hint">Shown on receipts and reports.</span></label>
+ <label class="eq-field" style="min-width:180px"><span class="eq-field__label">Minimum stock level</span><span class="eq-input eq-input--invalid"><input value="-4"></span><span class="eq-field__error"><span class="eq-icon">error</span>Enter 0 or more.</span></label>
+ <label class="eq-field" style="min-width:260px"><span class="eq-field__label">Search</span><span class="eq-input"><span class="eq-icon">search</span><input placeholder="SKU, product or barcode"></span></label></div></div>
+</div>
+<script></script>
+</body></html>

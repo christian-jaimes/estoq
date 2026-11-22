@@ -1,0 +1,14 @@
+<Page
+    x:Class="Estoq.App.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Foreground="{ThemeResource EqTextBrush}">
+
+  <!-- The dashboard (KPIs, sales performance, top sellers, alerts, recent sales) is built per docs/roadmap.md. -->
+  <StackPanel Spacing="24">
+    <TextBlock Text="{x:Bind ViewModel.Title}" Style="{StaticResource EqPageTitleStyle}" />
+    <Border Style="{StaticResource EqCardStyle}">
+      <TextBlock Text="{x:Bind ViewModel.Message}" Style="{StaticResource EqSecondaryStyle}" />
+    </Border>
+  </StackPanel>
+</Page>

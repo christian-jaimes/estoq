@@ -1,0 +1,13 @@
+<Page
+    x:Class="Estoq.App.Views.PlaceholderPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Foreground="{ThemeResource EqTextBrush}">
+
+  <StackPanel Spacing="24">
+    <TextBlock Text="{x:Bind ViewModel.Title, Mode=OneWay}" Style="{StaticResource EqPageTitleStyle}" />
+    <Border Style="{StaticResource EqCardStyle}">
+      <TextBlock Text="{x:Bind ViewModel.Message, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" />
+    </Border>
+  </StackPanel>
+</Page>

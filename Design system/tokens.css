@@ -1,0 +1,152 @@
+/* estoq — generated from tokens.json */
+:root, [data-theme="light"] {
+  --gold: #d6b77a; /* Champagne Gold, the signature accent. Primary button fill, active nav indicator, selected rows, primary chart series, logo. Never a large background and never small text on light grounds (1.7:1 on ivory) — use `gold-ink` there. */
+  --gold-hover: #e2c995; /* Hover state of gold actions (primary button, gold toggles). */
+  --gold-pressed: #b99a5e; /* Pressed/active state of gold actions. */
+  --gold-ink: #9c7b40; /* Gold for text, icons and links. Light: darker gold #9C7B40 — 3.4:1 on `bg`, 3.9:1 on `surface`: meets 3:1 for icons, focus rings and text 24px+, NOT 4.5:1 for body-size text (source value kept). Dark: 9.4:1 on `bg`, 8.5:1 on `surface`. */
+  --on-gold: #17191c; /* Text and icons on a `gold` fill (charcoal on gold, 9.2:1). Never white on gold. */
+  --gold-tint: #f9f5ec; /* Selected tile/option background (Selector), behind a `gold-ink` border. Assumption: 14% gold over `surface` (light), 10% (dark). */
+  --on-gold-tint: var(--text); /* Label on `gold-tint`: charcoal text in light (14:1), gold in dark (7.0:1). */
+  --charcoal: #17191c; /* Brand Charcoal. Dark logo ground, splash screen, structure in brand moments. Same in both themes. */
+  --ivory: #f1efe9; /* Brand Warm Ivory. Light logo ground and marketing backgrounds. Same in both themes. */
+  --bg: #f1efe9; /* App background behind sidebar, top bar and content. */
+  --surface: #ffffff; /* Cards, panels, tables, sidebar, top bar and inputs (containers). */
+  --surface-elevated: #faf9f6; /* Dialogs, menus, popovers, table header rows and hover rows. */
+  --text: #24262a; /* Primary text on `bg`, `surface`, `surface-elevated` (13:1+ light, 12:1+ dark). */
+  --text-secondary: #777a80; /* Labels, captions, metadata. Dark: 6:1+ on every ground. Light: 3.7:1 on `bg`, 4.3:1 on `surface` — below 4.5:1 for small text (source value kept); prefer it on `surface` and at 13px+. */
+  --border: #dfddd6; /* Card outlines, table dividers, input borders. Light from source; dark value is an assumption (not in the guidelines). */
+  --focus-ring: var(--gold-ink); /* 2px keyboard focus outline on every control, offset 2px. 3:1+ on all grounds in both themes. */
+  --success: #43876a; /* Positive status: in stock, completed, positive trend. Dot, icon, chart line or badge marker — always with a word or icon, never colour alone. As text it misses 4.5:1 in both themes. */
+  --warning: #c18b42; /* Warnings and low-stock states. Marker colour only; pair with the word ("Low stock") and the `warning` icon. */
+  --danger: #c45d58; /* Errors, out-of-stock, destructive actions (danger button fill with white text, 4.2:1 — bold 14px label), negative trend. */
+  --info: #5c83a8; /* Informational states: incoming stock, pending, notices. Marker colour only. */
+  --chart-1: #c4912a; /* Chart series 1 — gold, the primary series (this period, the series the story is about). Deeper than `gold` so marks hold on white; 2.8:1 on light `surface`, so light-mode charts carry direct labels or a table view. */
+  --chart-2: #2563d9; /* Chart series 2 — blue. Assign series in fixed order 1→4; never reorder by rank. */
+  --chart-3: #d6338a; /* Chart series 3 — magenta. Slots 1–3 are distinguishable in any combination (validated all-pairs, colour-blind safe), so line charts use at most these three. */
+  --chart-4: #3838b8; /* Chart series 4 — indigo. Only for bars and donut segments, where it never touches `chart-2` (validated adjacent pairs incl. the donut's wrap-around). */
+  --chart-muted: #c9c7c0; /* De-emphasised data: the comparison period (last year) and the "Other" bucket. Series 5+ fold into it, never a new hue. */
+  --shadow-card: 0 1px 2px rgba(23,25,28,0.06); /* Cards, with a `border` outline. */
+  --shadow-dialog: 0 16px 48px rgba(23,25,28,0.16); /* Dialogs, menus and popovers. */
+}
+[data-theme="dark"] {
+  --gold: #d6b77a;
+  --gold-hover: #e2c995;
+  --gold-pressed: #b99a5e;
+  --gold-ink: #d6b77a;
+  --on-gold: #17191c;
+  --gold-tint: #2f2f2c;
+  --on-gold-tint: var(--gold);
+  --charcoal: #17191c;
+  --ivory: #f1efe9;
+  --bg: #141619;
+  --surface: #1c2023;
+  --surface-elevated: #282c31;
+  --text: #f1efe9;
+  --text-secondary: #a9aaad;
+  --border: #33373d;
+  --focus-ring: var(--gold-ink);
+  --success: #43876a;
+  --warning: #c18b42;
+  --danger: #c45d58;
+  --info: #5c83a8;
+  --chart-1: #bc8a26;
+  --chart-2: #3b82f6;
+  --chart-3: #e0509e;
+  --chart-4: #8b7bff;
+  --chart-muted: #4a4f57;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.30);
+  --shadow-dialog: 0 16px 48px rgba(0,0,0,0.50);
+}
+:root {
+  --space-4: 4px; /* Icon-to-label gap, badge padding. */
+  --space-8: 8px; /* Gap inside controls, between stacked labels and inputs. */
+  --space-12: 12px; /* Button horizontal padding (small), table cell vertical padding. */
+  --space-16: 16px; /* Card padding (compact), gap between form fields. */
+  --space-24: 24px; /* Card padding, gap between cards. */
+  --space-32: 32px; /* Gap between page sections. */
+  --space-48: 48px; /* Content area outer margin on wide screens. */
+  --space-64: 64px; /* Onboarding and splash layouts. */
+  --radius-sm: 6px; /* Small controls: badges, checkboxes, chips, nav items. */
+  --radius-md: 8px; /* Inputs and buttons. */
+  --radius-lg: 12px; /* Cards and panels. */
+  --radius-xl: 16px; /* Dialogs. */
+  --radius-pill: 999px; /* Pills: chips (currency, filters) and fully rounded tags. */
+  --icon-sm: 20px; /* Icons in tables, inputs, buttons. */
+  --icon-md: 24px; /* Sidebar navigation and top bar icons. */
+  --sidebar-width: 240px; /* Expanded left sidebar. */
+  --control-height: 36px; /* Buttons and inputs (assumption). */
+  --font-brand: "Poppins", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --font-ui: "Manrope", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --font-icon: "Material Symbols Rounded";
+  --text-display: 600 32px/40px var(--font-brand); /* Onboarding, splash, marketing headlines. */
+  --text-page-title: 600 26px/34px var(--font-brand); /* One per screen, top of the content area. */
+  --text-section-title: 600 20px/28px var(--font-brand); /* Major sections within a page. */
+  --text-card-title: 600 16px/24px var(--font-ui); /* Card and dialog titles. */
+  --text-body: 400 14px/20px var(--font-ui); /* Default UI text, table cells, form values. */
+  --text-caption: 500 12px/16px var(--font-ui); /* Labels, table headers, badges. */
+  --text-label: 600 14px/20px var(--font-ui); /* Buttons and nav items. */
+  --text-kpi: 600 32px/38px var(--font-ui); /* Dashboard figures (28–32px). Always tabular numerals. */
+}
+.display {
+  font-family: var(--font-brand);
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.page-title {
+  font-family: var(--font-brand);
+  font-size: 26px;
+  line-height: 34px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.section-title {
+  font-family: var(--font-brand);
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.card-title {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.body {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.secondary {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.caption {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.label {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.kpi {
+  font-family: var(--font-ui);
+  font-size: 32px;
+  line-height: 38px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}

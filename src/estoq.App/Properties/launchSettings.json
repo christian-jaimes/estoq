@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "estoq (Package)": {
+      "commandName": "MsixPackage"
+    }
+  }
+}

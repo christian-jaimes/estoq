@@ -1,0 +1,25 @@
+<!-- @dsCard group="Forms" height=370 subtitle="Single-choice tiles — payment method; compact row variant" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{margin:0} .stage{padding:24px;display:flex;flex-direction:column;gap:24px;background:var(--bg);box-sizing:border-box;max-width:560px}</style></head>
+<body class="eq-root">
+<div class="stage">
+ <fieldset class="eq-selector" style="grid-template-columns:repeat(4,1fr)">
+  <legend class="eq-selector__legend">Payment method</legend>
+  <label class="eq-selector__option"><input type="radio" name="pay" value="cash" checked><span class="eq-icon">payments</span>Cash</label>
+  <label class="eq-selector__option"><input type="radio" name="pay" value="card"><span class="eq-icon">credit_card</span>Card</label>
+  <label class="eq-selector__option"><input type="radio" name="pay" value="transfer"><span class="eq-icon">swap_horiz</span>Transfer</label>
+  <label class="eq-selector__option"><input type="radio" name="pay" value="zelle"><span class="eq-icon">bolt</span>Zelle</label>
+  <label class="eq-selector__option"><input type="radio" name="pay" value="usdt"><span class="eq-icon">toll</span>USDT</label>
+  <label class="eq-selector__option"><input type="radio" name="pay" value="mobile"><span class="eq-icon">smartphone</span>Mobile payment</label>
+  <label class="eq-selector__option"><input type="radio" name="pay" value="paypal"><span class="eq-icon">account_balance_wallet</span>PayPal</label>
+  <label class="eq-selector__option"><input type="radio" name="pay" value="other"><span class="eq-icon">more_horiz</span>Other</label>
+ </fieldset>
+ <fieldset class="eq-selector eq-selector--compact" style="grid-template-columns:repeat(3,1fr)">
+  <legend class="eq-selector__legend">Stock movement</legend>
+  <label class="eq-selector__option"><input type="radio" name="mv" value="in" checked><span class="eq-icon">south_west</span>Incoming</label>
+  <label class="eq-selector__option"><input type="radio" name="mv" value="out"><span class="eq-icon">north_east</span>Outgoing</label>
+  <label class="eq-selector__option"><input type="radio" name="mv" value="adj" disabled><span class="eq-icon">tune</span>Adjustment</label>
+ </fieldset>
+</div>
+<script></script>
+</body></html>

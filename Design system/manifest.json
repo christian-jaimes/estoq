@@ -1,0 +1,190 @@
+{
+  "manifestVersion": 3,
+  "name": "estoq",
+  "namespace": "Estoq",
+  "files": [
+    "assets/Logos/README.md",
+    "components/Badge/README.md",
+    "components/BarChart/README.md",
+    "components/Button/README.md",
+    "components/Card/README.md",
+    "components/Chip/README.md",
+    "components/Dialog/README.md",
+    "components/DonutChart/README.md",
+    "components/IconButton/README.md",
+    "components/ImageGallery/README.md",
+    "components/Input/README.md",
+    "components/LineChart/README.md",
+    "components/NotificationPanel/README.md",
+    "components/Selector/README.md",
+    "components/Sidebar/README.md",
+    "components/Table/README.md",
+    "components/TopBar/README.md",
+    "components/bundle.css",
+    "tokens.css"
+  ],
+  "libraries": [],
+  "components": [
+    {
+      "name": "Badge",
+      "group": "Data display",
+      "summary": "Status badges label the state of a product, order or transaction."
+    },
+    {
+      "name": "BarChart",
+      "group": "Charts",
+      "summary": "Bar charts compare amounts across categories or periods, such as monthly revenue against last year or units sold per product."
+    },
+    {
+      "name": "Button",
+      "group": "Actions",
+      "summary": "Buttons trigger actions; one primary (gold) button per view marks the main action."
+    },
+    {
+      "name": "Card",
+      "group": "Data display",
+      "summary": "Cards group related content on the page; the KPI card shows one dashboard metric."
+    },
+    {
+      "name": "Chip",
+      "group": "Forms",
+      "summary": "Chips are compact pill choices: one from a short set (currency, period) or several as filters."
+    },
+    {
+      "name": "Dialog",
+      "group": "Overlays",
+      "summary": "Dialogs focus the user on one action or confirmation."
+    },
+    {
+      "name": "DonutChart",
+      "group": "Charts",
+      "summary": "The donut chart shows how one total splits into a few parts, such as this month's sales by category or payment methods used."
+    },
+    {
+      "name": "IconButton",
+      "group": "Actions",
+      "summary": "Icon buttons run a single action shown by an icon alone: round for quick actions and shortcuts, plain for toolbars and the top bar."
+    },
+    {
+      "name": "ImageGallery",
+      "group": "Data display",
+      "summary": "The image gallery shows a product's photos: one large image with a rail of thumbnails and an add tile, on the product detail and edit screens."
+    },
+    {
+      "name": "Input",
+      "group": "Forms",
+      "summary": "Text inputs collect a single value; always with a visible label."
+    },
+    {
+      "name": "LineChart",
+      "group": "Charts",
+      "summary": "Line charts show change over time: daily sales, stock level across weeks, sales by channel."
+    },
+    {
+      "name": "NotificationPanel",
+      "group": "Overlays",
+      "summary": "The notification panel is the popover that opens from the bell in the top bar."
+    },
+    {
+      "name": "Selector",
+      "group": "Forms",
+      "summary": "The Selector picks one option from a small set of visual tiles, such as the payment method at checkout or the type of stock movement."
+    },
+    {
+      "name": "Sidebar",
+      "group": "Navigation",
+      "summary": "The persistent, collapsible left sidebar holds the logo, primary navigation, and the signed-in user with a link to Settings."
+    },
+    {
+      "name": "Table",
+      "group": "Data display",
+      "summary": "Tables list products, movements and transactions for scanning and comparison."
+    },
+    {
+      "name": "TopBar",
+      "group": "Navigation",
+      "summary": "The top bar holds search, four shortcut buttons, then the theme toggle and notifications, in three groups split by dividers."
+    }
+  ],
+  "assetGroups": [
+    {
+      "name": "Logos",
+      "tile": "l",
+      "order": [
+        "estoq-wordmark-charcoal.png",
+        "estoq-wordmark-gold.png",
+        "estoq-wordmark-ivory.png",
+        "estoq-q-mark-charcoal.png",
+        "estoq-q-mark-gold.png",
+        "estoq-q-mark-ivory.png"
+      ],
+      "files": [
+        {
+          "path": "assets/Logos/estoq-wordmark-charcoal.png",
+          "id": "491fb9d4292d5e2112f93df21c117cce"
+        },
+        {
+          "path": "assets/Logos/estoq-wordmark-gold.png",
+          "id": "33c9890b075892d08df123a7b4a9c59d"
+        },
+        {
+          "path": "assets/Logos/estoq-wordmark-ivory.png",
+          "id": "4cc880f1874fd754922ac3ab43139f11"
+        },
+        {
+          "path": "assets/Logos/estoq-q-mark-charcoal.png",
+          "id": "4bf9d099bd60432892b1be0cc360b5af"
+        },
+        {
+          "path": "assets/Logos/estoq-q-mark-gold.png",
+          "id": "1b51481250f284550b39ffeeb98388bf"
+        },
+        {
+          "path": "assets/Logos/estoq-q-mark-ivory.png",
+          "id": "f910523b1c24ca9e64cbcb5c8956ab24"
+        }
+      ]
+    }
+  ],
+  "storage": {
+    "files": {
+      "assets/Logos/estoq-q-mark-charcoal.png": {
+        "store": "blob",
+        "id": "4bf9d099bd60432892b1be0cc360b5af",
+        "bytes": 54460,
+        "type": "image/png"
+      },
+      "assets/Logos/estoq-q-mark-gold.png": {
+        "store": "blob",
+        "id": "1b51481250f284550b39ffeeb98388bf",
+        "bytes": 54813,
+        "type": "image/png"
+      },
+      "assets/Logos/estoq-q-mark-ivory.png": {
+        "store": "blob",
+        "id": "f910523b1c24ca9e64cbcb5c8956ab24",
+        "bytes": 53912,
+        "type": "image/png"
+      },
+      "assets/Logos/estoq-wordmark-charcoal.png": {
+        "store": "blob",
+        "id": "491fb9d4292d5e2112f93df21c117cce",
+        "bytes": 71292,
+        "type": "image/png"
+      },
+      "assets/Logos/estoq-wordmark-gold.png": {
+        "store": "blob",
+        "id": "33c9890b075892d08df123a7b4a9c59d",
+        "bytes": 70914,
+        "type": "image/png"
+      },
+      "assets/Logos/estoq-wordmark-ivory.png": {
+        "store": "blob",
+        "id": "4cc880f1874fd754922ac3ab43139f11",
+        "bytes": 70642,
+        "type": "image/png"
+      }
+    },
+    "blobBytesUsed": 376033
+  }
+}
