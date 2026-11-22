@@ -31,6 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\estoq.Core\estoq.Core.csproj" />
+    <!-- Strings are .NET resources read by ILocalizer; keep them out of the app's MRT resource index. -->
+    <PRIResource Remove="Resources\*.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Assets\**\*.png" />
     <Content Include="Assets\Fonts\*.ttf" />
   </ItemGroup>

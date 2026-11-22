@@ -1,0 +1,44 @@
+<UserControl
+    x:Class="Estoq.App.Views.Setup.OwnerStepView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Estoq.App.Controls"
+    xmlns:services="using:Estoq.App.Services">
+
+  <StackPanel Spacing="20" HorizontalAlignment="Stretch">
+    <controls:EqField Label="{x:Bind services:Loc.Get('Owner_FullName')}" IsRequired="True"
+                      Text="{x:Bind ViewModel.FullName, Mode=TwoWay}" ErrorText="{x:Bind ViewModel.FullNameError, Mode=OneWay}" />
+    <controls:EqField Label="{x:Bind services:Loc.Get('Owner_Email')}" IsRequired="True"
+                      Text="{x:Bind ViewModel.Email, Mode=TwoWay}" ErrorText="{x:Bind ViewModel.EmailError, Mode=OneWay}" />
+
+    <Grid ColumnSpacing="16">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <controls:EqField Grid.Column="0" Label="{x:Bind services:Loc.Get('Owner_Password')}" IsRequired="True" IsPassword="True"
+                        Text="{x:Bind ViewModel.Password, Mode=TwoWay}" ErrorText="{x:Bind ViewModel.PasswordError, Mode=OneWay}" />
+      <controls:EqField Grid.Column="1" Label="{x:Bind services:Loc.Get('Owner_ConfirmPassword')}" IsRequired="True" IsPassword="True"
+                        Text="{x:Bind ViewModel.ConfirmPassword, Mode=TwoWay}"
+                        ErrorText="{x:Bind ViewModel.ConfirmPasswordError, Mode=OneWay}" />
+    </Grid>
+
+    <!-- Generated six-digit code: the owner signs in with it. -->
+    <Border Style="{StaticResource EqCardStyle}" Padding="20">
+      <Grid ColumnSpacing="16">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Spacing="4">
+          <TextBlock Text="{x:Bind services:Loc.Get('Owner_UserCode')}" Style="{StaticResource EqLabelStyle}" />
+          <TextBlock Text="{x:Bind ViewModel.UserCode}" Style="{StaticResource EqKpiStyle}" CharacterSpacing="300"
+                     IsTextSelectionEnabled="True" AutomationProperties.Name="{x:Bind ViewModel.UserCode}" />
+          <TextBlock Text="{x:Bind services:Loc.Get('Owner_UserCodeHelp')}" Style="{StaticResource EqSecondaryStyle}" />
+        </StackPanel>
+        <Button Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource EqSecondaryButtonStyle}"
+                Content="{x:Bind ViewModel.CopyText, Mode=OneWay}" Command="{x:Bind ViewModel.CopyCodeCommand}" />
+      </Grid>
+    </Border>
+  </StackPanel>
+</UserControl>

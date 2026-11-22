@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Pure business rules: no database, no UI, no file system (docs/technical/architecture.md). -->
+</Project>

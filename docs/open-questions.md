@@ -10,6 +10,7 @@ Mockups are a visual reference only; features are specified in these docs. A moc
 |---|---|---|---|
 | Q12 | Settings sections beyond the plan: Defaults and rules (discount cap, inactivity timeout, return window, low-stock default) and Data (backup) | Add both after the four planned sections; Data arrives with [[backup]] | [[settings]] |
 | Q13 | Inventory import: the mockup has an Import button, no flow is defined | Button hidden until a CSV import flow is specified | [[inventory]] |
+| Q21 | Owner password rules: the setup wizard asks for a password and confirmation but no rule is specified | At least 8 characters, no other rule (`SetupRules.MinPasswordLength`) | [[setup-wizard]], [[sign-in]] |
 | Q15 | `.gitignore` excludes `branding/`, which on Windows also ignores `Branding/` | Unknown; confirm whether intentional | repo |
 | Q16 | Complete Sale key: POS mockup shows F2, which opens Add product | Ctrl+Enter completes the sale | [[point-of-sale]] |
 

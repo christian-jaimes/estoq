@@ -2,6 +2,10 @@
 
 The frame around every page: sidebar, top bar, pop-ups, notifications panel and theme. Visible in mockups 1, 6, 7, 8. Implementation details: [[ui-implementation]].
 
+## Splash
+
+At launch, before the wizard or the shell: always dark background, gold logo and wordmark (the gold lockup) centred, shown for 2 seconds (`Views/SplashPage`, `MainWindow.ShowSplash`). Then [[setup-wizard]] if no owner exists, otherwise the shell.
+
 ## Sidebar
 
 Floating, collapsible (240 px, 64 px collapsed). Wordmark (Q mark when collapsed).

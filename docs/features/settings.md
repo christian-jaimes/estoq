@@ -33,7 +33,7 @@ Rules: an inactive account cannot sign in; a manager cannot change or deactivate
 
 ## Exchange rates
 
-List of currencies (USD base, EUR, COP, VES) with the current rate to base, last updated and by whom; "Update rate" adds a new rate with an effective time. History per currency. Rates are never overwritten. Open to all roles because border-shop rates change often.
+List of currencies (the base currency chosen in the [[setup-wizard]], USD unless changed, plus the accepted ones) with the current rate to base, last updated and by whom; "Update rate" adds a new rate with an effective time. History per currency. Rates are never overwritten. Open to all roles because border-shop rates change often.
 
 ## Defaults and rules (proposed)
 

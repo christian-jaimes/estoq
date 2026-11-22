@@ -1,0 +1,163 @@
+<Page
+    x:Class="Estoq.App.Views.Setup.SetupWizardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Estoq.App.Controls"
+    xmlns:setup="using:Estoq.App.Views.Setup"
+    xmlns:vm="using:Estoq.App.ViewModels.Setup"
+    Foreground="{ThemeResource EqTextBrush}">
+
+  <Page.Resources>
+    <!-- Combo boxes sit inside the same bordered container as text fields, so their own chrome is transparent. -->
+    <SolidColorBrush x:Key="ComboBoxBackground" Color="Transparent" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="Transparent" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="Transparent" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundFocused" Color="Transparent" />
+    <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver" Color="Transparent" />
+    <SolidColorBrush x:Key="ComboBoxBorderBrushPressed" Color="Transparent" />
+    <SolidColorBrush x:Key="ComboBoxBorderBrushFocused" Color="Transparent" />
+  </Page.Resources>
+
+  <Grid Background="{ThemeResource EqBgBrush}">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="340" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+
+    <!-- Left rail: wordmark, title, step list with the current step marked in gold. -->
+    <Grid Grid.Column="0" Background="{ThemeResource EqSurfaceBrush}" BorderBrush="{ThemeResource EqBorderBrush}"
+          BorderThickness="0,0,1,0" Padding="28,56,20,32">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+
+      <!-- Gold lockup (Q mark and wordmark) in both themes. -->
+      <Image Grid.Row="0" Height="44" HorizontalAlignment="Left" Stretch="Uniform"
+             Source="ms-appx:///Assets/Logos/estoq-lockup-gold.png" AutomationProperties.Name="estoq" />
+
+      <TextBlock Grid.Row="1" Margin="0,28,0,8" Text="{x:Bind ViewModel.WizardTitle, Mode=OneWay}"
+                 Style="{StaticResource EqPageTitleStyle}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="2" Margin="0,0,0,28" Text="{x:Bind ViewModel.WizardTagline, Mode=OneWay}"
+                 Style="{StaticResource EqSecondaryStyle}" FontSize="14" />
+
+      <ItemsControl Grid.Row="3" ItemsSource="{x:Bind ViewModel.Steps}" IsTabStop="False">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:WizardStepViewModel">
+            <Grid Height="64" Margin="0,0,0,4" Padding="14,0,12,0" ColumnSpacing="14"
+                  CornerRadius="{StaticResource EqRadiusMd}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+
+              <!-- Current step: gold tint and a gold marker on the left edge. -->
+              <Border Grid.ColumnSpan="2" Margin="-14,0,-12,0" Background="{ThemeResource EqGoldTintBrush}"
+                      CornerRadius="{StaticResource EqRadiusMd}" Visibility="{x:Bind IsCurrent, Mode=OneWay}" />
+              <Border Grid.ColumnSpan="2" Margin="-14,12,0,12" Width="3" HorizontalAlignment="Left"
+                      Background="{ThemeResource EqGoldBrush}" CornerRadius="2"
+                      Visibility="{x:Bind IsCurrent, Mode=OneWay}" />
+
+              <!-- Number badge: gold when current, a check when done, an outline when upcoming. Text is never colour alone. -->
+              <Grid Grid.Column="0" Width="32" Height="32" VerticalAlignment="Center">
+                <Border Background="{ThemeResource EqGoldBrush}" CornerRadius="16"
+                        Visibility="{x:Bind IsCurrent, Mode=OneWay}">
+                  <TextBlock Text="{x:Bind NumberText}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                             FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                             Foreground="{ThemeResource EqOnGoldBrush}" />
+                </Border>
+                <FontIcon Glyph="&#xF0BE;" FontFamily="{StaticResource EqIconFontFilled}" FontSize="32"
+                          Foreground="{ThemeResource EqGoldInkBrush}" Visibility="{x:Bind IsDone, Mode=OneWay}" />
+                <Border BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1" CornerRadius="16"
+                        Visibility="{x:Bind IsUpcoming, Mode=OneWay}">
+                  <TextBlock Text="{x:Bind NumberText}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                             FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                             Foreground="{ThemeResource EqTextSecondaryBrush}" />
+                </Border>
+              </Grid>
+
+              <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" Style="{StaticResource EqCaptionStyle}"
+                           TextTrimming="CharacterEllipsis" />
+              </StackPanel>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </Grid>
+
+    <!-- Right: progress, heading, the current step, then Back and Next. -->
+    <Grid Grid.Column="1" Padding="56,56,56,28" RowSpacing="20">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <StackPanel Grid.Row="0" Spacing="8" MaxWidth="960" HorizontalAlignment="Stretch">
+        <TextBlock Text="{x:Bind ViewModel.StepOfText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" />
+        <ProgressBar Minimum="0" Maximum="{x:Bind ViewModel.ProgressMaximum, Mode=OneWay}"
+                     Value="{x:Bind ViewModel.ProgressValue, Mode=OneWay}" Height="6"
+                     CornerRadius="3" Foreground="{ThemeResource EqGoldBrush}" Background="{ThemeResource EqBorderBrush}" />
+      </StackPanel>
+
+      <StackPanel Grid.Row="1" Spacing="6" MaxWidth="960" HorizontalAlignment="Stretch">
+        <TextBlock Text="{x:Bind ViewModel.Current.Heading, Mode=OneWay}" Style="{StaticResource EqPageTitleStyle}"
+                   FontSize="30" TextWrapping="Wrap" />
+        <TextBlock Text="{x:Bind ViewModel.Current.Description, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}"
+                   FontSize="15" />
+      </StackPanel>
+
+      <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid MaxWidth="960" HorizontalAlignment="Stretch" Padding="0,4,16,16">
+          <setup:WelcomeStepView Visibility="{x:Bind ViewModel.IsWelcomeStep, Mode=OneWay}" />
+          <setup:OwnerStepView Visibility="{x:Bind ViewModel.IsOwnerStep, Mode=OneWay}" />
+          <setup:StoreStepView Visibility="{x:Bind ViewModel.IsStoreStep, Mode=OneWay}" />
+          <setup:PreferencesStepView Visibility="{x:Bind ViewModel.IsPreferencesStep, Mode=OneWay}" />
+          <setup:RecoveryStepView Visibility="{x:Bind ViewModel.IsRecoveryStep, Mode=OneWay}" />
+        </Grid>
+      </ScrollViewer>
+
+      <Grid Grid.Row="3" MaxWidth="960" HorizontalAlignment="Stretch" RowSpacing="12">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Height="1" Background="{ThemeResource EqBorderBrush}" />
+        <Grid Grid.Row="1" ColumnSpacing="12">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="{x:Bind ViewModel.FinishError, Mode=OneWay}" VerticalAlignment="Center"
+                     Foreground="{ThemeResource EqDangerBrush}" FontSize="13" TextWrapping="Wrap"
+                     Visibility="{x:Bind ViewModel.HasFinishError, Mode=OneWay}" />
+          <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.BackCommand}"
+                  Visibility="{x:Bind ViewModel.IsBackVisible, Mode=OneWay}">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <FontIcon Glyph="&#xE5CB;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+              <TextBlock Text="{x:Bind ViewModel.BackText, Mode=OneWay}" />
+            </StackPanel>
+          </Button>
+          <Button Grid.Column="2" Style="{StaticResource EqPrimaryButtonStyle}" Command="{x:Bind ViewModel.NextCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <TextBlock Text="{x:Bind ViewModel.NextText, Mode=OneWay}" />
+              <FontIcon Glyph="&#xE5CC;" FontFamily="{StaticResource EqIconFont}" FontSize="18"
+                        Visibility="{x:Bind ViewModel.ShowNextArrow, Mode=OneWay}" />
+            </StackPanel>
+          </Button>
+        </Grid>
+      </Grid>
+    </Grid>
+
+    <!-- The window uses this strip as its title bar so the app can be dragged from it. -->
+    <Grid x:Name="DragRegion" Grid.ColumnSpan="2" Height="32" VerticalAlignment="Top" Background="Transparent" />
+  </Grid>
+</Page>

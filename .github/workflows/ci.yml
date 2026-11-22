@@ -17,3 +17,13 @@ jobs:
         with:
           global-json-file: global.json
       - run: dotnet build src/estoq.App/estoq.App.csproj --configuration Release -p:Platform=x64
+
+  core:
+    name: Core rules and tests (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - run: dotnet test estoq.Portable.slnf --configuration Release

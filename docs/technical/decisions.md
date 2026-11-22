@@ -34,5 +34,7 @@ Architecture decision log. Replaces the legacy ADR files. Add new decisions at t
 | 28 | Dashboard MVP is the overview only; tabs later. Email receipts deferred | Accepted by the product owner | 2026-11-21 |
 | 29 | Business rules built in `estoq.Core` alongside the front end, before the database | Accepted by the product owner | 2026-11-21 |
 | 30 | Settings and staff changes are audit-logged with old and new values, never changed silently | Accepted by the product owner | 2026-11-21 |
+| 31 | UI text in `.resx` files read through `ILocalizer` (English neutral, Spanish satellite); XAML uses `Loc.Get` function bindings and the page that offers a language switch is rebuilt on change | Accepted | 2026-11-22 |
+| 32 | The base and default currency is chosen in the setup wizard (USD unless changed) instead of fixed to USD; any currency can be accepted, found by search. Setup also records whether prices include tax (default not included). Supersedes the USD-only part of 13 and the fixed-USD part of 22 | Accepted by the product owner | 2026-11-22 |
 
 Details for each: [[architecture]], [[data-model]], and the feature docs.

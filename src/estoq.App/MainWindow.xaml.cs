@@ -1,9 +1,11 @@
 using Estoq.App.Services;
 using Estoq.App.Views;
+using Estoq.App.Views.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
 
 namespace Estoq.App;
 
@@ -23,12 +25,44 @@ public sealed partial class MainWindow : Window
         UpdateCaptionButtons();
     }
 
+    /// <summary>The time the splash stays on screen.</summary>
+    private static readonly TimeSpan SplashDuration = TimeSpan.FromSeconds(2);
+
+    /// <summary>Shows the splash, then runs <paramref name="next"/> after two seconds.</summary>
+    public void ShowSplash(Action next)
+    {
+        HostFrame.Navigate(typeof(SplashPage), null, new SuppressNavigationTransitionInfo());
+        if (HostFrame.Content is SplashPage splash)
+        {
+            // The whole splash is draggable; there is nothing to click.
+            SetTitleBar(splash);
+        }
+
+        var timer = DispatcherQueue.CreateTimer();
+        timer.Interval = SplashDuration;
+        timer.IsRepeating = false;
+        timer.Tick += (_, _) => next();
+        timer.Start();
+    }
+
     public void ShowShell()
     {
         HostFrame.Navigate(typeof(ShellPage));
+        HostFrame.BackStack.Clear();
         if (HostFrame.Content is ShellPage shell)
         {
             SetTitleBar(shell.TitleBarDragRegion);
+        }
+    }
+
+    /// <summary>Shows the first-run wizard full window. Also used to rebuild it after a language change.</summary>
+    public void ShowSetup()
+    {
+        HostFrame.Navigate(typeof(SetupWizardPage), null, new SuppressNavigationTransitionInfo());
+        HostFrame.BackStack.Clear();
+        if (HostFrame.Content is SetupWizardPage wizard)
+        {
+            SetTitleBar(wizard.TitleBarDragRegion);
         }
     }
 

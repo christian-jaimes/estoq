@@ -17,11 +17,19 @@ In Visual Studio: open `estoq.sln`, platform **x64**, startup project `estoq.App
 
 The app targets `net10.0-windows10.0.19041.0`, platforms x64 and ARM64, packaged as MSIX. Warnings are errors outside the App project.
 
-When the back-end projects return: a portable solution filter (`estoq.Portable.slnf`) builds and tests Core, Application and Infrastructure on any OS with `dotnet test`.
+Unit tests: `dotnet test estoq.Portable.slnf` builds and tests the portable projects (Core and its tests today; Application and Infrastructure join with the back end) on any OS.
+
+## Run from the command line
+
+```powershell
+.\scripts\run-local.ps1
+```
+
+Builds Release x64, copies the output into the `AppX` layout and launches the packaged app. Windows runs the app from `bin\x64\Release\<tfm>\AppX`, which also holds `Assets` (fonts, icons, logos). `dotnet build` writes the binaries one folder up, so registering that folder gives a stale or asset-less app (missing icons and logos); the script avoids it. The `AppX` layout is first created by the F5 package launch in Visual Studio.
 
 ## CI
 
-`.github/workflows/ci.yml`: a Windows job builds `src/estoq.App` in Release for x64. A Linux job for the portable projects comes back with the back end.
+`.github/workflows/ci.yml`: a Windows job builds `src/estoq.App` in Release for x64. A Linux job runs the portable solution filter (`dotnet test estoq.Portable.slnf`).
 
 ## Data during development
 
