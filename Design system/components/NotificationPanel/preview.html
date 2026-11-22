@@ -1,0 +1,35 @@
+<!-- @dsCard group="Overlays" height=640 subtitle="Popover from the top bar bell: grouped list, unread state, empty state" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{margin:0} .stage{padding:24px;display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap;background:var(--bg);box-sizing:border-box}</style></head>
+<body class="eq-root">
+<div class="stage">
+ <div class="eq-notif-anchor">
+  <button class="eq-icon-btn" aria-label="Notifications, 3 unread" aria-expanded="true" aria-controls="np"><span class="eq-icon">notifications</span><span class="eq-icon-btn__dot"></span></button>
+  <section class="eq-notif" id="np" role="dialog" aria-label="Notifications">
+   <div class="eq-notif__head"><h2 class="eq-notif__title">Notifications</h2><button class="eq-notif__link">Mark all as read</button></div>
+   <fieldset class="eq-chips eq-notif__filters" aria-label="Show">
+    <label class="eq-chip"><input type="radio" name="nf" checked>All</label>
+    <label class="eq-chip"><input type="radio" name="nf">Unread · 3</label>
+   </fieldset>
+   <ul class="eq-notif__list">
+    <li class="eq-notif__group">Today</li>
+    <li><a class="eq-notif__item" href="#"><span class="eq-notif__icon eq-notif__icon--warning"><span class="eq-icon">warning</span></span><span class="eq-notif__body"><p class="eq-notif__text">5 products are below their minimum stock level</p><p class="eq-notif__detail">Wool scarf — Charcoal and 4 more</p></span><span class="eq-notif__time">10 min<span class="eq-notif__unread" aria-label="Unread"></span></span></a></li>
+    <li><a class="eq-notif__item" href="#"><span class="eq-notif__icon eq-notif__icon--info"><span class="eq-icon">local_shipping</span></span><span class="eq-notif__body"><p class="eq-notif__text">Delivery from Textiles Norte arrives today</p><p class="eq-notif__detail">PO-0142 · 120 units</p></span><span class="eq-notif__time">1 h<span class="eq-notif__unread" aria-label="Unread"></span></span></a></li>
+    <li><a class="eq-notif__item" href="#"><span class="eq-notif__icon eq-notif__icon--danger"><span class="eq-icon">remove_shopping_cart</span></span><span class="eq-notif__body"><p class="eq-notif__text">Leather belt — Tan, 90 is out of stock</p><p class="eq-notif__detail">Last sold at 09:42</p></span><span class="eq-notif__time">3 h<span class="eq-notif__unread" aria-label="Unread"></span></span></a></li>
+    <li class="eq-notif__group">Earlier</li>
+    <li><a class="eq-notif__item eq-notif__item--read" href="#"><span class="eq-notif__icon eq-notif__icon--success"><span class="eq-icon">check_circle</span></span><span class="eq-notif__body"><p class="eq-notif__text">Stock adjustment approved</p><p class="eq-notif__detail">ADJ-0031 · −4 units · by María</p></span><span class="eq-notif__time">Yesterday</span></a></li>
+    <li><a class="eq-notif__item eq-notif__item--read" href="#"><span class="eq-notif__icon"><span class="eq-icon">assignment_return</span></span><span class="eq-notif__body"><p class="eq-notif__text">Return processed</p><p class="eq-notif__detail">Sale #2384 · €59.00 refunded</p></span><span class="eq-notif__time">18 Nov</span></a></li>
+   </ul>
+   <div class="eq-notif__foot"><button class="eq-btn eq-btn--ghost eq-btn--sm">View all</button><button class="eq-btn eq-btn--ghost eq-btn--sm"><span class="eq-icon">settings</span>Settings</button></div>
+  </section>
+ </div>
+ <div class="eq-notif-anchor">
+  <button class="eq-icon-btn" aria-label="Notifications" aria-expanded="true"><span class="eq-icon">notifications</span></button>
+  <section class="eq-notif" role="dialog" aria-label="Notifications" style="width:300px">
+   <div class="eq-notif__head"><h2 class="eq-notif__title">Notifications</h2></div>
+   <div class="eq-notif__empty"><span class="eq-icon">notifications_off</span><strong>You're up to date</strong>New stock, delivery and sales alerts will appear here.</div>
+  </section>
+ </div>
+</div>
+<script></script>
+</body></html>

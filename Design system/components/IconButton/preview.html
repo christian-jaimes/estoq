@@ -1,0 +1,27 @@
+<!-- @dsCard group="Actions" height=190 subtitle="Round (outlined, gold icon) and plain; default, selected, small, disabled" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{margin:0} .stage{padding:24px;display:flex;flex-direction:column;gap:20px;background:var(--bg);box-sizing:border-box} .row{display:flex;gap:16px;align-items:center;flex-wrap:wrap} .sep{width:1px;height:24px;background:var(--border)}</style></head>
+<body class="eq-root">
+<div class="stage">
+ <div class="row">
+  <button class="eq-icon-btn eq-icon-btn--round" aria-label="Sales"><span class="eq-icon">shopping_cart</span></button>
+  <button class="eq-icon-btn eq-icon-btn--round" aria-label="Products"><span class="eq-icon">deployed_code</span></button>
+  <button class="eq-icon-btn eq-icon-btn--round" aria-label="Incoming stock"><span class="eq-icon">local_shipping</span></button>
+  <button class="eq-icon-btn eq-icon-btn--round" aria-label="Pricing"><span class="eq-icon">sell</span></button>
+  <span class="sep"></span>
+  <button class="eq-icon-btn eq-icon-btn--round" aria-pressed="true" aria-label="Products, selected"><span class="eq-icon">deployed_code</span></button>
+  <button class="eq-icon-btn eq-icon-btn--round" disabled aria-label="Pricing (unavailable)"><span class="eq-icon">sell</span></button>
+ </div>
+ <div class="row">
+  <button class="eq-icon-btn eq-icon-btn--round eq-icon-btn--sm" aria-label="Sales"><span class="eq-icon">shopping_cart</span></button>
+  <button class="eq-icon-btn eq-icon-btn--round eq-icon-btn--sm" aria-label="Products"><span class="eq-icon">deployed_code</span></button>
+  <button class="eq-icon-btn eq-icon-btn--round eq-icon-btn--sm" aria-label="Incoming stock"><span class="eq-icon">local_shipping</span></button>
+  <button class="eq-icon-btn eq-icon-btn--round eq-icon-btn--sm" aria-label="Pricing"><span class="eq-icon">sell</span></button>
+  <span class="sep"></span>
+  <button class="eq-icon-btn" aria-label="Filter"><span class="eq-icon">filter_list</span></button>
+  <button class="eq-icon-btn" aria-label="More actions"><span class="eq-icon">more_vert</span></button>
+  <button class="eq-icon-btn" aria-label="Notifications"><span class="eq-icon">notifications</span><span class="eq-icon-btn__dot"></span></button>
+ </div>
+</div>
+<script>document.querySelectorAll('.eq-icon-btn--round:not([disabled])').forEach(function(b){b.addEventListener('click',function(){var row=b.parentNode;row.querySelectorAll('.eq-icon-btn--round').forEach(function(x){if(x!==b)x.removeAttribute('aria-pressed');});b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');});});</script>
+</body></html>

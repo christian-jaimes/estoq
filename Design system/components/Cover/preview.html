@@ -1,0 +1,35 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+html,body{margin:0;height:100%}
+.cover{position:relative;width:960px;height:288px;background:var(--bg);overflow:hidden}
+.cover svg{position:absolute;inset:0}
+.gold{fill:var(--gold)}.ink{fill:var(--text)}.pressed{fill:var(--gold-pressed)}.tint{fill:var(--gold-hover)}
+.dot{fill:var(--on-gold)}
+.lg{rx:var(--radius-lg)}.sm{rx:var(--radius-sm)}
+.name{position:absolute;left:48px;bottom:40px;max-width:440px}
+.name h1{margin:0;font-family:var(--font-brand);font-weight:600;font-size:120px;line-height:.92;letter-spacing:-0.02em;color:var(--text)}
+.name p{margin:12px 0 0;font-family:var(--font-ui);font-size:14px;line-height:20px;color:var(--text-secondary)}
+</style></head><body>
+<div class="cover">
+<svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+<!--
+blocks: gold 268×312 slab (bleeds), text (ink) 128×140, gold-pressed 128×96, gold-hover 32×32 — sides on space-8/space-32 multiples
+arrangement: one tall gold slab bleeding off the right with two stacked satellites and one small tint, all right of x=480
+pattern: dot grid at space-24 pitch cut into the gold slab — "every product has a place": a precise, gridded stock shelf
+scales: pitch space-24, gaps space-16, radii radius-lg (blocks) and radius-sm (tint)
+-->
+<rect class="gold lg" x="704" y="-12" width="268" height="312"/>
+<rect class="pressed lg" x="560" y="40" width="128" height="96"/>
+<rect class="ink lg" x="560" y="152" width="128" height="148"/>
+<rect class="tint sm" x="512" y="232" width="32" height="32"/>
+<g id="grid"></g>
+</svg>
+<div class="name"><h1>estoq</h1><p>Precision in every move.</p></div>
+</div>
+<script>
+(function(){var g=document.getElementById('grid'),ns='http://www.w3.org/2000/svg';
+for(var r=0;r<6;r++)for(var c=0;c<6;c++){var d=document.createElementNS(ns,'circle');
+d.setAttribute('cx',760+c*24);d.setAttribute('cy',84+r*24);d.setAttribute('r',(r===3&&c===4)?5:2.5);d.setAttribute('class','dot');g.appendChild(d);}})();
+</script>
+</body></html>

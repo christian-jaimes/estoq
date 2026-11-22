@@ -1,0 +1,20 @@
+<!-- @dsCard group="Forms" height=170 subtitle="Pill choice chips — currency (single) and filters (multiple)" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{margin:0} .stage{padding:24px;display:flex;flex-direction:column;gap:20px;background:var(--bg);box-sizing:border-box}</style></head>
+<body class="eq-root">
+<div class="stage">
+ <fieldset class="eq-chips" aria-label="Currency">
+  <label class="eq-chip"><input type="radio" name="cur" value="USD" checked><span class="eq-chip__symbol">$</span>USD</label>
+  <label class="eq-chip"><input type="radio" name="cur" value="EUR"><span class="eq-chip__symbol">€</span>EUR</label>
+  <label class="eq-chip"><input type="radio" name="cur" value="VES"><span class="eq-chip__symbol">Bs.</span>VES</label>
+  <label class="eq-chip"><input type="radio" name="cur" value="COP"><span class="eq-chip__symbol">$</span>COP</label>
+ </fieldset>
+ <fieldset class="eq-chips" aria-label="Stock status">
+  <label class="eq-chip"><input type="checkbox" checked>In stock</label>
+  <label class="eq-chip"><input type="checkbox" checked>Low stock</label>
+  <label class="eq-chip"><input type="checkbox">Out of stock</label>
+  <label class="eq-chip"><input type="checkbox"><span class="eq-icon">local_shipping</span>Incoming</label>
+ </fieldset>
+</div>
+<script></script>
+</body></html>
