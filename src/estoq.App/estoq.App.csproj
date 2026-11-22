@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <Content Include="Assets\**\*.png" />
+    <Content Include="Assets\**\*.jpg" />
     <Content Include="Assets\Fonts\*.ttf" />
   </ItemGroup>
 

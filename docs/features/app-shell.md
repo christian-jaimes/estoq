@@ -31,6 +31,7 @@ Purchasing, Transactions and Analytics in the visual references are not part of 
 | F3 | [[stock-adjustments]] |
 | F4 | [[returns-and-voids]] |
 | Ctrl+K, Ctrl+F | Focus search |
+| F12 | Log out ([[sign-in]]) |
 | Esc | Close the open pop-up |
 
 Decided by the product owner on 2026-11-21. Only one pop-up is open at a time; another F key replaces it, the same key does nothing.

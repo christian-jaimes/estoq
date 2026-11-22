@@ -15,7 +15,7 @@ The single place for what is planned and what is built. Replaces the former `Dev
 - [x] App shell: sidebar, top bar, F1 to F4 pop-up frame, theme toggle, placeholder pages ([[app-shell]], [[ui-implementation]])
 - [x] Splash screen, 2 seconds ([[app-shell]])
 - [x] Setup wizard ([[setup-wizard]]); mockup `0 - Elegant Dark Store Setup Wizard.png`
-- [ ] Sign-in screen ([[sign-in]]); mockups `1 - Premium Dark Gold Login Screen.png`, `1.1 - estoQ Dark Login Screen.png`
+- [x] Sign-in screen, log out (button, F12) and inactivity log out ([[sign-in]]); mockups `1 - Premium Dark Gold Login Screen.png`, `1.1 - estoQ Dark Login Screen.png`
 - [ ] Pop-ups
     - [ ] Point of sale, F1 ([[point-of-sale]]); mockup `3 - Dark Mode Point of Sale Interface.png`
     - [ ] Add product, F2 ([[add-product]]); mockup `2 - Dark Gold-Accented Product Form.png`
@@ -32,6 +32,7 @@ The single place for what is planned and what is built. Replaces the former `Dev
     - [ ] Store; mockup `10 - Dark EstoQ Store Settings Modal.png`
     - [ ] Staff; mockup `11 - Dark Staff Management Settings Modal.png`
     - [ ] Exchange rates
+    - [ ] Defaults and rules: owner-configurable inactivity timeout (setting `ISecuritySettings.InactivityTimeout`, default 3 minutes; [[sign-in]])
 - [ ] English and Spanish resource files for every screen (done for the setup wizard; mechanism in [[ui-implementation]])
 
 ### Core rules (alongside the front end)
@@ -44,6 +45,7 @@ Build each rule before or with the first screen that needs it.
 - [ ] Stock rules: movement types, signs, needs stock correction ([[stock-adjustments]])
 - [ ] Product rules: generated name, duplicate check, SKU and internal barcode generation ([[add-product]])
 - [x] Roles and permissions matrix ([[roles-and-permissions]])
+- [x] Sign-in rules: code input, lockout, inactivity policy ([[sign-in]])
 - [x] Setup rules: owner email, password, store fields, six-digit user code, currency codes and accepted list, tax default 0 % and tax included or not ([[setup-wizard]])
 - [ ] Audit events: what each action and settings change records ([[data-model]])
 
@@ -64,7 +66,8 @@ Build each rule before or with the first screen that needs it.
 |---|---|
 | WinUI shell | Built; first run on Windows still to verify |
 | Setup wizard | Built on sample data; builds clean, UI not yet run on Windows |
-| Core rules | `estoq.Core` started: roles and permissions, setup rules; `tests/estoq.Core.Tests` |
+| Sign-in | Built on sample accounts; app builds and launches, layout not yet checked by eye |
+| Core rules | `estoq.Core` started: roles and permissions, setup rules, sign-in rules; `tests/estoq.Core.Tests` |
 | Back end projects (Application, Infrastructure) | Not started; folders hold only build leftovers |
 | Documentation | Consolidated 2026-11-21; open items in [[open-questions]] |
 

@@ -29,6 +29,6 @@ Mockups are a visual reference only; features are specified in these docs. A moc
 | R3 | Encryption spike: library chosen (SQLite3 Multiple Ciphers); prove versions, migrations, backup and speed with the checklist in [[encryption]] | Back end, before real data is written |
 | R4 | Google verification for the Drive app data scope (long lead time) | [[backup]] |
 | R5 | Restore on a new computer with no internet | [[backup]] |
-| R6 | Lockout growth curve and default inactivity timeout | [[sign-in]] back end |
+| R6 | Lockout growth curve (working default: 1 minute after five failures, doubling each further five, max 15 minutes; inactivity timeout decided: 3 minutes) | [[sign-in]] back end |
 | R7 | Expected scale (default 10,000 variants, 100,000 sales) | Back end performance tests |
 | R8 | Code signing certificate for MSIX | Release |

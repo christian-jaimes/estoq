@@ -18,8 +18,10 @@ public sealed class ThemeService : IThemeService
 
     public void Attach(FrameworkElement root)
     {
+        ArgumentNullException.ThrowIfNull(root);
+
         _root = root;
-        _root.ActualThemeChanged += (_, _) => Changed?.Invoke(this, EventArgs.Empty);
+        root.ActualThemeChanged += (_, _) => Changed?.Invoke(this, EventArgs.Empty);
         Apply(Preference);
     }
 

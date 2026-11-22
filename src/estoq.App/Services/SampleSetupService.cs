@@ -10,6 +10,10 @@ namespace Estoq.App.Services;
 /// </summary>
 public sealed class SampleSetupService : ISetupService
 {
+    private readonly IAccountService _accounts;
+
+    public SampleSetupService(IAccountService accounts) => _accounts = accounts;
+
     // No 0, 1, I, O: easy to read from paper.
     private const string KeyAlphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     private const int KeyGroups = 6;
@@ -56,6 +60,7 @@ public sealed class SampleSetupService : ISetupService
         var error = checks.FirstOrDefault(code => code != ValidationCode.None);
         if (error == ValidationCode.None)
         {
+            _accounts.RegisterOwner(request.OwnerName, request.UserCode, request.OwnerEmail, ownerPassword);
             IsSetupComplete = true;
         }
 

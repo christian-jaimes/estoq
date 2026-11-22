@@ -19,7 +19,7 @@ Every saved change in Store, Staff, Defaults and rules and Data writes an audit 
 
 ## Account
 
-Profile photo (change, remove; initials when empty), role (read only), full name (required), email (required for the owner, optional for staff), change password, six-digit user code (masked, with reveal), app language (English, Spanish), theme (light, dark, system).
+Profile photo (change, remove; initials when empty), role (read only), full name (required), email (required for the owner, optional for staff), change password, six-digit user code (masked, with reveal), app language (English, Spanish), theme (light, dark, system), Log out button (also F12).
 
 ## Store
 
@@ -37,7 +37,7 @@ List of currencies (the base currency chosen in the [[setup-wizard]], USD unless
 
 ## Defaults and rules (proposed)
 
-Default currency, cashier discount cap (10 %), inactivity timeout, return window (with no limit), receipt behaviour, default low-stock threshold.
+Default currency, cashier discount cap (10 %), inactivity timeout (default 3 minutes, 1 to 60; owner only; see [[sign-in]]), return window (with no limit), receipt behaviour, default low-stock threshold.
 
 ## Data (with backup)
 
