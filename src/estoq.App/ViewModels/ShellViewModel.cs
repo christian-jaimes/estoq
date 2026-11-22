@@ -13,22 +13,27 @@ public sealed partial class ShellViewModel : ObservableObject
     private readonly INavigationService _navigation;
     private readonly IThemeService _theme;
     private readonly IPopupService _popups;
+    private readonly ILocalizer _localizer;
+    private readonly ISessionService _session;
 
-    public ShellViewModel(INavigationService navigation, IThemeService theme, IPopupService popups)
+    public ShellViewModel(INavigationService navigation, IThemeService theme, IPopupService popups, ILocalizer localizer, ISessionService session)
     {
         _navigation = navigation;
         _theme = theme;
         _popups = popups;
+        _localizer = localizer;
+        _session = session;
 
         NavItems =
         [
-            new NavItemViewModel(AppRoute.Dashboard, "Dashboard", "", OnNavSelected),
-            new NavItemViewModel(AppRoute.Inventory, "Inventory", "", OnNavSelected),
-            new NavItemViewModel(AppRoute.Sales, "Sales", "", OnNavSelected),
+            new NavItemViewModel(AppRoute.Dashboard, "Nav_Dashboard", "", OnNavSelected, localizer),
+            new NavItemViewModel(AppRoute.Inventory, "Nav_Inventory", "", OnNavSelected, localizer),
+            new NavItemViewModel(AppRoute.Sales, "Nav_Sales", "", OnNavSelected, localizer),
         ];
 
         _navigation.Navigated += (_, route) => SyncSelection(route);
         _theme.Changed += (_, _) => RefreshThemeState();
+        _localizer.LanguageChanged += (_, _) => RefreshStrings();
         RefreshThemeState();
     }
 
@@ -55,24 +60,26 @@ public sealed partial class ShellViewModel : ObservableObject
     [ObservableProperty]
     public partial string SidebarToggleGlyph { get; set; } = "";
 
-    [ObservableProperty]
-    public partial string SidebarToggleToolTip { get; set; } = "Collapse sidebar";
+    public string SidebarToggleToolTip => _localizer[IsSidebarExpanded ? "Shell_CollapseSidebar" : "Shell_ExpandSidebar"];
 
     [ObservableProperty]
     public partial string ThemeGlyph { get; set; } = "";
 
-    [ObservableProperty]
-    public partial string ThemeToolTip { get; set; } = "Switch to light theme";
+    public string ThemeToolTip => _localizer[_theme.IsDark ? "Shell_ToLightTheme" : "Shell_ToDarkTheme"];
 
     /// <summary>Sample value until sign-in provides the real role.</summary>
-    public string UserRole => "Owner";
+    public string UserRole => _localizer["Shell_RoleOwner"];
 
     public Microsoft.UI.Xaml.HorizontalAlignment AccountAlignment =>
         IsSidebarExpanded ? Microsoft.UI.Xaml.HorizontalAlignment.Stretch : Microsoft.UI.Xaml.HorizontalAlignment.Center;
 
-    public string UserDisplayName => "Local user";
+    public string UserDisplayName => _session.UserName ?? _localizer["Shell_UserName"];
 
-    public string UserInitials => "LU";
+    public string UserInitials => _session.UserName is { Length: > 0 } name ? InitialsOf(name) : _localizer["Shell_UserInitials"];
+
+    /// <summary>First letters of the first two words, upper case: "Ana Pérez Ruiz" gives "AP".</summary>
+    private static string InitialsOf(string name) =>
+        string.Concat(name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(word => char.ToUpperInvariant(word[0])));
 
     partial void OnIsSidebarExpandedChanged(bool value)
     {
@@ -82,7 +89,7 @@ public sealed partial class ShellViewModel : ObservableObject
         OnPropertyChanged(nameof(SidebarPadding));
         OnPropertyChanged(nameof(AccountAlignment));
         SidebarToggleGlyph = value ? "" : "";
-        SidebarToggleToolTip = value ? "Collapse sidebar" : "Expand sidebar";
+        OnPropertyChanged(nameof(SidebarToggleToolTip));
         foreach (var item in NavItems)
         {
             item.IsExpanded = value;
@@ -105,11 +112,22 @@ public sealed partial class ShellViewModel : ObservableObject
         }
     }
 
+    /// <summary>Re-reads every localized string after a language change.</summary>
+    private void RefreshStrings()
+    {
+        foreach (var item in NavItems)
+        {
+            item.RefreshStrings();
+        }
+
+        OnPropertyChanged(string.Empty);
+    }
+
     private void RefreshThemeState()
     {
         // Dark theme shows the sun (switches to light); light theme shows the moon (design system, top bar).
         ThemeGlyph = _theme.IsDark ? "" : "";
-        ThemeToolTip = _theme.IsDark ? "Switch to light theme" : "Switch to dark theme";
+        OnPropertyChanged(nameof(ThemeToolTip));
     }
 
     [RelayCommand]

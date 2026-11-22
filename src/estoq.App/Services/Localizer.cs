@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Resources;
 using Estoq.Core.Setup;
+using Windows.Storage;
 
 namespace Estoq.App.Services;
 
@@ -20,17 +21,26 @@ public interface ILocalizer
     string Format(string key, params object[] args);
 
     void SetLanguage(AppLanguage language);
+
+    /// <summary>Saves the current language as the store language, so the next launch starts in it.</summary>
+    void Remember();
 }
 
 public sealed class Localizer : ILocalizer
 {
+    private const string SettingKey = "store_language";
+    private const string SpanishCode = "es";
+
     private static readonly ResourceManager Resources =
         new("Estoq.App.Resources.Strings", typeof(Localizer).Assembly);
 
     public Localizer()
     {
-        // First launch follows the Windows display language; the wizard lets the owner change it.
-        var spanish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "es";
+        // The saved store language wins; before setup is done the Windows display language is the starting point.
+        var saved = LoadSaved();
+        var spanish = saved is { } code
+            ? code == SpanishCode
+            : CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == SpanishCode;
         Apply(spanish ? AppLanguage.Spanish : AppLanguage.English);
     }
 
@@ -53,6 +63,30 @@ public sealed class Localizer : ILocalizer
 
         Apply(language);
         LanguageChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void Remember()
+    {
+        try
+        {
+            ApplicationData.Current.LocalSettings.Values[SettingKey] = Language == AppLanguage.Spanish ? SpanishCode : "en";
+        }
+        catch (InvalidOperationException)
+        {
+            // Not running packaged: nothing to persist to; the language still applies for this run.
+        }
+    }
+
+    private static string? LoadSaved()
+    {
+        try
+        {
+            return ApplicationData.Current.LocalSettings.Values[SettingKey] as string;
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
     }
 
     private void Apply(AppLanguage language)

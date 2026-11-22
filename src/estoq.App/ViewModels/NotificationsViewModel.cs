@@ -10,11 +10,14 @@ namespace Estoq.App.ViewModels;
 public sealed partial class NotificationsViewModel : ObservableObject
 {
     private readonly INotificationService _service;
+    private readonly ILocalizer _localizer;
 
-    public NotificationsViewModel(INotificationService service)
+    public NotificationsViewModel(INotificationService service, ILocalizer localizer)
     {
         _service = service;
+        _localizer = localizer;
         _service.Changed += (_, _) => Refresh();
+        _localizer.LanguageChanged += (_, _) => Refresh();
         Refresh();
     }
 
@@ -32,9 +35,9 @@ public sealed partial class NotificationsViewModel : ObservableObject
 
     public Visibility UnreadDotVisibility => HasUnread ? Visibility.Visible : Visibility.Collapsed;
 
-    public string Summary => HasUnread ? $"{UnreadCount} unread" : "All caught up";
+    public string Summary => HasUnread ? _localizer.Format("Notif_Unread", UnreadCount) : _localizer["Notif_AllCaughtUp"];
 
-    public string BellLabel => HasUnread ? $"Notifications, {UnreadCount} unread" : "Notifications";
+    public string BellLabel => HasUnread ? _localizer.Format("Notif_BellUnread", UnreadCount) : _localizer["Notif_Title"];
 
     [RelayCommand]
     private void MarkRead(string? notificationId)
@@ -65,7 +68,7 @@ public sealed partial class NotificationsViewModel : ObservableObject
         Items.Clear();
         foreach (var n in _service.GetAll())
         {
-            Items.Add(new NotificationItemViewModel(n));
+            Items.Add(new NotificationItemViewModel(n, _localizer));
         }
 
         UnreadCount = Items.Count(i => !i.IsRead);

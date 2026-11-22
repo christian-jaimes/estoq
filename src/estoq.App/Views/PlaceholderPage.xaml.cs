@@ -22,12 +22,7 @@ public sealed partial class PlaceholderPage : Page
         base.OnNavigatedTo(e);
         if (e.Parameter is AppRoute route)
         {
-            (ViewModel.Title, ViewModel.Message) = route switch
-            {
-                AppRoute.Inventory => ("Inventory", "The inventory page is built per the roadmap."),
-                AppRoute.Sales => ("Sales", "The sales page is built per the roadmap."),
-                _ => (route.ToString(), string.Empty),
-            };
+            ViewModel.Show(route);
         }
     }
 }

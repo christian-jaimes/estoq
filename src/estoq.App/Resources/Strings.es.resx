@@ -96,4 +96,73 @@
   <data name="Store_Language" xml:space="preserve"><value>Idioma de la tienda</value></data>
   <data name="Store_LanguageHelp" xml:space="preserve"><value>Se usa en recibos y etiquetas. Empieza con el idioma que elegiste en la bienvenida.</value></data>
   <data name="Error_InvalidCurrency" xml:space="preserve"><value>Elige una moneda.</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Panel</value></data>
+  <data name="Nav_Inventory" xml:space="preserve"><value>Inventario</value></data>
+  <data name="Nav_Sales" xml:space="preserve"><value>Ventas</value></data>
+  <data name="Shell_UserName" xml:space="preserve"><value>Usuario local</value></data>
+  <data name="Shell_UserInitials" xml:space="preserve"><value>UL</value></data>
+  <data name="Shell_RoleOwner" xml:space="preserve"><value>Propietario</value></data>
+  <data name="Shell_CollapseSidebar" xml:space="preserve"><value>Contraer barra lateral</value></data>
+  <data name="Shell_ExpandSidebar" xml:space="preserve"><value>Expandir barra lateral</value></data>
+  <data name="Shell_ToggleSidebarName" xml:space="preserve"><value>Contraer o expandir barra lateral</value></data>
+  <data name="Shell_AccountSettings" xml:space="preserve"><value>Ajustes de la cuenta</value></data>
+  <data name="Shell_ToLightTheme" xml:space="preserve"><value>Cambiar al tema claro</value></data>
+  <data name="Shell_ToDarkTheme" xml:space="preserve"><value>Cambiar al tema oscuro</value></data>
+  <data name="Shell_SwitchTheme" xml:space="preserve"><value>Cambiar tema</value></data>
+  <data name="Shell_SearchPlaceholder" xml:space="preserve"><value>Buscar productos, SKU o códigos de barras</value></data>
+  <data name="Shell_SearchTip" xml:space="preserve"><value>Buscar (Ctrl+K)</value></data>
+  <data name="Shell_SearchName" xml:space="preserve"><value>Búsqueda global</value></data>
+  <data name="Popup_Close" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="Popup_CloseTip" xml:space="preserve"><value>Cerrar (Esc)</value></data>
+  <data name="Popup_Sale_Title" xml:space="preserve"><value>Punto de venta</value></data>
+  <data name="Popup_Sale_Subtitle" xml:space="preserve"><value>Nueva venta (F1)</value></data>
+  <data name="Popup_Sale_Message" xml:space="preserve"><value>El flujo de ventas (escaneo, carrito, pago y recibo) se construye a continuación (ver hoja de ruta).</value></data>
+  <data name="Popup_Sale_Primary" xml:space="preserve"><value>Completar venta</value></data>
+  <data name="Popup_Items_Title" xml:space="preserve"><value>Agregar o recibir artículos</value></data>
+  <data name="Popup_Items_Subtitle" xml:space="preserve"><value>Crear un producto o agregar existencias (F2)</value></data>
+  <data name="Popup_Items_Message" xml:space="preserve"><value>La creación de productos y la recepción de existencias se construyen a continuación (ver hoja de ruta).</value></data>
+  <data name="Popup_Items_Primary" xml:space="preserve"><value>Guardar producto</value></data>
+  <data name="Popup_Adjust_Title" xml:space="preserve"><value>Ajustes de inventario</value></data>
+  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Cuenta un artículo y registra el motivo (F3)</value></data>
+  <data name="Popup_Adjust_Message" xml:space="preserve"><value>El conteo de artículos y el registro del motivo de cada cambio se construyen a continuación (ver hoja de ruta).</value></data>
+  <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Guardar ajuste</value></data>
+  <data name="Popup_Returns_Title" xml:space="preserve"><value>Devoluciones</value></data>
+  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Devolver o cambiar un artículo (F4)</value></data>
+  <data name="Popup_Returns_Message" xml:space="preserve"><value>Las devoluciones de clientes se construyen a continuación (ver hoja de ruta).</value></data>
+  <data name="Popup_Returns_Primary" xml:space="preserve"><value>Guardar devolución</value></data>
+  <data name="Popup_Settings_Title" xml:space="preserve"><value>Ajustes</value></data>
+  <data name="Popup_Settings_Subtitle" xml:space="preserve"><value>Cuenta, tienda, personal y tipos de cambio</value></data>
+  <data name="Popup_Settings_Message" xml:space="preserve"><value>Los ajustes se construyen según la hoja de ruta.</value></data>
+  <data name="Popup_Settings_Primary" xml:space="preserve"><value>Guardar cambios</value></data>
+  <data name="Notif_Title" xml:space="preserve"><value>Notificaciones</value></data>
+  <data name="Notif_Unread" xml:space="preserve"><value>{0} sin leer</value></data>
+  <data name="Notif_AllCaughtUp" xml:space="preserve"><value>Todo al día</value></data>
+  <data name="Notif_BellUnread" xml:space="preserve"><value>Notificaciones, {0} sin leer</value></data>
+  <data name="Notif_MarkAllRead" xml:space="preserve"><value>Marcar todo como leído</value></data>
+  <data name="Notif_ClearRead" xml:space="preserve"><value>Borrar leídas</value></data>
+  <data name="Notif_Clear" xml:space="preserve"><value>Borrar</value></data>
+  <data name="Notif_ClearName" xml:space="preserve"><value>Borrar notificación</value></data>
+  <data name="Notif_EmptyTitle" xml:space="preserve"><value>Sin notificaciones</value></data>
+  <data name="Notif_EmptyBody" xml:space="preserve"><value>Las alertas de inventario y de respaldo aparecen aquí.</value></data>
+  <data name="Notif_Minutes" xml:space="preserve"><value>{0} min</value></data>
+  <data name="Notif_Hours" xml:space="preserve"><value>{0} h</value></data>
+  <data name="Notif_Yesterday" xml:space="preserve"><value>Ayer</value></data>
+  <data name="Notif_DateFormat" xml:space="preserve"><value>d MMM</value></data>
+  <data name="Notif_SoldWithoutStock_Title" xml:space="preserve"><value>{0} se vendió sin existencias</value></data>
+  <data name="Notif_SoldWithoutStock_Detail" xml:space="preserve"><value>Venta {0}. Registra el conteo para corregir las existencias.</value></data>
+  <data name="Notif_LowStock_Title" xml:space="preserve"><value>{0} productos están por debajo de su stock mínimo</value></data>
+  <data name="Notif_LowStock_Detail" xml:space="preserve"><value>Revísalos en Inventario.</value></data>
+  <data name="Notif_LowStockItem_Title" xml:space="preserve"><value>{0} está en su mínimo de {1}</value></data>
+  <data name="Notif_LowStockItem_Detail" xml:space="preserve"><value>Existencias tras la próxima venta: {0}.</value></data>
+  <data name="Notif_BackupStale_Title" xml:space="preserve"><value>El último respaldo fue hace {0} días</value></data>
+  <data name="Notif_BackupStale_Detail" xml:space="preserve"><value>Haz un respaldo desde Ajustes.</value></data>
+  <data name="Notif_BackupFailed_Title" xml:space="preserve"><value>El respaldo falló</value></data>
+  <data name="Notif_BackupFailed_Detail" xml:space="preserve"><value>No se pudo acceder a la carpeta de respaldo.</value></data>
+  <data name="Page_Dashboard_Message" xml:space="preserve"><value>El panel se construye después de las ventanas emergentes y de las páginas de Inventario y Ventas (ver hoja de ruta).</value></data>
+  <data name="Page_Inventory_Message" xml:space="preserve"><value>La página de inventario se construye según la hoja de ruta.</value></data>
+  <data name="Page_Sales_Message" xml:space="preserve"><value>La página de ventas se construye según la hoja de ruta.</value></data>
+  <data name="Shell_TipSale" xml:space="preserve"><value>Nueva venta (F1)</value></data>
+  <data name="Shell_TipItems" xml:space="preserve"><value>Agregar o recibir artículos (F2)</value></data>
+  <data name="Shell_TipAdjust" xml:space="preserve"><value>Ajustes de inventario (F3)</value></data>
+  <data name="Shell_TipReturns" xml:space="preserve"><value>Devoluciones (F4)</value></data>
 </root>

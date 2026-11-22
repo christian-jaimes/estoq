@@ -11,11 +11,14 @@ namespace Estoq.App.ViewModels;
 public sealed partial class PopupViewModel : ObservableObject
 {
     private readonly IPopupService _popups;
+    private readonly ILocalizer _localizer;
 
-    public PopupViewModel(IPopupService popups)
+    public PopupViewModel(IPopupService popups, ILocalizer localizer)
     {
         _popups = popups;
+        _localizer = localizer;
         _popups.Changed += (_, _) => Refresh();
+        _localizer.LanguageChanged += (_, _) => Refresh();
     }
 
     [ObservableProperty]
@@ -44,10 +47,17 @@ public sealed partial class PopupViewModel : ObservableObject
     [RelayCommand]
     private void Close() => _popups.Close();
 
+    private string Text(string popup, string part) => _localizer[$"Popup_{popup}_{part}"];
+
     private void Refresh()
     {
         if (_popups.Current is not { } kind)
         {
+            if (!IsOpen)
+            {
+                return;
+            }
+
             // Keep the last text so the pop-up does not change while it hides.
             IsOpen = false;
             return;
@@ -56,35 +66,35 @@ public sealed partial class PopupViewModel : ObservableObject
         (Title, Subtitle, Glyph, Message, PrimaryText) = kind switch
         {
             PopupKind.PointOfSale => (
-                "Point of sale",
-                "New sale (F1)",
+                Text("Sale", "Title"),
+                Text("Sale", "Subtitle"),
                 "",
-                "The sales workflow (scan, cart, payment and receipt) is built next (see roadmap).",
-                "Complete sale"),
+                Text("Sale", "Message"),
+                Text("Sale", "Primary")),
             PopupKind.AddItems => (
-                "Add or receive items",
-                "Create a product or add stock (F2)",
+                Text("Items", "Title"),
+                Text("Items", "Subtitle"),
                 "",
-                "Product creation and stock receiving is built next (see roadmap).",
-                "Save product"),
+                Text("Items", "Message"),
+                Text("Items", "Primary")),
             PopupKind.StockAdjustments => (
-                "Stock adjustments",
-                "Count an item and record a reason (F3)",
+                Text("Adjust", "Title"),
+                Text("Adjust", "Subtitle"),
                 "",
-                "Counting items and recording a reason for each change is built next (see roadmap).",
-                "Save adjustment"),
+                Text("Adjust", "Message"),
+                Text("Adjust", "Primary")),
             PopupKind.Returns => (
-                "Returns",
-                "Return or exchange an item (F4)",
+                Text("Returns", "Title"),
+                Text("Returns", "Subtitle"),
                 "",
-                "Customer returns is built next (see roadmap).",
-                "Save return"),
+                Text("Returns", "Message"),
+                Text("Returns", "Primary")),
             PopupKind.Settings => (
-                "Settings",
-                "Account, store, staff and exchange rates",
+                Text("Settings", "Title"),
+                Text("Settings", "Subtitle"),
                 "",
-                "Settings are built per the roadmap.",
-                "Save changes"),
+                Text("Settings", "Message"),
+                Text("Settings", "Primary")),
             _ => (string.Empty, string.Empty, string.Empty, string.Empty, string.Empty),
         };
 
