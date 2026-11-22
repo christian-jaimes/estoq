@@ -10,9 +10,9 @@ Full window, dark textured background, gold wordmark, "PRECISION IN EVERY MOVE",
 
 1. Identifier screen: "Enter your user code or email". Numeric keypad friendly.
 2. Main path: a six-digit user code signs in directly.
-3. Optional path: typing a letter morphs the screen (subtle layout change, not a full-screen animation) into email and password, keeping the typed text. Password has show/hide; "Use a different account" returns to the code.
-4. Success lands on the [[dashboard]].
-5. Failure shows a calm, generic message that never reveals whether the code or email exists.
+3. Optional path: typing a letter morphs the screen (subtle layout change, not a full-screen animation) into email and password, keeping the typed text. The upper content, password row and lower actions move together with a short ease-in/ease-out transition. Clearing the identifier returns to user-code mode. Password has show/hide.
+4. Success eases the sign-in page out and the application shell in, then opens the [[dashboard]].
+5. Failure shows a calm, generic message that never reveals whether the code or email exists. The relevant field border briefly turns red and shakes; for email sign-in both email and password fields animate because the result does not identify which credential was wrong.
 
 ## Accounts
 
@@ -20,9 +20,23 @@ Full window, dark textured background, gold wordmark, "PRECISION IN EVERY MOVE",
 - Email and password are optional for staff and required for the owner, who is the administrator. The owner email also prepares for a future online version.
 - No usernames.
 
+## Implementation
+
+- Page `Views/SignIn/SignInPage`, view model `SignInViewModel`. Always dark, silk background `Assets/Backgrounds/signin-silk.jpg`.
+- Input rules in `estoq.Core/SignIn/SignInRules`: digits only is a code (capped at six), any other character is an email. A complete code signs in on its own; the button and Enter also submit. A wrong code is cleared so it can be retyped.
+- Services: `IAccountService` checks credentials (sample accounts in memory, the owner is added by the [[setup-wizard]]); `ISessionService` holds the signed-in user; both are replaced by the back end later.
+- After setup the owner is signed in. Launch with setup done opens this screen.
+- Sample staff for testing: manager code `482913`, cashier `570146`, inactive cashier `315208` (always fails).
+- All text is in the resource files, English and Spanish.
+
+## Log out
+
+- Log out button in the [[settings]] Account pop-up, and F12 anywhere in the shell. Both close any pop-up and return to sign-in.
+- Automatic after inactivity (no pointer or key input). Default 3 minutes, range 1 to 60, held in `ISecuritySettings.InactivityTimeout`; the rule is `InactivityPolicy` in Core. The sign-in screen then says the session ended for inactivity.
+
 ## Safeguards
 
-- Five wrong attempts lock sign-in for one minute; the pause grows if failures continue (curve: [[open-questions]] R6).
-- Auto-lock after inactivity; timeout set by the owner.
+- Five wrong attempts lock sign-in for one minute; each further five double the pause, up to 15 minutes. One lock for the whole screen, never per account. A countdown shows while locked. Rule: `SignInLockout` in Core (curve is a working default, [[open-questions]] R6).
+- Auto log out after inactivity; the owner will set the timeout in [[settings]].
 - A code alone cannot void, refund or adjust stock; those need approval ([[roles-and-permissions]]).
 - PIN: built later behind a feature flag, off in the MVP. SSO is post-MVP.

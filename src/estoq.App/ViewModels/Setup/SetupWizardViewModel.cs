@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Estoq.App.Services;
+using Estoq.Core.Roles;
 using Estoq.Core.Setup;
 
 namespace Estoq.App.ViewModels.Setup;
@@ -170,7 +171,7 @@ public sealed partial class SetupWizardViewModel : ObservableObject
         FinishError = string.Empty;
 
         // Setup creates the owner, who is signed in straight away.
-        _session.SignIn(request.OwnerName);
+        _session.SignIn(new SessionUser(request.OwnerName, UserRole.Owner));
 
         // From here on the whole app follows the store language. The wizard must not rebuild itself for this change.
         _isCompleting = true;

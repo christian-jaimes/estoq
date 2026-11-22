@@ -34,3 +34,11 @@ qr_code_scanner f206
 info e88e
 space_dashboard e66b
 add_box e146
+barcode_scanner e70c
+person f0d3
+lock e899
+visibility e8f4
+visibility_off e8f5
+arrow_forward e5c8
+arrow_back e5c4
+logout e9ba

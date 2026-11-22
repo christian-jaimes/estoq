@@ -9,6 +9,9 @@ namespace Estoq.App;
 
 public partial class App : Microsoft.UI.Xaml.Application
 {
+    // Testing shortcut: skip first-run setup and launch directly at sign-in.
+    private const bool SkipSetupForTesting = true;
+
     private Window? _window;
     private ILogger<App>? _logger;
 
@@ -49,6 +52,10 @@ public partial class App : Microsoft.UI.Xaml.Application
         // Setup wizard. The view models are singletons so a language change can rebuild the page without losing input.
         services.AddSingleton<ILocalizer, Localizer>();
         services.AddSingleton<ISessionService, SessionService>();
+        services.AddSingleton<IAccountService, SampleAccountService>();
+        services.AddSingleton<ISecuritySettings, SecuritySettings>();
+        services.AddSingleton<IInactivityMonitor, InactivityMonitor>();
+        services.AddTransient<SignInViewModel>();
         services.AddSingleton<ISetupService, SampleSetupService>();
         services.AddSingleton<IClipboardService, ClipboardService>();
         services.AddSingleton<ILogoPickerService, LogoPickerService>();
@@ -70,14 +77,13 @@ public partial class App : Microsoft.UI.Xaml.Application
         _window = new MainWindow();
         _window.Activate();
 
-        // Splash for two seconds, then: no owner yet means the first-run wizard, otherwise the shell
-        // (sign-in comes with its own screen).
+        // Splash for two seconds, then: sign-in for testing or once setup is complete; otherwise the first-run wizard.
         var window = (MainWindow)_window;
         window.ShowSplash(() =>
         {
-            if (Services.GetRequiredService<ISetupService>().IsSetupComplete)
+            if (SkipSetupForTesting || Services.GetRequiredService<ISetupService>().IsSetupComplete)
             {
-                window.ShowShell();
+                window.ShowSignIn();
             }
             else
             {

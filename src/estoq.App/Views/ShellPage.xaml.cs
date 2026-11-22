@@ -5,11 +5,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace Estoq.App.Views;
 
 public sealed partial class ShellPage : Page
 {
+    private bool _animateEntrance;
+
     public ShellPage()
     {
         ViewModel = App.Current.Services.GetRequiredService<ShellViewModel>();
@@ -19,6 +24,7 @@ public sealed partial class ShellPage : Page
         InitializeComponent();
 
         navigation.Initialize(ContentFrame);
+        Loaded += OnShellLoaded;
         Loaded += (_, _) => navigation.NavigateTo(AppRoute.Dashboard);
         PopupState.PropertyChanged += OnPopupPropertyChanged;
         _localizer = App.Current.Services.GetRequiredService<ILocalizer>();
@@ -40,6 +46,49 @@ public sealed partial class ShellPage : Page
 
     /// <summary>The window uses this area as its title bar so the app can be dragged from it.</summary>
     public UIElement TitleBarDragRegion => DragRegion;
+
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        if (e.Parameter is true)
+        {
+            _animateEntrance = true;
+            ShellRoot.Opacity = 0;
+            ((CompositeTransform)ShellRoot.RenderTransform).TranslateY = 16;
+        }
+    }
+
+    private void OnShellLoaded(object sender, RoutedEventArgs e)
+    {
+        if (!_animateEntrance)
+        {
+            return;
+        }
+
+        _animateEntrance = false;
+        var transform = (CompositeTransform)ShellRoot.RenderTransform;
+        var duration = TimeSpan.FromMilliseconds(240);
+        var easing = new CubicEase { EasingMode = EasingMode.EaseInOut };
+        var storyboard = new Storyboard();
+
+        var fade = new DoubleAnimation { To = 1, Duration = duration, EasingFunction = easing };
+        Storyboard.SetTarget(fade, ShellRoot);
+        Storyboard.SetTargetProperty(fade, "Opacity");
+
+        var move = new DoubleAnimation { To = 0, Duration = duration, EasingFunction = easing };
+        Storyboard.SetTarget(move, transform);
+        Storyboard.SetTargetProperty(move, "TranslateY");
+
+        storyboard.Children.Add(fade);
+        storyboard.Children.Add(move);
+        storyboard.Begin();
+    }
+
+    private void OnLogOutAccelerator(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.LogOutCommand.Execute(null);
+        args.Handled = true;
+    }
 
     private void OnFocusSearch(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {

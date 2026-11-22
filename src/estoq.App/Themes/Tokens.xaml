@@ -43,6 +43,7 @@
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
       <Color x:Key="EqGoldInk">#9C7B40</Color>
+      <Color x:Key="EqGoldHover">#E2C995</Color>
       <SolidColorBrush x:Key="EqBgBrush" Color="#F1EFE9" />
       <SolidColorBrush x:Key="EqSurfaceBrush" Color="#FFFFFF" />
       <SolidColorBrush x:Key="EqSurfaceElevatedBrush" Color="#FAF9F6" />
@@ -69,6 +70,7 @@
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
       <Color x:Key="EqGoldInk">#D6B77A</Color>
+      <Color x:Key="EqGoldHover">#E2C995</Color>
       <SolidColorBrush x:Key="EqBgBrush" Color="#141619" />
       <SolidColorBrush x:Key="EqSurfaceBrush" Color="#1C2023" />
       <SolidColorBrush x:Key="EqSurfaceElevatedBrush" Color="#282C31" />
@@ -94,6 +96,8 @@
       <SolidColorBrush x:Key="EqScrimBrush" Color="#B3000000" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="HighContrast">
+      <StaticResource x:Key="EqGoldInk" ResourceKey="SystemColorHighlightColor" />
+      <StaticResource x:Key="EqGoldHover" ResourceKey="SystemColorHighlightColor" />
       <SolidColorBrush x:Key="EqBgBrush" Color="{ThemeResource SystemColorWindowColor}" />
       <SolidColorBrush x:Key="EqSurfaceBrush" Color="{ThemeResource SystemColorWindowColor}" />
       <SolidColorBrush x:Key="EqSurfaceElevatedBrush" Color="{ThemeResource SystemColorWindowColor}" />

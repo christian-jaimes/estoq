@@ -34,6 +34,7 @@ public sealed partial class ShellViewModel : ObservableObject
         _navigation.Navigated += (_, route) => SyncSelection(route);
         _theme.Changed += (_, _) => RefreshThemeState();
         _localizer.LanguageChanged += (_, _) => RefreshStrings();
+        _session.SignedOut += (_, _) => SearchText = string.Empty;
         RefreshThemeState();
     }
 
@@ -67,8 +68,8 @@ public sealed partial class ShellViewModel : ObservableObject
 
     public string ThemeToolTip => _localizer[_theme.IsDark ? "Shell_ToLightTheme" : "Shell_ToDarkTheme"];
 
-    /// <summary>Sample value until sign-in provides the real role.</summary>
-    public string UserRole => _localizer["Shell_RoleOwner"];
+    /// <summary>Role of the signed-in user, in the app language.</summary>
+    public string UserRole => _localizer[$"Role_{_session.Role}"];
 
     public Microsoft.UI.Xaml.HorizontalAlignment AccountAlignment =>
         IsSidebarExpanded ? Microsoft.UI.Xaml.HorizontalAlignment.Stretch : Microsoft.UI.Xaml.HorizontalAlignment.Center;
@@ -147,6 +148,10 @@ public sealed partial class ShellViewModel : ObservableObject
 
     [RelayCommand]
     private void OpenReturns() => _popups.Show(PopupKind.Returns);
+
+    /// <summary>Ends the session (F12 and the Account settings button). The window then shows sign-in.</summary>
+    [RelayCommand]
+    private void LogOut() => _session.SignOut(SignOutReason.UserRequested);
 
     [RelayCommand]
     private void ToggleTheme() => _theme.Toggle();

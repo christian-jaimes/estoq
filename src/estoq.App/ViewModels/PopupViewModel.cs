@@ -12,11 +12,13 @@ public sealed partial class PopupViewModel : ObservableObject
 {
     private readonly IPopupService _popups;
     private readonly ILocalizer _localizer;
+    private readonly ISessionService _session;
 
-    public PopupViewModel(IPopupService popups, ILocalizer localizer)
+    public PopupViewModel(IPopupService popups, ILocalizer localizer, ISessionService session)
     {
         _popups = popups;
         _localizer = localizer;
+        _session = session;
         _popups.Changed += (_, _) => Refresh();
         _localizer.LanguageChanged += (_, _) => Refresh();
     }
@@ -44,8 +46,15 @@ public sealed partial class PopupViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsPrimaryEnabled { get; set; }
 
+    /// <summary>True for Settings: its body offers Log out.</summary>
+    [ObservableProperty]
+    public partial bool IsSettings { get; set; }
+
     [RelayCommand]
     private void Close() => _popups.Close();
+
+    [RelayCommand]
+    private void LogOut() => _session.SignOut(SignOutReason.UserRequested);
 
     private string Text(string popup, string part) => _localizer[$"Popup_{popup}_{part}"];
 
@@ -98,6 +107,7 @@ public sealed partial class PopupViewModel : ObservableObject
             _ => (string.Empty, string.Empty, string.Empty, string.Empty, string.Empty),
         };
 
+        IsSettings = kind == PopupKind.Settings;
         IsPrimaryEnabled = false;
         IsOpen = true;
     }

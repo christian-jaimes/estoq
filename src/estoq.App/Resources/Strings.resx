@@ -101,7 +101,6 @@
   <data name="Nav_Sales" xml:space="preserve"><value>Sales</value></data>
   <data name="Shell_UserName" xml:space="preserve"><value>Local user</value></data>
   <data name="Shell_UserInitials" xml:space="preserve"><value>LU</value></data>
-  <data name="Shell_RoleOwner" xml:space="preserve"><value>Owner</value></data>
   <data name="Shell_CollapseSidebar" xml:space="preserve"><value>Collapse sidebar</value></data>
   <data name="Shell_ExpandSidebar" xml:space="preserve"><value>Expand sidebar</value></data>
   <data name="Shell_ToggleSidebarName" xml:space="preserve"><value>Collapse or expand sidebar</value></data>
@@ -165,4 +164,25 @@
   <data name="Shell_TipItems" xml:space="preserve"><value>Add or receive items (F2)</value></data>
   <data name="Shell_TipAdjust" xml:space="preserve"><value>Stock adjustments (F3)</value></data>
   <data name="Shell_TipReturns" xml:space="preserve"><value>Returns (F4)</value></data>
+  <data name="Role_Owner" xml:space="preserve"><value>Owner</value></data>
+  <data name="Role_Manager" xml:space="preserve"><value>Manager</value></data>
+  <data name="Role_Cashier" xml:space="preserve"><value>Cashier</value></data>
+  <data name="SignIn_Tagline" xml:space="preserve"><value>PRECISION IN EVERY MOVE</value></data>
+  <data name="SignIn_Title" xml:space="preserve"><value>Welcome back</value></data>
+  <data name="SignIn_SubtitleCode" xml:space="preserve"><value>Enter your user code or email to continue.</value></data>
+  <data name="SignIn_SubtitlePassword" xml:space="preserve"><value>Enter your email and password to continue.</value></data>
+  <data name="SignIn_IdentifierPlaceholder" xml:space="preserve"><value>Enter user code or email</value></data>
+  <data name="SignIn_IdentifierLabel" xml:space="preserve"><value>User code or email</value></data>
+  <data name="SignIn_PasswordPlaceholder" xml:space="preserve"><value>Password</value></data>
+  <data name="SignIn_ShowPassword" xml:space="preserve"><value>Show password</value></data>
+  <data name="SignIn_HidePassword" xml:space="preserve"><value>Hide password</value></data>
+  <data name="SignIn_Button" xml:space="preserve"><value>Sign in</value></data>
+  <data name="SignIn_Footer" xml:space="preserve"><value>Secure local sign-in · Works offline</value></data>
+  <data name="SignIn_Failed" xml:space="preserve"><value>That didn't work. Check your details and try again.</value></data>
+  <data name="SignIn_Incomplete" xml:space="preserve"><value>Enter your six-digit code, or your email and password.</value></data>
+  <data name="SignIn_Locked" xml:space="preserve"><value>Too many attempts. Try again in {0}.</value></data>
+  <data name="SignIn_InactivityNotice" xml:space="preserve"><value>You were logged out after a period of inactivity.</value></data>
+  <data name="Account_SessionTitle" xml:space="preserve"><value>Session</value></data>
+  <data name="Account_LogOutHint" xml:space="preserve"><value>Ends your session on this computer. Shortcut: F12.</value></data>
+  <data name="Account_LogOut" xml:space="preserve"><value>Log out</value></data>
 </root>
