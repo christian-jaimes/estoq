@@ -129,6 +129,8 @@ public sealed partial class ShellPage : Page
 
     private void OnPopupCloseRequested(object? sender, EventArgs e) => PopupState.CloseCommand.Execute(null);
 
+    private void OnPopupPrimaryInvoked(object? sender, EventArgs e) => PopupState.PrimaryCommand.Execute(null);
+
     private void OnScrimTapped(object sender, TappedRoutedEventArgs e) => PopupState.CloseCommand.Execute(null);
 
     /// <summary>Clicks inside the pop-up must not reach the scrim, which would close it.</summary>

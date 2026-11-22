@@ -1,5 +1,6 @@
 using Estoq.App.Services;
 using Estoq.App.ViewModels;
+using Estoq.App.ViewModels.AddProduct;
 using Estoq.App.ViewModels.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -46,6 +47,8 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddSingleton<IPopupService, PopupService>();
         services.AddSingleton<INotificationService, MockNotificationService>();
         services.AddSingleton<NotificationsViewModel>();
+        services.AddSingleton<ICatalogService, SampleCatalogService>();
+        services.AddSingleton<AddProductViewModel>();
         services.AddSingleton<PopupViewModel>();
         services.AddSingleton<ShellViewModel>();
 

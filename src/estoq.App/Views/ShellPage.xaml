@@ -5,6 +5,7 @@
     xmlns:controls="using:Estoq.App.Controls"
     xmlns:vm="using:Estoq.App.ViewModels"
     xmlns:services="using:Estoq.App.Services"
+    xmlns:addproduct="using:Estoq.App.Views.AddProduct"
     Foreground="{ThemeResource EqTextBrush}">
 
   <!-- F12 logs out from anywhere in the shell, pop-ups included. -->
@@ -321,9 +322,13 @@
                            Title="{x:Bind PopupState.Title, Mode=OneWay}" Subtitle="{x:Bind PopupState.Subtitle, Mode=OneWay}"
                            Glyph="{x:Bind PopupState.Glyph, Mode=OneWay}" PrimaryText="{x:Bind PopupState.PrimaryText, Mode=OneWay}"
                            IsPrimaryEnabled="{x:Bind PopupState.IsPrimaryEnabled, Mode=OneWay}"
-                           CloseRequested="OnPopupCloseRequested" Tapped="OnPopupTapped">
+                           CloseRequested="OnPopupCloseRequested" PrimaryInvoked="OnPopupPrimaryInvoked" Tapped="OnPopupTapped">
         <StackPanel Spacing="20">
-          <TextBlock Text="{x:Bind PopupState.Message, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" />
+          <TextBlock Text="{x:Bind PopupState.Message, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}"
+                     Visibility="{x:Bind PopupState.ShowMessage, Mode=OneWay}" />
+
+          <!-- F2: the Add product form. -->
+          <addproduct:AddProductView Visibility="{x:Bind PopupState.IsAddProduct, Mode=OneWay}" />
 
           <!-- Account settings: end the session. Same action as F12. -->
           <Border Style="{StaticResource EqCardStyle}" Visibility="{x:Bind PopupState.IsSettings, Mode=OneWay}">
