@@ -48,6 +48,7 @@ public partial class App : Microsoft.UI.Xaml.Application
 
         // Setup wizard. The view models are singletons so a language change can rebuild the page without losing input.
         services.AddSingleton<ILocalizer, Localizer>();
+        services.AddSingleton<ISessionService, SessionService>();
         services.AddSingleton<ISetupService, SampleSetupService>();
         services.AddSingleton<IClipboardService, ClipboardService>();
         services.AddSingleton<ILogoPickerService, LogoPickerService>();

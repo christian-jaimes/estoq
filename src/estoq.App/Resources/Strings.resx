@@ -96,4 +96,73 @@
   <data name="Store_Language" xml:space="preserve"><value>Store language</value></data>
   <data name="Store_LanguageHelp" xml:space="preserve"><value>Used on receipts and labels. Starts as the language you chose on Welcome.</value></data>
   <data name="Error_InvalidCurrency" xml:space="preserve"><value>Choose a currency.</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Nav_Inventory" xml:space="preserve"><value>Inventory</value></data>
+  <data name="Nav_Sales" xml:space="preserve"><value>Sales</value></data>
+  <data name="Shell_UserName" xml:space="preserve"><value>Local user</value></data>
+  <data name="Shell_UserInitials" xml:space="preserve"><value>LU</value></data>
+  <data name="Shell_RoleOwner" xml:space="preserve"><value>Owner</value></data>
+  <data name="Shell_CollapseSidebar" xml:space="preserve"><value>Collapse sidebar</value></data>
+  <data name="Shell_ExpandSidebar" xml:space="preserve"><value>Expand sidebar</value></data>
+  <data name="Shell_ToggleSidebarName" xml:space="preserve"><value>Collapse or expand sidebar</value></data>
+  <data name="Shell_AccountSettings" xml:space="preserve"><value>Account settings</value></data>
+  <data name="Shell_ToLightTheme" xml:space="preserve"><value>Switch to light theme</value></data>
+  <data name="Shell_ToDarkTheme" xml:space="preserve"><value>Switch to dark theme</value></data>
+  <data name="Shell_SwitchTheme" xml:space="preserve"><value>Switch theme</value></data>
+  <data name="Shell_SearchPlaceholder" xml:space="preserve"><value>Search products, SKUs or barcodes</value></data>
+  <data name="Shell_SearchTip" xml:space="preserve"><value>Search (Ctrl+K)</value></data>
+  <data name="Shell_SearchName" xml:space="preserve"><value>Global search</value></data>
+  <data name="Popup_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Popup_CloseTip" xml:space="preserve"><value>Close (Esc)</value></data>
+  <data name="Popup_Sale_Title" xml:space="preserve"><value>Point of sale</value></data>
+  <data name="Popup_Sale_Subtitle" xml:space="preserve"><value>New sale (F1)</value></data>
+  <data name="Popup_Sale_Message" xml:space="preserve"><value>The sales workflow (scan, cart, payment and receipt) is built next (see roadmap).</value></data>
+  <data name="Popup_Sale_Primary" xml:space="preserve"><value>Complete sale</value></data>
+  <data name="Popup_Items_Title" xml:space="preserve"><value>Add or receive items</value></data>
+  <data name="Popup_Items_Subtitle" xml:space="preserve"><value>Create a product or add stock (F2)</value></data>
+  <data name="Popup_Items_Message" xml:space="preserve"><value>Product creation and stock receiving is built next (see roadmap).</value></data>
+  <data name="Popup_Items_Primary" xml:space="preserve"><value>Save product</value></data>
+  <data name="Popup_Adjust_Title" xml:space="preserve"><value>Stock adjustments</value></data>
+  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Count an item and record a reason (F3)</value></data>
+  <data name="Popup_Adjust_Message" xml:space="preserve"><value>Counting items and recording a reason for each change is built next (see roadmap).</value></data>
+  <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Save adjustment</value></data>
+  <data name="Popup_Returns_Title" xml:space="preserve"><value>Returns</value></data>
+  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Return or exchange an item (F4)</value></data>
+  <data name="Popup_Returns_Message" xml:space="preserve"><value>Customer returns is built next (see roadmap).</value></data>
+  <data name="Popup_Returns_Primary" xml:space="preserve"><value>Save return</value></data>
+  <data name="Popup_Settings_Title" xml:space="preserve"><value>Settings</value></data>
+  <data name="Popup_Settings_Subtitle" xml:space="preserve"><value>Account, store, staff and exchange rates</value></data>
+  <data name="Popup_Settings_Message" xml:space="preserve"><value>Settings are built per the roadmap.</value></data>
+  <data name="Popup_Settings_Primary" xml:space="preserve"><value>Save changes</value></data>
+  <data name="Notif_Title" xml:space="preserve"><value>Notifications</value></data>
+  <data name="Notif_Unread" xml:space="preserve"><value>{0} unread</value></data>
+  <data name="Notif_AllCaughtUp" xml:space="preserve"><value>All caught up</value></data>
+  <data name="Notif_BellUnread" xml:space="preserve"><value>Notifications, {0} unread</value></data>
+  <data name="Notif_MarkAllRead" xml:space="preserve"><value>Mark all as read</value></data>
+  <data name="Notif_ClearRead" xml:space="preserve"><value>Clear read</value></data>
+  <data name="Notif_Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Notif_ClearName" xml:space="preserve"><value>Clear notification</value></data>
+  <data name="Notif_EmptyTitle" xml:space="preserve"><value>No notifications</value></data>
+  <data name="Notif_EmptyBody" xml:space="preserve"><value>Stock and backup alerts appear here.</value></data>
+  <data name="Notif_Minutes" xml:space="preserve"><value>{0} min</value></data>
+  <data name="Notif_Hours" xml:space="preserve"><value>{0} h</value></data>
+  <data name="Notif_Yesterday" xml:space="preserve"><value>Yesterday</value></data>
+  <data name="Notif_DateFormat" xml:space="preserve"><value>d MMM</value></data>
+  <data name="Notif_SoldWithoutStock_Title" xml:space="preserve"><value>{0} was sold without stock</value></data>
+  <data name="Notif_SoldWithoutStock_Detail" xml:space="preserve"><value>Sale {0}. Record the count to correct the stock.</value></data>
+  <data name="Notif_LowStock_Title" xml:space="preserve"><value>{0} products are below their minimum stock level</value></data>
+  <data name="Notif_LowStock_Detail" xml:space="preserve"><value>Review them in Inventory.</value></data>
+  <data name="Notif_LowStockItem_Title" xml:space="preserve"><value>{0} is at its minimum of {1}</value></data>
+  <data name="Notif_LowStockItem_Detail" xml:space="preserve"><value>Stock after the next sale: {0}.</value></data>
+  <data name="Notif_BackupStale_Title" xml:space="preserve"><value>The last backup was {0} days ago</value></data>
+  <data name="Notif_BackupStale_Detail" xml:space="preserve"><value>Back up from Settings.</value></data>
+  <data name="Notif_BackupFailed_Title" xml:space="preserve"><value>The backup failed</value></data>
+  <data name="Notif_BackupFailed_Detail" xml:space="preserve"><value>The backup folder could not be reached.</value></data>
+  <data name="Page_Dashboard_Message" xml:space="preserve"><value>The dashboard is built after the pop-ups and the Inventory and Sales pages (see roadmap).</value></data>
+  <data name="Page_Inventory_Message" xml:space="preserve"><value>The inventory page is built per the roadmap.</value></data>
+  <data name="Page_Sales_Message" xml:space="preserve"><value>The sales page is built per the roadmap.</value></data>
+  <data name="Shell_TipSale" xml:space="preserve"><value>New sale (F1)</value></data>
+  <data name="Shell_TipItems" xml:space="preserve"><value>Add or receive items (F2)</value></data>
+  <data name="Shell_TipAdjust" xml:space="preserve"><value>Stock adjustments (F3)</value></data>
+  <data name="Shell_TipReturns" xml:space="preserve"><value>Returns (F4)</value></data>
 </root>

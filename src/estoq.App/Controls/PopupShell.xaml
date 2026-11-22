@@ -1,7 +1,8 @@
 <UserControl
     x:Class="Estoq.App.Controls.PopupShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:services="using:Estoq.App.Services">
 
   <!-- Pop-up shell (design system: dialog, radius-xl): header with title and close, scrolling body, footer actions.
        Every F1 to F4 flow and the product profile reuse this one shell so staff learn one pattern. -->
@@ -26,7 +27,7 @@
           <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
         </StackPanel>
         <Button x:Name="CloseButton" Grid.Column="2" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Top"
-                Click="OnCloseClick" ToolTipService.ToolTip="Close (Esc)" AutomationProperties.Name="Close">
+                Click="OnCloseClick" ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_CloseTip')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}">
           <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
           <Button.KeyboardAccelerators>
             <KeyboardAccelerator Key="Escape" />
@@ -44,7 +45,7 @@
       <!-- Footer: secondary close, then the one gold primary action (design system, Button). -->
       <Rectangle Grid.Row="2" Height="1" VerticalAlignment="Top" Fill="{ThemeResource EqBorderBrush}" />
       <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right" Padding="24,16">
-        <Button Style="{StaticResource EqSecondaryButtonStyle}" Content="Close" Click="OnCloseClick" />
+        <Button Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Popup_Close')}" Click="OnCloseClick" />
         <Button Style="{StaticResource EqPrimaryButtonStyle}" Content="{x:Bind PrimaryText, Mode=OneWay}"
                 IsEnabled="{x:Bind IsPrimaryEnabled, Mode=OneWay}" Click="OnPrimaryClick" />
       </StackPanel>

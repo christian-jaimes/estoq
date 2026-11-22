@@ -8,18 +8,24 @@ namespace Estoq.App.ViewModels;
 public sealed partial class NavItemViewModel : ObservableObject
 {
     private readonly Action<AppRoute> _onSelected;
+    private readonly ILocalizer _localizer;
+    private readonly string _labelKey;
 
-    public NavItemViewModel(AppRoute route, string label, string glyph, Action<AppRoute> onSelected)
+    public NavItemViewModel(AppRoute route, string labelKey, string glyph, Action<AppRoute> onSelected, ILocalizer localizer)
     {
         Route = route;
-        Label = label;
+        _labelKey = labelKey;
+        _localizer = localizer;
         Glyph = glyph;
         _onSelected = onSelected;
     }
 
     public AppRoute Route { get; }
 
-    public string Label { get; }
+    public string Label => _localizer[_labelKey];
+
+    /// <summary>Re-reads the label after a language change.</summary>
+    public void RefreshStrings() => OnPropertyChanged(nameof(Label));
 
     /// <summary>Material Symbols Rounded code point (see Assets/Fonts/codepoints.txt).</summary>
     public string Glyph { get; }

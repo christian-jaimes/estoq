@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Estoq.App.Controls"
     xmlns:vm="using:Estoq.App.ViewModels"
+    xmlns:services="using:Estoq.App.Services"
     Foreground="{ThemeResource EqTextBrush}">
 
   <Grid Background="{ThemeResource EqBgBrush}">
@@ -82,7 +83,7 @@
                   HorizontalContentAlignment="Stretch"
                   Command="{x:Bind ViewModel.OpenSettingsCommand}"
                   PointerEntered="OnAccountPointerEntered" PointerExited="OnAccountPointerExited"
-                  ToolTipService.ToolTip="Account settings" AutomationProperties.Name="Account settings">
+                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_AccountSettings')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Shell_AccountSettings')}">
             <Grid ColumnSpacing="12">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -117,7 +118,7 @@
       <Button Style="{StaticResource EqSidebarCollapseButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top"
               Margin="0,18,0,0" Command="{x:Bind ViewModel.ToggleSidebarCommand}"
               ToolTipService.ToolTip="{x:Bind ViewModel.SidebarToggleToolTip, Mode=OneWay}"
-              AutomationProperties.Name="Collapse or expand sidebar">
+              AutomationProperties.Name="{x:Bind services:Loc.Get('Shell_ToggleSidebarName')}">
         <FontIcon Glyph="{x:Bind ViewModel.SidebarToggleGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
       </Button>
     </Grid>
@@ -147,12 +148,12 @@
             <FontIcon Grid.Column="0" Glyph="&#xEF7A;" FontFamily="{StaticResource EqIconFont}" FontSize="20"
                       Foreground="{ThemeResource EqTextSecondaryBrush}" />
             <TextBox x:Name="SearchBox" Grid.Column="1" VerticalAlignment="Center"
-                     PlaceholderText="Search products, SKUs or barcodes"
+                     PlaceholderText="{x:Bind services:Loc.Get('Shell_SearchPlaceholder')}"
                      Text="{x:Bind ViewModel.SearchText, Mode=TwoWay}"
                      Background="Transparent" BorderThickness="0" MinHeight="0" Padding="0,6"
                      FontFamily="{StaticResource EqUiFont}" FontSize="14"
-                     ToolTipService.ToolTip="Search (Ctrl+K)"
-                     AutomationProperties.Name="Global search">
+                     ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_SearchTip')}"
+                     AutomationProperties.Name="{x:Bind services:Loc.Get('Shell_SearchName')}">
               <TextBox.Resources>
                 <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
                 <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
@@ -176,28 +177,28 @@
 
         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenPointOfSaleCommand}"
-                  ToolTipService.ToolTip="New sale (F1)" AutomationProperties.Name="Point of sale">
+                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipSale')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Sale_Title')}">
             <FontIcon Glyph="&#xF17E;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
             <Button.KeyboardAccelerators>
               <KeyboardAccelerator Key="F1" />
             </Button.KeyboardAccelerators>
           </Button>
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenAddItemsCommand}"
-                  ToolTipService.ToolTip="Add or receive items (F2)" AutomationProperties.Name="Add or receive items">
+                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipItems')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Items_Title')}">
             <FontIcon Glyph="&#xE146;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
             <Button.KeyboardAccelerators>
               <KeyboardAccelerator Key="F2" />
             </Button.KeyboardAccelerators>
           </Button>
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenStockAdjustmentsCommand}"
-                  ToolTipService.ToolTip="Stock adjustments (F3)" AutomationProperties.Name="Stock adjustments">
+                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipAdjust')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Adjust_Title')}">
             <FontIcon Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
             <Button.KeyboardAccelerators>
               <KeyboardAccelerator Key="F3" />
             </Button.KeyboardAccelerators>
           </Button>
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenReturnsCommand}"
-                  ToolTipService.ToolTip="Returns (F4)" AutomationProperties.Name="Returns">
+                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipReturns')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Returns_Title')}">
             <FontIcon Glyph="&#xE5DB;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
             <Button.KeyboardAccelerators>
               <KeyboardAccelerator Key="F4" />
@@ -210,13 +211,13 @@
         <Button Grid.Column="4" Style="{StaticResource EqPlainIconButtonStyle}" Command="{x:Bind ViewModel.ToggleThemeCommand}"
                 VerticalAlignment="Center"
                 ToolTipService.ToolTip="{x:Bind ViewModel.ThemeToolTip, Mode=OneWay}"
-                AutomationProperties.Name="Switch theme">
+                AutomationProperties.Name="{x:Bind services:Loc.Get('Shell_SwitchTheme')}">
           <FontIcon Glyph="{x:Bind ViewModel.ThemeGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
         </Button>
 
         <!-- Notifications bell: opens the notifications pop-up (design system, NotificationPanel). Gold dot while unread. -->
         <Button Grid.Column="5" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Center"
-                ToolTipService.ToolTip="Notifications"
+                ToolTipService.ToolTip="{x:Bind services:Loc.Get('Notif_Title')}"
                 AutomationProperties.Name="{x:Bind Notifications.BellLabel, Mode=OneWay}">
           <Grid>
             <FontIcon Glyph="&#xE7F5;" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
@@ -232,15 +233,15 @@
                     <ColumnDefinition Width="Auto" />
                   </Grid.ColumnDefinitions>
                   <StackPanel>
-                    <TextBlock Text="Notifications" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="16"
+                    <TextBlock Text="{x:Bind services:Loc.Get('Notif_Title')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="16"
                                Foreground="{ThemeResource EqTextBrush}" />
                     <TextBlock Text="{x:Bind Notifications.Summary, Mode=OneWay}" Style="{StaticResource EqCaptionStyle}" />
                   </StackPanel>
                   <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-                    <HyperlinkButton Style="{StaticResource EqLinkButtonStyle}" Content="Mark all as read"
+                    <HyperlinkButton Style="{StaticResource EqLinkButtonStyle}" Content="{x:Bind services:Loc.Get('Notif_MarkAllRead')}"
                                      Command="{x:Bind Notifications.MarkAllReadCommand}"
                                      IsEnabled="{x:Bind Notifications.HasUnread, Mode=OneWay}" />
-                    <HyperlinkButton Style="{StaticResource EqLinkButtonStyle}" Content="Clear read"
+                    <HyperlinkButton Style="{StaticResource EqLinkButtonStyle}" Content="{x:Bind services:Loc.Get('Notif_ClearRead')}"
                                      Command="{x:Bind Notifications.ClearReadCommand}"
                                      IsEnabled="{x:Bind Notifications.HasRead, Mode=OneWay}" />
                   </StackPanel>
@@ -266,7 +267,7 @@
                             <StackPanel Grid.Column="1" Spacing="2">
                               <TextBlock Text="{x:Bind Title}" TextWrapping="Wrap" FontSize="14"
                                          FontFamily="{StaticResource EqUiFontSemiBold}" Foreground="{ThemeResource EqTextBrush}" />
-                              <TextBlock Text="{x:Bind Detail}" Style="{StaticResource EqSecondaryStyle}" />
+                              <TextBlock Text="{x:Bind Detail}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
                             </StackPanel>
                             <StackPanel Grid.Column="2" Spacing="4" HorizontalAlignment="Right">
                               <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
@@ -277,7 +278,7 @@
                               <Button Style="{StaticResource EqPlainIconButtonStyle}" Width="28" Height="28" HorizontalAlignment="Right"
                                       Tag="{x:Bind NotificationId}" Click="OnClearNotificationClick"
                                       Visibility="{x:Bind ReadVisibility}"
-                                      ToolTipService.ToolTip="Clear" AutomationProperties.Name="Clear notification">
+                                      ToolTipService.ToolTip="{x:Bind services:Loc.Get('Notif_Clear')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Notif_ClearName')}">
                                 <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
                               </Button>
                             </StackPanel>
@@ -290,9 +291,9 @@
                               Visibility="{x:Bind Notifications.EmptyVisibility, Mode=OneWay}">
                     <FontIcon Glyph="&#xE7F5;" FontFamily="{StaticResource EqIconFont}" FontSize="32"
                               Foreground="{ThemeResource EqTextSecondaryBrush}" HorizontalAlignment="Center" />
-                    <TextBlock Text="No notifications" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                    <TextBlock Text="{x:Bind services:Loc.Get('Notif_EmptyTitle')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
                                Foreground="{ThemeResource EqTextBrush}" HorizontalAlignment="Center" />
-                    <TextBlock Text="Stock and backup alerts appear here." Style="{StaticResource EqSecondaryStyle}"
+                    <TextBlock Text="{x:Bind services:Loc.Get('Notif_EmptyBody')}" Style="{StaticResource EqSecondaryStyle}"
                                HorizontalAlignment="Center" />
                   </StackPanel>
                 </Grid>

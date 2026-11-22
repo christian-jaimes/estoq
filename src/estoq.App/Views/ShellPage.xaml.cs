@@ -21,7 +21,16 @@ public sealed partial class ShellPage : Page
         navigation.Initialize(ContentFrame);
         Loaded += (_, _) => navigation.NavigateTo(AppRoute.Dashboard);
         PopupState.PropertyChanged += OnPopupPropertyChanged;
+        _localizer = App.Current.Services.GetRequiredService<ILocalizer>();
+        Loaded += (_, _) => _localizer.LanguageChanged += OnLanguageChanged;
+        Unloaded += (_, _) => _localizer.LanguageChanged -= OnLanguageChanged;
     }
+
+    private readonly ILocalizer _localizer;
+
+    /// <summary>Static labels are read when a page is built, so a language change builds the shell again.</summary>
+    private void OnLanguageChanged(object? sender, EventArgs e) =>
+        DispatcherQueue.TryEnqueue(() => App.Current.MainWindow?.ShowShell());
 
     public ShellViewModel ViewModel { get; }
 

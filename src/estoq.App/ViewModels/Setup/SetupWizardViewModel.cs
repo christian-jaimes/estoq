@@ -13,10 +13,13 @@ public sealed partial class SetupWizardViewModel : ObservableObject
 {
     private readonly ISetupService _setup;
     private readonly ILocalizer _localizer;
+    private readonly ISessionService _session;
+    private bool _isCompleting;
 
     public SetupWizardViewModel(
         ISetupService setup,
         ILocalizer localizer,
+        ISessionService session,
         WelcomeStepViewModel welcome,
         OwnerStepViewModel owner,
         StoreStepViewModel store,
@@ -25,6 +28,7 @@ public sealed partial class SetupWizardViewModel : ObservableObject
     {
         _setup = setup;
         _localizer = localizer;
+        _session = session;
         Welcome = welcome;
         Owner = owner;
         Store = store;
@@ -164,6 +168,14 @@ public sealed partial class SetupWizardViewModel : ObservableObject
         }
 
         FinishError = string.Empty;
+
+        // Setup creates the owner, who is signed in straight away.
+        _session.SignIn(request.OwnerName);
+
+        // From here on the whole app follows the store language. The wizard must not rebuild itself for this change.
+        _isCompleting = true;
+        _localizer.SetLanguage(request.StoreLanguage);
+        _localizer.Remember();
         Owner.ClearSecrets();
         Recovery.Clear();
         Completed?.Invoke(this, EventArgs.Empty);
@@ -185,6 +197,11 @@ public sealed partial class SetupWizardViewModel : ObservableObject
 
     private void OnLanguageChanged(object? sender, EventArgs e)
     {
+        if (_isCompleting)
+        {
+            return;
+        }
+
         foreach (var step in Steps)
         {
             step.RefreshStrings();

@@ -10,16 +10,11 @@ public sealed class MockNotificationService : INotificationService
         var now = DateTimeOffset.Now;
         _items =
         [
-            new("n1", NotificationKind.SoldWithoutStock, "Linen shirt, M, was sold without stock",
-                "Sale 000124. Record the count to correct the stock.", now.AddMinutes(-10), false),
-            new("n2", NotificationKind.LowStock, "5 products are below their minimum stock level",
-                "Review them in Inventory.", now.AddHours(-3), false),
-            new("n3", NotificationKind.BackupStale, "The last backup was 9 days ago",
-                "Back up from Settings.", now.AddDays(-1).AddHours(-2), false),
-            new("n4", NotificationKind.LowStock, "Denim jacket, L, is at its minimum of 2",
-                "1 unit left after the next sale.", now.AddDays(-3), true),
-            new("n5", NotificationKind.BackupStale, "The backup failed",
-                "The backup folder could not be reached.", now.AddDays(-6), true),
+            new("n1", NotificationKind.SoldWithoutStock, ["Linen shirt, M"], ["000124"], now.AddMinutes(-10), false),
+            new("n2", NotificationKind.LowStock, ["5"], [], now.AddHours(-3), false),
+            new("n3", NotificationKind.BackupStale, ["9"], [], now.AddDays(-1).AddHours(-2), false),
+            new("n4", NotificationKind.LowStockItem, ["Denim jacket, L", "2"], ["1"], now.AddDays(-3), true),
+            new("n5", NotificationKind.BackupFailed, [], [], now.AddDays(-6), true),
         ];
     }
 

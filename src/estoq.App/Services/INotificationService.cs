@@ -1,19 +1,24 @@
 namespace Estoq.App.Services;
 
-/// <summary>The kinds of notification the app raises (see docs/features/app-shell.md).</summary>
+/// <summary>The kinds of notification the app raises (see docs/features/app-shell.md). Each kind has its own localized text.</summary>
 public enum NotificationKind
 {
     LowStock,
+    LowStockItem,
     SoldWithoutStock,
     BackupStale,
+    BackupFailed,
 }
 
-/// <summary>One notification. The text carries the figure; the kind picks the icon.</summary>
+/// <summary>
+/// One notification. Stored as kind plus arguments, never as text, so it reads in the current app language.
+/// The arguments fill the kind's strings (Notif_{Kind}_Title and _Detail in Strings.resx).
+/// </summary>
 public sealed record AppNotification(
     string NotificationId,
     NotificationKind Kind,
-    string Title,
-    string Detail,
+    IReadOnlyList<string> TitleArguments,
+    IReadOnlyList<string> DetailArguments,
     DateTimeOffset CreatedAt,
     bool IsRead);
 
