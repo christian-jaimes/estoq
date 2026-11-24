@@ -1,5 +1,6 @@
 using Estoq.App.Services;
 using Estoq.App.ViewModels;
+using Estoq.App.ViewModels.PointOfSale;
 using Estoq.App.ViewModels.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -47,6 +48,8 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddSingleton<INotificationService, MockNotificationService>();
         services.AddSingleton<NotificationsViewModel>();
         services.AddSingleton<PopupViewModel>();
+        services.AddSingleton<IPointOfSaleService, SamplePointOfSaleService>();
+        services.AddSingleton<PointOfSaleViewModel>();
         services.AddSingleton<ShellViewModel>();
 
         // Setup wizard. The view models are singletons so a language change can rebuild the page without losing input.
@@ -60,6 +63,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddSingleton<IClipboardService, ClipboardService>();
         services.AddSingleton<ILogoPickerService, LogoPickerService>();
         services.AddSingleton<IRecoveryKeyPrinter, RecoveryKeyPrinter>();
+        services.AddSingleton<IReceiptPrinter, ReceiptPrinter>();
         services.AddSingleton<WelcomeStepViewModel>();
         services.AddSingleton<OwnerStepViewModel>();
         services.AddSingleton<StoreStepViewModel>();

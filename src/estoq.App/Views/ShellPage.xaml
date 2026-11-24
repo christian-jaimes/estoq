@@ -5,10 +5,12 @@
     xmlns:controls="using:Estoq.App.Controls"
     xmlns:vm="using:Estoq.App.ViewModels"
     xmlns:services="using:Estoq.App.Services"
+    xmlns:pos="using:Estoq.App.Views.PointOfSale"
     Foreground="{ThemeResource EqTextBrush}">
 
   <!-- F12 logs out from anywhere in the shell, pop-ups included. -->
   <Page.KeyboardAccelerators>
+    <KeyboardAccelerator Key="F1" Invoked="OnPointOfSaleAccelerator" />
     <KeyboardAccelerator Key="F12" Invoked="OnLogOutAccelerator" />
   </Page.KeyboardAccelerators>
 
@@ -187,9 +189,6 @@
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenPointOfSaleCommand}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipSale')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Sale_Title')}">
             <FontIcon Glyph="&#xF17E;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
-            <Button.KeyboardAccelerators>
-              <KeyboardAccelerator Key="F1" />
-            </Button.KeyboardAccelerators>
           </Button>
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenAddItemsCommand}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipItems')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Items_Title')}">
@@ -318,6 +317,7 @@
     <Grid x:Name="PopupOverlay" Grid.ColumnSpan="2" Canvas.ZIndex="10" Background="{ThemeResource EqScrimBrush}"
           Padding="40,56,40,40" Visibility="{x:Bind PopupState.IsOpen, Mode=OneWay}" Tapped="OnScrimTapped">
       <controls:PopupShell x:Name="PopupFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                           Visibility="{x:Bind PopupState.IsFramed, Mode=OneWay}"
                            Title="{x:Bind PopupState.Title, Mode=OneWay}" Subtitle="{x:Bind PopupState.Subtitle, Mode=OneWay}"
                            Glyph="{x:Bind PopupState.Glyph, Mode=OneWay}" PrimaryText="{x:Bind PopupState.PrimaryText, Mode=OneWay}"
                            IsPrimaryEnabled="{x:Bind PopupState.IsPrimaryEnabled, Mode=OneWay}"
@@ -348,6 +348,9 @@
           </Border>
         </StackPanel>
       </controls:PopupShell>
+      <!-- The point of sale has its own layout (mockup 3) and does not use the shared frame. -->
+      <pos:PointOfSaleView x:Name="PosView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                           Visibility="{x:Bind PopupState.IsPointOfSale, Mode=OneWay}" Tapped="OnPopupTapped" />
     </Grid>
   </Grid>
 </Page>

@@ -145,3 +145,61 @@ public sealed class RecoveryKeyPrinter : IRecoveryKeyPrinter
         }
     }
 }
+
+public interface IReceiptPrinter
+{
+    Task<bool> PrintAsync(string title, string receiptText);
+}
+
+public sealed class ReceiptPrinter : IReceiptPrinter
+{
+    public async Task<bool> PrintAsync(string title, string receiptText)
+    {
+        var window = App.Current.MainWindow;
+        if (window is null || !PrintManager.IsSupported())
+        {
+            return false;
+        }
+
+        var handle = WindowNative.GetWindowHandle(window);
+        var document = new PrintDocument();
+        UIElement BuildPage() => new Border
+        {
+            Padding = new Thickness(48),
+            Child = new TextBlock
+            {
+                Text = receiptText,
+                FontSize = 16,
+                FontFamily = new FontFamily("Consolas"),
+                TextWrapping = TextWrapping.Wrap,
+                IsTextSelectionEnabled = false,
+            },
+        };
+
+        document.Paginate += (_, _) => document.SetPreviewPageCount(1, PreviewPageCountType.Final);
+        document.GetPreviewPage += (_, e) => document.SetPreviewPage(e.PageNumber, BuildPage());
+        document.AddPages += (_, _) =>
+        {
+            document.AddPage(BuildPage());
+            document.AddPagesComplete();
+        };
+
+        var manager = PrintManagerInterop.GetForWindow(handle);
+        void OnRequested(PrintManager sender, PrintTaskRequestedEventArgs args) =>
+            args.Request.CreatePrintTask(title, request => request.SetSource(document.DocumentSource));
+
+        manager.PrintTaskRequested += OnRequested;
+        try
+        {
+            return await PrintManagerInterop.ShowPrintUIForWindowAsync(handle);
+        }
+        catch (Exception ex) when (ex is System.Runtime.InteropServices.COMException or InvalidOperationException)
+        {
+            return false;
+        }
+        finally
+        {
+            manager.PrintTaskRequested -= OnRequested;
+        }
+    }
+}
