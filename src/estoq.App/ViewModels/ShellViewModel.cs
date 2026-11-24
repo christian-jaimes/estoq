@@ -138,7 +138,16 @@ public sealed partial class ShellViewModel : ObservableObject
     private void OpenSettings() => _popups.Show(PopupKind.Settings);
 
     [RelayCommand]
-    private void OpenPointOfSale() => _popups.Show(PopupKind.PointOfSale);
+    private void OpenPointOfSale()
+    {
+        if (_popups.Current == PopupKind.PointOfSale)
+        {
+            _popups.Close();
+            return;
+        }
+
+        _popups.Show(PopupKind.PointOfSale);
+    }
 
     [RelayCommand]
     private void OpenAddItems() => _popups.Show(PopupKind.AddItems);

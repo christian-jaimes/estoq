@@ -30,6 +30,9 @@ public interface INotificationService
 
     event EventHandler? Changed;
 
+    /// <summary>Raises a notification (for example a sale of an item without stock).</summary>
+    void Add(AppNotification notification);
+
     void MarkRead(string notificationId);
 
     void MarkAllRead();

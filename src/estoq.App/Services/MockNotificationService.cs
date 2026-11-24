@@ -22,6 +22,8 @@ public sealed class MockNotificationService : INotificationService
 
     public IReadOnlyList<AppNotification> GetAll() => _items.OrderByDescending(n => n.CreatedAt).ToList();
 
+    public void Add(AppNotification notification) => Update(_items.Append(notification));
+
     public void MarkRead(string notificationId) =>
         Update(_items.Select(n => n.NotificationId == notificationId ? n with { IsRead = true } : n));
 
