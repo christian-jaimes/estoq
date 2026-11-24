@@ -150,6 +150,9 @@
   <data name="Add_AddImage" xml:space="preserve"><value>Add image</value></data>
   <data name="Add_RemoveImage" xml:space="preserve"><value>Remove image</value></data>
   <data name="Add_NoImage" xml:space="preserve"><value>No image yet</value></data>
+  <data name="Add_DragImages" xml:space="preserve"><value>Drag and drop images here</value></data>
+  <data name="Add_BrowseImages" xml:space="preserve"><value>or click to browse</value></data>
+  <data name="Add_ImageTypes" xml:space="preserve"><value>JPG, PNG or WebP</value></data>
   <data name="Add_Summary" xml:space="preserve"><value>Summary</value></data>
   <data name="Add_SummaryVariants" xml:space="preserve"><value>Variants</value></data>
   <data name="Add_Variants" xml:space="preserve"><value>Variants and stock</value></data>

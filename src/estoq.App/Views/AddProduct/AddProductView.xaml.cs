@@ -5,6 +5,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.System;
 
 namespace Estoq.App.Views.AddProduct;
@@ -12,13 +14,71 @@ namespace Estoq.App.Views.AddProduct;
 /// <summary>The body of the Add product pop-up (F2). All behaviour lives in <see cref="AddProductViewModel"/>.</summary>
 public sealed partial class AddProductView : UserControl
 {
+    private ScrollViewer? _popupBodyScrollViewer;
+
     public AddProductView()
     {
         ViewModel = App.Current.Services.GetRequiredService<AddProductViewModel>();
         InitializeComponent();
+        CostField.ErrorTextChanged += OnPricingFieldErrorChanged;
+        SellingField.ErrorTextChanged += OnPricingFieldErrorChanged;
+        ViewModel.PropertyChanged += OnAddProductPropertyChanged;
+        UpdatePricingHeader();
     }
 
     public AddProductViewModel ViewModel { get; }
+
+    private void OnAddProductLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_popupBodyScrollViewer is null)
+        {
+            for (DependencyObject? current = this; current is not null; current = VisualTreeHelper.GetParent(current))
+            {
+                if (current is ScrollViewer scrollViewer)
+                {
+                    _popupBodyScrollViewer = scrollViewer;
+                    _popupBodyScrollViewer.SizeChanged += OnPopupBodySizeChanged;
+                    break;
+                }
+            }
+        }
+
+        UpdateMinimumHeight();
+    }
+
+    private void OnPopupBodySizeChanged(object sender, SizeChangedEventArgs e) => UpdateMinimumHeight();
+
+    private void UpdateMinimumHeight()
+    {
+        if (_popupBodyScrollViewer is null) return;
+        var viewportHeight = _popupBodyScrollViewer.ViewportHeight;
+        if (viewportHeight > 0 && !double.IsInfinity(viewportHeight)) MinHeight = viewportHeight;
+    }
+
+    private void OnPricingFieldErrorChanged(object? sender, EventArgs e)
+    {
+        UpdatePricingHeader();
+    }
+
+    private void OnAddProductPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(AddProductViewModel.PricingDisclaimer)) UpdatePricingHeader();
+        if (e.PropertyName is nameof(AddProductViewModel.MainImage) or nameof(AddProductViewModel.ImagePosition))
+        {
+            DispatcherQueue.TryEnqueue(CenterSelectedThumbnail);
+        }
+    }
+
+    private void UpdatePricingHeader()
+    {
+        var error = !string.IsNullOrEmpty(SellingField.ErrorText) ? SellingField.ErrorText
+            : !string.IsNullOrEmpty(CostField.ErrorText) ? CostField.ErrorText
+            : ViewModel.PricingDisclaimer;
+        PricingErrorText.Text = string.IsNullOrEmpty(error)
+            ? string.Empty
+            : error.StartsWith("— ", StringComparison.Ordinal) ? error : $"— {error}";
+        PricingErrorText.Visibility = string.IsNullOrEmpty(error) ? Visibility.Collapsed : Visibility.Visible;
+    }
 
     private void OnMasterDataTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
@@ -131,13 +191,77 @@ public sealed partial class AddProductView : UserControl
         AddSizeFlyout.Hide();
     }
 
-    private void OnThumbnailClick(object sender, RoutedEventArgs e)
+    private void CenterSelectedThumbnail()
     {
-        if (sender is FrameworkElement { DataContext: ProductImageViewModel image })
-        {
-            ViewModel.SelectImageCommand.Execute(image);
-        }
+        if (!ViewModel.HasImages) return;
+        var selectedIndex = ViewModel.Images.ToList().FindIndex(image => ReferenceEquals(image.Preview, ViewModel.MainImage));
+        if (selectedIndex < 0) return;
+        var viewportHeight = ImageThumbnailScrollViewer.ViewportHeight > 0
+            ? ImageThumbnailScrollViewer.ViewportHeight
+            : ImageThumbnailScrollViewer.ActualHeight;
+        const double thumbnailStride = 78;
+        const double thumbnailExtent = 70;
+        var offset = selectedIndex * thumbnailStride - (viewportHeight - thumbnailExtent) / 2;
+        ImageThumbnailScrollViewer.ChangeView(null, Math.Clamp(offset, 0, ImageThumbnailScrollViewer.ScrollableHeight), null, true);
     }
+
+    private void OnThumbnailPointerEntered(object sender, PointerRoutedEventArgs e) => SetThumbnailRemoveOpacity(sender, 1);
+
+    private void OnThumbnailPointerExited(object sender, PointerRoutedEventArgs e) => SetThumbnailRemoveOpacity(sender, 0);
+
+    private static void SetThumbnailRemoveOpacity(object sender, double opacity)
+    {
+        if (sender is not Grid thumbnail || thumbnail.Children.OfType<Button>().LastOrDefault() is not { } removeButton) return;
+
+        var storyboard = new Storyboard();
+        var animation = new DoubleAnimation { To = opacity, Duration = TimeSpan.FromMilliseconds(80) };
+        Storyboard.SetTarget(animation, removeButton);
+        Storyboard.SetTargetProperty(animation, "Opacity");
+        storyboard.Children.Add(animation);
+        storyboard.Begin();
+    }
+
+    private void OnProductImageKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        var delta = e.Key switch
+        {
+            VirtualKey.Right or VirtualKey.Down => 1,
+            VirtualKey.Left or VirtualKey.Up => -1,
+            _ => 0,
+        };
+        if (delta == 0 || !ViewModel.HasImages) return;
+        ViewModel.StepImage(delta);
+        e.Handled = true;
+    }
+
+    private void OnBrowseImagesClick(object sender, RoutedEventArgs e) => ViewModel.AddImageCommand.Execute(null);
+
+    private void OnProductImageDragOver(object sender, DragEventArgs e)
+    {
+        e.AcceptedOperation = e.DataView.Contains(StandardDataFormats.StorageItems)
+            ? DataPackageOperation.Copy
+            : DataPackageOperation.None;
+        e.Handled = true;
+    }
+
+    private async void OnProductImageDrop(object sender, DragEventArgs e)
+    {
+        if (!e.DataView.Contains(StandardDataFormats.StorageItems)) return;
+        e.AcceptedOperation = DataPackageOperation.Copy;
+        e.Handled = true;
+        var files = (await e.DataView.GetStorageItemsAsync())
+            .OfType<StorageFile>()
+            .Where(IsSupportedProductImage)
+            .Select(file => file.Path)
+            .ToList();
+        await ViewModel.AddDroppedImagesAsync(files);
+    }
+
+    private static bool IsSupportedProductImage(StorageFile file) =>
+        file.FileType.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
+        file.FileType.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
+        file.FileType.Equals(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+        file.FileType.Equals(".webp", StringComparison.OrdinalIgnoreCase);
 
     private void OnRemoveVariantClick(object sender, RoutedEventArgs e)
     {

@@ -54,6 +54,7 @@ public sealed class LogoPickerService : ILogoPickerService
         picker.FileTypeFilter.Add(".png");
         picker.FileTypeFilter.Add(".jpg");
         picker.FileTypeFilter.Add(".jpeg");
+        picker.FileTypeFilter.Add(".webp");
     }
 
     private static bool InitializePicker(FileOpenPicker picker)

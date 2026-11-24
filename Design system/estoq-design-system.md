@@ -418,16 +418,19 @@ Tables list products, movements and transactions for scanning and comparison.
 
 ## ImageGallery
 
-The image gallery shows a product's photos: one large image with a rail of thumbnails and an add tile, on the product detail and edit screens.
+Use this pattern whenever someone browses or manages product photos. Keep the photo order stable: selecting a thumbnail changes the main photo without rearranging the list.
 
-**Provide:** `.eq-gallery` containing `.eq-gallery__main` with one `<img>` per photo (same order as the thumbnails, each with real `alt` text: product, colour, view), and a `<fieldset class="eq-gallery__rail">` of `<label class="eq-gallery__thumb">` items — a hidden `<input type="radio">` (same `name`) plus the thumbnail `<img>` — followed by an `eq-gallery__add` button where photos can be edited. With no photos, put `eq-gallery__empty` (icon + one line) in the main area.
+- Main frame: fixed 4:3 aspect ratio, `surface-elevated` ground, 1px `border`, `radius-lg`. The frame owns its dimensions. Fit the full photo inside (`contain` / platform `Uniform`) so product imagery is never cropped.
+- Thumbnail rail: vertical, fixed square tiles with `space-8` between them. Fill each tile (`cover` / platform `UniformToFill`) regardless of source aspect ratio. Round and clip the photo to the tile's radius.
+- Match the rail viewport height to the main frame. Allow scrolling when all thumbnails do not fit and keep the last item fully reachable.
+- Selection: use a persistent, high-contrast `gold` outline around the selected tile, independent of hover. Keep the selected item in view when selection changes.
+- Hit areas: the full thumbnail tile selects its photo. Keep remove as a separate small corner button, so the image remains an unambiguous select action.
+- Remove affordance: reveal it when the pointer enters anywhere over its tile, hide it on exit, and use a short opacity animation. Keep its danger fill solid red in normal, hover, and pressed states.
+- Add photo: place the add action in a consistent corner of the main frame. Empty state keeps the same 4:3 frame and offers browse plus drag-and-drop where supported.
+- Accessibility: provide useful alt text and accessible names for photos and actions; expose selected state. Support keyboard selection and keep mouse, keyboard, and removal behavior synchronized with the same ordered photo collection.
+- Use the first photo as the product cover only where the data model defines that behavior. Never reorder photos just to emphasize the selected one.
 
-- Main: square, `surface-elevated` ground, 1px `border`, `radius-lg`; photos `object-fit: contain` so products are never cropped.
-- Thumbnails: 56px, `radius-md`, `space-8` apart, cropped to fill. Selected: 2px `gold` border with a `surface` gap ring. Focus: 2px `focus-ring`.
-- Add tile: same size, `surface`, `add` icon in `text-secondary`; opens the file picker and accepts drag-and-drop. Hide it in read-only views.
-- The first photo is the product's cover (used in tables, receipts and search). Up to 8 photos.
-- Clicking a thumbnail (or arrow keys) swaps the main image; it works with CSS alone.
-- Shoot or crop product photos on a plain light ground so they sit consistently in both themes.
+These rules apply to native and web galleries. Use each platform's equivalent image-fit, clipping, focus, and pointer-state APIs. See [the component guide](components/ImageGallery/README.md) for implementation details.
 
 ## BarChart
 

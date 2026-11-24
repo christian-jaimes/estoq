@@ -122,6 +122,15 @@ public sealed partial class AddProductViewModel : ObservableObject
     public partial string ValidationText { get; set; } = string.Empty;
 
     [ObservableProperty]
+    public partial string GeneralDisclaimer { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string PricingDisclaimer { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string VariantsDisclaimer { get; set; } = string.Empty;
+
+    [ObservableProperty]
     public partial bool CanSave { get; set; }
 
     [ObservableProperty]
@@ -148,6 +157,12 @@ public sealed partial class AddProductViewModel : ObservableObject
     public bool HasDuplicate => DuplicateName.Length > 0;
 
     public bool ShowValidation => ValidationText.Length > 0 && !HasDuplicate;
+
+    public bool ShowGeneralDisclaimer => GeneralDisclaimer.Length > 0;
+
+    public bool ShowPricingDisclaimer => PricingDisclaimer.Length > 0;
+
+    public bool ShowVariantsDisclaimer => VariantsDisclaimer.Length > 0;
 
     public bool HasMainImage => MainImage is not null;
 
@@ -277,11 +292,18 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     partial void OnValidationTextChanged(string value) => OnPropertyChanged(nameof(ShowValidation));
 
+    partial void OnGeneralDisclaimerChanged(string value) => OnPropertyChanged(nameof(ShowGeneralDisclaimer));
+
+    partial void OnPricingDisclaimerChanged(string value) => OnPropertyChanged(nameof(ShowPricingDisclaimer));
+
+    partial void OnVariantsDisclaimerChanged(string value) => OnPropertyChanged(nameof(ShowVariantsDisclaimer));
+
     partial void OnMainImageChanged(ImageSource? value)
     {
         OnPropertyChanged(nameof(HasMainImage));
         OnPropertyChanged(nameof(HasNoMainImage));
         OnPropertyChanged(nameof(ImagePosition));
+        foreach (var image in Images) image.IsSelected = ReferenceEquals(image.Preview, value);
     }
 
     [RelayCommand]
@@ -328,18 +350,26 @@ public sealed partial class AddProductViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanAddImage))]
     private async Task AddImageAsync()
     {
-        var picked = await _imagePicker.PickManyAsync();
-        if (picked.Count == 0)
-        {
-            return;
-        }
+        await AddImagesAsync(await _imagePicker.PickManyAsync());
+    }
 
+    public Task AddDroppedImagesAsync(IEnumerable<string> paths) => AddImagesAsync(paths
+        .Where(path => !string.IsNullOrWhiteSpace(path))
+        .Select(path => new PickedLogo(path, System.IO.Path.GetFileName(path), 0)));
+
+    private async Task AddImagesAsync(IEnumerable<PickedLogo> picked)
+    {
+        var startingCount = Images.Count;
         foreach (var file in picked.Take(MaxImages - Images.Count))
         {
-            var image = new ProductImageViewModel(file.Path, await _imagePicker.LoadPreviewAsync(file.Path));
-            Images.Add(image);
-            MainImage ??= image.Preview;
+            if (Images.Any(image => string.Equals(image.Path, file.Path, StringComparison.OrdinalIgnoreCase))) continue;
+            var preview = await _imagePicker.LoadPreviewAsync(file.Path);
+            if (preview is null) continue;
+            Images.Add(new ProductImageViewModel(file.Path, preview, SelectProductImage, RemoveProductImage));
+            MainImage ??= preview;
         }
+
+        if (Images.Count == startingCount) return;
         OnPropertyChanged(nameof(ImagePosition));
         OnPropertyChanged(nameof(HasImages));
         OnPropertyChanged(nameof(CanAddImage));
@@ -357,6 +387,8 @@ public sealed partial class AddProductViewModel : ObservableObject
         }
     }
 
+    private void SelectProductImage(ProductImageViewModel image) => SelectImage(image);
+
     public void StepImage(int delta)
     {
         if (Images.Count == 0) return;
@@ -372,6 +404,8 @@ public sealed partial class AddProductViewModel : ObservableObject
         var image = Images.FirstOrDefault(i => ReferenceEquals(i.Preview, MainImage));
         RemoveImage(image);
     }
+
+    public void RemoveProductImage(ProductImageViewModel? image) => RemoveImage(image);
 
     [RelayCommand]
     private void RemoveMainImage()
@@ -641,8 +675,9 @@ public sealed partial class AddProductViewModel : ObservableObject
         if (ShowCost && cost is { } c && selling is { } price && !costBad && !sellingBad)
         {
             var margin = ProductPricing.Estimate(c, price);
-            var percent = margin.Percent is { } p ? $"{p.ToString("N2", _localizer.Culture)} %" : Dash;
-            SummaryMargin = $"{Money(margin.Amount)} ({percent})";
+            SummaryMargin = margin.Percent is { } p
+                ? $"{margin.Amount.ToString("N0", _localizer.Culture)} ({p.ToString("N0", _localizer.Culture)}%)"
+                : Dash;
             IsMarginNegative = margin.Amount < 0;
         }
         else
@@ -711,9 +746,20 @@ public sealed partial class AddProductViewModel : ObservableObject
         var code = sellingBad || costBad ? ProductValidationCode.PriceInvalid : ProductRules.Validate(draft);
         var variantPriceBad = Variants.Any(v => v.PriceText.Length > 0 && !IsValidPrice(v.PriceText));
         string message;
+        var section = "";
         if (code != ProductValidationCode.None)
         {
             message = _localizer[$"Error_{code}"];
+            section = code switch
+            {
+                ProductValidationCode.ProductTypeRequired or ProductValidationCode.CategoryRequired or
+                    ProductValidationCode.BrandRequired or ProductValidationCode.ModelLabelRequired or
+                    ProductValidationCode.NameRequired => "general",
+                ProductValidationCode.SellingPriceRequired or ProductValidationCode.PriceInvalid => "pricing",
+                ProductValidationCode.SkuRequired or ProductValidationCode.SkuDuplicate or
+                    ProductValidationCode.StockInvalid => "variants",
+                _ => "",
+            };
         }
         else if (HasDuplicate)
         {
@@ -722,19 +768,29 @@ public sealed partial class AddProductViewModel : ObservableObject
         else if (Variants.Count == 0)
         {
             message = _localizer["Error_NoVariants"];
+            section = "variants";
+        }
+        else if (variantPriceBad)
+        {
+            message = _localizer["Error_PriceInvalid"];
+            section = "variants";
         }
         else if (Variants.Any(v => _catalog.TakenSkus.Contains(v.Sku.Trim())))
         {
             message = _localizer[$"Error_{ProductValidationCode.SkuDuplicate}"];
+            section = "variants";
         }
         else
         {
             message = string.Empty;
         }
 
-        CanSave = message.Length == 0 && !variantPriceBad && !IsSaving;
+        CanSave = message.Length == 0 && !IsSaving;
 
-        // Say what is missing only once the owner has started filling the form in.
+        // Keep feedback beside its section heading so field errors never change the form's height.
+        GeneralDisclaimer = _touched && section == "general" ? $"— {message}" : string.Empty;
+        PricingDisclaimer = _touched && section == "pricing" ? $"— {message}" : string.Empty;
+        VariantsDisclaimer = _touched && section == "variants" ? $"— {message}" : string.Empty;
         ValidationText = _touched ? message : string.Empty;
         SaveCommand.NotifyCanExecuteChanged();
     }

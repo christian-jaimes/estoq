@@ -23,12 +23,45 @@
       <Setter Property="Background" Value="{ThemeResource EqSurfaceBrush}" />
       <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
     </Style>
+    <Style x:Key="RemoveThumbnailButtonStyle" TargetType="Button">
+      <Setter Property="Background" Value="{ThemeResource EqDangerBrush}" />
+      <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+      <Setter Property="BorderBrush" Value="{ThemeResource EqDangerBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="7" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="MinWidth" Value="0" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+      <Setter Property="VerticalContentAlignment" Value="Stretch" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border Background="{ThemeResource EqDangerBrush}"
+                    BorderBrush="{ThemeResource EqDangerBrush}" BorderThickness="1"
+                    CornerRadius="7">
+              <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                AutomationProperties.AccessibilityView="Raw" />
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
   </UserControl.Resources>
 
-  <StackPanel Spacing="10" MinWidth="900" Tapped="OnAddProductTapped">
+  <Grid MinWidth="900" Tapped="OnAddProductTapped" Loaded="OnAddProductLoaded">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
 
     <!-- Duplicate found: brand, product type and model label already exist. -->
-    <Border Visibility="{x:Bind ViewModel.HasDuplicate, Mode=OneWay}" Style="{StaticResource EqCardStyle}" Padding="16,12"
+    <Border Grid.Row="0" Visibility="{x:Bind ViewModel.HasDuplicate, Mode=OneWay}" Style="{StaticResource EqCardStyle}" Padding="16,12"
             BorderBrush="{ThemeResource EqWarningBrush}">
       <Grid ColumnSpacing="12">
         <Grid.ColumnDefinitions>
@@ -42,23 +75,42 @@
       </Grid>
     </Border>
 
-    <Grid ColumnSpacing="16">
+    <Grid Grid.Row="1" ColumnSpacing="16">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="4*" MinWidth="0" />
         <ColumnDefinition Width="5*" MinWidth="0" />
       </Grid.ColumnDefinitions>
 
-      <!-- Left column: General, Pricing, Size and colour. -->
-      <StackPanel Grid.Column="0" Spacing="10">
+      <!-- Left column: Pricing keeps its natural height; Description absorbs the remaining space in General. -->
+      <Grid Grid.Column="0" RowSpacing="10">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <Border Style="{StaticResource EqCardStyle}" Padding="14">
-          <StackPanel Spacing="8">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <FontIcon Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
-              <TextBlock Text="{x:Bind services:Loc.Get('Add_General')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
-            </StackPanel>
+        <Border Grid.Row="0" Style="{StaticResource EqCardStyle}" Padding="14">
+          <Grid RowSpacing="8">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="*" />
+              <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid ColumnSpacing="12">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <FontIcon Grid.Column="0" Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_General')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
+              <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.GeneralDisclaimer, Mode=OneWay}" FontSize="12"
+                         Foreground="{ThemeResource EqDangerBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                         TextWrapping="NoWrap" Visibility="{x:Bind ViewModel.ShowGeneralDisclaimer, Mode=OneWay}" />
+            </Grid>
 
-            <Grid ColumnSpacing="10">
+            <Grid Grid.Row="1" ColumnSpacing="10">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*" MinWidth="0" />
               <ColumnDefinition Width="*" MinWidth="0" />
@@ -97,7 +149,7 @@
               </StackPanel>
             </Grid>
 
-            <Grid ColumnSpacing="10">
+            <Grid Grid.Row="2" ColumnSpacing="10">
               <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*" MinWidth="0" />
               <ColumnDefinition Width="*" MinWidth="0" />
@@ -123,12 +175,16 @@
                                 Text="{x:Bind ViewModel.ModelLabel, Mode=TwoWay}" />
             </Grid>
 
-            <StackPanel Spacing="6">
-              <StackPanel Orientation="Horizontal" Spacing="6">
+            <Grid Grid.Row="3" RowSpacing="6">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+              </Grid.RowDefinitions>
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="6">
                 <TextBlock Text="{x:Bind services:Loc.Get('Add_Description')}" Style="{StaticResource EqLabelStyle}" />
                 <TextBlock Text="{x:Bind services:Loc.Get('Label_Optional')}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" />
               </StackPanel>
-              <Border Style="{StaticResource EqInputContainerStyle}" Height="54" Padding="12,2">
+              <Border Grid.Row="1" Style="{StaticResource EqInputContainerStyle}" MinHeight="54" VerticalAlignment="Stretch" Padding="12,2">
                 <Border.Resources>
                   <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
                   <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
@@ -139,42 +195,57 @@
                   <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
                   <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
                 </Border.Resources>
-                <TextBox AcceptsReturn="True" TextWrapping="Wrap" Background="Transparent" BorderThickness="0" Padding="0,4"
+                <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Stretch" Background="Transparent" BorderThickness="0" Padding="0,4"
                          FontFamily="{StaticResource EqUiFont}" FontSize="14"
                          PlaceholderText="{x:Bind services:Loc.Get('Add_DescriptionHint')}"
                          Text="{x:Bind ViewModel.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          AutomationProperties.Name="{x:Bind services:Loc.Get('Add_Description')}" />
               </Border>
-            </StackPanel>
+            </Grid>
 
-            <controls:EqField Label="{x:Bind services:Loc.Get('Add_SupplierBarcode')}" IsOptional="True"
+            <controls:EqField Grid.Row="4" Label="{x:Bind services:Loc.Get('Add_SupplierBarcode')}" IsOptional="True"
                               PlaceholderText="{x:Bind services:Loc.Get('Add_SupplierBarcodeHint')}"
                               Text="{x:Bind ViewModel.SupplierBarcode, Mode=TwoWay}" />
-          </StackPanel>
+          </Grid>
         </Border>
 
         <!-- Pricing: cost and margin are hidden from cashiers. -->
-        <Border Style="{StaticResource EqCardStyle}" Padding="14">
+        <Border Grid.Row="1" Style="{StaticResource EqCardStyle}" Padding="14" VerticalAlignment="Stretch">
           <StackPanel Spacing="8">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <FontIcon Glyph="&#xF05B;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
-              <TextBlock Text="{x:Bind services:Loc.Get('Add_Pricing')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
-            </StackPanel>
             <Grid ColumnSpacing="12">
               <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
               </Grid.ColumnDefinitions>
-              <controls:EqField x:Name="CostField" Grid.Column="0" Label="{x:Bind services:Loc.Get('Add_Cost')}" IsOptional="True"
+              <FontIcon Grid.Column="0" Glyph="&#xF05B;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_Pricing')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
+              <TextBlock x:Name="PricingErrorText" Grid.Column="2" FontSize="12" Foreground="{ThemeResource EqDangerBrush}"
+                         VerticalAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Visibility="Collapsed" />
+            </Grid>
+            <Grid ColumnSpacing="12">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="0" />
+                <ColumnDefinition Width="*" MinWidth="0" />
+                <ColumnDefinition Width="*" MinWidth="0" />
+              </Grid.ColumnDefinitions>
+              <controls:EqField x:Name="CostField" Grid.Column="0" HorizontalAlignment="Stretch" MinWidth="0"
+                                Label="{x:Bind services:Loc.Get('Add_Cost')}" IsOptional="True"
+                                IsNumeric="True" NumericErrorText="{x:Bind services:Loc.Get('Error_PriceInvalid')}"
+                                ShowErrorText="False"
                                 Suffix="{x:Bind ViewModel.CurrencyCode}" Visibility="{x:Bind ViewModel.ShowCost, Mode=OneWay}"
                                 Text="{x:Bind ViewModel.CostText, Mode=TwoWay}" />
-              <controls:EqField x:Name="SellingField" Grid.Column="1" Label="{x:Bind services:Loc.Get('Add_Selling')}" IsRequired="True"
+              <controls:EqField x:Name="SellingField" Grid.Column="1" HorizontalAlignment="Stretch" MinWidth="0"
+                                Label="{x:Bind services:Loc.Get('Add_Selling')}" IsRequired="True"
+                                IsNumeric="True" NumericErrorText="{x:Bind services:Loc.Get('Error_PriceInvalid')}"
+                                ShowErrorText="False"
                                 Suffix="{x:Bind ViewModel.CurrencyCode}"
                                 Text="{x:Bind ViewModel.SellingText, Mode=TwoWay}" />
-              <StackPanel Grid.Column="2" Spacing="6" Visibility="{x:Bind ViewModel.ShowCost, Mode=OneWay}">
+              <StackPanel Grid.Column="2" Spacing="6" MinWidth="0" HorizontalAlignment="Stretch"
+                          Visibility="{x:Bind ViewModel.ShowCost, Mode=OneWay}">
                 <TextBlock Text="{x:Bind services:Loc.Get('Add_Margin')}" Style="{StaticResource EqLabelStyle}" TextTrimming="CharacterEllipsis" />
-                <Border Style="{StaticResource EqInputContainerStyle}" BorderBrush="{ThemeResource EqSuccessBrush}" Padding="0">
+                <Border Style="{StaticResource EqInputContainerStyle}" BorderBrush="{ThemeResource EqSuccessBrush}"
+                        Padding="0" MinWidth="0" HorizontalAlignment="Stretch">
                   <Grid>
                     <Rectangle Fill="{ThemeResource EqSuccessBrush}" Opacity="0.15" RadiusX="7" RadiusY="7" />
                     <TextBlock Text="{x:Bind ViewModel.SummaryMargin, Mode=OneWay}" Style="{StaticResource EqLabelStyle}"
@@ -193,10 +264,14 @@
         </Border>
 
         <!-- Size and colour: only ticked combinations become variants. -->
-      </StackPanel>
+      </Grid>
 
       <!-- Right column: image beside size and colour, then the variants table. -->
-      <StackPanel Grid.Column="1" Spacing="10">
+      <Grid Grid.Column="1" RowSpacing="10">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <Grid ColumnSpacing="10">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
@@ -209,63 +284,94 @@
                 <FontIcon Glyph="&#xE1A1;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
                 <TextBlock Text="{x:Bind services:Loc.Get('Add_Image')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
               </StackPanel>
-              <Grid ColumnSpacing="12">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="56" />
-              </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" Height="220" CornerRadius="{StaticResource EqRadiusMd}" Background="{ThemeResource EqSurfaceElevatedBrush}"
-                        BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
+              <Grid Height="195" AllowDrop="True" DragOver="OnProductImageDragOver" Drop="OnProductImageDrop"
+                    KeyDown="OnProductImageKeyDown">
+                <Border Style="{StaticResource EqInputContainerStyle}" Height="195" CornerRadius="{StaticResource EqRadiusMd}"
+                        Background="{ThemeResource EqSurfaceBrush}" Padding="0"
+                        Visibility="{x:Bind ViewModel.HasNoMainImage, Mode=OneWay}">
                   <Grid>
-                    <Image Source="{x:Bind ViewModel.MainImage, Mode=OneWay}" Stretch="Uniform"
-                           Visibility="{x:Bind ViewModel.HasMainImage, Mode=OneWay}" />
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="6"
-                                Visibility="{x:Bind ViewModel.HasNoMainImage, Mode=OneWay}">
-                      <FontIcon Glyph="&#xE1A1;" FontFamily="{StaticResource EqIconFont}" FontSize="36"
-                                Foreground="{ThemeResource EqTextSecondaryBrush}" HorizontalAlignment="Center" />
-                      <TextBlock Text="{x:Bind services:Loc.Get('Add_NoImage')}" Style="{StaticResource EqCaptionStyle}" HorizontalAlignment="Center" />
-                    </StackPanel>
-                    <Button Style="{StaticResource EqPlainIconButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="6"
-                            Command="{x:Bind ViewModel.RemoveSelectedImageCommand}" Visibility="{x:Bind ViewModel.HasMainImage, Mode=OneWay}"
-                            ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_RemoveImage')}"
-                            AutomationProperties.Name="{x:Bind services:Loc.Get('Add_RemoveImage')}">
-                      <FontIcon Glyph="&#xE74D;" FontFamily="{StaticResource EqIconFont}" FontSize="18" Foreground="{ThemeResource EqDangerBrush}" />
+                    <Rectangle Stroke="{ThemeResource EqTextSecondaryBrush}" StrokeThickness="1"
+                               StrokeDashArray="4,3" RadiusX="8" RadiusY="8" IsHitTestVisible="False" />
+                    <Button Background="Transparent" BorderThickness="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            Click="OnBrowseImagesClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Add_AddImage')}">
+                      <StackPanel Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE1A1;" FontFamily="{StaticResource EqIconFont}" FontSize="44"
+                                  Foreground="{ThemeResource EqGoldInkBrush}" HorizontalAlignment="Center" />
+                        <TextBlock Text="{x:Bind services:Loc.Get('Add_DragImages')}" Style="{StaticResource EqLabelStyle}"
+                                   HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                        <TextBlock Text="{x:Bind services:Loc.Get('Add_BrowseImages')}" Style="{StaticResource EqSecondaryStyle}"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock Text="{x:Bind services:Loc.Get('Add_ImageTypes')}" Style="{StaticResource EqCaptionStyle}"
+                                   HorizontalAlignment="Center" />
+                      </StackPanel>
                     </Button>
                   </Grid>
                 </Border>
-                <Grid Grid.Column="0" VerticalAlignment="Bottom" Margin="8" ColumnSpacing="8" IsHitTestVisible="True">
-                  <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                  <Border Grid.Column="0" Background="#99000000" CornerRadius="6" Padding="4,0" HorizontalAlignment="Left"
-                          Visibility="{x:Bind ViewModel.HasImages, Mode=OneWay}">
-                    <StackPanel Orientation="Horizontal" Spacing="4">
-                      <Button Style="{StaticResource EqPlainIconButtonStyle}" Click="OnPreviousImageClick" Content="‹" />
-                      <TextBlock Text="{x:Bind ViewModel.ImagePosition, Mode=OneWay}" Foreground="White" VerticalAlignment="Center" />
-                      <Button Style="{StaticResource EqPlainIconButtonStyle}" Click="OnNextImageClick" Content="›" />
-                    </StackPanel>
+
+                <Grid ColumnSpacing="10" Height="195" Visibility="{x:Bind ViewModel.HasMainImage, Mode=OneWay}">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MinWidth="0" />
+                    <ColumnDefinition Width="70" />
+                  </Grid.ColumnDefinitions>
+                  <Border Grid.Column="0" Height="195" CornerRadius="{StaticResource EqRadiusMd}"
+                          Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
+                    <Grid>
+                      <Button Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Padding="0"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                              HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                              MinWidth="0" MinHeight="0"
+                              KeyDown="OnProductImageKeyDown"
+                              AutomationProperties.Name="{x:Bind services:Loc.Get('Add_Image')}">
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                          <Rectangle.Fill>
+                            <ImageBrush ImageSource="{x:Bind ViewModel.MainImage, Mode=OneWay}" Stretch="Uniform" />
+                          </Rectangle.Fill>
+                        </Rectangle>
+                      </Button>
+                      <Button Width="48" Height="48" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"
+                              Command="{x:Bind ViewModel.AddImageCommand}" IsEnabled="{x:Bind ViewModel.CanAddImage, Mode=OneWay}"
+                              ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_AddImage')}"
+                              AutomationProperties.Name="{x:Bind services:Loc.Get('Add_AddImage')}">
+                        <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
+                      </Button>
+                    </Grid>
                   </Border>
-                  <Button Grid.Column="3" Width="42" Height="42" Padding="0" Command="{x:Bind ViewModel.AddImageCommand}"
-                          IsEnabled="{x:Bind ViewModel.CanAddImage, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_AddImage')}">
-                    <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="23" />
-                  </Button>
+                  <ScrollViewer x:Name="ImageThumbnailScrollViewer" Grid.Column="1" Width="70" Height="195"
+                                VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsRepeater ItemsSource="{x:Bind ViewModel.Images}">
+                      <ItemsRepeater.Layout><StackLayout Spacing="8" /></ItemsRepeater.Layout>
+                      <ItemsRepeater.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ProductImageViewModel">
+                          <Grid Width="70" Height="70" PointerEntered="OnThumbnailPointerEntered" PointerExited="OnThumbnailPointerExited">
+                            <Border CornerRadius="8" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
+                              <Border.Background>
+                                <ImageBrush ImageSource="{x:Bind Preview}" Stretch="UniformToFill" />
+                              </Border.Background>
+                              <Button Background="Transparent" BorderBrush="Transparent" BorderThickness="0"
+                                      Padding="0" Command="{x:Bind SelectCommand}" KeyDown="OnProductImageKeyDown"
+                                      MinWidth="0" MinHeight="0"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                      AutomationProperties.Name="{x:Bind services:Loc.Get('Add_Image')}" />
+                            </Border>
+                            <Border CornerRadius="8" BorderThickness="3" BorderBrush="{ThemeResource EqGoldInkBrush}"
+                                    IsHitTestVisible="False" Visibility="{x:Bind SelectionVisibility, Mode=OneWay}" />
+                            <Button x:Name="RemoveThumbnailButton" Style="{StaticResource RemoveThumbnailButtonStyle}"
+                                    Width="28" Height="28"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top" Margin="3"
+                                    Opacity="0"
+                                    IsTabStop="True" Command="{x:Bind RemoveCommand}"
+                                    ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_RemoveImage')}"
+                                    AutomationProperties.Name="{x:Bind services:Loc.Get('Add_RemoveImage')}">
+                              <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="14"
+                                        Foreground="{ThemeResource EqTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                          </Grid>
+                        </DataTemplate>
+                      </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                  </ScrollViewer>
                 </Grid>
-                <ScrollViewer Grid.Column="1" Width="56" Height="220" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                  <ItemsRepeater ItemsSource="{x:Bind ViewModel.Images}">
-                    <ItemsRepeater.Layout><StackLayout Spacing="8" /></ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
-                      <DataTemplate x:DataType="vm:ProductImageViewModel">
-                        <Button Width="56" Height="56" Padding="0" Background="Transparent" BorderBrush="{ThemeResource EqBorderBrush}" Click="OnThumbnailClick">
-                          <Image Source="{x:Bind Preview}" Stretch="UniformToFill" Width="52" Height="52" />
-                        </Button>
-                      </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                  </ItemsRepeater>
-                </ScrollViewer>
-                <Button Grid.Column="0" Width="48" Height="48" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,8,8"
-                        Command="{x:Bind ViewModel.AddImageCommand}" IsEnabled="{x:Bind ViewModel.CanAddImage, Mode=OneWay}"
-                        ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_AddImage')}"
-                        AutomationProperties.Name="{x:Bind services:Loc.Get('Add_AddImage')}">
-                  <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
-                </Button>
               </Grid>
             </StackPanel>
           </Border>
@@ -334,14 +440,20 @@
         </Grid>
 
         <!-- Variants and opening stock. SKU can be typed over; the barcode is generated. -->
-        <Border Style="{StaticResource EqCardStyle}" Padding="14">
+        <Border Grid.Row="1" Style="{StaticResource EqCardStyle}" Padding="14" VerticalAlignment="Stretch">
           <StackPanel Spacing="8">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <FontIcon Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
-              <StackPanel>
-                <TextBlock Text="{x:Bind services:Loc.Get('Add_Variants')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
-              </StackPanel>
-            </StackPanel>
+            <Grid ColumnSpacing="12">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <FontIcon Grid.Column="0" Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_Variants')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
+              <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.VariantsDisclaimer, Mode=OneWay}" FontSize="12"
+                         Foreground="{ThemeResource EqDangerBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                         TextWrapping="NoWrap" Visibility="{x:Bind ViewModel.ShowVariantsDisclaimer, Mode=OneWay}" />
+            </Grid>
             <TextBlock Text="{x:Bind services:Loc.Get('Add_VariantsHint')}" Style="{StaticResource EqSecondaryStyle}" />
 
             <Grid ColumnSpacing="12" Padding="8,8">
@@ -407,11 +519,8 @@
                        Visibility="{x:Bind ViewModel.HasNoVariants, Mode=OneWay}" />
           </StackPanel>
         </Border>
-      </StackPanel>
+      </Grid>
     </Grid>
 
-    <!-- What is still missing, shown once the form has been touched. -->
-    <TextBlock Text="{x:Bind ViewModel.ValidationText, Mode=OneWay}" Foreground="{ThemeResource EqDangerBrush}" FontSize="13"
-               TextWrapping="Wrap" HorizontalAlignment="Right" Visibility="{x:Bind ViewModel.ShowValidation, Mode=OneWay}" />
-  </StackPanel>
+  </Grid>
 </UserControl>

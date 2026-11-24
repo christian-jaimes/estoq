@@ -68,7 +68,7 @@
     {
       "name": "ImageGallery",
       "group": "Data display",
-      "summary": "The image gallery shows a product's photos: one large image with a rail of thumbnails and an add tile, on the product detail and edit screens."
+      "summary": "A fixed 4:3 main photo with a full-image fit, square cover-filled thumbnails, clear selection styling, and separate select and remove actions."
     },
     {
       "name": "Input",
