@@ -17,9 +17,6 @@ public sealed partial class AddProductView : UserControl
 
     public AddProductViewModel ViewModel { get; }
 
-    /// <summary>For x:Bind: shows an element while a flag is false.</summary>
-    public static bool Not(bool value) => !value;
-
     /// <summary>A typed value that is not in the list is accepted as a new product type, category or brand.</summary>
     private void OnComboTextSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
     {
@@ -61,7 +58,7 @@ public sealed partial class AddProductView : UserControl
 
     private void OnThumbnailClick(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement { Tag: ProductImageViewModel image })
+        if (sender is FrameworkElement { DataContext: ProductImageViewModel image })
         {
             ViewModel.SelectImageCommand.Execute(image);
         }
@@ -69,9 +66,39 @@ public sealed partial class AddProductView : UserControl
 
     private void OnRemoveVariantClick(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement { Tag: VariantRowViewModel row })
+        if (sender is FrameworkElement { DataContext: VariantRowViewModel row })
         {
             ViewModel.RemoveVariantCommand.Execute(row);
+        }
+    }
+
+    // Bindings inside the row templates are one-way; edits come back through these handlers.
+    private void OnChoiceClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { DataContext: ChoiceItemViewModel item } element)
+        {
+            var isChecked = element switch
+            {
+                Microsoft.UI.Xaml.Controls.Primitives.ToggleButton toggle => toggle.IsChecked == true,
+                _ => item.IsSelected,
+            };
+            item.IsSelected = isChecked;
+        }
+    }
+
+    private void OnSkuTextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (sender is TextBox { DataContext: VariantRowViewModel row } box && row.Sku != box.Text)
+        {
+            row.Sku = box.Text;
+        }
+    }
+
+    private void OnStockValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        if (sender.DataContext is VariantRowViewModel row && !double.IsNaN(args.NewValue))
+        {
+            row.OpeningStock = args.NewValue;
         }
     }
 }
