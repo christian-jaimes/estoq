@@ -6,6 +6,9 @@ public sealed record ProductTypeInfo(string Name, IReadOnlyList<string> Sizes);
 /// <summary>A seeded colour. <see cref="Key"/> names the translated label (<c>Colour_&lt;Key&gt;</c>); <see cref="Hex"/> is the swatch.</summary>
 public sealed record ColourInfo(string Key, string Hex, bool IsQuickPick);
 
+/// <summary>A brand displayed by the product editor, with optional user-facing code metadata.</summary>
+public sealed record BrandInfo(string Id, string Name, string SkuCode, bool IsActive);
+
 /// <summary>One variant of a product about to be created.</summary>
 public sealed record NewVariant(string? Size, string? Colour, string Sku, string InternalBarcode, int OpeningStock, decimal? SellingPrice = null);
 
@@ -37,6 +40,8 @@ public interface ICatalogService
     IReadOnlyList<string> Categories { get; }
 
     IReadOnlyList<string> Brands { get; }
+
+    IReadOnlyList<BrandInfo> BrandDetails { get; }
 
     IReadOnlyList<ColourInfo> Colours { get; }
 

@@ -18,6 +18,14 @@ Planned for the back-end phase. Nothing is implemented yet. Draw and review the 
 - Names, SKUs and emails compared case-insensitively.
 - History is never deleted: products, variants and users use `is_active` or a status; foreign keys restrict deletes.
 
+## Development master-data CSVs
+
+The current sample product editor loads the dropdown lists from `data/dummy_brands.csv`, `data/dummy_categories.csv` and `data/dummy_product_types.csv`. It reads display names and includes rows whose `is_active` value parses as true; inactive rows are omitted. These are development fixtures, not the future database implementation. CSVs are copied to the app output and, in a repository checkout, the sample service resolves the repository copy so edits are visible without rebuilding.
+
+When the add-product autocomplete has no matches, it offers `+ <typed value>`. Choosing that row only stages the value in the form. `SampleCatalogService` writes it to its master-data CSV only when the product is saved; canceling or closing the popup does not alter the files. It generates the next unused `BRD-##`, `CAT-##` or `TYP-##` identifier. New brands and types also receive unique short `sku_code` values (initials for up to three words, or the first three alphanumeric characters for one word, with a numeric suffix on collisions). Other master-data columns remain blank; a later owner/manager master-data flow will manage them. Names are matched case-insensitively.
+
+Product-type CSV rows currently provide names and `requires_size`; sample size choices are mapped in code until proper size-set records are managed through master data. Product type/category fixture metadata not consumed by the add-product form remains untouched.
+
 ## Tables
 
 | Area | Table | Key columns |

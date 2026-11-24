@@ -1,0 +1,27 @@
+type_id,type_name,default_category_id,sku_code,description,department,requires_size
+TYP-01,T-Shirt,CAT-01,TSH,Cotton or blend short-sleeve casual top,Tops,True
+TYP-02,Jeans,CAT-11,JNS,Denim trousers with rivet reinforcements,Bottoms,True
+TYP-03,Sneakers,CAT-04,SNK,Casual or athletic rubber-soled footwear,Shoes,True
+TYP-04,Dress,CAT-02,DRS,"One-piece garment for women in mini, midi, or maxi lengths",One-Piece,True
+TYP-05,Jacket,CAT-05,JCK,Waist-to-hip length outer garment,Outerwear,True
+TYP-06,Sweater,CAT-12,SWT,Knitted pullover garment for upper body,Tops,True
+TYP-07,Handbag,CAT-16,HBG,Handheld or shoulder-carried accessory bag,Bags,True
+TYP-08,Blazer,CAT-10,BLZ,Structured tailored jacket for smart-casual or formal wear,Outerwear,True
+TYP-09,Running Shoes,CAT-04,RUN,Cushioned athletic footwear engineered for running,Shoes,True
+TYP-10,Polo Shirt,CAT-01,PLO,Collared short-sleeve shirt with buttoned placket,Tops,True
+TYP-11,Skirt,CAT-02,SKT,Lower-body garment hanging from the waist,Bottoms,True
+TYP-12,Hoodie,CAT-07,HOD,Sweatshirt featuring an attached hood,Tops,True
+TYP-13,Watch,CAT-15,WTC,Timepiece worn on the wrist,Accessories,False
+TYP-14,Chinos,CAT-01,CHN,Lightweight cotton twill trousers,Bottoms,True
+TYP-15,Blouse,CAT-02,BLS,Loose-fitting tailored women's top,Tops,True
+TYP-16,Boots,CAT-04,BOT,Sturdy footwear covering the foot and ankle or lower leg,Shoes,True
+TYP-17,Scarf,CAT-08,SCF,Fabric wrap worn around the neck for warmth or style,Accessories,False
+TYP-18,Coat,CAT-05,COT,Full-length or knee-length heavy outer garment,Outerwear,True
+TYP-19,Shorts,CAT-06,SHR,Short trousers reaching above the knee,Bottoms,True
+TYP-20,Sunglasses,CAT-17,SNG,Tinted protective eyewear,Accessories,False
+TYP-21,Dress Shirt,CAT-10,DSH,Button-up collared shirt for formal or business attire,Tops,True
+TYP-22,Backpack,CAT-16,BPK,Two-strap bag carried on the back,Bags,False
+TYP-23,Belt,CAT-08,BLT,Leather or woven strap worn around the waist,Accessories,True
+TYP-24,Cap,CAT-18,CAP,Soft crown headwear with a front visor,Accessories,False
+TYP-25,Socks,CAT-09,SCK,Knitted foot coverings worn inside shoes,Essentials,True
+TYP-26,Cardigan,CAT-12,CRD,Open-front knitted sweater with buttons or zipper,Tops,True

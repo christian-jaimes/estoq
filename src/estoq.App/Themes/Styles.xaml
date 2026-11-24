@@ -195,7 +195,7 @@
     <Setter Property="HorizontalContentAlignment" Value="Left" />
     <Setter Property="MinHeight" Value="36" />
     <Setter Property="MinWidth" Value="0" />
-    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="Padding" Value="0" />
     <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
     <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
     <Setter Property="FocusVisualPrimaryThickness" Value="2" />
@@ -256,6 +256,80 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="{StaticResource EqRadiusMd}" />
     <Setter Property="Padding" Value="12,0" />
+  </Style>
+
+  <!-- One input surface for editable ComboBoxes; the native editable template otherwise draws its own TextBox. -->
+  <Style x:Key="EqEditableComboBoxStyle" TargetType="ComboBox">
+    <Setter Property="MinHeight" Value="38" />
+    <Setter Property="Padding" Value="10,0" />
+    <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+    <Setter Property="Background" Value="{ThemeResource EqSurfaceBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{StaticResource EqRadiusMd}" />
+  </Style>
+
+  <Style x:Key="EqAutoSuggestTextBoxStyle" TargetType="TextBox">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="TextWrapping" Value="NoWrap" />
+    <Setter Property="TextAlignment" Value="Left" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Padding" Value="12,6" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+    <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
+    <Setter Property="FontSize" Value="14" />
+  </Style>
+
+  <Style x:Key="EqAutoSuggestBoxStyle" TargetType="AutoSuggestBox">
+    <Setter Property="Height" Value="36" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="TextBoxStyle" Value="{StaticResource EqAutoSuggestTextBoxStyle}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="AutoSuggestBox">
+          <Grid x:Name="LayoutRoot">
+            <TextBox x:Name="TextBox" Style="{TemplateBinding TextBoxStyle}"
+                     PlaceholderText="{TemplateBinding PlaceholderText}"
+                     Header="{TemplateBinding Header}" Width="{TemplateBinding Width}"
+                     Description="{TemplateBinding Description}"
+                     Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                     FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}"
+                     FontWeight="{TemplateBinding FontWeight}" FontStretch="{TemplateBinding FontStretch}"
+                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                     ScrollViewer.BringIntoViewOnFocusChange="False" Canvas.ZIndex="0" Margin="0"
+                     DesiredCandidateWindowAlignment="BottomEdge" UseSystemFocusVisuals="{TemplateBinding UseSystemFocusVisuals}"
+                     CornerRadius="{TemplateBinding CornerRadius}" />
+            <Popup x:Name="SuggestionsPopup" ShouldConstrainToRootBounds="False">
+              <Border x:Name="SuggestionsContainer" Padding="{ThemeResource AutoSuggestListMargin}"
+                      Margin="0,-8,0,0"
+                      BorderThickness="1,0,1,1"
+                      BorderBrush="{ThemeResource AutoSuggestBoxSuggestionsListBorderBrush}"
+                      Background="{ThemeResource EqSurfaceBrush}"
+                      CornerRadius="0,0,8,8">
+                <Border.RenderTransform />
+                <ListView x:Name="SuggestionsList" DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
+                          IsItemClickEnabled="True" ItemTemplate="{TemplateBinding ItemTemplate}"
+                          ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                          ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
+                          MaxHeight="{TemplateBinding MaxSuggestionListHeight}"
+                          Margin="{ThemeResource AutoSuggestListPadding}">
+                  <ListView.ItemContainerTransitions />
+                </ListView>
+              </Border>
+            </Popup>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
   </Style>
 
   <!-- Text buttons (design system, Button): one gold primary per view, secondary for the rest. -->

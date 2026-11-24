@@ -2,6 +2,7 @@ using Estoq.App.ViewModels.AddProduct;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.System;
@@ -19,25 +20,97 @@ public sealed partial class AddProductView : UserControl
 
     public AddProductViewModel ViewModel { get; }
 
-    /// <summary>A typed value that is not in the list is accepted as a new product type, category or brand.</summary>
-    private void OnComboTextSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+    private void OnMasterDataTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
-        var text = args.Text.Trim();
-        sender.Text = text;
-        if (ReferenceEquals(sender, TypeBox))
+        if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput) return;
+        var source = ReferenceEquals(sender, TypeBox) ? ViewModel.ProductTypeNames
+            : ReferenceEquals(sender, CategoryBox) ? ViewModel.CategoryNames : ViewModel.BrandNames;
+        var results = source.Where(value => value.Contains(sender.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)).Take(100).ToList();
+        var suggestions = results.Select(value => new MasterDataSuggestion(value, false)).ToList();
+        var typed = sender.Text.Trim();
+        if (typed.Length > 0 && !source.Any(value => string.Equals(value, typed, StringComparison.CurrentCultureIgnoreCase)))
         {
-            ViewModel.ProductType = text;
+            if (results.Count == 0) suggestions.Add(new MasterDataSuggestion(typed, true));
         }
-        else if (ReferenceEquals(sender, CategoryBox))
-        {
-            ViewModel.Category = text;
-        }
-        else if (ReferenceEquals(sender, BrandBox))
-        {
-            ViewModel.Brand = text;
-        }
+        if (ReferenceEquals(sender, TypeBox)) Replace(ViewModel.FilteredProductTypes, suggestions);
+        else if (ReferenceEquals(sender, CategoryBox)) Replace(ViewModel.FilteredCategories, suggestions);
+        else Replace(ViewModel.FilteredBrands, suggestions);
+        if (suggestions.Count > 0 && !sender.IsSuggestionListOpen) sender.IsSuggestionListOpen = true;
+    }
 
-        args.Handled = true;
+    private void OnMasterDataGotFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is AutoSuggestBox box && string.IsNullOrWhiteSpace(box.Text) && !box.IsSuggestionListOpen) box.IsSuggestionListOpen = true;
+    }
+
+    private void OnAddProductTapped(object sender, TappedRoutedEventArgs e)
+    {
+        var source = e.OriginalSource as DependencyObject;
+        CloseIfOutside(TypeBox, source);
+        CloseIfOutside(CategoryBox, source);
+        CloseIfOutside(BrandBox, source);
+    }
+
+    private static void CloseIfOutside(AutoSuggestBox box, DependencyObject? source)
+    {
+        if (box.IsSuggestionListOpen && (source is null || !IsWithin(source, box))) box.IsSuggestionListOpen = false;
+    }
+
+    private static bool IsWithin(DependencyObject element, DependencyObject ancestor)
+    {
+        for (var current = element; current is not null; current = VisualTreeHelper.GetParent(current))
+        {
+            if (ReferenceEquals(current, ancestor)) return true;
+        }
+        return false;
+    }
+
+    private void OnMasterDataSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+    {
+        if (args.SelectedItem is not MasterDataSuggestion suggestion) return;
+        ApplySuggestionValueAfterSelection(sender, suggestion.Value);
+    }
+
+    private void OnMasterDataQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        var value = (args.ChosenSuggestion as MasterDataSuggestion)?.Value ?? sender.Text.Trim();
+        sender.IsSuggestionListOpen = false;
+        ApplySuggestionValueAfterSelection(sender, value);
+    }
+
+    private void ApplySuggestionValueAfterSelection(AutoSuggestBox sender, string value) =>
+        sender.DispatcherQueue.TryEnqueue(() =>
+        {
+            sender.Text = value;
+            SetMasterDataValue(sender, value);
+        });
+
+    private void SetMasterDataValue(AutoSuggestBox sender, string value)
+    {
+        if (ReferenceEquals(sender, TypeBox)) ViewModel.ProductType = value;
+        else if (ReferenceEquals(sender, CategoryBox)) ViewModel.Category = value;
+        else if (ReferenceEquals(sender, BrandBox)) ViewModel.Brand = value;
+    }
+
+    private static void Replace(System.Collections.ObjectModel.ObservableCollection<MasterDataSuggestion> target, IEnumerable<MasterDataSuggestion> values)
+    {
+        var desired = values.ToList();
+        for (var index = target.Count - 1; index >= 0; index--)
+        {
+            if (!desired.Any(option => option == target[index])) target.RemoveAt(index);
+        }
+        for (var index = 0; index < desired.Count; index++)
+        {
+            if (index < target.Count && target[index] == desired[index]) continue;
+            var currentIndex = -1;
+            for (var scan = index + 1; scan < target.Count; scan++)
+            {
+                if (target[scan] == desired[index]) { currentIndex = scan; break; }
+            }
+            if (currentIndex >= 0) target.Move(currentIndex, index);
+            else target.Insert(index, desired[index]);
+        }
+        while (target.Count > desired.Count) target.RemoveAt(target.Count - 1);
     }
 
     private void OnAddSizeClick(object sender, RoutedEventArgs e) => CommitNewSize();

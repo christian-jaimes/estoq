@@ -1,0 +1,23 @@
+category_id,category_name,slug,description,is_active
+CAT-01,Menswear,men,Clothing and apparel designed for men,TRUE
+CAT-02,Womenswear,women,Clothing and apparel designed for women,TRUE
+CAT-03,Kidswear,kids,Apparel for children and toddlers,TRUE
+CAT-04,Footwear,footwear,"Shoes, boots, sneakers, and sandals for all genders",TRUE
+CAT-05,Outerwear,outerwear,"Jackets, coats, parkas, and weather-resistant layers",TRUE
+CAT-06,Activewear,activewear,"Performance sportswear, gym attire, and athleisure",TRUE
+CAT-07,Streetwear,streetwear,"Urban casual fashion, hoodies, and graphic apparel",TRUE
+CAT-08,Accessories,accessories,"Bags, belts, scarves, hats, and sunglasses",TRUE
+CAT-09,Underwear & Socks,underwear-socks,"Everyday essentials, hosiery, and intimates",TRUE
+CAT-10,Formalwear,formalwear,"Suits, evening dresses, dress shirts, and ties",TRUE
+CAT-11,Denim,denim,"Jeans, denim jackets, and chambray apparel",TRUE
+CAT-12,Knitwear,knitwear,"Sweaters, cardigans, and knitted pullovers",TRUE
+CAT-13,Swimwear,swimwear,"Swimsuits, boardshorts, and beach cover-ups",TRUE
+CAT-14,Loungewear,loungewear,"Pajamas, robes, and comfortable homewear",TRUE
+CAT-15,Watches & Jewelry,watches-jewelry,"Wristwatches, bracelets, necklaces, and rings",TRUE
+CAT-16,Bags & Luggage,bags-luggage,"Handbags, backpacks, duffels, and travel cases",TRUE
+CAT-17,Eyewear,eyewear,"Sunglasses, optical frames, and eyewear cases",TRUE
+CAT-18,Headwear,headwear,"Caps, beanies, bucket hats, and fedoras",TRUE
+CAT-19,Workwear,workwear,Durable utility clothing and reinforced apparel,TRUE
+CAT-20,Maternity,maternity,Adaptive clothing designed for pregnancy and nursing,TRUE
+CAT-21,Seasonal Specials,seasonal,Holiday collections and limited seasonal drops,TRUE
+CAT-22,Outlet & Clearance,outlet,End-of-season discounted items,FALSE

@@ -8,6 +8,9 @@
     xmlns:vm="using:Estoq.App.ViewModels.AddProduct">
 
   <UserControl.Resources>
+    <DataTemplate x:Key="MasterDataSuggestionTemplate" x:DataType="vm:MasterDataSuggestion">
+      <TextBlock Text="{x:Bind DisplayText}" VerticalAlignment="Center" />
+    </DataTemplate>
     <!-- Size chip and colour swatch: a toggle that is outlined when off and gold when on. -->
     <Style x:Key="AddChoiceToggleStyle" TargetType="ToggleButton">
       <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
@@ -22,7 +25,7 @@
     </Style>
   </UserControl.Resources>
 
-  <StackPanel Spacing="10" MinWidth="900">
+  <StackPanel Spacing="10" MinWidth="900" Tapped="OnAddProductTapped">
 
     <!-- Duplicate found: brand, product type and model label already exist. -->
     <Border Visibility="{x:Bind ViewModel.HasDuplicate, Mode=OneWay}" Style="{StaticResource EqCardStyle}" Padding="16,12"
@@ -41,8 +44,8 @@
 
     <Grid ColumnSpacing="16">
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="4*" />
-        <ColumnDefinition Width="5*" />
+        <ColumnDefinition Width="4*" MinWidth="0" />
+        <ColumnDefinition Width="5*" MinWidth="0" />
       </Grid.ColumnDefinitions>
 
       <!-- Left column: General, Pricing, Size and colour. -->
@@ -56,78 +59,69 @@
             </StackPanel>
 
             <Grid ColumnSpacing="10">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" MinWidth="0" />
+              <ColumnDefinition Width="*" MinWidth="0" />
               </Grid.ColumnDefinitions>
-              <StackPanel Grid.Column="0" Spacing="6">
+              <StackPanel Grid.Column="0" Spacing="6" MinWidth="0">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                   <TextBlock Text="{x:Bind services:Loc.Get('Add_ProductType')}" Style="{StaticResource EqLabelStyle}" />
                   <TextBlock Text="*" Style="{StaticResource EqLabelStyle}" Foreground="{ThemeResource EqGoldInkBrush}" />
                 </StackPanel>
-                <Border Style="{StaticResource EqInputContainerStyle}" Padding="4,0">
-                  <ComboBox x:Name="TypeBox" IsEditable="True" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                            Background="Transparent" BorderThickness="0"
-                            ItemsSource="{x:Bind ViewModel.ProductTypeNames}" Text="{x:Bind ViewModel.ProductType, Mode=TwoWay}"
-                            TextSubmitted="OnComboTextSubmitted"
-                            AutomationProperties.Name="{x:Bind services:Loc.Get('Add_ProductType')}" />
+                <Border Style="{StaticResource EqInputContainerStyle}" Padding="0" MinWidth="0">
+                <AutoSuggestBox x:Name="TypeBox" Style="{StaticResource EqAutoSuggestBoxStyle}" HorizontalAlignment="Stretch"
+                                Text="{x:Bind ViewModel.ProductType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                TextMemberPath="Value"
+                                ItemsSource="{x:Bind ViewModel.FilteredProductTypes}" TextChanged="OnMasterDataTextChanged"
+                                ItemTemplate="{StaticResource MasterDataSuggestionTemplate}"
+                                SuggestionChosen="OnMasterDataSuggestionChosen" QuerySubmitted="OnMasterDataQuerySubmitted"
+                                GotFocus="OnMasterDataGotFocus"
+                                MaxSuggestionListHeight="200" AutomationProperties.Name="{x:Bind services:Loc.Get('Add_ProductType')}" />
                 </Border>
               </StackPanel>
-              <StackPanel Grid.Column="1" Spacing="6">
+              <StackPanel Grid.Column="1" Spacing="6" MinWidth="0">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                   <TextBlock Text="{x:Bind services:Loc.Get('Add_Category')}" Style="{StaticResource EqLabelStyle}" />
                   <TextBlock Text="*" Style="{StaticResource EqLabelStyle}" Foreground="{ThemeResource EqGoldInkBrush}" />
                 </StackPanel>
-                <Border Style="{StaticResource EqInputContainerStyle}" Padding="4,0">
-                  <ComboBox x:Name="CategoryBox" IsEditable="True" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                            Background="Transparent" BorderThickness="0"
-                            ItemsSource="{x:Bind ViewModel.CategoryNames}" Text="{x:Bind ViewModel.Category, Mode=TwoWay}"
-                            TextSubmitted="OnComboTextSubmitted"
-                            AutomationProperties.Name="{x:Bind services:Loc.Get('Add_Category')}" />
+                <Border Style="{StaticResource EqInputContainerStyle}" Padding="0" MinWidth="0">
+                <AutoSuggestBox x:Name="CategoryBox" Style="{StaticResource EqAutoSuggestBoxStyle}" HorizontalAlignment="Stretch"
+                                Text="{x:Bind ViewModel.Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                TextMemberPath="Value"
+                                ItemsSource="{x:Bind ViewModel.FilteredCategories}" TextChanged="OnMasterDataTextChanged"
+                                ItemTemplate="{StaticResource MasterDataSuggestionTemplate}"
+                                SuggestionChosen="OnMasterDataSuggestionChosen" QuerySubmitted="OnMasterDataQuerySubmitted"
+                                GotFocus="OnMasterDataGotFocus"
+                                MaxSuggestionListHeight="200" AutomationProperties.Name="{x:Bind services:Loc.Get('Add_Category')}" />
                 </Border>
               </StackPanel>
             </Grid>
 
             <Grid ColumnSpacing="10">
               <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" MinWidth="0" />
+              <ColumnDefinition Width="*" MinWidth="0" />
               </Grid.ColumnDefinitions>
-              <StackPanel Grid.Column="0" Spacing="6">
+              <StackPanel Grid.Column="0" Spacing="6" MinWidth="0">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                   <TextBlock Text="{x:Bind services:Loc.Get('Add_Brand')}" Style="{StaticResource EqLabelStyle}" />
                   <TextBlock Text="*" Style="{StaticResource EqLabelStyle}" Foreground="{ThemeResource EqGoldInkBrush}" />
                 </StackPanel>
-                <Border Style="{StaticResource EqInputContainerStyle}" Padding="4,0">
-                  <ComboBox x:Name="BrandBox" IsEditable="True" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                            Background="Transparent" BorderThickness="0"
-                            ItemsSource="{x:Bind ViewModel.BrandNames}" Text="{x:Bind ViewModel.Brand, Mode=TwoWay}"
-                            TextSubmitted="OnComboTextSubmitted"
-                            AutomationProperties.Name="{x:Bind services:Loc.Get('Add_Brand')}" />
+                <Border Style="{StaticResource EqInputContainerStyle}" Padding="0" MinWidth="0">
+                <AutoSuggestBox x:Name="BrandBox" Style="{StaticResource EqAutoSuggestBoxStyle}" HorizontalAlignment="Stretch"
+                                Text="{x:Bind ViewModel.Brand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                TextMemberPath="Value"
+                                ItemsSource="{x:Bind ViewModel.FilteredBrands}" TextChanged="OnMasterDataTextChanged"
+                                ItemTemplate="{StaticResource MasterDataSuggestionTemplate}"
+                                SuggestionChosen="OnMasterDataSuggestionChosen" QuerySubmitted="OnMasterDataQuerySubmitted"
+                                GotFocus="OnMasterDataGotFocus"
+                                MaxSuggestionListHeight="200" AutomationProperties.Name="{x:Bind services:Loc.Get('Add_Brand')}" />
                 </Border>
               </StackPanel>
-              <controls:EqField Grid.Column="1" Label="{x:Bind services:Loc.Get('Add_ModelLabel')}" IsRequired="True"
+              <controls:EqField Grid.Column="1" MinWidth="0" Label="{x:Bind services:Loc.Get('Add_ModelLabel')}" IsRequired="True"
                                 PlaceholderText="{x:Bind services:Loc.Get('Add_ModelLabelHint')}"
                                 Text="{x:Bind ViewModel.ModelLabel, Mode=TwoWay}" />
             </Grid>
-
-            <!-- Generated name; editable. "Use generated name" appears once it was typed over. -->
-            <StackPanel Spacing="4">
-              <controls:EqField Label="{x:Bind services:Loc.Get('Add_Name')}" IsRequired="True"
-                                Text="{x:Bind ViewModel.Name, Mode=TwoWay}" />
-              <Grid ColumnSpacing="8">
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Add_NameHint')}" Style="{StaticResource EqCaptionStyle}"
-                           TextWrapping="Wrap" VerticalAlignment="Center" />
-                <HyperlinkButton Grid.Column="1" Style="{StaticResource EqLinkButtonStyle}" Padding="0"
-                                 Content="{x:Bind services:Loc.Get('Add_UseGeneratedName')}"
-                                 Visibility="{x:Bind ViewModel.NameEdited, Mode=OneWay}"
-                                 Command="{x:Bind ViewModel.ResetNameCommand}" />
-              </Grid>
-            </StackPanel>
 
             <StackPanel Spacing="6">
               <StackPanel Orientation="Horizontal" Spacing="6">

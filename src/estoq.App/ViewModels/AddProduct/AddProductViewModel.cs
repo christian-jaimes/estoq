@@ -48,6 +48,12 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     public ObservableCollection<string> BrandNames { get; } = [];
 
+    public ObservableCollection<MasterDataSuggestion> FilteredProductTypes { get; } = [];
+
+    public ObservableCollection<MasterDataSuggestion> FilteredCategories { get; } = [];
+
+    public ObservableCollection<MasterDataSuggestion> FilteredBrands { get; } = [];
+
     public ObservableCollection<ChoiceItemViewModel> Sizes { get; } = [];
 
     /// <summary>Every colour, for the "More colours" list.</summary>
@@ -86,10 +92,6 @@ public sealed partial class AddProductViewModel : ObservableObject
     /// <summary>Generated from brand, product type and model label until the owner edits it.</summary>
     [ObservableProperty]
     public partial string Name { get; set; } = string.Empty;
-
-    /// <summary>True when the owner typed over the generated name; "Use generated name" then appears.</summary>
-    [ObservableProperty]
-    public partial bool NameEdited { get; set; }
 
     [ObservableProperty]
     public partial string Description { get; set; } = string.Empty;
@@ -183,6 +185,9 @@ public sealed partial class AddProductViewModel : ObservableObject
         Fill(ProductTypeNames, _catalog.ProductTypes.Select(t => t.Name));
         Fill(CategoryNames, _catalog.Categories);
         Fill(BrandNames, _catalog.Brands);
+        FillSuggestions(FilteredProductTypes, ProductTypeNames);
+        FillSuggestions(FilteredCategories, CategoryNames);
+        FillSuggestions(FilteredBrands, BrandNames);
 
         ShowCost = RolePermissions.IsAllowed(_session.Role, Permission.SeeCostsAndMargins);
         ProductType = string.Empty;
@@ -190,7 +195,6 @@ public sealed partial class AddProductViewModel : ObservableObject
         Brand = string.Empty;
         ModelLabel = string.Empty;
         Name = string.Empty;
-        NameEdited = false;
         Description = string.Empty;
         SupplierBarcode = string.Empty;
         CostText = string.Empty;
@@ -261,17 +265,6 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     partial void OnSellingTextChanged(string value) => OnFormChanged();
 
-    partial void OnNameChanged(string value)
-    {
-        if (_loading || _suppressName)
-        {
-            return;
-        }
-
-        NameEdited = ProductNaming.Clean(value) != GeneratedName();
-        OnFormChanged();
-    }
-
     partial void OnIsMarginNegativeChanged(bool value) => OnPropertyChanged(nameof(IsMarginPositive));
 
     partial void OnColourSearchChanged(string value) => RefreshColourLists();
@@ -291,12 +284,9 @@ public sealed partial class AddProductViewModel : ObservableObject
         OnPropertyChanged(nameof(ImagePosition));
     }
 
-    private bool _suppressName;
-
     [RelayCommand]
     private void ResetName()
     {
-        NameEdited = false;
         SetName(GeneratedName());
         OnFormChanged();
     }
@@ -488,10 +478,7 @@ public sealed partial class AddProductViewModel : ObservableObject
         Touch();
         if (updateName)
         {
-            if (!NameEdited)
-            {
-                SetName(GeneratedName());
-            }
+            SetName(GeneratedName());
 
             UpdateDuplicate();
         }
@@ -506,15 +493,7 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     private void SetName(string name)
     {
-        _suppressName = true;
-        try
-        {
-            Name = name;
-        }
-        finally
-        {
-            _suppressName = false;
-        }
+        Name = name;
     }
 
     private ProductTypeInfo? FindType(string? name)
@@ -768,4 +747,16 @@ public sealed partial class AddProductViewModel : ObservableObject
             target.Add(value);
         }
     }
+
+    private static void FillSuggestions(ObservableCollection<MasterDataSuggestion> target, IEnumerable<string> values)
+    {
+        target.Clear();
+        foreach (var value in values) target.Add(new MasterDataSuggestion(value, false));
+    }
+}
+
+/// <summary>A selectable master-data value, or an inline create action for an unmatched value.</summary>
+public sealed record MasterDataSuggestion(string Value, bool IsCreate)
+{
+    public string DisplayText => IsCreate ? $"+ {Value}" : Value;
 }

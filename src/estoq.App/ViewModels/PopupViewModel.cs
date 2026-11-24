@@ -16,6 +16,7 @@ public sealed partial class PopupViewModel : ObservableObject
     private readonly ISessionService _session;
     private readonly AddProductViewModel _addProduct;
     private PopupKind? _shown;
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _subtitleTimer;
 
     public PopupViewModel(IPopupService popups, ILocalizer localizer, ISessionService session, AddProductViewModel addProduct)
     {
@@ -29,6 +30,14 @@ public sealed partial class PopupViewModel : ObservableObject
         // The Add product form decides when its primary action is allowed; saving closes the pop-up.
         _addProduct.PropertyChanged += (_, e) =>
         {
+            if (e.PropertyName == nameof(AddProductViewModel.Name) && _popups.Current == PopupKind.AddItems)
+            {
+                Title = _addProduct.Name.Length == 0 ? Text("Items", "Title") : $"{Text("Items", "Title")} – {_addProduct.Name}";
+                if (_subtitleTimer is null)
+                {
+                    Subtitle = _addProduct.Name.Length == 0 ? string.Empty : _localizer["Add_NameHint"];
+                }
+            }
             if (e.PropertyName == nameof(AddProductViewModel.CanSave) && _popups.Current == PopupKind.AddItems)
             {
                 IsPrimaryEnabled = _addProduct.CanSave;
@@ -101,6 +110,8 @@ public sealed partial class PopupViewModel : ObservableObject
     {
         if (_popups.Current is not { } kind)
         {
+            _subtitleTimer?.Stop();
+            _subtitleTimer = null;
             if (!IsOpen)
             {
                 return;
@@ -155,6 +166,29 @@ public sealed partial class PopupViewModel : ObservableObject
         if (kind == PopupKind.AddItems && _shown != kind)
         {
             _addProduct.Reset();
+        }
+
+        if (kind == PopupKind.AddItems)
+        {
+            Title = _addProduct.Name.Length == 0 ? Text("Items", "Title") : $"{Text("Items", "Title")} – {_addProduct.Name}";
+            Subtitle = Text("Items", "Subtitle");
+            if (_shown != kind)
+            {
+                _subtitleTimer?.Stop();
+                _subtitleTimer = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().CreateTimer();
+                _subtitleTimer.Interval = TimeSpan.FromSeconds(5);
+                _subtitleTimer.IsRepeating = false;
+                _subtitleTimer.Tick += (_, _) =>
+                {
+                    if (_popups.Current == PopupKind.AddItems)
+                    {
+                        Subtitle = _addProduct.Name.Length == 0 ? string.Empty : _localizer["Add_NameHint"];
+                    }
+                    _subtitleTimer?.Stop();
+                    _subtitleTimer = null;
+                };
+                _subtitleTimer.Start();
+            }
         }
 
         _shown = kind;

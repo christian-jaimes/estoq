@@ -128,7 +128,7 @@
   <data name="Add_ModelLabel" xml:space="preserve"><value>Etiqueta de modelo</value></data>
   <data name="Add_ModelLabelHint" xml:space="preserve"><value>p. ej. Estampado rojo</value></data>
   <data name="Add_Name" xml:space="preserve"><value>Nombre del producto</value></data>
-  <data name="Add_NameHint" xml:space="preserve"><value>Se arma con la marca, el tipo de producto y el modelo.</value></data>
+  <data name="Add_NameHint" xml:space="preserve"><value>El nombre del producto se genera con la marca, el tipo de producto y el modelo.</value></data>
   <data name="Add_UseGeneratedName" xml:space="preserve"><value>Usar nombre generado</value></data>
   <data name="Add_Description" xml:space="preserve"><value>Descripción</value></data>
   <data name="Add_DescriptionHint" xml:space="preserve"><value>p. ej. Camiseta de algodón, corte regular…</value></data>
