@@ -215,7 +215,7 @@
                 <ItemsRepeater.ItemTemplate>
                   <DataTemplate x:DataType="vm:ChoiceItemViewModel">
                     <ToggleButton Style="{StaticResource AddChoiceToggleStyle}" Content="{x:Bind Label}"
-                                  IsChecked="{x:Bind IsSelected, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                                  IsChecked="{x:Bind IsSelected, Mode=OneWay}" Click="OnChoiceClick" HorizontalAlignment="Stretch">
                       <ToggleButton.Resources>
                         <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="{ThemeResource SystemAccentColor}" />
                         <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="{ThemeResource SystemAccentColorLight1}" />
@@ -255,7 +255,7 @@
                 </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
                   <DataTemplate x:DataType="vm:ChoiceItemViewModel">
-                    <ToggleButton Width="40" Height="40" Padding="0" CornerRadius="20" IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                    <ToggleButton Width="40" Height="40" Padding="0" CornerRadius="20" IsChecked="{x:Bind IsSelected, Mode=OneWay}" Click="OnChoiceClick"
                                   ToolTipService.ToolTip="{x:Bind Label}" AutomationProperties.Name="{x:Bind Label}"
                                   Background="Transparent" BorderBrush="{ThemeResource EqBorderBrush}">
                       <ToggleButton.Resources>
@@ -293,7 +293,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Ellipse Width="20" Height="20" Fill="{x:Bind SwatchBrush}" Stroke="{ThemeResource EqBorderBrush}"
                                          StrokeThickness="1" VerticalAlignment="Center" />
-                                <CheckBox Grid.Column="1" Content="{x:Bind Label}" IsChecked="{x:Bind IsSelected, Mode=TwoWay}" MinWidth="0" />
+                                <CheckBox Grid.Column="1" Content="{x:Bind Label}" IsChecked="{x:Bind IsSelected, Mode=OneWay}" Click="OnChoiceClick" MinWidth="0" />
                               </Grid>
                             </DataTemplate>
                           </ItemsRepeater.ItemTemplate>
@@ -459,12 +459,12 @@
                                  TextTrimming="CharacterEllipsis" />
                     </StackPanel>
                     <TextBox Grid.Column="1" VerticalAlignment="Center" FontFamily="{StaticResource EqUiFont}" FontSize="13"
-                             Text="{x:Bind Sku, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="40"
+                             Text="{x:Bind Sku, Mode=OneWay}" TextChanged="OnSkuTextChanged" MaxLength="40"
                              AutomationProperties.Name="{x:Bind Label}" />
                     <TextBlock Grid.Column="2" Text="{x:Bind InternalBarcode}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center"
                                IsTextSelectionEnabled="True" />
                     <NumberBox Grid.Column="3" VerticalAlignment="Center" Minimum="0" Maximum="1000000" SmallChange="1" LargeChange="10"
-                               SpinButtonPlacementMode="Inline" Value="{x:Bind OpeningStock, Mode=TwoWay}"
+                               SpinButtonPlacementMode="Inline" Value="{x:Bind OpeningStock, Mode=OneWay}" ValueChanged="OnStockValueChanged"
                                AutomationProperties.Name="{x:Bind Label}" />
                     <Button Grid.Column="4" Style="{StaticResource EqPlainIconButtonStyle}" Click="OnRemoveVariantClick"
                             VerticalAlignment="Center">

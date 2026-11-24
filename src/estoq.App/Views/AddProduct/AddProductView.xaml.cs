@@ -74,4 +74,34 @@ public sealed partial class AddProductView : UserControl
             ViewModel.RemoveVariantCommand.Execute(row);
         }
     }
+
+    // Bindings inside the row templates are one-way; edits come back through these handlers.
+    private void OnChoiceClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { DataContext: ChoiceItemViewModel item } element)
+        {
+            var isChecked = element switch
+            {
+                Microsoft.UI.Xaml.Controls.Primitives.ToggleButton toggle => toggle.IsChecked == true,
+                _ => item.IsSelected,
+            };
+            item.IsSelected = isChecked;
+        }
+    }
+
+    private void OnSkuTextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (sender is TextBox { DataContext: VariantRowViewModel row } box && row.Sku != box.Text)
+        {
+            row.Sku = box.Text;
+        }
+    }
+
+    private void OnStockValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        if (sender.DataContext is VariantRowViewModel row && !double.IsNaN(args.NewValue))
+        {
+            row.OpeningStock = args.NewValue;
+        }
+    }
 }
