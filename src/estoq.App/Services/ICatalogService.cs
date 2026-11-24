@@ -1,10 +1,13 @@
 namespace Estoq.App.Services;
 
 /// <summary>A kind of product and the sizes it offers. No sizes means a one-size item.</summary>
-public sealed record ProductTypeInfo(string Name, IReadOnlyList<string> Sizes);
+public sealed record ProductTypeInfo(string Name, IReadOnlyList<string> Sizes, string Id = "");
 
 /// <summary>A seeded colour. <see cref="Key"/> names the translated label (<c>Colour_&lt;Key&gt;</c>); <see cref="Hex"/> is the swatch.</summary>
-public sealed record ColourInfo(string Key, string Hex, bool IsQuickPick);
+public sealed record ColourInfo(string Key, string Hex, bool IsQuickPick, string Family = "");
+
+/// <summary>A seeded size from the size master data.</summary>
+public sealed record SizeInfo(string Name, int SortOrder, string ProductTypeId = "");
 
 /// <summary>A brand displayed by the product editor, with optional user-facing code metadata.</summary>
 public sealed record BrandInfo(string Id, string Name, string SkuCode, bool IsActive);
@@ -44,6 +47,8 @@ public interface ICatalogService
     IReadOnlyList<BrandInfo> BrandDetails { get; }
 
     IReadOnlyList<ColourInfo> Colours { get; }
+
+    IReadOnlyList<SizeInfo> Sizes { get; }
 
     /// <summary>The products that exist, for the duplicate check.</summary>
     IReadOnlyList<Estoq.Core.Products.ExistingProduct> ExistingProducts { get; }

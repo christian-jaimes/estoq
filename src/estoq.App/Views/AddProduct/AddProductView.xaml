@@ -75,17 +75,17 @@
       </Grid>
     </Border>
 
-    <Grid Grid.Row="1" ColumnSpacing="16">
+    <Grid Grid.Row="1" ColumnSpacing="12">
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="4*" MinWidth="0" />
-        <ColumnDefinition Width="5*" MinWidth="0" />
+        <ColumnDefinition Width="2*" MinWidth="0" />
+        <ColumnDefinition Width="3*" MinWidth="0" />
       </Grid.ColumnDefinitions>
 
-      <!-- Left column: Pricing keeps its natural height; Description absorbs the remaining space in General. -->
+      <!-- General and pricing share the left column. -->
       <Grid Grid.Column="0" RowSpacing="10">
         <Grid.RowDefinitions>
           <RowDefinition Height="*" />
-          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Style="{StaticResource EqCardStyle}" Padding="14">
@@ -266,27 +266,26 @@
         <!-- Size and colour: only ticked combinations become variants. -->
       </Grid>
 
-      <!-- Right column: image beside size and colour, then the variants table. -->
+      <!-- Product image and size and colour sit in separate columns above the variants table. -->
       <Grid Grid.Column="1" RowSpacing="10">
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto" />
           <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid ColumnSpacing="10">
+        <Grid Grid.Row="0" ColumnSpacing="10" Height="240" VerticalAlignment="Top">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="0.9*" MinWidth="0" />
+            <ColumnDefinition Width="1.1*" MinWidth="0" />
           </Grid.ColumnDefinitions>
-
-          <Border Grid.Column="0" Style="{StaticResource EqCardStyle}" Padding="14">
-            <StackPanel Spacing="12">
+        <Border Grid.Column="0" Style="{StaticResource EqCardStyle}" Padding="12" Height="240" VerticalAlignment="Top">
+            <StackPanel Spacing="8">
               <StackPanel Orientation="Horizontal" Spacing="12">
                 <FontIcon Glyph="&#xE1A1;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
                 <TextBlock Text="{x:Bind services:Loc.Get('Add_Image')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
               </StackPanel>
-              <Grid Height="195" AllowDrop="True" DragOver="OnProductImageDragOver" Drop="OnProductImageDrop"
+              <Grid Height="170" HorizontalAlignment="Stretch" AllowDrop="True" DragOver="OnProductImageDragOver" Drop="OnProductImageDrop"
                     KeyDown="OnProductImageKeyDown">
-                <Border Style="{StaticResource EqInputContainerStyle}" Height="195" CornerRadius="{StaticResource EqRadiusMd}"
+                <Border Style="{StaticResource EqInputContainerStyle}" Height="170" CornerRadius="{StaticResource EqRadiusMd}"
                         Background="{ThemeResource EqSurfaceBrush}" Padding="0"
                         Visibility="{x:Bind ViewModel.HasNoMainImage, Mode=OneWay}">
                   <Grid>
@@ -308,12 +307,12 @@
                   </Grid>
                 </Border>
 
-                <Grid ColumnSpacing="10" Height="195" Visibility="{x:Bind ViewModel.HasMainImage, Mode=OneWay}">
+                <Grid ColumnSpacing="10" Height="170" HorizontalAlignment="Stretch" Visibility="{x:Bind ViewModel.HasMainImage, Mode=OneWay}">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" MinWidth="0" />
                     <ColumnDefinition Width="70" />
                   </Grid.ColumnDefinitions>
-                  <Border Grid.Column="0" Height="195" CornerRadius="{StaticResource EqRadiusMd}"
+                  <Border Grid.Column="0" Height="170" CornerRadius="{StaticResource EqRadiusMd}"
                           Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
                     <Grid>
                       <Button Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Padding="0"
@@ -336,7 +335,7 @@
                       </Button>
                     </Grid>
                   </Border>
-                  <ScrollViewer x:Name="ImageThumbnailScrollViewer" Grid.Column="1" Width="70" Height="195"
+                  <ScrollViewer x:Name="ImageThumbnailScrollViewer" Grid.Column="1" Width="70" Height="170"
                                 VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
                     <ItemsRepeater ItemsSource="{x:Bind ViewModel.Images}">
                       <ItemsRepeater.Layout><StackLayout Spacing="8" /></ItemsRepeater.Layout>
@@ -376,70 +375,109 @@
             </StackPanel>
           </Border>
 
-          <Border Grid.Column="1" Style="{StaticResource EqCardStyle}" Padding="14">
-            <StackPanel Spacing="8">
-              <StackPanel Orientation="Horizontal" Spacing="12">
+        <Border Grid.Column="1" Style="{StaticResource EqCardStyle}" Padding="10" Height="240" VerticalAlignment="Top">
+            <StackPanel Spacing="4">
+              <StackPanel Orientation="Horizontal" Spacing="10" Margin="0">
                 <FontIcon Glyph="&#xE53B;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
                 <TextBlock Text="{x:Bind services:Loc.Get('Add_SizeColour')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
               </StackPanel>
-              <TextBlock Text="{x:Bind services:Loc.Get('Add_Sizes')}" Style="{StaticResource EqLabelStyle}" />
-              <ItemsRepeater ItemsSource="{x:Bind ViewModel.Sizes}">
-                <ItemsRepeater.Layout><UniformGridLayout MinItemWidth="44" MinItemHeight="32" MinRowSpacing="5" MinColumnSpacing="5" ItemsStretch="None" /></ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
-                  <DataTemplate x:DataType="vm:ChoiceItemViewModel">
-                    <ToggleButton Style="{StaticResource AddChoiceToggleStyle}" Height="32" MinWidth="42" Padding="7,0" Content="{x:Bind Label}"
-                                  IsChecked="{x:Bind IsSelected, Mode=OneWay}" Click="OnChoiceClick" />
-                  </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-              </ItemsRepeater>
-              <Button Style="{StaticResource EqSecondaryButtonStyle}" HorizontalAlignment="Left" Padding="8,4">
-                <TextBlock Text="+ Add size" />
+              <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind services:Loc.Get('Add_Sizes')}" Style="{StaticResource EqLabelStyle}" FontSize="14" VerticalAlignment="Center" />
+                <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Padding="14,8">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="+" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="18" VerticalAlignment="Center" />
+                    <TextBlock Text="Add size" />
+                  </StackPanel>
                 <Button.Flyout>
-                  <Flyout x:Name="AddSizeFlyout">
-                    <StackPanel Spacing="8" Width="180">
-                      <TextBox x:Name="NewSizeBox" PlaceholderText="New size" MaxLength="8" KeyDown="OnNewSizeKeyDown" />
-                      <Button Style="{StaticResource EqPrimaryButtonStyle}" HorizontalAlignment="Stretch" Content="Add" Click="OnAddSizeClick" />
-                    </StackPanel>
-                  </Flyout>
-                </Button.Flyout>
-              </Button>
-              <TextBlock Text="{x:Bind services:Loc.Get('Add_Colours')}" Style="{StaticResource EqLabelStyle}" />
-              <ItemsRepeater ItemsSource="{x:Bind ViewModel.VisibleColours}">
-                <ItemsRepeater.Layout><UniformGridLayout MinItemWidth="34" MinItemHeight="34" MinRowSpacing="5" MinColumnSpacing="5" ItemsStretch="None" /></ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
-                  <DataTemplate x:DataType="vm:ChoiceItemViewModel">
-                    <ToggleButton Width="34" Height="34" Padding="0" CornerRadius="17" IsChecked="{x:Bind IsSelected, Mode=OneWay}" Click="OnChoiceClick"
-                                  ToolTipService.ToolTip="{x:Bind Label}" AutomationProperties.Name="{x:Bind Label}" Background="Transparent" BorderBrush="{ThemeResource EqBorderBrush}">
-                      <Ellipse Width="24" Height="24" Fill="{x:Bind SwatchBrush}" Stroke="{ThemeResource EqBorderBrush}" StrokeThickness="1" />
-                    </ToggleButton>
-                  </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-              </ItemsRepeater>
-              <Button Style="{StaticResource EqSecondaryButtonStyle}" HorizontalAlignment="Left" Padding="8,4">
-                <TextBlock Text="{x:Bind services:Loc.Get('Add_MoreColours')}" />
-                <Button.Flyout>
-                  <Flyout>
-                    <StackPanel Spacing="8" Width="220">
-                      <TextBox PlaceholderText="{x:Bind services:Loc.Get('Add_SearchColours')}" Text="{x:Bind ViewModel.ColourSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                      <ScrollViewer MaxHeight="240" VerticalScrollBarVisibility="Auto">
-                        <ItemsRepeater ItemsSource="{x:Bind ViewModel.FilteredColours}">
-                          <ItemsRepeater.Layout><StackLayout Spacing="2" /></ItemsRepeater.Layout>
+                  <Flyout FlyoutPresenterStyle="{StaticResource EqNotificationFlyoutStyle}">
+                    <StackPanel Spacing="0" Width="320">
+                      <TextBox Margin="12,12,12,8" Height="44" PlaceholderText="Search sizes…" Text="{x:Bind ViewModel.ProductTypeSizeSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                      <ScrollViewer MaxHeight="280" VerticalScrollBarVisibility="Auto" Margin="6,0">
+                        <ItemsRepeater ItemsSource="{x:Bind ViewModel.TypeSizeOptions}">
+                          <ItemsRepeater.Layout><StackLayout Spacing="4" /></ItemsRepeater.Layout>
                           <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="vm:ChoiceItemViewModel">
-                              <CheckBox Content="{x:Bind Label}" IsChecked="{x:Bind IsSelected, Mode=OneWay}" Click="OnChoiceClick" />
+                              <CheckBox Content="{x:Bind Label}" Margin="4,0" MinHeight="48" Padding="14,8,10,8"
+                                        FontFamily="{StaticResource EqUiFont}" FontSize="16" Foreground="{ThemeResource EqTextBrush}"
+                                        IsChecked="{x:Bind IsSelected, Mode=TwoWay}" Click="OnChoiceClick" />
                             </DataTemplate>
                           </ItemsRepeater.ItemTemplate>
                         </ItemsRepeater>
                       </ScrollViewer>
+                      <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" Margin="0,8,0,0" />
+                      <Grid ColumnSpacing="10" Padding="12">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <TextBox x:Name="NewSizeBox" Grid.Column="0" Height="46" PlaceholderText="Custom size" MaxLength="12" KeyDown="OnNewSizeKeyDown" />
+                        <Button Grid.Column="1" Style="{StaticResource EqPrimaryButtonStyle}" MinWidth="88" Height="46" Content="+  Add" Click="OnAddSizeClick" />
+                      </Grid>
                     </StackPanel>
                   </Flyout>
                 </Button.Flyout>
-              </Button>
+                </Button>
+              </Grid>
+              <ItemsRepeater ItemsSource="{x:Bind ViewModel.ProductTypeSizes}" Height="42" VerticalAlignment="Top">
+                <ItemsRepeater.Layout><UniformGridLayout MinItemWidth="0" MinItemHeight="34" MinRowSpacing="4" MinColumnSpacing="5" ItemsStretch="None" /></ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                  <DataTemplate x:DataType="vm:ChoiceItemViewModel">
+                    <ToggleButton Style="{StaticResource AddChoiceToggleStyle}" Height="34" MinWidth="48" Padding="8,0" HorizontalAlignment="Left" Content="{x:Bind Label}"
+                                  IsChecked="{x:Bind IsSelected, Mode=TwoWay}" Click="OnChoiceClick" />
+                  </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+              </ItemsRepeater>
+              <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" Margin="0,3" />
+              <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind services:Loc.Get('Add_Colours')}" Style="{StaticResource EqLabelStyle}" FontSize="14" VerticalAlignment="Center" />
+                <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Padding="14,8">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="+" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="18" VerticalAlignment="Center" />
+                    <TextBlock Text="Add colour" />
+                  </StackPanel>
+                <Button.Flyout>
+                  <Flyout FlyoutPresenterStyle="{StaticResource EqNotificationFlyoutStyle}">
+                    <StackPanel Spacing="0" Width="340">
+                      <TextBox Margin="12,12,12,8" Height="44" PlaceholderText="Search colours…" Text="{x:Bind ViewModel.ColourSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                      <ScrollViewer MaxHeight="280" VerticalScrollBarVisibility="Auto" Margin="6,0">
+                        <ItemsRepeater ItemsSource="{x:Bind ViewModel.FilteredColours}">
+                          <ItemsRepeater.Layout><StackLayout Spacing="4" /></ItemsRepeater.Layout>
+                          <ItemsRepeater.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ChoiceItemViewModel">
+                              <CheckBox Margin="4,0" MinHeight="48" Padding="14,8,10,8" FontFamily="{StaticResource EqUiFont}"
+                                        FontSize="16" Foreground="{ThemeResource EqTextBrush}"
+                                        IsChecked="{x:Bind IsSelected, Mode=TwoWay}" Click="OnChoiceClick">
+                                <StackPanel Orientation="Horizontal" Spacing="12"><Ellipse Width="24" Height="24" Fill="{x:Bind SwatchBrush}" Stroke="{ThemeResource EqBorderBrush}"/><TextBlock Text="{x:Bind Label}" VerticalAlignment="Center"/></StackPanel>
+                              </CheckBox>
+                            </DataTemplate>
+                          </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                      </ScrollViewer>
+                      <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" Margin="0,8,0,0" />
+                      <Grid ColumnSpacing="10" Padding="12">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <TextBox x:Name="NewColourBox" Grid.Column="0" Height="46" PlaceholderText="Custom colour" MaxLength="32" />
+                        <Button Grid.Column="1" Style="{StaticResource EqPrimaryButtonStyle}" MinWidth="88" Height="46" Content="+  Add" Click="OnAddColourClick" />
+                      </Grid>
+                    </StackPanel>
+                  </Flyout>
+                </Button.Flyout>
+                </Button>
+              </Grid>
+              <ItemsRepeater ItemsSource="{x:Bind ViewModel.QuickPickColours}" Height="40" VerticalAlignment="Top">
+                <ItemsRepeater.Layout><UniformGridLayout MinItemWidth="36" MinItemHeight="36" MinRowSpacing="2" MinColumnSpacing="5" ItemsStretch="None" /></ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                  <DataTemplate x:DataType="vm:ChoiceItemViewModel">
+                    <ToggleButton Width="36" Height="36" Padding="0" CornerRadius="18" IsChecked="{x:Bind IsSelected, Mode=TwoWay}" Click="OnChoiceClick"
+                                  ToolTipService.ToolTip="{x:Bind Label}" AutomationProperties.Name="{x:Bind Label}" Background="Transparent" BorderBrush="{ThemeResource EqBorderBrush}">
+                      <Ellipse Width="28" Height="28" Fill="{x:Bind SwatchBrush}" Stroke="{ThemeResource EqBorderBrush}" StrokeThickness="1" />
+                    </ToggleButton>
+                  </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+              </ItemsRepeater>
             </StackPanel>
           </Border>
-        </Grid>
-
         <!-- Variants and opening stock. SKU can be typed over; the barcode is generated. -->
+        </Grid>
         <Border Grid.Row="1" Style="{StaticResource EqCardStyle}" Padding="14" VerticalAlignment="Stretch">
           <StackPanel Spacing="8">
             <Grid ColumnSpacing="12">

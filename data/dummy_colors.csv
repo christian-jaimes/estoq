@@ -1,0 +1,26 @@
+color_id,color_name,sku_code,hex_code,color_family,finish,is_active
+COL-01,Black,BLA,#000000,Black,Solid,True
+COL-02,Core Black,COR,#111111,Black,Solid,True
+COL-03,White,WHI,#FFFFFF,White,Solid,True
+COL-04,Off-White,OFF,#FAF9F6,White,Solid,True
+COL-05,Dark Blue,DAR,#00008B,Blue,Wash,True
+COL-06,Navy,NAV,#1B2A4A,Blue,Solid,True
+COL-07,Sky Blue,SKY,#87CEEB,Blue,Solid,True
+COL-08,Emerald Green,EME,#046307,Green,Solid,True
+COL-09,Olive,OLI,#556B2F,Green,Solid,True
+COL-10,Teal,TEA,#008080,Green,Solid,True
+COL-11,Grey,GRE,#808080,Grey,Solid,True
+COL-12,Charcoal,CHA,#36454F,Grey,Solid,True
+COL-13,Heather Grey,HTG,#9AA297,Grey,Melange,True
+COL-14,Tan,TAN,#D2B48C,Brown,Solid,True
+COL-15,Camel,CAM,#C19A6B,Brown,Solid,True
+COL-16,Chocolate Brown,CHC,#3D1C02,Brown,Solid,True
+COL-17,Beige,BEI,#F5F5DC,Neutral,Solid,True
+COL-18,Khaki,KHA,#C3B091,Neutral,Solid,True
+COL-19,Burgundy,BUR,#800020,Red,Solid,True
+COL-20,Cherry Red,CHE,#990000,Red,Solid,True
+COL-21,Coral,CRL,#FF7F50,Orange,Solid,True
+COL-22,Mustard Yellow,MUS,#FFDB58,Yellow,Solid,True
+COL-23,Blush Pink,BLS,#DE5D83,Pink,Solid,True
+COL-24,Silver,SIL,#C0C0C0,Metallic,Metallic,True
+COL-25,Tortoiseshell,TOR,#5C3A21,Brown,Pattern,True

@@ -188,7 +188,22 @@ public sealed partial class AddProductView : UserControl
     {
         ViewModel.AddCustomSize(NewSizeBox.Text);
         NewSizeBox.Text = string.Empty;
-        AddSizeFlyout.Hide();
+    }
+
+    private void OnAddColourClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.AddCustomColour(NewColourBox.Text);
+        NewColourBox.Text = string.Empty;
+    }
+
+    private void OnRemoveSizeClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { DataContext: ChoiceItemViewModel size }) ViewModel.RemoveSize(size);
+    }
+
+    private void OnRemoveColourClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { DataContext: ChoiceItemViewModel colour }) ViewModel.RemoveColour(colour);
     }
 
     private void CenterSelectedThumbnail()
@@ -278,6 +293,7 @@ public sealed partial class AddProductView : UserControl
         {
             var isChecked = element switch
             {
+                CheckBox checkBox => checkBox.IsChecked == true,
                 Microsoft.UI.Xaml.Controls.Primitives.ToggleButton toggle => toggle.IsChecked == true,
                 _ => item.IsSelected,
             };

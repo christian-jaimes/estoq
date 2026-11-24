@@ -56,14 +56,24 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     public ObservableCollection<ChoiceItemViewModel> Sizes { get; } = [];
 
-    /// <summary>Every colour, for the "More colours" list.</summary>
+    public ObservableCollection<ChoiceItemViewModel> SelectedSizes { get; } = [];
+
+    public ObservableCollection<ChoiceItemViewModel> ProductTypeSizes { get; } = [];
+
+    public ObservableCollection<ChoiceItemViewModel> TypeSizeOptions { get; } = [];
+
+    /// <summary>Every colour, for the multi-select list.</summary>
     public ObservableCollection<ChoiceItemViewModel> Colours { get; } = [];
 
-    /// <summary>The swatches shown in the card: quick picks plus any other colour that is ticked.</summary>
+    /// <summary>The swatches shown in the card: colours the user has selected.</summary>
     public ObservableCollection<ChoiceItemViewModel> VisibleColours { get; } = [];
+
+    public ObservableCollection<ChoiceItemViewModel> QuickPickColours { get; } = [];
 
     /// <summary>The colours matching the search box in "More colours".</summary>
     public ObservableCollection<ChoiceItemViewModel> FilteredColours { get; } = [];
+
+    public ObservableCollection<ChoiceItemViewModel> FilteredSizes { get; } = [];
 
     public ObservableCollection<VariantRowViewModel> Variants { get; } = [];
 
@@ -107,6 +117,12 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     [ObservableProperty]
     public partial string ColourSearch { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string SizeSearch { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string ProductTypeSizeSearch { get; set; } = string.Empty;
 
     /// <summary>Name of the existing product with the same brand, product type and model label; empty when none.</summary>
     [ObservableProperty]
@@ -215,6 +231,8 @@ public sealed partial class AddProductViewModel : ObservableObject
         CostText = string.Empty;
         SellingText = string.Empty;
         ColourSearch = string.Empty;
+        SizeSearch = string.Empty;
+        ProductTypeSizeSearch = string.Empty;
         Images.Clear();
         MainImage = null;
         OnPropertyChanged(nameof(HasImages));
@@ -222,13 +240,8 @@ public sealed partial class AddProductViewModel : ObservableObject
 
         Sizes.Clear();
         Colours.Clear();
-        foreach (var colour in _catalog.Colours)
-        {
-            var item = new ChoiceItemViewModel(colour.Key, _localizer[$"Colour_{colour.Key}"], colour.Hex, colour.IsQuickPick);
-            item.PropertyChanged += OnChoiceChanged;
-            Colours.Add(item);
-        }
-
+        LoadMasterChoices();
+        RefreshSizeLists();
         RefreshColourLists();
         RebuildVariants();
         UpdateDuplicate();
@@ -245,12 +258,8 @@ public sealed partial class AddProductViewModel : ObservableObject
         {
             _sizesFor = key;
             Sizes.Clear();
-            foreach (var size in info?.Sizes ?? Array.Empty<string>())
-            {
-                var item = new ChoiceItemViewModel(size, size);
-                item.PropertyChanged += OnChoiceChanged;
-                Sizes.Add(item);
-            }
+            LoadMasterChoices();
+            RefreshSizeLists();
 
             // A different product type has its own size set, so the SKUs built from the old type no longer apply.
             _rows.Clear();
@@ -283,6 +292,10 @@ public sealed partial class AddProductViewModel : ObservableObject
     partial void OnIsMarginNegativeChanged(bool value) => OnPropertyChanged(nameof(IsMarginPositive));
 
     partial void OnColourSearchChanged(string value) => RefreshColourLists();
+
+    partial void OnSizeSearchChanged(string value) => RefreshSizeLists();
+
+    partial void OnProductTypeSizeSearchChanged(string value) => RefreshSizeLists();
 
     partial void OnDuplicateNameChanged(string value)
     {
@@ -325,9 +338,26 @@ public sealed partial class AddProductViewModel : ObservableObject
         var existing = Sizes.FirstOrDefault(s => ProductNaming.Key(s.Value) == ProductNaming.Key(size));
         if (existing is null)
         {
-            existing = new ChoiceItemViewModel(size, size);
+            existing = new ChoiceItemViewModel(size, size, isQuickPick: false, isCustom: true);
             existing.PropertyChanged += OnChoiceChanged;
             Sizes.Add(existing);
+        }
+
+        existing.IsSelected = true;
+    }
+
+    /// <summary>Adds a custom colour and selects it for this product.</summary>
+    public void AddCustomColour(string? text)
+    {
+        var colour = ProductNaming.Clean(text);
+        if (colour.Length == 0) return;
+        var existing = Colours.FirstOrDefault(item => ProductNaming.Key(item.Value) == ProductNaming.Key(colour));
+        if (existing is null)
+        {
+            existing = new ChoiceItemViewModel(colour, colour, "#B89A5A", false, isCustom: true);
+            existing.PropertyChanged += OnChoiceChanged;
+            Colours.Add(existing);
+            RefreshColourLists();
         }
 
         existing.IsSelected = true;
@@ -497,6 +527,10 @@ public sealed partial class AddProductViewModel : ObservableObject
         {
             RefreshColourLists();
         }
+        else
+        {
+            RefreshSizeLists();
+        }
 
         RebuildVariants();
         OnFormChanged();
@@ -546,17 +580,110 @@ public sealed partial class AddProductViewModel : ObservableObject
     private void RefreshColourLists()
     {
         VisibleColours.Clear();
-        foreach (var colour in Colours.Where(c => c.IsQuickPick || c.IsSelected))
+        foreach (var colour in Colours.Where(c => c.IsSelected))
         {
             VisibleColours.Add(colour);
         }
 
+        QuickPickColours.Clear();
+        var commonColours = new HashSet<string>(
+            ["WHITE", "BLACK", "NAVY", "EMERALD GREEN", "CHERRY RED", "BEIGE", "BLUSH PINK", "CHOCOLATE BROWN"],
+            StringComparer.Ordinal);
+        foreach (var colour in Colours.Where(c => commonColours.Contains(ProductNaming.Key(c.Value)) || c.IsSelected)
+                     .OrderByDescending(colour => colour.IsSelected))
+        {
+            QuickPickColours.Add(colour);
+        }
+
         var search = ProductNaming.Key(ColourSearch);
         FilteredColours.Clear();
-        foreach (var colour in Colours.Where(c => search.Length == 0 || ProductNaming.Key(c.Label).Contains(search, StringComparison.Ordinal)))
+        foreach (var colour in Colours.Where(c => search.Length == 0 || ProductNaming.Key(c.Label).Contains(search, StringComparison.Ordinal))
+                     .OrderByDescending(colour => colour.IsSelected))
         {
             FilteredColours.Add(colour);
         }
+    }
+
+    private void RefreshSizeLists()
+    {
+        var search = ProductNaming.Key(SizeSearch);
+        FilteredSizes.Clear();
+        foreach (var size in Sizes.Where(item => search.Length == 0 || ProductNaming.Key(item.Label).Contains(search, StringComparison.Ordinal)))
+        {
+            FilteredSizes.Add(size);
+        }
+
+        SelectedSizes.Clear();
+        foreach (var size in Sizes.Where(item => item.IsSelected)) SelectedSizes.Add(size);
+
+        var typeSearch = ProductNaming.Key(ProductTypeSizeSearch);
+        var typeSizes = FindType(ProductType)?.Sizes ?? (string.IsNullOrWhiteSpace(ProductType) ? new[] { "XS", "S", "M", "L", "XL" } : Array.Empty<string>());
+        TypeSizeOptions.Clear();
+        var availableTypeSizes = Sizes.Where(item => item.IsCustom || typeSizes.Any(value => ProductNaming.Key(value) == ProductNaming.Key(item.Value))).ToList();
+        foreach (var size in availableTypeSizes.Where(item =>
+                    (typeSearch.Length == 0 || ProductNaming.Key(item.Label).Contains(typeSearch, StringComparison.Ordinal)))
+                     .OrderByDescending(item => item.IsSelected))
+        {
+            TypeSizeOptions.Add(size);
+        }
+
+        ProductTypeSizes.Clear();
+        var displaySizes = availableTypeSizes.Where(item => item.IsSelected)
+            .Concat(availableTypeSizes.Where(item => !item.IsSelected).Take(Math.Max(0, 5 - availableTypeSizes.Count(item => item.IsSelected))))
+            .ToList();
+        foreach (var size in displaySizes)
+        {
+            ProductTypeSizes.Add(size);
+        }
+    }
+
+    public void RemoveSize(ChoiceItemViewModel? size)
+    {
+        if (size is not null) size.IsSelected = false;
+    }
+
+    public void RemoveColour(ChoiceItemViewModel? colour)
+    {
+        if (colour is not null) colour.IsSelected = false;
+    }
+
+    private void LoadMasterChoices()
+    {
+        var typeInfo = FindType(ProductType);
+        var typeSizes = typeInfo?.Sizes ?? (string.IsNullOrWhiteSpace(ProductType) ? new[] { "XS", "S", "M", "L", "XL" } : Array.Empty<string>());
+        var typeSizeKeys = typeSizes.Select(ProductNaming.Key).ToHashSet(StringComparer.Ordinal);
+        Sizes.Clear();
+        foreach (var size in _catalog.Sizes.Where(item => typeInfo is null
+                    ? string.IsNullOrWhiteSpace(ProductType) && item.ProductTypeId.Length == 0
+                    : item.ProductTypeId == typeInfo.Id)
+                .OrderBy(item => item.SortOrder))
+        {
+            var isProductTypeSize = typeSizeKeys.Contains(ProductNaming.Key(size.Name));
+            var item = new ChoiceItemViewModel(size.Name, size.Name, isQuickPick: false,
+                sortOrder: isProductTypeSize ? int.MaxValue : size.SortOrder);
+            item.PropertyChanged += OnChoiceChanged;
+            Sizes.Add(item);
+        }
+
+        foreach (var typeSize in typeSizes.Where(size => !Sizes.Any(item => ProductNaming.Key(item.Value) == ProductNaming.Key(size))))
+        {
+            var item = new ChoiceItemViewModel(typeSize, typeSize, sortOrder: int.MaxValue, isCustom: true);
+            item.PropertyChanged += OnChoiceChanged;
+            Sizes.Add(item);
+        }
+
+        Colours.Clear();
+        foreach (var colour in _catalog.Colours)
+        {
+            var colourKey = ProductNaming.Key(colour.Key);
+            var isDefault = colourKey is "WHITE" or "BLACK" or "NAVY" or "EMERALD GREEN" or "CHERRY RED"
+                or "BEIGE" or "BLUSH PINK" or "CHOCOLATE BROWN";
+            var item = new ChoiceItemViewModel(colour.Key, _localizer[$"Colour_{colour.Key}"], colour.Hex, isQuickPick: isDefault);
+            item.PropertyChanged += OnChoiceChanged;
+            Colours.Add(item);
+        }
+
+        RefreshColourLists();
     }
 
     private void RebuildVariants()

@@ -9,6 +9,8 @@ public sealed class SampleCatalogService : ICatalogService
     private readonly List<ProductTypeInfo> _types;
     private readonly List<string> _categories;
     private readonly List<BrandInfo> _brandDetails;
+    private readonly List<SizeInfo> _sizes;
+    private readonly List<ColourInfo> _colours;
 
     private readonly List<ExistingProduct> _products =
     [
@@ -22,6 +24,8 @@ public sealed class SampleCatalogService : ICatalogService
         _brandDetails = LoadBrands();
         _categories = LoadCategories();
         _types = LoadTypes(_categories);
+        _sizes = LoadSizes();
+        _colours = LoadColours().ToList();
     }
 
     public string DefaultCurrencyCode => "USD";
@@ -34,22 +38,9 @@ public sealed class SampleCatalogService : ICatalogService
 
     public IReadOnlyList<BrandInfo> BrandDetails => _brandDetails;
 
-    public IReadOnlyList<ColourInfo> Colours { get; } =
-    [
-        new("White", "#F4F4F2", true),
-        new("Black", "#1B1B1B", true),
-        new("Navy", "#1F2F55", true),
-        new("Red", "#B22C2C", true),
-        new("Beige", "#E7D3B5", true),
-        new("Grey", "#8A8D91", false),
-        new("Green", "#3F7D4E", false),
-        new("Blue", "#3B6FC4", false),
-        new("Yellow", "#E3C13A", false),
-        new("Orange", "#D9792B", false),
-        new("Pink", "#D77AA3", false),
-        new("Purple", "#7B5BA6", false),
-        new("Brown", "#7A5233", false),
-    ];
+    public IReadOnlyList<ColourInfo> Colours => _colours;
+
+    public IReadOnlyList<SizeInfo> Sizes => _sizes;
 
     public IReadOnlyList<ExistingProduct> ExistingProducts => _products;
 
@@ -65,6 +56,7 @@ public sealed class SampleCatalogService : ICatalogService
         AddCategoryIfNew(product.Category);
         AddBrandIfNew(product.Brand);
         AddTypeIfNew(product.ProductType);
+        AddCustomVariantChoices(product);
 
         _products.Add(new ExistingProduct(
             Guid.NewGuid().ToString("N"),
@@ -117,7 +109,41 @@ public sealed class SampleCatalogService : ICatalogService
         var id = NextId("dummy_product_types.csv", "type_id", "TYP-");
         var code = CreateSkuCode(name, ReadCsv("dummy_product_types.csv").Select(row => Get(row, "sku_code")));
         File.AppendAllText(ResolveCsvPath("dummy_product_types.csv"), Environment.NewLine + $"{id},{EscapeCsv(name)},,{code},,,");
-        _types.Add(new ProductTypeInfo(name, []));
+        _types.Add(new ProductTypeInfo(name, [], id));
+    }
+
+    private void AddCustomVariantChoices(NewProduct product)
+    {
+        var type = _types.FirstOrDefault(item => ProductNaming.Key(item.Name) == ProductNaming.Key(product.ProductType));
+        if (type is null) return;
+
+        foreach (var sizeName in product.Variants.Select(variant => variant.Size).Where(value => !string.IsNullOrWhiteSpace(value))
+                     .Select(value => ProductNaming.Clean(value)).Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (_sizes.Any(item => item.ProductTypeId == type.Id && ProductNaming.Key(item.Name) == ProductNaming.Key(sizeName))) continue;
+
+            var id = NextId("dummy_sizes.csv", "size_id", "SIZ-");
+            var skuCode = CreateSkuCode(sizeName, ReadCsv("dummy_sizes.csv").Select(row => Get(row, "sku_code")));
+            File.AppendAllText(ResolveCsvPath("dummy_sizes.csv"), Environment.NewLine +
+                $"{id},{EscapeCsv(sizeName)},{type.Id},,,{skuCode},Custom size,");
+            _sizes.Add(new SizeInfo(sizeName, _sizes.Count, type.Id));
+            var typeIndex = _types.IndexOf(type);
+            type = type with { Sizes = type.Sizes.Concat([sizeName]).ToList() };
+            _types[typeIndex] = type;
+        }
+
+        foreach (var colourName in product.Variants.Select(variant => variant.Colour).Where(value => !string.IsNullOrWhiteSpace(value))
+                     .Select(value => ProductNaming.Clean(value)).Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (_colours.Any(item => ProductNaming.Key(item.Key) == ProductNaming.Key(colourName))) continue;
+
+            var id = NextId("dummy_colors.csv", "color_id", "COL-");
+            var skuCode = CreateSkuCode(colourName, ReadCsv("dummy_colors.csv").Select(row => Get(row, "sku_code")));
+            const string hex = "#B89A5A";
+            File.AppendAllText(ResolveCsvPath("dummy_colors.csv"), Environment.NewLine +
+                $"{id},{EscapeCsv(colourName)},{skuCode},{hex},Custom,Solid,True");
+            _colours.Add(new ColourInfo(colourName, hex, false, "Custom"));
+        }
     }
 
     private static List<BrandInfo> LoadBrands() => ReadCsv("dummy_brands.csv")
@@ -132,22 +158,31 @@ public sealed class SampleCatalogService : ICatalogService
         .Where(name => name.Length > 0)
         .ToList();
 
+    private static List<SizeInfo> LoadSizes() => ReadCsv("dummy_sizes.csv")
+        .Select((row, index) => new SizeInfo(Get(row, "size_name"),
+            int.TryParse(Get(row, "sort_order"), out var order) ? order : index,
+            Get(row, "type_id")))
+        .Where(size => size.Name.Length > 0)
+        .OrderBy(size => size.SortOrder)
+        .ToList();
+
+    private static IReadOnlyList<ColourInfo> LoadColours() => ReadCsv("dummy_colors.csv")
+        .Where(row => IsActive(row, "is_active"))
+        .Select(row => new ColourInfo(Get(row, "color_name"), Get(row, "hex_code"), false, Get(row, "color_family")))
+        .Where(colour => colour.Key.Length > 0)
+        .ToList();
+
     private static List<ProductTypeInfo> LoadTypes(IReadOnlyList<string> categories)
     {
+        var sizes = LoadSizes();
         return ReadCsv("dummy_product_types.csv")
-            .Select(row => new ProductTypeInfo(Get(row, "type_name"), SizesFor(Get(row, "type_name"), Get(row, "requires_size"))))
+            .Select(row => new ProductTypeInfo(Get(row, "type_name"),
+                bool.TryParse(Get(row, "requires_size"), out var needsSize) && needsSize
+                    ? sizes.Where(size => size.ProductTypeId == Get(row, "type_id")).Select(size => size.Name).ToList()
+                    : [],
+                Get(row, "type_id")))
             .Where(type => type.Name.Length > 0)
             .ToList();
-    }
-
-    private static IReadOnlyList<string> SizesFor(string typeName, string requiresSize)
-    {
-        if (!bool.TryParse(requiresSize, out var needsSize) || !needsSize) return [];
-        var key = ProductNaming.Key(typeName);
-        if (key.Contains("shoe") || key.Contains("sneaker") || key.Contains("boot")) return ["38", "39", "40", "41", "42", "43", "44", "45"];
-        if (key.Contains("jean") || key.Contains("chino")) return ["28", "30", "32", "34", "36", "38"];
-        if (key.Contains("belt")) return ["S", "M", "L"];
-        return ["XS", "S", "M", "L", "XL", "XXL"];
     }
 
     private static IEnumerable<Dictionary<string, string>> ReadCsv(string fileName)
@@ -160,8 +195,15 @@ public sealed class SampleCatalogService : ICatalogService
         return rows.Skip(1).Where(row => !string.IsNullOrWhiteSpace(row)).Select(row =>
         {
             var values = ParseCsvRow(row);
-            return headers.Select((header, index) => (header, value: index < values.Length ? values[index].Trim() : string.Empty))
-                .ToDictionary(item => item.header, item => item.value, StringComparer.OrdinalIgnoreCase);
+            var fields = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            for (var index = 0; index < headers.Length; index++)
+            {
+                var header = headers[index].Trim();
+                if (header.Length == 0 || fields.ContainsKey(header)) continue;
+                fields.Add(header, index < values.Length ? values[index].Trim() : string.Empty);
+            }
+
+            return fields;
         }).ToList();
     }
 

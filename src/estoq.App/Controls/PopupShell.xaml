@@ -37,8 +37,8 @@
 
       <Rectangle Grid.Row="0" Height="1" VerticalAlignment="Bottom" Fill="{ThemeResource EqBorderBrush}" />
 
-      <!-- Content area: the flow supplies this. It scrolls when taller than the window. -->
-      <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Auto" Padding="24">
+      <!-- Content is constrained to the popup; longer tables provide their own scrolling. -->
+      <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Padding="24">
         <ContentPresenter Content="{x:Bind Body, Mode=OneWay}" />
       </ScrollViewer>
 
