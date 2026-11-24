@@ -254,4 +254,66 @@
   <data name="Account_SessionTitle" xml:space="preserve"><value>Sesión</value></data>
   <data name="Account_LogOutHint" xml:space="preserve"><value>Cierra tu sesión en este equipo. Atajo: F12.</value></data>
   <data name="Account_LogOut" xml:space="preserve"><value>Cerrar sesión</value></data>
+
+  <!-- Point of sale (F1) -->
+  <data name="Common_Cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Pos_Subtitle" xml:space="preserve"><value>Escanea los artículos, agrégalos a la venta y completa la transacción.</value></data>
+  <data name="Pos_ScanPlaceholder" xml:space="preserve"><value>Escanea el código de barras o busca un producto...</value></data>
+  <data name="Pos_NoMatch" xml:space="preserve"><value>Ningún producto coincide con "{0}".</value></data>
+  <data name="Pos_ColItem" xml:space="preserve"><value>Artículo</value></data>
+  <data name="Pos_ColPrice" xml:space="preserve"><value>Precio ({0})</value></data>
+  <data name="Pos_ColQty" xml:space="preserve"><value>Cant.</value></data>
+  <data name="Pos_ColTotal" xml:space="preserve"><value>Total ({0})</value></data>
+  <data name="Pos_EmptyCart" xml:space="preserve"><value>Escanea o busca un artículo para iniciar la venta.</value></data>
+  <data name="Pos_QtyDecrease" xml:space="preserve"><value>Reducir cantidad</value></data>
+  <data name="Pos_QtyIncrease" xml:space="preserve"><value>Aumentar cantidad</value></data>
+  <data name="Pos_RemoveItem" xml:space="preserve"><value>Quitar artículo</value></data>
+  <data name="Pos_ClearSale" xml:space="preserve"><value>Vaciar venta</value></data>
+  <data name="Pos_ClearConfirm" xml:space="preserve"><value>¿Quitar todos los artículos de esta venta?</value></data>
+  <data name="Pos_Summary" xml:space="preserve"><value>Resumen de la venta</value></data>
+  <data name="Pos_ItemOne" xml:space="preserve"><value>1 artículo</value></data>
+  <data name="Pos_Items" xml:space="preserve"><value>{0} artículos</value></data>
+  <data name="Pos_AddDiscount" xml:space="preserve"><value>Agregar descuento</value></data>
+  <data name="Pos_Subtotal" xml:space="preserve"><value>Subtotal</value></data>
+  <data name="Pos_Discount" xml:space="preserve"><value>Descuento</value></data>
+  <data name="Pos_DiscountTitle" xml:space="preserve"><value>Descuento</value></data>
+  <data name="Pos_DiscountPercent" xml:space="preserve"><value>Porcentaje</value></data>
+  <data name="Pos_DiscountHint" xml:space="preserve"><value>Hasta {0} % sin aprobación.</value></data>
+  <data name="Pos_DiscountApproval" xml:space="preserve"><value>Por encima del límite, un gerente o el propietario debe aprobar. Ingresa su código de seis dígitos.</value></data>
+  <data name="Pos_DiscountApprovalCode" xml:space="preserve"><value>Código de aprobación</value></data>
+  <data name="Pos_DiscountApply" xml:space="preserve"><value>Aplicar</value></data>
+  <data name="Pos_DiscountRemove" xml:space="preserve"><value>Quitar descuento</value></data>
+  <data name="Pos_DiscountInvalid" xml:space="preserve"><value>Ingresa un porcentaje de 0 a 100, con máximo dos decimales.</value></data>
+  <data name="Pos_DiscountNeedsCode" xml:space="preserve"><value>Ingresa el código de aprobación para aplicar este descuento.</value></data>
+  <data name="Pos_DiscountBadCode" xml:space="preserve"><value>Ese código no puede aprobar descuentos.</value></data>
+  <data name="Pos_Tax" xml:space="preserve"><value>Impuesto ({0} %)</value></data>
+  <data name="Pos_TaxExcludedInfo" xml:space="preserve"><value>Los precios no incluyen impuesto. El impuesto se suma al total.</value></data>
+  <data name="Pos_TaxIncludedInfo" xml:space="preserve"><value>Los precios incluyen impuesto. El impuesto mostrado ya forma parte del total.</value></data>
+  <data name="Pos_Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Pos_PaymentMethod" xml:space="preserve"><value>Método de pago</value></data>
+  <data name="Pos_PaymentAmount" xml:space="preserve"><value>Monto</value></data>
+  <data name="Pos_AmountPaid" xml:space="preserve"><value>Monto pagado</value></data>
+  <data name="Pos_Method_Cash" xml:space="preserve"><value>Efectivo</value></data>
+  <data name="Pos_Method_Card" xml:space="preserve"><value>Tarjeta</value></data>
+  <data name="Pos_Method_Transfer" xml:space="preserve"><value>Transferencia</value></data>
+  <data name="Pos_Method_Zelle" xml:space="preserve"><value>Zelle</value></data>
+  <data name="Pos_Method_Usdt" xml:space="preserve"><value>USDT</value></data>
+  <data name="Pos_Method_MobilePayment" xml:space="preserve"><value>Pago móvil</value></data>
+  <data name="Pos_Method_PayPal" xml:space="preserve"><value>PayPal</value></data>
+  <data name="Pos_Method_Other" xml:space="preserve"><value>Otro</value></data>
+  <data name="Pos_AmountReceived" xml:space="preserve"><value>Monto recibido</value></data>
+  <data name="Pos_AmountToReturn" xml:space="preserve"><value>Monto a devolver</value></data>
+  <data name="Pos_RemainingToPay" xml:space="preserve"><value>Pendiente por pagar</value></data>
+  <data name="Pos_SubmitPayment" xml:space="preserve"><value>Registrar pago</value></data>
+  <data name="Pos_ChangeDue" xml:space="preserve"><value>Cambio a devolver</value></data>
+  <data name="Pos_ChangeNeedsCash" xml:space="preserve"><value>Pago excedido: solo se puede devolver cambio en efectivo</value></data>
+  <data name="Pos_RemovePayment" xml:space="preserve"><value>Quitar pago</value></data>
+  <data name="Pos_Complete" xml:space="preserve"><value>Completar venta</value></data>
+  <data name="Pos_CompleteTip" xml:space="preserve"><value>Completar venta (Ctrl+Enter)</value></data>
+  <data name="Pos_StockOut" xml:space="preserve"><value>Sin existencias. Se venderá sin stock.</value></data>
+  <data name="Pos_StockPartial" xml:space="preserve"><value>Solo hay {0} en stock. El resto se vende sin stock.</value></data>
+  <data name="Pos_DoneTitle" xml:space="preserve"><value>Venta completada</value></data>
+  <data name="Pos_DoneNumber" xml:space="preserve"><value>Venta {0}</value></data>
+  <data name="Pos_PrintReceipt" xml:space="preserve"><value>Imprimir recibo</value></data>
+  <data name="Pos_NewSale" xml:space="preserve"><value>Nueva venta</value></data>
 </root>

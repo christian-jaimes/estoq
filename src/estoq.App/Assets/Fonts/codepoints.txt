@@ -42,3 +42,10 @@ visibility_off e8f5
 arrow_forward e5c8
 arrow_back e5c4
 logout e9ba
+
+delete e872
+credit_card e8a1
+swap_horiz e8d4
+phone_android e324
+more_horiz e5d3
+remove e15b

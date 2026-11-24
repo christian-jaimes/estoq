@@ -63,6 +63,7 @@ F1 to F4 and [[settings]] share one frame so staff learn one pattern.
 - `ViewModels/PopupViewModel` maps the open kind to header text and icon.
 - `Views/ShellPage` hosts the overlay: dimmed `EqScrimBrush` backdrop, shell inset 40 px sides and bottom, 56 px top. Opening moves focus inside so Esc works. Esc, close, and a backdrop click close it.
 - F2 shows `Views/AddProduct/AddProductView` (state in the singleton `AddProductViewModel`, reset each time the pop-up opens); `PopupViewModel` enables the primary button from its `CanSave` and closes the pop-up when it saves.
+- The point of sale (F1) is the exception: its mockup has its own header (wordmark, F1 badge, currency chips) and no footer, so `Views/PointOfSale/PointOfSaleView` is hosted beside the frame, chosen by `PopupViewModel.IsPointOfSale` and `IsFramed`. Esc and the close button behave the same.
 - Adding a flow: put a user control in `Body` chosen by `PopupKind`, drive `IsPrimaryEnabled`, handle `PrimaryInvoked`. Never copy the frame.
 
 ## Localisation

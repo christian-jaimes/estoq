@@ -53,6 +53,14 @@ public sealed partial class PopupViewModel : ObservableObject
     [ObservableProperty]
     public partial string Message { get; set; } = string.Empty;
 
+    /// <summary>True while the point of sale is open. It has its own layout and does not use the shared frame.</summary>
+    [ObservableProperty]
+    public partial bool IsPointOfSale { get; set; }
+
+    /// <summary>True while a pop-up that still uses the shared frame is open.</summary>
+    [ObservableProperty]
+    public partial bool IsFramed { get; set; }
+
     [ObservableProperty]
     public partial string PrimaryText { get; set; } = string.Empty;
 
@@ -151,6 +159,8 @@ public sealed partial class PopupViewModel : ObservableObject
 
         _shown = kind;
         IsPrimaryEnabled = kind == PopupKind.AddItems && _addProduct.CanSave;
+        IsPointOfSale = kind == PopupKind.PointOfSale;
+        IsFramed = !IsPointOfSale;
         IsOpen = true;
     }
 }

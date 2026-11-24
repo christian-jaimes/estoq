@@ -40,6 +40,10 @@
     <Content Include="Assets\**\*.png" />
     <Content Include="Assets\**\*.jpg" />
     <Content Include="Assets\Fonts\*.ttf" />
+    <Content Include="..\..\data\dummy_inventory.csv" Link="data\dummy_inventory.csv"
+             CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\data\dummy_discount.csv" Link="data\dummy_discount.csv"
+             CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

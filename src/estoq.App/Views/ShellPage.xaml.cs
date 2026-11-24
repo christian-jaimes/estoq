@@ -90,6 +90,12 @@ public sealed partial class ShellPage : Page
         args.Handled = true;
     }
 
+    private void OnPointOfSaleAccelerator(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.OpenPointOfSaleCommand.Execute(null);
+        args.Handled = true;
+    }
+
     private void OnFocusSearch(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         SearchBox.Focus(FocusState.Keyboard);
@@ -102,7 +108,7 @@ public sealed partial class ShellPage : Page
         if (e.PropertyName == nameof(PopupViewModel.IsOpen) && PopupState.IsOpen)
         {
             // Wait for the overlay to become visible, then move focus inside so Esc and Tab act on the pop-up.
-            DispatcherQueue.TryEnqueue(() => PopupFrame.FocusFirst());
+            DispatcherQueue.TryEnqueue(() => _ = PopupState.IsPointOfSale ? PosView.FocusStart() : PopupFrame.FocusFirst());
         }
     }
 
