@@ -22,9 +22,9 @@ public static class VariantPlanner
             return [new VariantSlot(null, null)];
         }
 
-        IReadOnlyList<string?> sizeOptions = sizeList.Count == 0 ? [null] : sizeList;
-        IReadOnlyList<string?> colourOptions = colourList.Count == 0 ? [null] : colourList;
-        var slots = new List<VariantSlot>(sizeOptions.Count * colourOptions.Count);
+        string?[] sizeOptions = sizeList.Count == 0 ? [null] : [.. sizeList];
+        string?[] colourOptions = colourList.Count == 0 ? [null] : [.. colourList];
+        var slots = new List<VariantSlot>(sizeOptions.Length * colourOptions.Length);
         foreach (var colour in colourOptions)
         {
             foreach (var size in sizeOptions)
