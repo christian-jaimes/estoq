@@ -248,14 +248,14 @@ public class PaymentSettlementTests
     }
 
     [Fact]
-    public void ChangeCannotExceedTheCashTaken()
+    public void ChangeBeyondTheCashTakenStillCompletesTheSale()
     {
         var result = PaymentSettlement.Calculate(50m, [new PaymentLine(PaymentMethod.Card, "USD", 60m)], Rates);
 
         Assert.True(result.IsCovered);
         Assert.Equal(10m, result.Change);
         Assert.False(result.CanGiveChange);
-        Assert.False(result.CanComplete);
+        Assert.True(result.CanComplete);
     }
 
     [Fact]
