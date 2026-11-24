@@ -153,6 +153,10 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     public bool HasVariants => Variants.Count > 0;
 
+    public bool HasNoVariants => Variants.Count == 0;
+
+    public bool IsMarginPositive => !IsMarginNegative;
+
     /// <summary>Starts a fresh form with the current master data and the signed-in role's permissions.</summary>
     public void Reset()
     {
@@ -253,6 +257,8 @@ public sealed partial class AddProductViewModel : ObservableObject
         NameEdited = ProductNaming.Clean(value) != GeneratedName();
         OnFormChanged();
     }
+
+    partial void OnIsMarginNegativeChanged(bool value) => OnPropertyChanged(nameof(IsMarginPositive));
 
     partial void OnColourSearchChanged(string value) => RefreshColourLists();
 
@@ -580,6 +586,7 @@ public sealed partial class AddProductViewModel : ObservableObject
     private void OnVariantsChanged()
     {
         OnPropertyChanged(nameof(HasVariants));
+        OnPropertyChanged(nameof(HasNoVariants));
         UpdateSummary();
         Validate();
     }

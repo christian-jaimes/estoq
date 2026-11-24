@@ -17,9 +17,6 @@ public sealed partial class AddProductView : UserControl
 
     public AddProductViewModel ViewModel { get; }
 
-    /// <summary>For x:Bind: shows an element while a flag is false.</summary>
-    public static bool Not(bool value) => !value;
-
     /// <summary>A typed value that is not in the list is accepted as a new product type, category or brand.</summary>
     private void OnComboTextSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
     {

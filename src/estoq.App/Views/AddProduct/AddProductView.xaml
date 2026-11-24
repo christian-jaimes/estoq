@@ -186,7 +186,7 @@
                     <TextBlock Text="{x:Bind ViewModel.SummaryMargin, Mode=OneWay}" Style="{StaticResource EqLabelStyle}"
                                Foreground="{ThemeResource EqSuccessBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
                                TextTrimming="CharacterEllipsis"
-                               Visibility="{x:Bind local:AddProductView.Not(ViewModel.IsMarginNegative), Mode=OneWay}" />
+                               Visibility="{x:Bind ViewModel.IsMarginPositive, Mode=OneWay}" />
                     <TextBlock Text="{x:Bind ViewModel.SummaryMargin, Mode=OneWay}" Style="{StaticResource EqLabelStyle}"
                                Foreground="{ThemeResource EqDangerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
                                TextTrimming="CharacterEllipsis"
@@ -475,7 +475,7 @@
               </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>
             <TextBlock Text="{x:Bind services:Loc.Get('Add_NoVariants')}" Style="{StaticResource EqSecondaryStyle}"
-                       Visibility="{x:Bind local:AddProductView.Not(ViewModel.HasVariants), Mode=OneWay}" />
+                       Visibility="{x:Bind ViewModel.HasNoVariants, Mode=OneWay}" />
           </StackPanel>
         </Border>
       </StackPanel>
