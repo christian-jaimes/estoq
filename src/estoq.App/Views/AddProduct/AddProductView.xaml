@@ -354,7 +354,7 @@
                     <ItemsRepeater.ItemTemplate>
                       <DataTemplate x:DataType="vm:ProductImageViewModel">
                         <Button Width="56" Height="56" Padding="0" Background="Transparent" BorderBrush="{ThemeResource EqBorderBrush}"
-                                Tag="{x:Bind}" Click="OnThumbnailClick">
+                                Click="OnThumbnailClick">
                           <Image Source="{x:Bind Preview}" Stretch="UniformToFill" Width="52" Height="52" />
                         </Button>
                       </DataTemplate>
@@ -466,7 +466,7 @@
                     <NumberBox Grid.Column="3" VerticalAlignment="Center" Minimum="0" Maximum="1000000" SmallChange="1" LargeChange="10"
                                SpinButtonPlacementMode="Inline" Value="{x:Bind OpeningStock, Mode=TwoWay}"
                                AutomationProperties.Name="{x:Bind Label}" />
-                    <Button Grid.Column="4" Style="{StaticResource EqPlainIconButtonStyle}" Tag="{x:Bind}" Click="OnRemoveVariantClick"
+                    <Button Grid.Column="4" Style="{StaticResource EqPlainIconButtonStyle}" Click="OnRemoveVariantClick"
                             VerticalAlignment="Center">
                       <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
                     </Button>

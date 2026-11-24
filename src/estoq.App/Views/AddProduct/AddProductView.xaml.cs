@@ -61,7 +61,7 @@ public sealed partial class AddProductView : UserControl
 
     private void OnThumbnailClick(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement { Tag: ProductImageViewModel image })
+        if (sender is FrameworkElement { DataContext: ProductImageViewModel image })
         {
             ViewModel.SelectImageCommand.Execute(image);
         }
@@ -69,7 +69,7 @@ public sealed partial class AddProductView : UserControl
 
     private void OnRemoveVariantClick(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement { Tag: VariantRowViewModel row })
+        if (sender is FrameworkElement { DataContext: VariantRowViewModel row })
         {
             ViewModel.RemoveVariantCommand.Execute(row);
         }
