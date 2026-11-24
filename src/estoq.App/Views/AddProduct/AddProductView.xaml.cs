@@ -2,6 +2,8 @@ using Estoq.App.ViewModels.AddProduct;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Windows.System;
 
 namespace Estoq.App.Views.AddProduct;
@@ -100,5 +102,37 @@ public sealed partial class AddProductView : UserControl
         {
             row.OpeningStock = args.NewValue;
         }
+    }
+
+    private void OnVariantPriceChanged(object sender, TextChangedEventArgs e)
+    {
+        if (sender is TextBox { DataContext: VariantRowViewModel row } box)
+        {
+            ViewModel.SetVariantPrice(row, box.Text);
+            if (box.Text.Length > 0 && !decimal.TryParse(box.Text, System.Globalization.NumberStyles.Number,
+                    ViewModel.PriceCulture, out _)) Shake(box);
+        }
+    }
+
+    private void OnPreviousImageClick(object sender, RoutedEventArgs e) => ViewModel.StepImage(-1);
+
+    private void OnNextImageClick(object sender, RoutedEventArgs e) => ViewModel.StepImage(1);
+
+    private void Shake(FrameworkElement element)
+    {
+        var transform = element.RenderTransform as CompositeTransform ?? new CompositeTransform();
+        element.RenderTransform = transform;
+        transform.TranslateX = 0;
+        var storyboard = new Storyboard();
+        var animation = new DoubleAnimationUsingKeyFrames();
+        animation.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero), Value = 0 });
+        animation.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(45)), Value = -4 });
+        animation.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(90)), Value = 4 });
+        animation.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(135)), Value = -2 });
+        animation.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(180)), Value = 0 });
+        Storyboard.SetTarget(animation, transform);
+        Storyboard.SetTargetProperty(animation, "TranslateX");
+        storyboard.Children.Add(animation);
+        storyboard.Begin();
     }
 }

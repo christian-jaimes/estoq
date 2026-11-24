@@ -56,6 +56,7 @@
         </Grid.Resources>
 
         <TextBox x:Name="Input" Grid.Column="0" VerticalAlignment="Center"
+                 PreviewKeyDown="OnInputPreviewKeyDown" TextChanging="OnInputTextChanging"
                  PlaceholderText="{x:Bind PlaceholderText, Mode=OneWay}"
                  Text="{x:Bind Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Background="Transparent" BorderThickness="0" MinHeight="0" Padding="0,6"

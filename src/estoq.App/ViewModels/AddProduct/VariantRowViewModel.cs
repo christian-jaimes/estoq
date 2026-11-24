@@ -46,5 +46,9 @@ public sealed partial class VariantRowViewModel : ObservableObject
 
     public int OpeningStockUnits => double.IsNaN(OpeningStock) ? 0 : (int)Math.Max(0, Math.Round(OpeningStock));
 
+    /// <summary>An optional variant-specific selling price; null inherits the product price.</summary>
+    [ObservableProperty]
+    public partial string PriceText { get; set; } = string.Empty;
+
     public string Key => $"{Size}|{Colour}";
 }

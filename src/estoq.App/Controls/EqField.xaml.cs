@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace Estoq.App.Controls;
 
@@ -110,4 +111,50 @@ public sealed partial class EqField : UserControl
     private void OnInputGotFocus(object sender, RoutedEventArgs e) => VisualStateManager.GoToState(this, "Focused", true);
 
     private void OnInputLostFocus(object sender, RoutedEventArgs e) => VisualStateManager.GoToState(this, "Unfocused", true);
+
+    private void OnInputPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (Label != "Cost Price" && Label != "Selling Price") return;
+        var box = (TextBox)sender;
+        var key = e.Key.ToString();
+        if (e.Key is Windows.System.VirtualKey.Back or Windows.System.VirtualKey.Delete or Windows.System.VirtualKey.Left or
+            Windows.System.VirtualKey.Right or Windows.System.VirtualKey.Tab or Windows.System.VirtualKey.Home or Windows.System.VirtualKey.End) return;
+        if (key.Length == 1 && char.IsDigit(key[0])) return;
+        var separator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+        if (e.Key == Windows.System.VirtualKey.Decimal &&
+            !box.Text.Contains(separator, StringComparison.Ordinal)) return;
+        e.Handled = true;
+        ErrorText = "Numbers only";
+        if (Parent is FrameworkElement parent)
+        {
+            var transform = parent.RenderTransform as Microsoft.UI.Xaml.Media.CompositeTransform ?? new Microsoft.UI.Xaml.Media.CompositeTransform();
+            parent.RenderTransform = transform;
+            var storyboard = new Microsoft.UI.Xaml.Media.Animation.Storyboard();
+            var animation = new Microsoft.UI.Xaml.Media.Animation.DoubleAnimationUsingKeyFrames();
+            animation.KeyFrames.Add(new Microsoft.UI.Xaml.Media.Animation.EasingDoubleKeyFrame { KeyTime = Microsoft.UI.Xaml.Media.Animation.KeyTime.FromTimeSpan(TimeSpan.Zero), Value = 0 });
+            animation.KeyFrames.Add(new Microsoft.UI.Xaml.Media.Animation.EasingDoubleKeyFrame { KeyTime = Microsoft.UI.Xaml.Media.Animation.KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(45)), Value = -4 });
+            animation.KeyFrames.Add(new Microsoft.UI.Xaml.Media.Animation.EasingDoubleKeyFrame { KeyTime = Microsoft.UI.Xaml.Media.Animation.KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(90)), Value = 4 });
+            animation.KeyFrames.Add(new Microsoft.UI.Xaml.Media.Animation.EasingDoubleKeyFrame { KeyTime = Microsoft.UI.Xaml.Media.Animation.KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(135)), Value = -2 });
+            animation.KeyFrames.Add(new Microsoft.UI.Xaml.Media.Animation.EasingDoubleKeyFrame { KeyTime = Microsoft.UI.Xaml.Media.Animation.KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(180)), Value = 0 });
+            Microsoft.UI.Xaml.Media.Animation.Storyboard.SetTarget(animation, transform);
+            Microsoft.UI.Xaml.Media.Animation.Storyboard.SetTargetProperty(animation, "TranslateX");
+            storyboard.Children.Add(animation);
+            storyboard.Begin();
+        }
+    }
+
+    private void OnInputTextChanging(TextBox sender, TextBoxTextChangingEventArgs e)
+    {
+        if (Label != "Cost Price" && Label != "Selling Price") return;
+        var separator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+        if (sender.Text.Length == 0 || (sender.Text.All(c => char.IsDigit(c) || c == separator[0]) && sender.Text.Count(c => c == separator[0]) <= 1))
+        {
+            ErrorText = string.Empty;
+            return;
+        }
+        var filtered = new string(sender.Text.Where(c => char.IsDigit(c) || c == separator[0]).ToArray());
+        if (filtered.Count(c => c == separator[0]) > 1) filtered = filtered[..filtered.LastIndexOf(separator[0])];
+        sender.Text = filtered;
+        sender.SelectionStart = filtered.Length;
+    }
 }

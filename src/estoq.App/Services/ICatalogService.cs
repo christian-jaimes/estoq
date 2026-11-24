@@ -7,7 +7,7 @@ public sealed record ProductTypeInfo(string Name, IReadOnlyList<string> Sizes);
 public sealed record ColourInfo(string Key, string Hex, bool IsQuickPick);
 
 /// <summary>One variant of a product about to be created.</summary>
-public sealed record NewVariant(string? Size, string? Colour, string Sku, string InternalBarcode, int OpeningStock);
+public sealed record NewVariant(string? Size, string? Colour, string Sku, string InternalBarcode, int OpeningStock, decimal? SellingPrice = null);
 
 /// <summary>Everything the Add product pop-up hands over on Save (docs/features/add-product.md).</summary>
 public sealed record NewProduct(

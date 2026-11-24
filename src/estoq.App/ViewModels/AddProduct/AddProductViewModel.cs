@@ -16,7 +16,7 @@ namespace Estoq.App.ViewModels.AddProduct;
 /// </summary>
 public sealed partial class AddProductViewModel : ObservableObject
 {
-    private const int MaxImages = 5;
+    private const int MaxImages = 30;
 
     private readonly ICatalogService _catalog;
     private readonly ILocalizer _localizer;
@@ -64,6 +64,8 @@ public sealed partial class AddProductViewModel : ObservableObject
     public ObservableCollection<ProductImageViewModel> Images { get; } = [];
 
     public string CurrencyCode => _catalog.DefaultCurrencyCode;
+
+    public CultureInfo PriceCulture => _localizer.Culture;
 
     /// <summary>Cost price and margin are hidden from cashiers (docs/product/roles-and-permissions.md).</summary>
     [ObservableProperty]
@@ -151,6 +153,17 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     public bool CanAddImage => Images.Count < MaxImages;
 
+    public bool HasImages => Images.Count > 0;
+
+    public string ImagePosition
+    {
+        get
+        {
+            var index = Images.ToList().FindIndex(i => ReferenceEquals(i.Preview, MainImage));
+            return $"{Math.Max(0, index) + 1} / {Images.Count}";
+        }
+    }
+
     public bool HasVariants => Variants.Count > 0;
 
     public bool HasNoVariants => Variants.Count == 0;
@@ -185,6 +198,7 @@ public sealed partial class AddProductViewModel : ObservableObject
         ColourSearch = string.Empty;
         Images.Clear();
         MainImage = null;
+        OnPropertyChanged(nameof(HasImages));
         OnPropertyChanged(nameof(CanAddImage));
 
         Sizes.Clear();
@@ -274,6 +288,7 @@ public sealed partial class AddProductViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(HasMainImage));
         OnPropertyChanged(nameof(HasNoMainImage));
+        OnPropertyChanged(nameof(ImagePosition));
     }
 
     private bool _suppressName;
@@ -323,15 +338,20 @@ public sealed partial class AddProductViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanAddImage))]
     private async Task AddImageAsync()
     {
-        var picked = await _imagePicker.PickAsync();
-        if (picked is null)
+        var picked = await _imagePicker.PickManyAsync();
+        if (picked.Count == 0)
         {
             return;
         }
 
-        var image = new ProductImageViewModel(picked.Path, await _imagePicker.LoadPreviewAsync(picked.Path));
-        Images.Add(image);
-        MainImage = image.Preview;
+        foreach (var file in picked.Take(MaxImages - Images.Count))
+        {
+            var image = new ProductImageViewModel(file.Path, await _imagePicker.LoadPreviewAsync(file.Path));
+            Images.Add(image);
+            MainImage ??= image.Preview;
+        }
+        OnPropertyChanged(nameof(ImagePosition));
+        OnPropertyChanged(nameof(HasImages));
         OnPropertyChanged(nameof(CanAddImage));
         AddImageCommand.NotifyCanExecuteChanged();
         Touch();
@@ -343,7 +363,24 @@ public sealed partial class AddProductViewModel : ObservableObject
         if (image is not null)
         {
             MainImage = image.Preview;
+            OnPropertyChanged(nameof(ImagePosition));
         }
+    }
+
+    public void StepImage(int delta)
+    {
+        if (Images.Count == 0) return;
+        var index = Images.ToList().FindIndex(i => ReferenceEquals(i.Preview, MainImage));
+        index = (index + delta + Images.Count) % Images.Count;
+        MainImage = Images[index].Preview;
+        OnPropertyChanged(nameof(ImagePosition));
+    }
+
+    [RelayCommand]
+    private void RemoveSelectedImage()
+    {
+        var image = Images.FirstOrDefault(i => ReferenceEquals(i.Preview, MainImage));
+        RemoveImage(image);
     }
 
     [RelayCommand]
@@ -357,8 +394,29 @@ public sealed partial class AddProductViewModel : ObservableObject
 
         Images.Remove(main);
         MainImage = Images.FirstOrDefault()?.Preview;
+        OnPropertyChanged(nameof(ImagePosition));
+        OnPropertyChanged(nameof(HasImages));
         OnPropertyChanged(nameof(CanAddImage));
         AddImageCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand]
+    private void RemoveImage(ProductImageViewModel? image)
+    {
+        if (image is null || !Images.Remove(image)) return;
+        if (ReferenceEquals(image.Preview, MainImage)) MainImage = Images.FirstOrDefault()?.Preview;
+        OnPropertyChanged(nameof(ImagePosition));
+        OnPropertyChanged(nameof(HasImages));
+        OnPropertyChanged(nameof(CanAddImage));
+        AddImageCommand.NotifyCanExecuteChanged();
+    }
+
+    public void SetVariantPrice(VariantRowViewModel row, string text)
+    {
+        if (row.PriceText == text) return;
+        row.PriceText = text;
+        Touch();
+        Validate();
     }
 
     /// <summary>Saves the product and its variants in one step, then raises <see cref="Saved"/>.</summary>
@@ -386,7 +444,8 @@ public sealed partial class AddProductViewModel : ObservableObject
                 ParsePrice(SellingText, out _) ?? 0m,
                 Images.Select(i => i.Path).ToList(),
                 Variants
-                    .Select(v => new NewVariant(v.Size, v.Colour, v.Sku.Trim(), v.InternalBarcode, v.OpeningStockUnits))
+                    .Select(v => new NewVariant(v.Size, v.Colour, v.Sku.Trim(), v.InternalBarcode, v.OpeningStockUnits,
+                        string.IsNullOrWhiteSpace(v.PriceText) ? null : decimal.Parse(v.PriceText.Trim(), NumberStyles.Number, _localizer.Culture)))
                     .ToList());
             await _catalog.SaveAsync(product);
             Saved?.Invoke(this, EventArgs.Empty);
@@ -648,6 +707,8 @@ public sealed partial class AddProductViewModel : ObservableObject
         return null;
     }
 
+    private bool IsValidPrice(string text) => decimal.TryParse(text.Trim(), NumberStyles.Number, _localizer.Culture, out var value) && value >= 0;
+
     private void Validate()
     {
         var selling = ParsePrice(SellingText, out var sellingBad);
@@ -669,6 +730,7 @@ public sealed partial class AddProductViewModel : ObservableObject
             Variants.Select(v => new VariantDraft(v.Sku, v.OpeningStockUnits)).ToList());
 
         var code = sellingBad || costBad ? ProductValidationCode.PriceInvalid : ProductRules.Validate(draft);
+        var variantPriceBad = Variants.Any(v => v.PriceText.Length > 0 && !IsValidPrice(v.PriceText));
         string message;
         if (code != ProductValidationCode.None)
         {
@@ -691,7 +753,7 @@ public sealed partial class AddProductViewModel : ObservableObject
             message = string.Empty;
         }
 
-        CanSave = message.Length == 0 && !IsSaving;
+        CanSave = message.Length == 0 && !variantPriceBad && !IsSaving;
 
         // Say what is missing only once the owner has started filling the form in.
         ValidationText = _touched ? message : string.Empty;

@@ -41,11 +41,30 @@ public interface ILogoPickerService
     /// <summary>Opens the file picker for a PNG or JPG. Null when cancelled.</summary>
     Task<PickedLogo?> PickAsync();
 
+    /// <summary>Opens the file picker for several PNG or JPG images. Empty when cancelled.</summary>
+    Task<IReadOnlyList<PickedLogo>> PickManyAsync();
+
     Task<ImageSource?> LoadPreviewAsync(string path);
 }
 
 public sealed class LogoPickerService : ILogoPickerService
 {
+    private static void ConfigurePicker(FileOpenPicker picker)
+    {
+        picker.FileTypeFilter.Add(".png");
+        picker.FileTypeFilter.Add(".jpg");
+        picker.FileTypeFilter.Add(".jpeg");
+    }
+
+    private static bool InitializePicker(FileOpenPicker picker)
+    {
+        var window = App.Current.MainWindow;
+        if (window is null) return false;
+        InitializeWithWindow.Initialize(picker, WindowNative.GetWindowHandle(window));
+        ConfigurePicker(picker);
+        return true;
+    }
+
     public async Task<PickedLogo?> PickAsync()
     {
         var window = App.Current.MainWindow;
@@ -55,10 +74,7 @@ public sealed class LogoPickerService : ILogoPickerService
         }
 
         var picker = new FileOpenPicker();
-        InitializeWithWindow.Initialize(picker, WindowNative.GetWindowHandle(window));
-        picker.FileTypeFilter.Add(".png");
-        picker.FileTypeFilter.Add(".jpg");
-        picker.FileTypeFilter.Add(".jpeg");
+        InitializePicker(picker);
 
         var file = await picker.PickSingleFileAsync();
         if (file is null)
@@ -68,6 +84,20 @@ public sealed class LogoPickerService : ILogoPickerService
 
         var properties = await file.GetBasicPropertiesAsync();
         return new PickedLogo(file.Path, file.Name, (long)properties.Size);
+    }
+
+    public async Task<IReadOnlyList<PickedLogo>> PickManyAsync()
+    {
+        var picker = new FileOpenPicker();
+        if (!InitializePicker(picker)) return Array.Empty<PickedLogo>();
+        var files = await picker.PickMultipleFilesAsync();
+        var picked = new List<PickedLogo>(files.Count);
+        foreach (var file in files)
+        {
+            var properties = await file.GetBasicPropertiesAsync();
+            picked.Add(new PickedLogo(file.Path, file.Name, (long)properties.Size));
+        }
+        return picked;
     }
 
     public async Task<ImageSource?> LoadPreviewAsync(string path)
