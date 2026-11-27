@@ -2,6 +2,7 @@ using Estoq.App.Services;
 using Estoq.App.ViewModels;
 using Estoq.App.ViewModels.AddProduct;
 using Estoq.App.ViewModels.PointOfSale;
+using Estoq.App.ViewModels.Sales;
 using Estoq.App.ViewModels.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -73,6 +74,9 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddSingleton<PreferencesStepViewModel>();
         services.AddSingleton<RecoveryStepViewModel>();
         services.AddSingleton<SetupWizardViewModel>();
+        services.AddSingleton<ISalesService, SampleSalesService>();
+        services.AddSingleton<ISalesExporter, SalesExporter>();
+        services.AddTransient<SalesViewModel>();
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<PlaceholderViewModel>();
         return services.BuildServiceProvider();
