@@ -73,6 +73,7 @@ public sealed class SampleStockAdjustmentService : IStockAdjustmentService
         var now = DateTime.Now.ToString("dd-MM-yy HH:mm", CultureInfo.InvariantCulture);
         var movementType = StockAdjustmentRules.MovementType(request.Type);
 
+        var description = SampleCsv.Escape(StockMovementLog.Describe(request.Reference, request.Notes));
         var applied = new List<AppliedAdjustmentItem>();
         var lines = new List<string>();
         foreach (var requested in request.Items)
@@ -98,7 +99,9 @@ public sealed class SampleStockAdjustmentService : IStockAdjustmentService
                 SampleCsv.Get(article, "retail_selling_price"),
                 difference.ToString(CultureInfo.InvariantCulture),
                 now,
-                Location));
+                Location,
+                string.Empty,
+                description));
             applied.Add(new AppliedAdjustmentItem(item, item.OnHand, difference, counted));
         }
 

@@ -6,6 +6,7 @@ public enum NotificationKind
     LowStock,
     LowStockItem,
     SoldWithoutStock,
+    ReturnWithoutReceipt,
     BackupStale,
     BackupFailed,
 }

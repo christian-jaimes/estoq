@@ -125,7 +125,7 @@ public sealed class SampleCatalogService : ICatalogService
 
             movementLines.Add(string.Join(',',
                 $"MOV-{nextMovement++}", id, "add", Price(cost, "0.##"), Price(price, "0.##"),
-                variant.OpeningStock.ToString(System.Globalization.CultureInfo.InvariantCulture), now, OpeningStockLocation));
+                variant.OpeningStock.ToString(System.Globalization.CultureInfo.InvariantCulture), now, OpeningStockLocation, string.Empty, string.Empty));
         }
 
         AppendLines(ResolveCsvPath(ArticleFile), articleLines);

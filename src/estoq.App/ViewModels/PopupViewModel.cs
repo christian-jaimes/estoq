@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Estoq.App.Services;
 using Estoq.App.ViewModels.AddProduct;
+using Estoq.App.ViewModels.Returns;
 using Estoq.App.ViewModels.StockAdjustments;
 
 namespace Estoq.App.ViewModels;
@@ -16,16 +17,18 @@ public sealed partial class PopupViewModel : ObservableObject
     private readonly ILocalizer _localizer;
     private readonly ISessionService _session;
     private readonly AddProductViewModel _addProduct;
+    private readonly ReturnsViewModel _returns;
     private readonly StockAdjustmentViewModel _adjustment;
     private PopupKind? _shown;
     private Microsoft.UI.Dispatching.DispatcherQueueTimer? _hintTimer;
 
-    public PopupViewModel(IPopupService popups, ILocalizer localizer, ISessionService session, AddProductViewModel addProduct, StockAdjustmentViewModel adjustment)
+    public PopupViewModel(IPopupService popups, ILocalizer localizer, ISessionService session, AddProductViewModel addProduct, ReturnsViewModel returns, StockAdjustmentViewModel adjustment)
     {
         _popups = popups;
         _localizer = localizer;
         _session = session;
         _addProduct = addProduct;
+        _returns = returns;
         _adjustment = adjustment;
         _popups.Changed += (_, _) => Refresh();
         _localizer.LanguageChanged += (_, _) => Refresh();
@@ -45,6 +48,27 @@ public sealed partial class PopupViewModel : ObservableObject
         };
         _addProduct.CloseRequested += (_, _) => _popups.Close();
 
+        // The Returns form decides when its primary action is allowed and what it says (Refund or Exchange).
+        _returns.PropertyChanged += (_, e) =>
+        {
+            if (_popups.Current != PopupKind.Returns)
+            {
+                return;
+            }
+
+            if (e.PropertyName == nameof(ReturnsViewModel.PrimaryText))
+            {
+                PrimaryText = _returns.PrimaryText;
+            }
+
+            if (e.PropertyName is nameof(ReturnsViewModel.CanSave) or nameof(ReturnsViewModel.IsCompleted))
+            {
+                // Save stays off while the "Return completed" confirmation is showing.
+                IsPrimaryEnabled = _returns.CanSave && !_returns.IsCompleted;
+            }
+        };
+        _returns.CloseRequested += (_, _) => _popups.Close();
+
         // Same for stock adjustments: the form decides when Apply is allowed, and the confirmation hides it.
         _adjustment.PropertyChanged += (_, e) =>
         {
@@ -58,6 +82,9 @@ public sealed partial class PopupViewModel : ObservableObject
 
     /// <summary>The Add product form; the shell binds its "Product added" confirmation over the whole pop-up.</summary>
     public AddProductViewModel AddProduct => _addProduct;
+
+    /// <summary>The Returns form; the shell binds its "Return completed" confirmation over the whole pop-up.</summary>
+    public ReturnsViewModel Returns => _returns;
 
     [ObservableProperty]
     public partial bool IsOpen { get; set; }
@@ -105,6 +132,10 @@ public sealed partial class PopupViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsAddProduct { get; set; }
 
+    /// <summary>True for F4: the body shows the Returns form.</summary>
+    [ObservableProperty]
+    public partial bool IsReturns { get; set; }
+
     /// <summary>The Stock adjustments form; the shell binds its "Adjustment applied" confirmation over the whole pop-up.</summary>
     public StockAdjustmentViewModel Adjustment => _adjustment;
 
@@ -125,6 +156,10 @@ public sealed partial class PopupViewModel : ObservableObject
         if (_popups.Current == PopupKind.AddItems)
         {
             await _addProduct.SaveCommand.ExecuteAsync(null);
+        }
+        else if (_popups.Current == PopupKind.Returns)
+        {
+            _returns.SaveCommand.Execute(null);
         }
         else if (_popups.Current == PopupKind.StockAdjustments)
         {
@@ -171,6 +206,12 @@ public sealed partial class PopupViewModel : ObservableObject
             if (_addProduct.IsCompleted)
             {
                 _addProduct.Reset();
+            }
+
+            // Same for a "Return completed" confirmation.
+            if (_returns.IsCompleted)
+            {
+                _returns.Reset();
             }
 
             if (_adjustment.IsCompleted)
@@ -226,13 +267,24 @@ public sealed partial class PopupViewModel : ObservableObject
 
         IsSettings = kind == PopupKind.Settings;
         IsAddProduct = kind == PopupKind.AddItems;
+        IsReturns = kind == PopupKind.Returns;
         IsStockAdjustment = kind == PopupKind.StockAdjustments;
-        ShowMessage = !IsAddProduct && !IsStockAdjustment;
+        ShowMessage = !IsAddProduct && !IsStockAdjustment && !IsReturns;
 
         // A language change refreshes the text only; a fresh open starts a fresh form.
         if (kind == PopupKind.AddItems && _shown != kind)
         {
             _addProduct.Reset();
+        }
+
+        if (kind == PopupKind.Returns)
+        {
+            if (_shown != kind)
+            {
+                _returns.Reset();
+            }
+
+            PrimaryText = _returns.PrimaryText;
         }
 
         if (kind == PopupKind.StockAdjustments && _shown != kind)
@@ -264,6 +316,7 @@ public sealed partial class PopupViewModel : ObservableObject
         {
             PopupKind.AddItems => _addProduct.CanSave,
             PopupKind.StockAdjustments => _adjustment.CanApply,
+            PopupKind.Returns => _returns.CanSave && !_returns.IsCompleted,
             _ => false,
         };
         IsPointOfSale = kind == PopupKind.PointOfSale;

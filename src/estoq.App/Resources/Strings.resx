@@ -234,7 +234,7 @@
   <data name="Adjust_DoneColNow" xml:space="preserve"><value>Now</value></data>
   <data name="Adjust_DoneNew" xml:space="preserve"><value>New adjustment</value></data>
   <data name="Popup_Returns_Title" xml:space="preserve"><value>Returns</value></data>
-  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Return or exchange an item</value></data>
+  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Process a product return for a refund or an exchange.</value></data>
   <data name="Popup_Returns_Message" xml:space="preserve"><value>Customer returns is built next (see roadmap).</value></data>
   <data name="Popup_Returns_Primary" xml:space="preserve"><value>Save return</value></data>
   <data name="Popup_Settings_Title" xml:space="preserve"><value>Settings</value></data>
@@ -365,4 +365,66 @@
   <data name="Add_DoneColQty" xml:space="preserve"><value>Qty</value></data>
   <data name="Add_DoneColTotal" xml:space="preserve"><value>Total price</value></data>
   <data name="Error_NoStock" xml:space="preserve"><value>Enter opening stock for at least one variant.</value></data>
+  <data name="Ret_SaleTitle" xml:space="preserve"><value>Original sale</value></data>
+  <data name="Ret_ReceiptPlaceholder" xml:space="preserve"><value>Receipt number, for example 000120</value></data>
+  <data name="Ret_FindSale" xml:space="preserve"><value>Find sale</value></data>
+  <data name="Ret_ChangeSale" xml:space="preserve"><value>Change</value></data>
+  <data name="Ret_NoReceipt" xml:space="preserve"><value>Return without a receipt</value></data>
+  <data name="Ret_NoReceiptTitle" xml:space="preserve"><value>No receipt</value></data>
+  <data name="Ret_NoReceiptHint" xml:space="preserve"><value>Items come back at today's price and the owner is notified.</value></data>
+  <data name="Ret_UseReceipt" xml:space="preserve"><value>Use a receipt</value></data>
+  <data name="Ret_ErrNotFound" xml:space="preserve"><value>No sale found with that receipt number.</value></data>
+  <data name="Ret_ErrWindow" xml:space="preserve"><value>This sale is past the {0}-day return window.</value></data>
+  <data name="Ret_ErrNothingLeft" xml:space="preserve"><value>Everything on this sale was already returned.</value></data>
+  <data name="Ret_ErrNoItem" xml:space="preserve"><value>No item found for "{0}".</value></data>
+  <data name="Ret_ItemsTitle" xml:space="preserve"><value>Return items</value></data>
+  <data name="Ret_ItemsEmpty" xml:space="preserve"><value>Find a sale to choose the items to return.</value></data>
+  <data name="Ret_ScanPlaceholder" xml:space="preserve"><value>Scan barcode or search product...</value></data>
+  <data name="Ret_ColItem" xml:space="preserve"><value>Item</value></data>
+  <data name="Ret_ColPrice" xml:space="preserve"><value>Price</value></data>
+  <data name="Ret_ColQty" xml:space="preserve"><value>Qty</value></data>
+  <data name="Ret_ColSold" xml:space="preserve"><value>Sold</value></data>
+  <data name="Ret_QtyDecrease" xml:space="preserve"><value>Decrease quantity</value></data>
+  <data name="Ret_QtyIncrease" xml:space="preserve"><value>Increase quantity</value></data>
+  <data name="Ret_Remove" xml:space="preserve"><value>Remove</value></data>
+  <data name="Ret_ReasonTitle" xml:space="preserve"><value>Reason</value></data>
+  <data name="Ret_ReasonNone" xml:space="preserve"><value>No reason</value></data>
+  <data name="Ret_Reason_ChangeOfMind" xml:space="preserve"><value>Change of mind</value></data>
+  <data name="Ret_Reason_WrongSize" xml:space="preserve"><value>Wrong size</value></data>
+  <data name="Ret_Reason_Defective" xml:space="preserve"><value>Defective or damaged</value></data>
+  <data name="Ret_Reason_WrongItem" xml:space="preserve"><value>Wrong item</value></data>
+  <data name="Ret_Reason_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="Ret_NotePlaceholder" xml:space="preserve"><value>Add a note...</value></data>
+  <data name="Ret_TypeExchange" xml:space="preserve"><value>Exchange</value></data>
+  <data name="Ret_ExchangeTitle" xml:space="preserve"><value>Exchange items</value></data>
+  <data name="Ret_ExchangeEmpty" xml:space="preserve"><value>Scan or search the items the customer takes.</value></data>
+  <data name="Ret_RefundAmount" xml:space="preserve"><value>Refund amount</value></data>
+  <data name="Ret_BalancePays" xml:space="preserve"><value>Customer pays</value></data>
+  <data name="Ret_BalanceReceives" xml:space="preserve"><value>Customer receives</value></data>
+  <data name="Ret_BalanceEven" xml:space="preserve"><value>No difference</value></data>
+  <data name="Ret_Capped" xml:space="preserve"><value>Limited to what is left to refund on this sale.</value></data>
+  <data name="Ret_SettleIn" xml:space="preserve"><value>Settle in</value></data>
+  <data name="Ret_PrimaryRefund" xml:space="preserve"><value>Proceed with refund</value></data>
+  <data name="Ret_PrimaryExchange" xml:space="preserve"><value>Proceed with exchange</value></data>
+  <data name="Ret_DoneTitle" xml:space="preserve"><value>Return completed</value></data>
+  <data name="Ret_DoneNumber" xml:space="preserve"><value>Return {0}</value></data>
+  <data name="Ret_DoneSubtitleRefund" xml:space="preserve"><value>The items are back in stock and the refund is recorded.</value></data>
+  <data name="Ret_DoneSubtitleExchange" xml:space="preserve"><value>The items are back in stock and the exchange is recorded.</value></data>
+  <data name="Ret_DoneReturned" xml:space="preserve"><value>Returned items</value></data>
+  <data name="Ret_DoneTaken" xml:space="preserve"><value>New items</value></data>
+  <data name="Ret_DoneAnother" xml:space="preserve"><value>Process another return</value></data>
+  <data name="Ret_Returned" xml:space="preserve"><value>Returned</value></data>
+  <data name="Ret_ReturnedSome" xml:space="preserve"><value>{0} returned</value></data>
+  <data name="Ret_ItemsTitleExchange" xml:space="preserve"><value>Items to exchange</value></data>
+  <data name="Ret_ColTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Ret_Summary" xml:space="preserve"><value>Summary</value></data>
+  <data name="Ret_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Ret_ModeLabel" xml:space="preserve"><value>Mode</value></data>
+  <data name="Ret_ModeReturn" xml:space="preserve"><value>Return</value></data>
+  <data name="Ret_KpiItems" xml:space="preserve"><value>Items</value></data>
+  <data name="Ret_KpiSubtotal" xml:space="preserve"><value>Subtotal</value></data>
+  <data name="Ret_KpiCredit" xml:space="preserve"><value>Credit</value></data>
+  <data name="Ret_KpiNewItems" xml:space="preserve"><value>New items</value></data>
+  <data name="Notif_ReturnWithoutReceipt_Title" xml:space="preserve"><value>Return {0} had no receipt</value></data>
+  <data name="Notif_ReturnWithoutReceipt_Detail" xml:space="preserve"><value>Returned at today's price without a receipt. Review it.</value></data>
 </root>

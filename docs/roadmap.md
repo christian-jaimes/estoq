@@ -72,6 +72,7 @@ Build each rule before or with the first screen that needs it.
 | Core rules | `estoq.Core` started: roles and permissions, setup rules, sign-in rules, sale rules, product rules (name, duplicate check, variants, SKU, barcode, margin, validation); `tests/estoq.Core.Tests` |
 | Add product (F2) | Built on sample data (CPT6); not yet compiled or run on Windows. Tick the Add product and Product rules items when merged ([[add-product]]) |
 | Stock adjustments (F3) | Built on sample data (CPT8); not yet compiled or run on Windows. Rules in `estoq.Core/Stock` with tests. Tick the Stock adjustments and Stock rules items when merged ([[stock-adjustments]]) |
+| Returns (F4) | Refund and exchange built on sample data (CPT9); not compiled or run on Windows. Rules in `estoq.Core/Returns` with tests. Voids and "View sale" wait for the Sales page. Tick the Returns item when merged ([[returns-and-voids]]) |
 | Back end projects (Application, Infrastructure) | Not started; folders hold only build leftovers |
 | Documentation | Consolidated 2026-11-21; open items in [[open-questions]] |
 

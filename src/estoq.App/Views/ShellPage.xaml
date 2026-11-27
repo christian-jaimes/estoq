@@ -6,6 +6,7 @@
     xmlns:vm="using:Estoq.App.ViewModels"
     xmlns:services="using:Estoq.App.Services"
     xmlns:addproduct="using:Estoq.App.Views.AddProduct"
+    xmlns:returns="using:Estoq.App.Views.Returns"
     xmlns:pos="using:Estoq.App.Views.PointOfSale"
     xmlns:addvm="using:Estoq.App.ViewModels.AddProduct"
     xmlns:adjust="using:Estoq.App.Views.StockAdjustments"
@@ -316,12 +317,19 @@
                            PrimaryText="{x:Bind PopupState.PrimaryText, Mode=OneWay}"
                            IsPrimaryEnabled="{x:Bind PopupState.IsPrimaryEnabled, Mode=OneWay}"
                            CloseRequested="OnPopupCloseRequested" PrimaryInvoked="OnPopupPrimaryInvoked" Tapped="OnPopupTapped">
+        <controls:PopupShell.HeaderContent>
+          <!-- F4: the currency to hand over, as in the point of sale header. -->
+          <returns:ReturnCurrencyChips Visibility="{x:Bind PopupState.IsReturns, Mode=OneWay}" />
+        </controls:PopupShell.HeaderContent>
         <StackPanel Spacing="20">
           <TextBlock Text="{x:Bind PopupState.Message, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}"
                      Visibility="{x:Bind PopupState.ShowMessage, Mode=OneWay}" />
 
           <!-- F2: the Add product form. -->
           <addproduct:AddProductView Visibility="{x:Bind PopupState.IsAddProduct, Mode=OneWay}" />
+
+          <!-- F4: the Returns form. -->
+          <returns:ReturnsView Visibility="{x:Bind PopupState.IsReturns, Mode=OneWay}" />
 
           <!-- F3: the Stock adjustments form. -->
           <adjust:StockAdjustmentView Visibility="{x:Bind PopupState.IsStockAdjustment, Mode=OneWay}" />
@@ -419,6 +427,8 @@
         </Grid>
       </Border>
     </Border>
+    <!-- Return completed: same placement as Product added. -->
+    <returns:ReturnCompletedOverlay />
     <!-- Adjustment applied: confirmation over the whole pop-up (header and footer included), same pattern as Product added. -->
     <Border Background="{ThemeResource EqScrimBrush}" Tapped="OnPopupTapped" CornerRadius="{StaticResource EqRadiusXl}"
             Visibility="{x:Bind PopupState.Adjustment.IsCompleted, Mode=OneWay}">
