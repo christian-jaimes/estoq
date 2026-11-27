@@ -18,6 +18,8 @@ Rules:
 - Saved in one transaction: return, movements, refund or exchange.
 - Reason: optional in the mockup, required in the legacy flow. Working default: optional.
 
+Built so far (sample data, CPT9): receipt lookup (six digits; "#" and zeros optional), tick and quantity per item (never more than was sold less earlier returns), reason and note, Refund or Exchange, refund share of what was paid (a discount or tax on the sale is refunded in proportion, never more than is left to refund), settle currency at the current rate, the return window (sample setting 30 days), no-receipt returns at the current price with an owner notification, and a "Return completed" confirmation. Stock goes back as `return` rows (and exchange items as `sale` rows) appended to `data/dummy_stock_movements.csv`. Not built: voids, "View sale" (needs the Sales page), choosing the refund method (recorded as cash), approval or limits for no-receipt returns.
+
 ## Voids
 
 No mockup. Started from a sale on [[sales]]. Managers and owners; a cashier requests and a manager or owner approves on the same screen.
