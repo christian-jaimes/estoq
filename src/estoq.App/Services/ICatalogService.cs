@@ -3,7 +3,7 @@ namespace Estoq.App.Services;
 /// <summary>A kind of product and the sizes it offers. No sizes means a one-size item.</summary>
 public sealed record ProductTypeInfo(string Name, IReadOnlyList<string> Sizes, string Id = "");
 
-/// <summary>A seeded colour. <see cref="Key"/> names the translated label (<c>Colour_&lt;Key&gt;</c>); <see cref="Hex"/> is the swatch.</summary>
+/// <summary>A seeded colour. <see cref="Key"/> is the exact <c>color_name</c> value; <see cref="Hex"/> is the swatch.</summary>
 public sealed record ColourInfo(string Key, string Hex, bool IsQuickPick, string Family = "");
 
 /// <summary>A seeded size from the size master data.</summary>
@@ -13,7 +13,7 @@ public sealed record SizeInfo(string Name, int SortOrder, string ProductTypeId =
 public sealed record BrandInfo(string Id, string Name, string SkuCode, bool IsActive);
 
 /// <summary>One variant of a product about to be created.</summary>
-public sealed record NewVariant(string? Size, string? Colour, string Sku, string InternalBarcode, int OpeningStock, decimal? SellingPrice = null);
+public sealed record NewVariant(string? Size, string? Colour, string Sku, string InternalBarcode, int OpeningStock, decimal? SellingPrice = null, decimal? CostPrice = null);
 
 /// <summary>Everything the Add product pop-up hands over on Save (docs/features/add-product.md).</summary>
 public sealed record NewProduct(

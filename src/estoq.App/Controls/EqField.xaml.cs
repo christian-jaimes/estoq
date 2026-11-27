@@ -41,6 +41,9 @@ public sealed partial class EqField : UserControl
     public static readonly DependencyProperty ShowErrorTextProperty =
         DependencyProperty.Register(nameof(ShowErrorText), typeof(bool), typeof(EqField), new PropertyMetadata(true, OnErrorTextVisibilityChanged));
 
+    public static readonly DependencyProperty ShowLabelProperty =
+        DependencyProperty.Register(nameof(ShowLabel), typeof(bool), typeof(EqField), new PropertyMetadata(true, OnDecorationChanged));
+
     private bool _updatingNumericText;
     private Storyboard? _invalidInputStoryboard;
 
@@ -118,6 +121,12 @@ public sealed partial class EqField : UserControl
         set => SetValue(ShowErrorTextProperty, value);
     }
 
+    public bool ShowLabel
+    {
+        get => (bool)GetValue(ShowLabelProperty);
+        set => SetValue(ShowLabelProperty, value);
+    }
+
     public event EventHandler? ErrorTextChanged;
 
     private static void OnErrorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -147,6 +156,7 @@ public sealed partial class EqField : UserControl
 
     private void ApplyDecoration()
     {
+        LabelContainer.Visibility = ShowLabel ? Visibility.Visible : Visibility.Collapsed;
         RequiredMark.Visibility = IsRequired ? Visibility.Visible : Visibility.Collapsed;
         OptionalMark.Visibility = IsOptional && !IsRequired ? Visibility.Visible : Visibility.Collapsed;
         Input.Visibility = IsPassword ? Visibility.Collapsed : Visibility.Visible;

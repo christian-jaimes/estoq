@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 
 namespace Estoq.App;
@@ -26,6 +27,11 @@ public sealed partial class MainWindow : Window
         var root = Content as FrameworkElement
             ?? throw new InvalidOperationException("MainWindow XAML did not create its root content.");
 
+        // Like Root, resolve the named child from the live XAML tree as well as the generated field.
+        // This keeps startup working if Visual Studio has stale generated name fields after a XAML edit.
+        HostFrame ??= root.FindName("HostFrame") as Frame ?? FindVisualDescendant<Frame>(root)
+            ?? throw new InvalidOperationException("MainWindow XAML did not create its host frame.");
+
         AppServices.Get<IThemeService>().Attach(root);
         AppServices.Get<IThemeService>().Changed += (_, _) => UpdateCaptionButtons();
         UpdateCaptionButtons();
@@ -43,6 +49,18 @@ public sealed partial class MainWindow : Window
 
     /// <summary>The time the splash stays on screen.</summary>
     private static readonly TimeSpan SplashDuration = TimeSpan.FromSeconds(2);
+
+    private static T? FindVisualDescendant<T>(DependencyObject parent) where T : DependencyObject
+    {
+        for (var index = 0; index < VisualTreeHelper.GetChildrenCount(parent); index++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, index);
+            if (child is T match) return match;
+            if (FindVisualDescendant<T>(child) is { } nested) return nested;
+        }
+
+        return null;
+    }
 
     /// <summary>Shows the splash, then runs <paramref name="next"/> after two seconds.</summary>
     public void ShowSplash(Action next)

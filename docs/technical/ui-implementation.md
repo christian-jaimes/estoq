@@ -37,6 +37,13 @@ The popup corner treatment is set directly in the shared template because the Wi
 
 Form fields must stay within their assigned layout width; the length of entered or selected text must never resize the field, sibling columns or containing card. In grid-based forms, constrain star columns and their field wrappers with `MinWidth="0"`, and let the control stretch to that allocated width. Keep single-line input text on one line so long values scroll or clip inside the field instead of expanding the layout. Use an explicit `Width` when the form calls for a fixed-size field; otherwise use a constrained grid column so the width remains stable and responsive to the available form width.
 
+### Label and field spacing
+
+- Keep the vertical gap between a field label and its input at 6 px, matching `Controls/EqField`'s `StackPanel Spacing="6"` and the Add Product General fields.
+- Put the label and input in the same vertical `StackPanel` with `Spacing="6"` when building a custom field. For labels with optional or required marks, put the label text and mark in a horizontal stack, then place the input below it in the parent stack.
+- Do not use a star-sized grid row between a label and a compact input; it can absorb extra height and make the label-to-input gap inconsistent. When an editing area is intentionally meant to fill remaining space before the next field, use a label row followed by a star-sized input row, keep the label-to-input row spacing at 6 px, and let the input stretch to the available height. Give that input a `MinHeight` rather than a fixed height.
+- Keep spacing between separate fields controlled by the parent grid or stack; do not add that spacing to the label-to-input gap.
+
 ## Fonts and icons
 
 Manrope (Regular, SemiBold) and Poppins (SemiBold, Medium) bundled as static fonts with their SIL OFL licences. Material Symbols Rounded (Apache 2.0) is subset to the glyphs in use, in outline and filled variants, weight 500, optical size 24, grade 0.
@@ -81,6 +88,15 @@ F1 to F4 and [[settings]] share one frame so staff learn one pattern.
 - F2 shows `Views/AddProduct/AddProductView` (state in the singleton `AddProductViewModel`, reset each time the pop-up opens); `PopupViewModel` enables the primary button from its `CanSave` and closes the pop-up when it saves.
 - The point of sale (F1) is the exception: its mockup has its own header (wordmark, F1 badge, currency chips) and no footer, so `Views/PointOfSale/PointOfSaleView` is hosted beside the frame, chosen by `PopupViewModel.IsPointOfSale` and `IsFramed`. Esc and the close button behave the same.
 - Adding a flow: put a user control in `Body` chosen by `PopupKind`, drive `IsPrimaryEnabled`, handle `PrimaryInvoked`. Never copy the frame.
+
+### Container sizing inside pop-ups
+
+- Treat the popup shell as the available boundary. Its content area is the space between the fixed header and footer; sections must size and resize inside that area when the popup changes size.
+- Keep the body and its columns constrained to the popup viewport. Do not use content-driven minimum heights or widths that push sections behind the footer or outside the popup.
+- Within a column, use flexible rows for sections that should absorb available space and `Auto` rows for sections that should stay close to their content height. For example, Add Product's General section grows while Pricing remains compact.
+- Each section fills only its assigned container. Use `VerticalAlignment="Stretch"` where it should occupy the row and constrained grid columns with `MinWidth="0"` to prevent child controls or long text from forcing overflow.
+- Recalculate viewport-bound dimensions when the popup resizes. Put scrolling on the content that can grow (such as a long list), not on fixed headers, footers, or compact sections.
+- Preserve the intended sizing of sibling sections when changing one section. A change to a card's content should not make another card overflow or acquire unnecessary blank space.
 
 ## Localisation
 

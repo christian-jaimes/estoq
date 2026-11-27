@@ -168,6 +168,9 @@ public sealed partial class AddProductViewModel : ObservableObject
     public partial bool IsMarginNegative { get; set; }
 
     [ObservableProperty]
+    public partial bool IsMarginPositive { get; set; }
+
+    [ObservableProperty]
     public partial string SummaryVariants { get; set; } = string.Empty;
 
     public bool HasDuplicate => DuplicateName.Length > 0;
@@ -199,9 +202,7 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     public bool HasVariants => Variants.Count > 0;
 
-    public bool HasNoVariants => Variants.Count == 0;
-
-    public bool IsMarginPositive => !IsMarginNegative;
+    public bool IsMarginNeutral => !IsMarginNegative && !IsMarginPositive;
 
     /// <summary>Starts a fresh form with the current master data and the signed-in role's permissions.</summary>
     public void Reset()
@@ -285,11 +286,21 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     partial void OnSupplierBarcodeChanged(string value) => OnFormChanged();
 
-    partial void OnCostTextChanged(string value) => OnFormChanged();
+    partial void OnCostTextChanged(string value)
+    {
+        OnVariantDefaultsChanged();
+        OnFormChanged();
+    }
 
-    partial void OnSellingTextChanged(string value) => OnFormChanged();
+    partial void OnSellingTextChanged(string value)
+    {
+        OnVariantDefaultsChanged();
+        OnFormChanged();
+    }
 
-    partial void OnIsMarginNegativeChanged(bool value) => OnPropertyChanged(nameof(IsMarginPositive));
+    partial void OnIsMarginNegativeChanged(bool value) => OnPropertyChanged(nameof(IsMarginNeutral));
+
+    partial void OnIsMarginPositiveChanged(bool value) => OnPropertyChanged(nameof(IsMarginNeutral));
 
     partial void OnColourSearchChanged(string value) => RefreshColourLists();
 
@@ -363,8 +374,7 @@ public sealed partial class AddProductViewModel : ObservableObject
         existing.IsSelected = true;
     }
 
-    [RelayCommand]
-    private void RemoveVariant(VariantRowViewModel? row)
+    public void RemoveVariant(VariantRowViewModel? row)
     {
         if (row is null)
         {
@@ -465,10 +475,11 @@ public sealed partial class AddProductViewModel : ObservableObject
         AddImageCommand.NotifyCanExecuteChanged();
     }
 
-    public void SetVariantPrice(VariantRowViewModel row, string text)
+    public void SetVariantPrice(VariantRowViewModel row, bool isCost, string text)
     {
-        if (row.PriceText == text) return;
-        row.PriceText = text;
+        if (isCost ? row.CostPriceText == text : row.SellingPriceText == text) return;
+        if (isCost) row.CostPriceText = text;
+        else row.SellingPriceText = text;
         Touch();
         Validate();
     }
@@ -499,7 +510,8 @@ public sealed partial class AddProductViewModel : ObservableObject
                 Images.Select(i => i.Path).ToList(),
                 Variants
                     .Select(v => new NewVariant(v.Size, v.Colour, v.Sku.Trim(), v.InternalBarcode, v.OpeningStockUnits,
-                        string.IsNullOrWhiteSpace(v.PriceText) ? null : decimal.Parse(v.PriceText.Trim(), NumberStyles.Number, _localizer.Culture)))
+                        !v.IsSellingPriceCustomized || string.IsNullOrWhiteSpace(v.SellingPriceText) ? null : decimal.Parse(v.SellingPriceText.Trim(), NumberStyles.Number, _localizer.Culture),
+                        !v.IsCostPriceCustomized || string.IsNullOrWhiteSpace(v.CostPriceText) ? null : decimal.Parse(v.CostPriceText.Trim(), NumberStyles.Number, _localizer.Culture)))
                     .ToList());
             await _catalog.SaveAsync(product);
             Saved?.Invoke(this, EventArgs.Empty);
@@ -678,7 +690,7 @@ public sealed partial class AddProductViewModel : ObservableObject
             var colourKey = ProductNaming.Key(colour.Key);
             var isDefault = colourKey is "WHITE" or "BLACK" or "NAVY" or "EMERALD GREEN" or "CHERRY RED"
                 or "BEIGE" or "BLUSH PINK" or "CHOCOLATE BROWN";
-            var item = new ChoiceItemViewModel(colour.Key, _localizer[$"Colour_{colour.Key}"], colour.Hex, isQuickPick: isDefault);
+            var item = new ChoiceItemViewModel(colour.Key, colour.Key, colour.Hex, isQuickPick: isDefault);
             item.PropertyChanged += OnChoiceChanged;
             Colours.Add(item);
         }
@@ -690,7 +702,9 @@ public sealed partial class AddProductViewModel : ObservableObject
     {
         var sizes = Sizes.Where(s => s.IsSelected).ToList();
         var colours = Colours.Where(c => c.IsSelected).ToList();
-        var slots = VariantPlanner.Plan(sizes.Select(s => s.Value), colours.Select(c => c.Value));
+        IReadOnlyList<VariantSlot> slots = sizes.Count == 0 && colours.Count == 0
+            ? Array.Empty<VariantSlot>()
+            : VariantPlanner.Plan(sizes.Select(s => s.Value), colours.Select(c => c.Value));
 
         var rows = new List<VariantRowViewModel>(slots.Count);
         var taken = new HashSet<string>(_catalog.TakenSkus, StringComparer.OrdinalIgnoreCase);
@@ -708,10 +722,14 @@ public sealed partial class AddProductViewModel : ObservableObject
                 row = new VariantRowViewModel(
                     slot.Size,
                     slot.Colour,
-                    VariantLabel(slot.Size, colour?.Label),
+                    VariantLabel(slot.Size, colour?.Value),
                     colour?.Hex,
                     SkuGenerator.Generate(ProductType, slot.Colour, slot.Size, taken),
-                    InternalBarcode.FromSequence(_nextBarcode++));
+                    InternalBarcode.FromSequence(_nextBarcode++),
+                    CurrencyCode,
+                    ShowCost,
+                    RemoveVariant);
+                row.SetDefaultPrices(CostText, SellingText);
                 row.PropertyChanged += OnRowChanged;
                 _rows[key] = row;
             }
@@ -729,6 +747,7 @@ public sealed partial class AddProductViewModel : ObservableObject
         Variants.Clear();
         foreach (var row in rows)
         {
+            row.IsAlternateRow = rows.IndexOf(row) % 2 == 1;
             Variants.Add(row);
         }
 
@@ -750,12 +769,19 @@ public sealed partial class AddProductViewModel : ObservableObject
             return;
         }
 
-        if (e.PropertyName == nameof(VariantRowViewModel.Sku) && sender is VariantRowViewModel row)
+        if (sender is VariantRowViewModel row && e.PropertyName == nameof(VariantRowViewModel.CostPriceText))
         {
-            row.IsSkuOverridden = true;
+            if (!row.IsUpdatingDefaultPrices) row.MarkPriceCustomized(isCost: true);
+            Touch();
+            Validate();
         }
-
-        if (e.PropertyName is nameof(VariantRowViewModel.Sku) or nameof(VariantRowViewModel.OpeningStock))
+        else if (sender is VariantRowViewModel sellingRow && e.PropertyName == nameof(VariantRowViewModel.SellingPriceText))
+        {
+            if (!sellingRow.IsUpdatingDefaultPrices) sellingRow.MarkPriceCustomized(isCost: false);
+            Touch();
+            Validate();
+        }
+        else if (e.PropertyName == nameof(VariantRowViewModel.OpeningStockText))
         {
             Touch();
             Validate();
@@ -765,29 +791,23 @@ public sealed partial class AddProductViewModel : ObservableObject
     /// <summary>The SKU starts with the product type, so a changed type rebuilds every SKU the owner did not type over.</summary>
     private void RegenerateSkus()
     {
-        var taken = new HashSet<string>(_catalog.TakenSkus, StringComparer.OrdinalIgnoreCase);
-        taken.UnionWith(Variants.Where(v => v.IsSkuOverridden).Select(v => v.Sku));
-        _loading = true;
-        try
-        {
-            foreach (var row in Variants.Where(v => !v.IsSkuOverridden))
-            {
-                row.Sku = SkuGenerator.Generate(ProductType, row.Colour, row.Size, taken);
-                taken.Add(row.Sku);
-            }
-        }
-        finally
-        {
-            _loading = false;
-        }
+        // Generated SKUs are immutable on the form. Rebuilding the variants regenerates them
+        // when the product type changes.
     }
 
     private void OnVariantsChanged()
     {
         OnPropertyChanged(nameof(HasVariants));
-        OnPropertyChanged(nameof(HasNoVariants));
         UpdateSummary();
         Validate();
+    }
+
+    private void OnVariantDefaultsChanged()
+    {
+        foreach (var row in Variants)
+        {
+            row.SetDefaultPrices(CostText, SellingText);
+        }
     }
 
     private void UpdateSummary()
@@ -806,11 +826,13 @@ public sealed partial class AddProductViewModel : ObservableObject
                 ? $"{margin.Amount.ToString("N0", _localizer.Culture)} ({p.ToString("N0", _localizer.Culture)}%)"
                 : Dash;
             IsMarginNegative = margin.Amount < 0;
+            IsMarginPositive = margin.Amount > 0;
         }
         else
         {
             SummaryMargin = Dash;
             IsMarginNegative = false;
+            IsMarginPositive = false;
         }
 
         var sizeCount = Sizes.Count(x => x.IsSelected);
@@ -871,7 +893,9 @@ public sealed partial class AddProductViewModel : ObservableObject
             Variants.Select(v => new VariantDraft(v.Sku, v.OpeningStockUnits)).ToList());
 
         var code = sellingBad || costBad ? ProductValidationCode.PriceInvalid : ProductRules.Validate(draft);
-        var variantPriceBad = Variants.Any(v => v.PriceText.Length > 0 && !IsValidPrice(v.PriceText));
+        var variantPriceBad = Variants.Any(v =>
+            (v.CostPriceText.Length > 0 && !IsValidPrice(v.CostPriceText))
+            || (v.SellingPriceText.Length > 0 && !IsValidPrice(v.SellingPriceText)));
         string message;
         var section = "";
         if (code != ProductValidationCode.None)

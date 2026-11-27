@@ -20,7 +20,7 @@ public sealed partial class ChoiceItemViewModel : ObservableObject
     /// <summary>The stable value used in SKUs and the database (the size, or the English colour name).</summary>
     public string Value { get; }
 
-    /// <summary>The text shown, in the app language.</summary>
+    /// <summary>The text shown. Seeded colours preserve the exact color_name value from dummy_colors.csv.</summary>
     public string Label { get; }
 
     /// <summary>Swatch colour like "#B22C2C"; null for sizes.</summary>

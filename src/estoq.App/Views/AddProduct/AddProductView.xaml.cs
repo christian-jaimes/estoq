@@ -43,16 +43,19 @@ public sealed partial class AddProductView : UserControl
             }
         }
 
-        UpdateMinimumHeight();
+        UpdateFormHeight();
     }
 
-    private void OnPopupBodySizeChanged(object sender, SizeChangedEventArgs e) => UpdateMinimumHeight();
+    private void OnPopupBodySizeChanged(object sender, SizeChangedEventArgs e) => UpdateFormHeight();
 
-    private void UpdateMinimumHeight()
+    private void UpdateFormHeight()
     {
         if (_popupBodyScrollViewer is null) return;
         var viewportHeight = _popupBodyScrollViewer.ViewportHeight;
-        if (viewportHeight > 0 && !double.IsInfinity(viewportHeight)) MinHeight = viewportHeight;
+        if (viewportHeight > 0 && !double.IsInfinity(viewportHeight))
+        {
+            AddProductRoot.Height = viewportHeight;
+        }
     }
 
     private void OnPricingFieldErrorChanged(object? sender, EventArgs e)
@@ -251,6 +254,19 @@ public sealed partial class AddProductView : UserControl
 
     private void OnBrowseImagesClick(object sender, RoutedEventArgs e) => ViewModel.AddImageCommand.Execute(null);
 
+    private void OnStockTextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (sender is not TextBox textBox) return;
+        var raw = textBox.Text;
+        var filtered = new string(raw.Where(character => character is >= '0' and <= '9').ToArray());
+        if (int.TryParse(filtered, out var units) && units > 1_000_000) filtered = "1000000";
+        if (raw == filtered) return;
+
+        var caret = Math.Min(textBox.SelectionStart, filtered.Length);
+        textBox.Text = filtered;
+        textBox.SelectionStart = caret;
+    }
+
     private void OnProductImageDragOver(object sender, DragEventArgs e)
     {
         e.AcceptedOperation = e.DataView.Contains(StandardDataFormats.StorageItems)
@@ -278,14 +294,6 @@ public sealed partial class AddProductView : UserControl
         file.FileType.Equals(".jpeg", StringComparison.OrdinalIgnoreCase) ||
         file.FileType.Equals(".webp", StringComparison.OrdinalIgnoreCase);
 
-    private void OnRemoveVariantClick(object sender, RoutedEventArgs e)
-    {
-        if (sender is FrameworkElement { DataContext: VariantRowViewModel row })
-        {
-            ViewModel.RemoveVariantCommand.Execute(row);
-        }
-    }
-
     // Bindings inside the row templates are one-way; edits come back through these handlers.
     private void OnChoiceClick(object sender, RoutedEventArgs e)
     {
@@ -301,51 +309,8 @@ public sealed partial class AddProductView : UserControl
         }
     }
 
-    private void OnSkuTextChanged(object sender, TextChangedEventArgs e)
-    {
-        if (sender is TextBox { DataContext: VariantRowViewModel row } box && row.Sku != box.Text)
-        {
-            row.Sku = box.Text;
-        }
-    }
-
-    private void OnStockValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-    {
-        if (sender.DataContext is VariantRowViewModel row && !double.IsNaN(args.NewValue))
-        {
-            row.OpeningStock = args.NewValue;
-        }
-    }
-
-    private void OnVariantPriceChanged(object sender, TextChangedEventArgs e)
-    {
-        if (sender is TextBox { DataContext: VariantRowViewModel row } box)
-        {
-            ViewModel.SetVariantPrice(row, box.Text);
-            if (box.Text.Length > 0 && !decimal.TryParse(box.Text, System.Globalization.NumberStyles.Number,
-                    ViewModel.PriceCulture, out _)) Shake(box);
-        }
-    }
-
     private void OnPreviousImageClick(object sender, RoutedEventArgs e) => ViewModel.StepImage(-1);
 
     private void OnNextImageClick(object sender, RoutedEventArgs e) => ViewModel.StepImage(1);
 
-    private void Shake(FrameworkElement element)
-    {
-        var transform = element.RenderTransform as CompositeTransform ?? new CompositeTransform();
-        element.RenderTransform = transform;
-        transform.TranslateX = 0;
-        var storyboard = new Storyboard();
-        var animation = new DoubleAnimationUsingKeyFrames();
-        animation.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero), Value = 0 });
-        animation.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(45)), Value = -4 });
-        animation.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(90)), Value = 4 });
-        animation.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(135)), Value = -2 });
-        animation.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(180)), Value = 0 });
-        Storyboard.SetTarget(animation, transform);
-        Storyboard.SetTargetProperty(animation, "TranslateX");
-        storyboard.Children.Add(animation);
-        storyboard.Begin();
-    }
 }

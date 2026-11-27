@@ -26,7 +26,7 @@
       </VisualStateGroup>
     </VisualStateManager.VisualStateGroups>
 
-    <StackPanel Orientation="Horizontal" Spacing="4">
+    <StackPanel x:Name="LabelContainer" Orientation="Horizontal" Spacing="4">
       <TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource EqLabelStyle}"
                  Foreground="{ThemeResource EqTextBrush}" />
       <TextBlock x:Name="RequiredMark" Text="*" Style="{StaticResource EqLabelStyle}"

@@ -156,13 +156,14 @@
   <data name="Add_Summary" xml:space="preserve"><value>Summary</value></data>
   <data name="Add_SummaryVariants" xml:space="preserve"><value>Variants</value></data>
   <data name="Add_Variants" xml:space="preserve"><value>Variants and stock</value></data>
-  <data name="Add_VariantsHint" xml:space="preserve"><value>Built from the ticked sizes and colours. The SKU and barcode are generated; type over the SKU to change it.</value></data>
-  <data name="Add_ColVariant" xml:space="preserve"><value>Variant (colour – size)</value></data>
+  <data name="Add_VariantsHint" xml:space="preserve"><value>Built from selected sizes and colours</value></data>
+  <data name="Add_ColVariant" xml:space="preserve"><value>Variant (size – colour)</value></data>
   <data name="Add_ColSku" xml:space="preserve"><value>SKU</value></data>
   <data name="Add_ColBarcode" xml:space="preserve"><value>Barcode</value></data>
   <data name="Add_ColStock" xml:space="preserve"><value>Initial stock</value></data>
+  <data name="Add_ColCostPrice" xml:space="preserve"><value>Cost price</value></data>
+  <data name="Add_ColSellingPrice" xml:space="preserve"><value>Selling price</value></data>
   <data name="Add_RemoveVariant" xml:space="preserve"><value>Remove variant</value></data>
-  <data name="Add_NoVariants" xml:space="preserve"><value>No variants left. Tick a size or colour again to bring them back.</value></data>
   <data name="Add_PlainVariant" xml:space="preserve"><value>Single variant</value></data>
   <data name="Add_Duplicate" xml:space="preserve"><value>A product with this brand, type and model label already exists: {0}. Add variants or stock to that product instead.</value></data>
   <data name="Add_SizeOne" xml:space="preserve"><value>size</value></data>

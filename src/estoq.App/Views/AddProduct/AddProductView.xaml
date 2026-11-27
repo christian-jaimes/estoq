@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Estoq.App.Controls"
     xmlns:services="using:Estoq.App.Services"
+    xmlns:pos="using:Estoq.App.Views.PointOfSale"
     xmlns:local="using:Estoq.App.Views.AddProduct"
     xmlns:vm="using:Estoq.App.ViewModels.AddProduct">
 
@@ -11,6 +12,25 @@
     <DataTemplate x:Key="MasterDataSuggestionTemplate" x:DataType="vm:MasterDataSuggestion">
       <TextBlock Text="{x:Bind DisplayText}" VerticalAlignment="Center" />
     </DataTemplate>
+    <Style x:Key="VariantStockInputStyle" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}">
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="TextBox">
+            <Grid>
+              <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                      BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" />
+              <ScrollViewer x:Name="ContentElement" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}"
+                            Foreground="{TemplateBinding Foreground}" IsTabStop="False"
+                            AutomationProperties.AccessibilityView="Raw" ZoomMode="Disabled" />
+              <TextBlock x:Name="PlaceholderTextContentPresenter" Text="{TemplateBinding PlaceholderText}"
+                         Foreground="{ThemeResource TextControlPlaceholderForeground}" Margin="{TemplateBinding BorderThickness}"
+                         Padding="{TemplateBinding Padding}" TextAlignment="{TemplateBinding TextAlignment}"
+                         VerticalAlignment="Center" IsHitTestVisible="False" />
+            </Grid>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
     <!-- Size chip and colour swatch: a toggle that is outlined when off and gold when on. -->
     <Style x:Key="AddChoiceToggleStyle" TargetType="ToggleButton">
       <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
@@ -54,7 +74,7 @@
     </Style>
   </UserControl.Resources>
 
-  <Grid MinWidth="900" Tapped="OnAddProductTapped" Loaded="OnAddProductLoaded">
+  <Grid x:Name="AddProductRoot" Tapped="OnAddProductTapped" Loaded="OnAddProductLoaded">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
@@ -82,13 +102,13 @@
       </Grid.ColumnDefinitions>
 
       <!-- General and pricing share the left column. -->
-      <Grid Grid.Column="0" RowSpacing="10">
+      <Grid Grid.Column="0" RowSpacing="10" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
           <RowDefinition Height="*" />
-          <RowDefinition Height="*" />
+          <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Style="{StaticResource EqCardStyle}" Padding="14">
+        <Border Grid.Row="0" Style="{StaticResource EqCardStyle}" Padding="14" VerticalAlignment="Stretch">
           <Grid RowSpacing="8">
             <Grid.RowDefinitions>
               <RowDefinition Height="Auto" />
@@ -184,7 +204,7 @@
                 <TextBlock Text="{x:Bind services:Loc.Get('Add_Description')}" Style="{StaticResource EqLabelStyle}" />
                 <TextBlock Text="{x:Bind services:Loc.Get('Label_Optional')}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" />
               </StackPanel>
-              <Border Grid.Row="1" Style="{StaticResource EqInputContainerStyle}" MinHeight="54" VerticalAlignment="Stretch" Padding="12,2">
+              <Border Grid.Row="1" Style="{StaticResource EqInputContainerStyle}" MinHeight="72" VerticalAlignment="Stretch" Padding="12,2">
                 <Border.Resources>
                   <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
                   <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
@@ -203,7 +223,7 @@
               </Border>
             </Grid>
 
-            <controls:EqField Grid.Row="4" Label="{x:Bind services:Loc.Get('Add_SupplierBarcode')}" IsOptional="True"
+            <controls:EqField Grid.Row="4" Margin="0,-10,0,0" Label="{x:Bind services:Loc.Get('Add_SupplierBarcode')}" IsOptional="True"
                               PlaceholderText="{x:Bind services:Loc.Get('Add_SupplierBarcodeHint')}"
                               Text="{x:Bind ViewModel.SupplierBarcode, Mode=TwoWay}" />
           </Grid>
@@ -244,20 +264,32 @@
               <StackPanel Grid.Column="2" Spacing="6" MinWidth="0" HorizontalAlignment="Stretch"
                           Visibility="{x:Bind ViewModel.ShowCost, Mode=OneWay}">
                 <TextBlock Text="{x:Bind services:Loc.Get('Add_Margin')}" Style="{StaticResource EqLabelStyle}" TextTrimming="CharacterEllipsis" />
-                <Border Style="{StaticResource EqInputContainerStyle}" BorderBrush="{ThemeResource EqSuccessBrush}"
-                        Padding="0" MinWidth="0" HorizontalAlignment="Stretch">
-                  <Grid>
-                    <Rectangle Fill="{ThemeResource EqSuccessBrush}" Opacity="0.15" RadiusX="7" RadiusY="7" />
+                <Grid MinWidth="0" HorizontalAlignment="Stretch">
+                  <Border Style="{StaticResource EqInputContainerStyle}" BorderBrush="{ThemeResource EqBorderBrush}" Padding="0"
+                          Visibility="{x:Bind ViewModel.IsMarginNeutral, Mode=OneWay}">
                     <TextBlock Text="{x:Bind ViewModel.SummaryMargin, Mode=OneWay}" Style="{StaticResource EqLabelStyle}"
-                               Foreground="{ThemeResource EqSuccessBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                               TextTrimming="CharacterEllipsis"
-                               Visibility="{x:Bind ViewModel.IsMarginPositive, Mode=OneWay}" />
-                    <TextBlock Text="{x:Bind ViewModel.SummaryMargin, Mode=OneWay}" Style="{StaticResource EqLabelStyle}"
-                               Foreground="{ThemeResource EqDangerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                               TextTrimming="CharacterEllipsis"
-                               Visibility="{x:Bind ViewModel.IsMarginNegative, Mode=OneWay}" />
-                  </Grid>
-                </Border>
+                               Foreground="{ThemeResource EqTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis" />
+                  </Border>
+                  <Border Style="{StaticResource EqInputContainerStyle}" BorderBrush="{ThemeResource EqDangerBrush}" Padding="0"
+                          Visibility="{x:Bind ViewModel.IsMarginNegative, Mode=OneWay}">
+                    <Grid>
+                      <Rectangle Fill="{ThemeResource EqDangerBrush}" Opacity="0.15" RadiusX="7" RadiusY="7" />
+                      <TextBlock Text="{x:Bind ViewModel.SummaryMargin, Mode=OneWay}" Style="{StaticResource EqLabelStyle}"
+                                 Foreground="{ThemeResource EqDangerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                 TextTrimming="CharacterEllipsis" />
+                    </Grid>
+                  </Border>
+                  <Border Style="{StaticResource EqInputContainerStyle}" BorderBrush="{ThemeResource EqSuccessBrush}" Padding="0"
+                          Visibility="{x:Bind ViewModel.IsMarginPositive, Mode=OneWay}">
+                    <Grid>
+                      <Rectangle Fill="{ThemeResource EqSuccessBrush}" Opacity="0.15" RadiusX="7" RadiusY="7" />
+                      <TextBlock Text="{x:Bind ViewModel.SummaryMargin, Mode=OneWay}" Style="{StaticResource EqLabelStyle}"
+                                 Foreground="{ThemeResource EqSuccessBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                 TextTrimming="CharacterEllipsis" />
+                    </Grid>
+                  </Border>
+                </Grid>
               </StackPanel>
             </Grid>
           </StackPanel>
@@ -269,7 +301,7 @@
       <!-- Product image and size and colour sit in separate columns above the variants table. -->
       <Grid Grid.Column="1" RowSpacing="10">
         <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
+          <RowDefinition Height="240" />
           <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" ColumnSpacing="10" Height="240" VerticalAlignment="Top">
@@ -476,86 +508,126 @@
               </ItemsRepeater>
             </StackPanel>
           </Border>
-        <!-- Variants and opening stock. SKU can be typed over; the barcode is generated. -->
         </Grid>
-        <Border Grid.Row="1" Style="{StaticResource EqCardStyle}" Padding="14" VerticalAlignment="Stretch">
-          <StackPanel Spacing="8">
-            <Grid ColumnSpacing="12">
+
+        <!-- Only selected size/colour combinations appear here. The list scrolls inside the form. -->
+        <Border Grid.Row="1" Style="{StaticResource EqCardStyle}" Padding="14" MinHeight="0" VerticalAlignment="Stretch">
+          <Grid RowSpacing="10">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid ColumnSpacing="10">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
               </Grid.ColumnDefinitions>
-              <FontIcon Grid.Column="0" Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <FontIcon Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
               <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_Variants')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
               <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.VariantsDisclaimer, Mode=OneWay}" FontSize="12"
                          Foreground="{ThemeResource EqDangerBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                          TextWrapping="NoWrap" Visibility="{x:Bind ViewModel.ShowVariantsDisclaimer, Mode=OneWay}" />
             </Grid>
-            <TextBlock Text="{x:Bind services:Loc.Get('Add_VariantsHint')}" Style="{StaticResource EqSecondaryStyle}" />
 
-            <Grid ColumnSpacing="12" Padding="8,8">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" MinWidth="110" />
-                <ColumnDefinition Width="95" />
-                <ColumnDefinition Width="95" />
-                <ColumnDefinition Width="105" />
-                <ColumnDefinition Width="120" />
-                <ColumnDefinition Width="32" />
-                <ColumnDefinition Width="32" />
-              </Grid.ColumnDefinitions>
-              <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Add_ColVariant')}" Style="{StaticResource EqLabelStyle}" FontSize="13" TextWrapping="Wrap" />
-              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_ColSku')}" Style="{StaticResource EqLabelStyle}" FontSize="13" TextWrapping="Wrap" />
-              <TextBlock Grid.Column="2" Text="Price" Style="{StaticResource EqLabelStyle}" FontSize="13" TextWrapping="Wrap" />
-              <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Add_ColBarcode')}" Style="{StaticResource EqLabelStyle}" FontSize="13" TextWrapping="Wrap" />
-              <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Add_ColStock')}" Style="{StaticResource EqLabelStyle}" FontSize="13" TextWrapping="Wrap" />
-            </Grid>
-            <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
-
-            <ScrollViewer MaxHeight="245" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <ItemsRepeater ItemsSource="{x:Bind ViewModel.Variants}">
-              <ItemsRepeater.Layout><StackLayout Spacing="2" /></ItemsRepeater.Layout>
-              <ItemsRepeater.ItemTemplate>
-                <DataTemplate x:DataType="vm:VariantRowViewModel">
-                  <Grid ColumnSpacing="12" Padding="8,2" MinHeight="44">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="*" MinWidth="110" />
-                      <ColumnDefinition Width="95" />
-                      <ColumnDefinition Width="95" />
-                      <ColumnDefinition Width="105" />
-                      <ColumnDefinition Width="120" />
-                      <ColumnDefinition Width="32" />
-                      <ColumnDefinition Width="32" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                      <Ellipse Width="22" Height="22" Fill="{x:Bind SwatchBrush}" Stroke="{ThemeResource EqBorderBrush}" StrokeThickness="1"
-                               Visibility="{x:Bind HasSwatch}" />
-                      <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqLabelStyle}" FontSize="13" VerticalAlignment="Center"
-                                 TextTrimming="CharacterEllipsis" />
-                    </StackPanel>
-                    <TextBox Grid.Column="1" VerticalAlignment="Center" FontFamily="{StaticResource EqUiFont}" FontSize="13"
-                             Text="{x:Bind Sku, Mode=OneWay}" TextChanged="OnSkuTextChanged" MaxLength="40"
-                             AutomationProperties.Name="{x:Bind Label}" />
-                    <TextBox Grid.Column="2" VerticalAlignment="Center" FontFamily="{StaticResource EqUiFont}" FontSize="13"
-                             Text="{x:Bind PriceText, Mode=OneWay}" PlaceholderText="Default" TextChanged="OnVariantPriceChanged"
-                             AutomationProperties.Name="Price for {x:Bind Label}" />
-                    <TextBlock Grid.Column="3" Text="{x:Bind InternalBarcode}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center"
-                               IsTextSelectionEnabled="True" />
-                    <NumberBox Grid.Column="4" VerticalAlignment="Center" Minimum="0" Maximum="1000000" SmallChange="1" LargeChange="10"
-                               SpinButtonPlacementMode="Inline" Value="{x:Bind OpeningStock, Mode=OneWay}" ValueChanged="OnStockValueChanged"
-                               AutomationProperties.Name="{x:Bind Label}" />
-                    <Button Grid.Column="5" Style="{StaticResource EqPlainIconButtonStyle}" Click="OnRemoveVariantClick"
-                            VerticalAlignment="Center">
-                      <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
-                    </Button>
-                  </Grid>
-                </DataTemplate>
-              </ItemsRepeater.ItemTemplate>
-            </ItemsRepeater>
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <Border BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1" CornerRadius="{StaticResource EqRadiusMd}" MinHeight="0">
+              <Grid MinWidth="760" MinHeight="0">
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Padding="10,8" ColumnSpacing="10" Background="{ThemeResource EqSurfaceElevatedBrush}">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.45*" MinWidth="150" />
+                    <ColumnDefinition Width="1.1*" MinWidth="112" />
+                    <ColumnDefinition Width="1*" MinWidth="112" />
+                    <ColumnDefinition Width="1*" MinWidth="112" />
+                    <ColumnDefinition Width="1.2*" MinWidth="136" />
+                    <ColumnDefinition Width="36" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Text="{x:Bind services:Loc.Get('Add_ColVariant')}" Style="{StaticResource EqLabelStyle}" FontSize="13" />
+                  <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_ColBarcode')}" Style="{StaticResource EqLabelStyle}" FontSize="13" />
+                  <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Add_ColCostPrice')}" Style="{StaticResource EqLabelStyle}" FontSize="13"
+                             Visibility="{x:Bind ViewModel.ShowCost, Mode=OneWay}" />
+                  <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Add_ColSellingPrice')}" Style="{StaticResource EqLabelStyle}" FontSize="13" />
+                  <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Add_ColStock')}" Style="{StaticResource EqLabelStyle}" FontSize="13"
+                             TextAlignment="Center" AutomationProperties.Name="{x:Bind services:Loc.Get('Add_ColStock')}" />
+                </Grid>
+                <Rectangle Grid.Row="0" Height="1" Fill="{ThemeResource EqBorderBrush}" VerticalAlignment="Bottom" />
+                <ScrollViewer Grid.Row="1" MaxHeight="300" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                  <ItemsRepeater ItemsSource="{x:Bind ViewModel.Variants}">
+                    <ItemsRepeater.Layout><StackLayout Spacing="0" /></ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                      <DataTemplate x:DataType="vm:VariantRowViewModel">
+                        <Border BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1" Background="{ThemeResource EqSurfaceBrush}">
+                        <Grid MinHeight="64" Padding="10,7" ColumnSpacing="10" Background="{ThemeResource EqSurfaceBrush}">
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.45*" MinWidth="150" />
+                            <ColumnDefinition Width="1.1*" MinWidth="112" />
+                            <ColumnDefinition Width="1*" MinWidth="112" />
+                            <ColumnDefinition Width="1*" MinWidth="112" />
+                            <ColumnDefinition Width="1.2*" MinWidth="136" />
+                            <ColumnDefinition Width="36" />
+                          </Grid.ColumnDefinitions>
+                          <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                            <Border Width="38" Height="38" CornerRadius="19" Background="{ThemeResource EqSurfaceElevatedBrush}"
+                                    BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1" Padding="4">
+                              <Ellipse Fill="{x:Bind SwatchBrush}" Stroke="{ThemeResource EqBorderBrush}" StrokeThickness="1"
+                                       Visibility="{x:Bind HasSwatch}" />
+                            </Border>
+                            <StackPanel Spacing="1" VerticalAlignment="Center">
+                              <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqLabelStyle}" FontSize="13" TextTrimming="CharacterEllipsis" />
+                              <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqSecondaryStyle}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                          </StackPanel>
+                          <TextBlock Grid.Column="1" Text="{x:Bind InternalBarcode}" Style="{StaticResource EqSecondaryStyle}"
+                                     VerticalAlignment="Center" IsTextSelectionEnabled="True" TextTrimming="CharacterEllipsis" />
+                          <controls:EqField Grid.Column="2" MinWidth="0" VerticalAlignment="Center"
+                                            Label="{x:Bind services:Loc.Get('Add_ColCostPrice')}" ShowLabel="False"
+                                            IsNumeric="True" NumericErrorText="{x:Bind services:Loc.Get('Error_PriceInvalid')}"
+                                            ShowErrorText="False" Suffix="{x:Bind CurrencyCode}"
+                                            Text="{x:Bind CostPriceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Visibility="{x:Bind CanSeeCostPrice}" />
+                          <controls:EqField Grid.Column="3" MinWidth="0" VerticalAlignment="Center"
+                                            Label="{x:Bind services:Loc.Get('Add_ColSellingPrice')}" ShowLabel="False"
+                                            IsNumeric="True" NumericErrorText="{x:Bind services:Loc.Get('Error_PriceInvalid')}"
+                                            ShowErrorText="False" Suffix="{x:Bind CurrencyCode}"
+                                            Text="{x:Bind SellingPriceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          <Grid Grid.Column="4" ColumnSpacing="1" VerticalAlignment="Center" Height="36">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition Width="*"/><ColumnDefinition Width="32"/></Grid.ColumnDefinitions>
+                            <Button Style="{StaticResource EqSecondaryButtonStyle}" Grid.Column="0" MinWidth="0" Width="32" Height="34" Padding="0"
+                                    Command="{x:Bind DecreaseOpeningStockCommand}" AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_QtyDecrease')}">
+                              <FontIcon Glyph="&#xE15B;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+                            </Button>
+                            <TextBox Grid.Column="1" Style="{StaticResource VariantStockInputStyle}"
+                                     Text="{x:Bind OpeningStockText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="7" TextChanged="OnStockTextChanged"
+                                     Padding="0,6" BorderThickness="0" Background="{ThemeResource EqSurfaceBrush}"
+                                     FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14" TextAlignment="Center"
+                                     VerticalContentAlignment="Center" InputScope="Number"
+                                     AutomationProperties.Name="{x:Bind services:Loc.Get('Add_ColStock')}" />
+                            <Button Style="{StaticResource EqSecondaryButtonStyle}" Grid.Column="2" MinWidth="0" Width="32" Height="34" Padding="0"
+                                    Command="{x:Bind IncreaseOpeningStockCommand}" AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_QtyIncrease')}">
+                              <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+                            </Button>
+                          </Grid>
+                          <Button Grid.Column="5" Style="{StaticResource EqSecondaryButtonStyle}" Width="36" MinWidth="0" Height="36" Padding="0"
+                                  Command="{x:Bind RemoveCommand}" VerticalAlignment="Center"
+                                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_RemoveVariant')}"
+                                  AutomationProperties.Name="{x:Bind services:Loc.Get('Add_RemoveVariant')}">
+                            <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="18" Foreground="{ThemeResource EqDangerBrush}" />
+                          </Button>
+                        </Grid>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                  </ItemsRepeater>
+                </ScrollViewer>
+              </Grid>
+            </Border>
             </ScrollViewer>
-            <TextBlock Text="{x:Bind services:Loc.Get('Add_NoVariants')}" Style="{StaticResource EqSecondaryStyle}"
-                       Visibility="{x:Bind ViewModel.HasNoVariants, Mode=OneWay}" />
-          </StackPanel>
+          </Grid>
         </Border>
       </Grid>
     </Grid>

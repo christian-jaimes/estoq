@@ -156,13 +156,14 @@
   <data name="Add_Summary" xml:space="preserve"><value>Resumen</value></data>
   <data name="Add_SummaryVariants" xml:space="preserve"><value>Variantes</value></data>
   <data name="Add_Variants" xml:space="preserve"><value>Variantes y existencias</value></data>
-  <data name="Add_VariantsHint" xml:space="preserve"><value>Se arman con las tallas y los colores marcados. El SKU y el código de barras se generan; escribe sobre el SKU para cambiarlo.</value></data>
-  <data name="Add_ColVariant" xml:space="preserve"><value>Variante (color – talla)</value></data>
+  <data name="Add_VariantsHint" xml:space="preserve"><value>Se crean con las tallas y los colores seleccionados</value></data>
+  <data name="Add_ColVariant" xml:space="preserve"><value>Variante (talla – color)</value></data>
   <data name="Add_ColSku" xml:space="preserve"><value>SKU</value></data>
   <data name="Add_ColBarcode" xml:space="preserve"><value>Código de barras</value></data>
   <data name="Add_ColStock" xml:space="preserve"><value>Existencias iniciales</value></data>
+  <data name="Add_ColCostPrice" xml:space="preserve"><value>Precio de coste</value></data>
+  <data name="Add_ColSellingPrice" xml:space="preserve"><value>Precio de venta</value></data>
   <data name="Add_RemoveVariant" xml:space="preserve"><value>Quitar variante</value></data>
-  <data name="Add_NoVariants" xml:space="preserve"><value>No quedan variantes. Vuelve a marcar una talla o un color para recuperarlas.</value></data>
   <data name="Add_PlainVariant" xml:space="preserve"><value>Variante única</value></data>
   <data name="Add_Duplicate" xml:space="preserve"><value>Ya existe un producto con esta marca, tipo y modelo: {0}. Agrega variantes o existencias a ese producto.</value></data>
   <data name="Add_SizeOne" xml:space="preserve"><value>talla</value></data>
