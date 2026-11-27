@@ -198,7 +198,7 @@
   <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Correct stock differences and record the reason</value></data>
   <data name="Popup_Adjust_Message" xml:space="preserve"><value>Counting items and recording a reason for each change is built next (see roadmap).</value></data>
   <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Apply adjustment</value></data>
-  <data name="Adjust_Items" xml:space="preserve"><value>Adjustment items</value></data>
+  <data name="Adjust_Items" xml:space="preserve"><value>Stock Adjustment</value></data>
   <data name="Adjust_ScanPlaceholder" xml:space="preserve"><value>Scan a barcode or search by name or SKU</value></data>
   <data name="Adjust_ColProduct" xml:space="preserve"><value>Product</value></data>
   <data name="Adjust_ColCurrent" xml:space="preserve"><value>Current stock</value></data>
@@ -209,8 +209,6 @@
   <data name="Adjust_Remove" xml:space="preserve"><value>Remove item</value></data>
   <data name="Adjust_Details" xml:space="preserve"><value>Adjustment details</value></data>
   <data name="Adjust_TypeLabel" xml:space="preserve"><value>Adjustment type</value></data>
-  <data name="Adjust_ReasonLabel" xml:space="preserve"><value>Reason</value></data>
-  <data name="Adjust_ReasonPending" xml:space="preserve"><value>Chosen with the type</value></data>
   <data name="Adjust_Reference" xml:space="preserve"><value>Reference</value></data>
   <data name="Adjust_Notes" xml:space="preserve"><value>Notes</value></data>
   <data name="Adjust_NotesPlaceholder" xml:space="preserve"><value>For example, adjusted after the physical count</value></data>
@@ -220,9 +218,6 @@
   <data name="Adjust_Net" xml:space="preserve"><value>Net change</value></data>
   <data name="Adjust_NoMatch" xml:space="preserve"><value>No item matches "{0}".</value></data>
   <data name="Adjust_AlreadyAdded" xml:space="preserve"><value>{0} is already in the list.</value></data>
-  <data name="Adjust_HintType" xml:space="preserve"><value>Choose an adjustment type to continue.</value></data>
-  <data name="Adjust_HintItems" xml:space="preserve"><value>Add at least one item to adjust.</value></data>
-  <data name="Adjust_HintChange" xml:space="preserve"><value>Change the count of at least one item.</value></data>
   <data name="Adjust_NoAccessTitle" xml:space="preserve"><value>Managers and owners adjust stock</value></data>
   <data name="Adjust_NoAccessBody" xml:space="preserve"><value>Ask a manager or the owner to correct stock for you.</value></data>
   <data name="Adjust_Type_Recount" xml:space="preserve"><value>Recount</value></data>

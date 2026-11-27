@@ -34,7 +34,7 @@ After applying, the pop-up resets to empty and stays open for the next adjustmen
 
 ## Build notes (CPT8)
 
-- The type is chosen with four chips instead of a dropdown, since the list is fixed. Each type has one reason, shown next to it and filled in with the type.
+- The type is chosen with four chips instead of a dropdown, since the list is fixed. Each type has one fixed reason, applied automatically and recorded with the adjustment (no separate field on screen). Layout: the Stock Adjustment items on the left, summary (increases, decreases, net change) and details on the right.
 - The counted quantity is the new stock, so there is no separate "new stock" column: the input column is the new stock, and the stepper and the difference beside it stay in step with it.
 - Damaged and Lost can only decrease stock (counted quantity cannot be above current stock). Recount and Sold without stock may go either way. Stock never goes below zero.
 - Scanning or choosing an item that is already in the list does not add it twice.

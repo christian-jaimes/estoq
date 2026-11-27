@@ -198,7 +198,7 @@
   <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Corrige diferencias de existencias y registra el motivo</value></data>
   <data name="Popup_Adjust_Message" xml:space="preserve"><value>El conteo de artículos y el registro del motivo de cada cambio se construyen a continuación (ver hoja de ruta).</value></data>
   <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Aplicar ajuste</value></data>
-  <data name="Adjust_Items" xml:space="preserve"><value>Artículos del ajuste</value></data>
+  <data name="Adjust_Items" xml:space="preserve"><value>Ajuste de stock</value></data>
   <data name="Adjust_ScanPlaceholder" xml:space="preserve"><value>Escanea un código o busca por nombre o SKU</value></data>
   <data name="Adjust_ColProduct" xml:space="preserve"><value>Producto</value></data>
   <data name="Adjust_ColCurrent" xml:space="preserve"><value>Existencias</value></data>
@@ -209,8 +209,6 @@
   <data name="Adjust_Remove" xml:space="preserve"><value>Quitar artículo</value></data>
   <data name="Adjust_Details" xml:space="preserve"><value>Detalles del ajuste</value></data>
   <data name="Adjust_TypeLabel" xml:space="preserve"><value>Tipo de ajuste</value></data>
-  <data name="Adjust_ReasonLabel" xml:space="preserve"><value>Motivo</value></data>
-  <data name="Adjust_ReasonPending" xml:space="preserve"><value>Se elige con el tipo</value></data>
   <data name="Adjust_Reference" xml:space="preserve"><value>Referencia</value></data>
   <data name="Adjust_Notes" xml:space="preserve"><value>Notas</value></data>
   <data name="Adjust_NotesPlaceholder" xml:space="preserve"><value>Por ejemplo, ajustado tras el conteo físico</value></data>
@@ -220,9 +218,6 @@
   <data name="Adjust_Net" xml:space="preserve"><value>Cambio neto</value></data>
   <data name="Adjust_NoMatch" xml:space="preserve"><value>Ningún artículo coincide con "{0}".</value></data>
   <data name="Adjust_AlreadyAdded" xml:space="preserve"><value>{0} ya está en la lista.</value></data>
-  <data name="Adjust_HintType" xml:space="preserve"><value>Elige un tipo de ajuste para continuar.</value></data>
-  <data name="Adjust_HintItems" xml:space="preserve"><value>Agrega al menos un artículo para ajustar.</value></data>
-  <data name="Adjust_HintChange" xml:space="preserve"><value>Cambia el conteo de al menos un artículo.</value></data>
   <data name="Adjust_NoAccessTitle" xml:space="preserve"><value>Solo gerentes y propietarios ajustan existencias</value></data>
   <data name="Adjust_NoAccessBody" xml:space="preserve"><value>Pide a un gerente o al propietario que corrija las existencias por ti.</value></data>
   <data name="Adjust_Type_Recount" xml:space="preserve"><value>Reconteo</value></data>

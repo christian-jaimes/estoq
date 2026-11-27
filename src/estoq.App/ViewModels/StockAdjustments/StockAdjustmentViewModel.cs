@@ -72,10 +72,6 @@ public sealed partial class StockAdjustmentViewModel : ObservableObject
     [ObservableProperty]
     public partial AdjustmentTypeChoiceViewModel? SelectedType { get; set; }
 
-    /// <summary>The reason that goes with the chosen type, in the app language; empty until a type is chosen.</summary>
-    [ObservableProperty]
-    public partial string ReasonText { get; set; } = string.Empty;
-
     [ObservableProperty]
     public partial string Reference { get; set; } = string.Empty;
 
@@ -95,26 +91,16 @@ public sealed partial class StockAdjustmentViewModel : ObservableObject
     [ObservableProperty]
     public partial string NetText { get; set; } = "0";
 
-    /// <summary>Why Apply is not available yet; empty when it is.</summary>
-    [ObservableProperty]
-    public partial string ApplyHint { get; set; } = string.Empty;
-
     [ObservableProperty]
     public partial bool CanApply { get; set; }
 
     public bool NoAccess => !HasAccess;
-
-    public bool HasReason => ReasonText.Length > 0;
-
-    public bool HasNoReason => ReasonText.Length == 0;
 
     public bool HasRows => Rows.Count > 0;
 
     public bool IsEmpty => Rows.Count == 0;
 
     public bool HasScanMessage => ScanMessage.Length > 0;
-
-    public bool HasApplyHint => ApplyHint.Length > 0;
 
     private AdjustmentType? CurrentType => SelectedType?.Type;
 
@@ -205,14 +191,6 @@ public sealed partial class StockAdjustmentViewModel : ObservableObject
 
     partial void OnScanMessageChanged(string value) => OnPropertyChanged(nameof(HasScanMessage));
 
-    partial void OnApplyHintChanged(string value) => OnPropertyChanged(nameof(HasApplyHint));
-
-    partial void OnReasonTextChanged(string value)
-    {
-        OnPropertyChanged(nameof(HasReason));
-        OnPropertyChanged(nameof(HasNoReason));
-    }
-
     partial void OnHasAccessChanged(bool value)
     {
         OnPropertyChanged(nameof(NoAccess));
@@ -282,9 +260,6 @@ public sealed partial class StockAdjustmentViewModel : ObservableObject
             type.Name = _localizer[$"Adjust_Type_{type.Type}"];
         }
 
-        ReasonText = SelectedType is { } selected
-            ? _localizer[$"Adjust_Reason_{StockAdjustmentRules.Reasons(selected.Type)[0]}"]
-            : string.Empty;
         foreach (var row in Rows)
         {
             row.RefreshStrings();
@@ -308,11 +283,6 @@ public sealed partial class StockAdjustmentViewModel : ObservableObject
         NetText = Signed(summary.Net);
 
         var validation = StockAdjustmentRules.Validate(lines);
-        ApplyHint = !HasAccess ? string.Empty
-            : SelectedType is null ? _localizer["Adjust_HintType"]
-            : validation == AdjustmentValidation.NoItems ? _localizer["Adjust_HintItems"]
-            : validation == AdjustmentValidation.NothingChanged ? _localizer["Adjust_HintChange"]
-            : string.Empty;
         CanApply = HasAccess && SelectedType is not null && validation == AdjustmentValidation.None;
 
         OnPropertyChanged(nameof(HasRows));
