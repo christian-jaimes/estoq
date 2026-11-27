@@ -1,0 +1,314 @@
+<UserControl
+    x:Class="Estoq.App.Views.StockAdjustments.StockAdjustmentView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Estoq.App.Controls"
+    xmlns:services="using:Estoq.App.Services"
+    xmlns:vm="using:Estoq.App.ViewModels.StockAdjustments">
+
+  <UserControl.Resources>
+    <!-- Inputs inside a container draw no border or fill of their own: the container shows the hover, focus and error states. -->
+    <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
+    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+    <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
+    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
+    <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
+    <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+
+    <!-- Adjustment type chip: outlined when off, gold when on (same chip as the size and colour choices of Add product). -->
+    <Style x:Key="AdjustTypeToggleStyle" TargetType="ToggleButton">
+      <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
+      <Setter Property="FontSize" Value="{StaticResource EqFontSm}" />
+      <Setter Property="CornerRadius" Value="{StaticResource EqRadiusMd}" />
+      <Setter Property="Height" Value="{StaticResource EqControlHeight}" />
+      <Setter Property="Padding" Value="10,0" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+      <Setter Property="Background" Value="{ThemeResource EqSurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
+    </Style>
+
+    <DataTemplate x:Key="StockSuggestionTemplate" x:DataType="services:StockItem">
+      <Grid ColumnSpacing="12">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+          <TextBlock Text="{x:Bind Name}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
+                     Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
+          <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+        <TextBlock Grid.Column="1" Text="{x:Bind OnHand}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" />
+      </Grid>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <Grid x:Name="AdjustRoot" Padding="0,0,0,2" Tapped="OnAdjustTapped" Loaded="OnAdjustLoaded">
+
+    <!-- Managers and owners only (docs/product/roles-and-permissions.md). -->
+    <Border Style="{StaticResource EqCardStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="480"
+            Visibility="{x:Bind ViewModel.NoAccess, Mode=OneWay}">
+      <StackPanel Spacing="6" HorizontalAlignment="Center">
+        <FontIcon Glyph="&#xE899;" FontFamily="{StaticResource EqIconFont}" FontSize="32"
+                  Foreground="{ThemeResource EqTextSecondaryBrush}" HorizontalAlignment="Center" />
+        <TextBlock Text="{x:Bind services:Loc.Get('Adjust_NoAccessTitle')}" Style="{StaticResource EqCardTitleStyle}"
+                   FontSize="{StaticResource EqFontXl}" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock Text="{x:Bind services:Loc.Get('Adjust_NoAccessBody')}" Style="{StaticResource EqSecondaryStyle}"
+                   TextAlignment="Center" HorizontalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
+    <Grid ColumnSpacing="16" Visibility="{x:Bind ViewModel.HasAccess, Mode=OneWay}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" MinWidth="0" />
+        <ColumnDefinition Width="340" />
+      </Grid.ColumnDefinitions>
+
+      <!-- Left: the items, then the summary -->
+      <Grid Grid.Column="0" RowDefinitions="*,Auto" RowSpacing="16" MinWidth="0">
+
+        <Border Grid.Row="0" Style="{StaticResource EqCardStyle}" Padding="20">
+          <Grid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="12">
+            <Grid Grid.Row="0" ColumnSpacing="10">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <FontIcon Grid.Column="0" Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}"
+                        Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Adjust_Items')}" Style="{StaticResource EqCardTitleStyle}"
+                         FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+            </Grid>
+
+            <!-- Scan or search: Enter adds the matching item, a barcode scanner types the code and presses Enter. -->
+            <Border Grid.Row="1" Style="{StaticResource EqInputContainerStyle}" Padding="0">
+              <AutoSuggestBox x:Name="SearchBox" Style="{StaticResource EqAutoSuggestBoxStyle}" HorizontalAlignment="Stretch"
+                              TextMemberPath="Name" ItemsSource="{x:Bind ViewModel.Suggestions}"
+                              ItemTemplate="{StaticResource StockSuggestionTemplate}"
+                              PlaceholderText="{x:Bind services:Loc.Get('Adjust_ScanPlaceholder')}"
+                              TextChanged="OnSearchTextChanged" QuerySubmitted="OnSearchQuerySubmitted"
+                              MaxSuggestionListHeight="240" AutomationProperties.Name="{x:Bind services:Loc.Get('Adjust_ScanPlaceholder')}" />
+            </Border>
+
+            <TextBlock Grid.Row="2" Text="{x:Bind ViewModel.ScanMessage, Mode=OneWay}" Foreground="{ThemeResource EqDangerBrush}"
+                       FontSize="{StaticResource EqFontSm}" TextWrapping="Wrap"
+                       Visibility="{x:Bind ViewModel.HasScanMessage, Mode=OneWay}" />
+
+            <!-- Items table -->
+            <Grid Grid.Row="3" RowDefinitions="Auto,*">
+              <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" MinWidth="120" />
+                  <ColumnDefinition Width="88" />
+                  <ColumnDefinition Width="96" />
+                  <ColumnDefinition Width="128" />
+                  <ColumnDefinition Width="36" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Adjust_ColProduct')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Adjust_ColCurrent')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Adjust_ColNew')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Adjust_ColAdjustment')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Center" HorizontalAlignment="Center" />
+              </Grid>
+
+              <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0">
+                <Grid>
+                  <ItemsRepeater ItemsSource="{x:Bind ViewModel.Rows}">
+                    <ItemsRepeater.ItemTemplate>
+                      <DataTemplate x:DataType="vm:AdjustmentRowViewModel">
+                        <Grid Style="{StaticResource EqTableRowStyle}">
+                          <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind IsAlternateRow, Mode=OneWay}" />
+                          <Grid MinHeight="64" Padding="12,7,8,7" ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="*" MinWidth="120" />
+                              <ColumnDefinition Width="88" />
+                              <ColumnDefinition Width="96" />
+                              <ColumnDefinition Width="128" />
+                              <ColumnDefinition Width="36" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                              <Border Width="40" Height="40" CornerRadius="{StaticResource EqRadiusMd}" Background="{ThemeResource EqSurfaceElevatedBrush}"
+                                      BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
+                                <FontIcon Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}"
+                                          Foreground="{ThemeResource EqTextSecondaryBrush}" />
+                              </Border>
+                              <StackPanel Spacing="1" VerticalAlignment="Center">
+                                <TextBlock Text="{x:Bind Item.Name}" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontSm}" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{x:Bind Item.DetailText}" Style="{StaticResource EqSecondaryStyle}" FontSize="{StaticResource EqFontXs}" TextTrimming="CharacterEllipsis" />
+                              </StackPanel>
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" Text="{x:Bind CurrentText, Mode=OneWay}" Style="{StaticResource EqTableCellStyle}"
+                                       FontFamily="{StaticResource EqUiFontSemiBold}" HorizontalAlignment="Center" />
+                            <Border Grid.Column="2" Style="{StaticResource EqInputContainerStyle}" Padding="0" VerticalAlignment="Center">
+                              <TextBox Text="{x:Bind CountedText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                       MaxLength="7" BeforeTextChanging="OnCountedBeforeTextChanging" InputScope="Number"
+                                       Background="Transparent" BorderThickness="0" Padding="0,6" VerticalContentAlignment="Center"
+                                       FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}" TextAlignment="Center"
+                                       AutomationProperties.Name="{x:Bind services:Loc.Get('Adjust_ColNew')}" />
+                            </Border>
+                            <Grid Grid.Column="3" ColumnSpacing="1" VerticalAlignment="Center" Height="{StaticResource EqControlHeight}">
+                              <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="32" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="32" />
+                              </Grid.ColumnDefinitions>
+                              <Button Grid.Column="0" Style="{StaticResource EqSecondaryButtonStyle}" MinWidth="0" Width="32" Height="34" Padding="0"
+                                      Command="{x:Bind DecreaseCommand}" AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_QtyDecrease')}">
+                                <FontIcon Glyph="&#xE15B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
+                              </Button>
+                              <Grid Grid.Column="1">
+                                <TextBlock Text="{x:Bind DifferenceText, Mode=OneWay}" Style="{StaticResource EqTableCellStyle}"
+                                           FontFamily="{StaticResource EqUiFontSemiBold}" HorizontalAlignment="Center"
+                                           Foreground="{ThemeResource EqTextSecondaryBrush}" Visibility="{x:Bind IsUnchanged, Mode=OneWay}" />
+                                <TextBlock Text="{x:Bind DifferenceText, Mode=OneWay}" Style="{StaticResource EqTableCellStyle}"
+                                           FontFamily="{StaticResource EqUiFontSemiBold}" HorizontalAlignment="Center"
+                                           Foreground="{ThemeResource EqSuccessBrush}" Visibility="{x:Bind IsIncrease, Mode=OneWay}" />
+                                <TextBlock Text="{x:Bind DifferenceText, Mode=OneWay}" Style="{StaticResource EqTableCellStyle}"
+                                           FontFamily="{StaticResource EqUiFontSemiBold}" HorizontalAlignment="Center"
+                                           Foreground="{ThemeResource EqDangerBrush}" Visibility="{x:Bind IsDecrease, Mode=OneWay}" />
+                              </Grid>
+                              <Button Grid.Column="2" Style="{StaticResource EqSecondaryButtonStyle}" MinWidth="0" Width="32" Height="34" Padding="0"
+                                      Command="{x:Bind IncreaseCommand}" AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_QtyIncrease')}">
+                                <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
+                              </Button>
+                            </Grid>
+                            <Button Grid.Column="4" Style="{StaticResource EqSecondaryButtonStyle}" Width="36" MinWidth="0" Height="{StaticResource EqControlHeight}" Padding="0"
+                                    Command="{x:Bind RemoveCommand}" VerticalAlignment="Center"
+                                    ToolTipService.ToolTip="{x:Bind services:Loc.Get('Adjust_Remove')}"
+                                    AutomationProperties.Name="{x:Bind services:Loc.Get('Adjust_Remove')}">
+                              <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" Foreground="{ThemeResource EqDangerBrush}" />
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                  </ItemsRepeater>
+
+                  <!-- Nothing added yet -->
+                  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6" Padding="16,32"
+                              Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay}">
+                    <FontIcon Glyph="&#xE70C;" FontFamily="{StaticResource EqIconFont}" FontSize="32"
+                              Foreground="{ThemeResource EqTextSecondaryBrush}" HorizontalAlignment="Center" />
+                    <TextBlock Text="{x:Bind services:Loc.Get('Adjust_EmptyTitle')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
+                               Foreground="{ThemeResource EqTextBrush}" HorizontalAlignment="Center" />
+                    <TextBlock Text="{x:Bind services:Loc.Get('Adjust_EmptyBody')}" Style="{StaticResource EqSecondaryStyle}"
+                               HorizontalAlignment="Center" TextAlignment="Center" />
+                  </StackPanel>
+                </Grid>
+              </ScrollViewer>
+            </Grid>
+          </Grid>
+        </Border>
+
+        <!-- Summary: increases, decreases, net change -->
+        <Border Grid.Row="1" Style="{StaticResource EqCardStyle}" Padding="20,16">
+          <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
+              <FontIcon Glyph="&#xF190;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Text="{x:Bind services:Loc.Get('Adjust_Summary')}" Style="{StaticResource EqCardTitleStyle}"
+                         FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+            </StackPanel>
+            <Grid Grid.Row="1" ColumnSpacing="16">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <StackPanel Grid.Column="0" Spacing="2">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <FontIcon Glyph="&#xE5D8;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" Foreground="{ThemeResource EqSuccessBrush}" />
+                  <TextBlock Text="{x:Bind services:Loc.Get('Adjust_Increases')}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock Text="{x:Bind ViewModel.IncreasesText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" Foreground="{ThemeResource EqSuccessBrush}" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="2">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <FontIcon Glyph="&#xE5DB;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" Foreground="{ThemeResource EqDangerBrush}" />
+                  <TextBlock Text="{x:Bind services:Loc.Get('Adjust_Decreases')}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock Text="{x:Bind ViewModel.DecreasesText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" Foreground="{ThemeResource EqDangerBrush}" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Spacing="2">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <FontIcon Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+                  <TextBlock Text="{x:Bind services:Loc.Get('Adjust_Net')}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock Text="{x:Bind ViewModel.NetText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" />
+              </StackPanel>
+            </Grid>
+            <!-- Why Apply is not available yet -->
+            <TextBlock Grid.Row="2" Text="{x:Bind ViewModel.ApplyHint, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}"
+                       Visibility="{x:Bind ViewModel.HasApplyHint, Mode=OneWay}" />
+          </Grid>
+        </Border>
+      </Grid>
+
+      <!-- Right: adjustment details -->
+      <Border Grid.Column="1" Style="{StaticResource EqCardStyle}" Padding="20">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" RowSpacing="16">
+          <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
+            <FontIcon Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+            <TextBlock Text="{x:Bind services:Loc.Get('Adjust_Details')}" Style="{StaticResource EqCardTitleStyle}"
+                       FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+          </StackPanel>
+
+          <StackPanel Grid.Row="1" Spacing="6">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <TextBlock Text="{x:Bind services:Loc.Get('Adjust_TypeLabel')}" Style="{StaticResource EqLabelStyle}" />
+              <TextBlock Text="*" Style="{StaticResource EqLabelStyle}" Foreground="{ThemeResource EqGoldInkBrush}" />
+            </StackPanel>
+            <ItemsRepeater ItemsSource="{x:Bind ViewModel.Types}">
+              <ItemsRepeater.Layout>
+                <UniformGridLayout MinItemWidth="140" MinItemHeight="36" MinRowSpacing="8" MinColumnSpacing="8" ItemsStretch="Fill" />
+              </ItemsRepeater.Layout>
+              <ItemsRepeater.ItemTemplate>
+                <DataTemplate x:DataType="vm:AdjustmentTypeChoiceViewModel">
+                  <ToggleButton Style="{StaticResource AdjustTypeToggleStyle}" Content="{x:Bind Name, Mode=OneWay}"
+                                IsChecked="{x:Bind IsSelected, Mode=OneWay}" Tag="{x:Bind}" Click="OnTypeClick" />
+                </DataTemplate>
+              </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+          </StackPanel>
+
+          <!-- The reason belongs to the type: each type has one fixed reason. -->
+          <StackPanel Grid.Row="2" Spacing="6">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <TextBlock Text="{x:Bind services:Loc.Get('Adjust_ReasonLabel')}" Style="{StaticResource EqLabelStyle}" />
+              <TextBlock Text="*" Style="{StaticResource EqLabelStyle}" Foreground="{ThemeResource EqGoldInkBrush}" />
+            </StackPanel>
+            <Border Style="{StaticResource EqInputContainerStyle}" Background="{ThemeResource EqSurfaceElevatedBrush}">
+              <Grid>
+                <TextBlock Text="{x:Bind ViewModel.ReasonText, Mode=OneWay}" Style="{StaticResource EqTableCellStyle}" FontSize="{StaticResource EqFontMd}"
+                           TextTrimming="CharacterEllipsis" Visibility="{x:Bind ViewModel.HasReason, Mode=OneWay}" />
+                <TextBlock Text="{x:Bind services:Loc.Get('Adjust_ReasonPending')}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center"
+                           TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Visibility="{x:Bind ViewModel.HasNoReason, Mode=OneWay}" />
+              </Grid>
+            </Border>
+          </StackPanel>
+
+          <controls:EqField Grid.Row="3" Label="{x:Bind services:Loc.Get('Adjust_Reference')}" IsOptional="True" MinWidth="0"
+                            Text="{x:Bind ViewModel.Reference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+          <!-- Notes fill the remaining height of the card. -->
+          <Grid Grid.Row="4" RowDefinitions="Auto,*" RowSpacing="6">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="4">
+              <TextBlock Text="{x:Bind services:Loc.Get('Adjust_Notes')}" Style="{StaticResource EqLabelStyle}" />
+              <TextBlock Text="{x:Bind services:Loc.Get('Label_Optional')}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" />
+            </StackPanel>
+            <Border Grid.Row="1" Style="{StaticResource EqInputContainerStyle}" Height="NaN" MinHeight="96" Padding="0">
+              <TextBox Text="{x:Bind ViewModel.Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       PlaceholderText="{x:Bind services:Loc.Get('Adjust_NotesPlaceholder')}"
+                       AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500"
+                       Background="Transparent" BorderThickness="0" Padding="12,8" VerticalContentAlignment="Top"
+                       FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontMd}"
+                       AutomationProperties.Name="{x:Bind services:Loc.Get('Adjust_Notes')}" />
+            </Border>
+          </Grid>
+        </Grid>
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>

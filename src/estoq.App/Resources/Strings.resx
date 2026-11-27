@@ -195,9 +195,49 @@
   <data name="Colour_Purple" xml:space="preserve"><value>Purple</value></data>
   <data name="Colour_Brown" xml:space="preserve"><value>Brown</value></data>
   <data name="Popup_Adjust_Title" xml:space="preserve"><value>Stock adjustments</value></data>
-  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Count an item and record a reason</value></data>
+  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Correct stock differences and record the reason</value></data>
   <data name="Popup_Adjust_Message" xml:space="preserve"><value>Counting items and recording a reason for each change is built next (see roadmap).</value></data>
-  <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Save adjustment</value></data>
+  <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Apply adjustment</value></data>
+  <data name="Adjust_Items" xml:space="preserve"><value>Adjustment items</value></data>
+  <data name="Adjust_ScanPlaceholder" xml:space="preserve"><value>Scan a barcode or search by name or SKU</value></data>
+  <data name="Adjust_ColProduct" xml:space="preserve"><value>Product</value></data>
+  <data name="Adjust_ColCurrent" xml:space="preserve"><value>Current stock</value></data>
+  <data name="Adjust_ColNew" xml:space="preserve"><value>New stock</value></data>
+  <data name="Adjust_ColAdjustment" xml:space="preserve"><value>Adjustment</value></data>
+  <data name="Adjust_EmptyTitle" xml:space="preserve"><value>No items yet</value></data>
+  <data name="Adjust_EmptyBody" xml:space="preserve"><value>Scan an item or search for it to start the adjustment.</value></data>
+  <data name="Adjust_Remove" xml:space="preserve"><value>Remove item</value></data>
+  <data name="Adjust_Details" xml:space="preserve"><value>Adjustment details</value></data>
+  <data name="Adjust_TypeLabel" xml:space="preserve"><value>Adjustment type</value></data>
+  <data name="Adjust_ReasonLabel" xml:space="preserve"><value>Reason</value></data>
+  <data name="Adjust_ReasonPending" xml:space="preserve"><value>Chosen with the type</value></data>
+  <data name="Adjust_Reference" xml:space="preserve"><value>Reference</value></data>
+  <data name="Adjust_Notes" xml:space="preserve"><value>Notes</value></data>
+  <data name="Adjust_NotesPlaceholder" xml:space="preserve"><value>For example, adjusted after the physical count</value></data>
+  <data name="Adjust_Summary" xml:space="preserve"><value>Adjustment summary</value></data>
+  <data name="Adjust_Increases" xml:space="preserve"><value>Increases</value></data>
+  <data name="Adjust_Decreases" xml:space="preserve"><value>Decreases</value></data>
+  <data name="Adjust_Net" xml:space="preserve"><value>Net change</value></data>
+  <data name="Adjust_NoMatch" xml:space="preserve"><value>No item matches "{0}".</value></data>
+  <data name="Adjust_AlreadyAdded" xml:space="preserve"><value>{0} is already in the list.</value></data>
+  <data name="Adjust_HintType" xml:space="preserve"><value>Choose an adjustment type to continue.</value></data>
+  <data name="Adjust_HintItems" xml:space="preserve"><value>Add at least one item to adjust.</value></data>
+  <data name="Adjust_HintChange" xml:space="preserve"><value>Change the count of at least one item.</value></data>
+  <data name="Adjust_NoAccessTitle" xml:space="preserve"><value>Managers and owners adjust stock</value></data>
+  <data name="Adjust_NoAccessBody" xml:space="preserve"><value>Ask a manager or the owner to correct stock for you.</value></data>
+  <data name="Adjust_Type_Recount" xml:space="preserve"><value>Recount</value></data>
+  <data name="Adjust_Type_SoldWithoutStock" xml:space="preserve"><value>Sold without stock</value></data>
+  <data name="Adjust_Type_Damaged" xml:space="preserve"><value>Damaged</value></data>
+  <data name="Adjust_Type_Lost" xml:space="preserve"><value>Lost</value></data>
+  <data name="Adjust_Reason_StockCountDifference" xml:space="preserve"><value>Stock count difference</value></data>
+  <data name="Adjust_Reason_OutOfStockSaleCorrection" xml:space="preserve"><value>Correction after an out-of-stock sale</value></data>
+  <data name="Adjust_Reason_DamagedUnsellable" xml:space="preserve"><value>Damaged, unsellable</value></data>
+  <data name="Adjust_Reason_LostOrStolen" xml:space="preserve"><value>Lost or stolen</value></data>
+  <data name="Adjust_DoneTitle" xml:space="preserve"><value>Adjustment applied</value></data>
+  <data name="Adjust_DoneColWas" xml:space="preserve"><value>Was</value></data>
+  <data name="Adjust_DoneColChange" xml:space="preserve"><value>Change</value></data>
+  <data name="Adjust_DoneColNow" xml:space="preserve"><value>Now</value></data>
+  <data name="Adjust_DoneNew" xml:space="preserve"><value>New adjustment</value></data>
   <data name="Popup_Returns_Title" xml:space="preserve"><value>Returns</value></data>
   <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Return or exchange an item</value></data>
   <data name="Popup_Returns_Message" xml:space="preserve"><value>Customer returns is built next (see roadmap).</value></data>
