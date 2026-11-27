@@ -330,4 +330,81 @@
   <data name="Add_DoneColQty" xml:space="preserve"><value>Cant.</value></data>
   <data name="Add_DoneColTotal" xml:space="preserve"><value>Precio total</value></data>
   <data name="Error_NoStock" xml:space="preserve"><value>Indica las existencias iniciales de al menos una variante.</value></data>
+
+  <!-- Inventory page -->
+  <data name="Inventory_Subtitle" xml:space="preserve"><value>Gestiona tus productos, variantes y niveles de stock.</value></data>
+  <data name="Inventory_Export" xml:space="preserve"><value>Exportar</value></data>
+  <data name="Inventory_AddProduct" xml:space="preserve"><value>Añadir producto</value></data>
+  <data name="Inventory_KpiProducts" xml:space="preserve"><value>Productos totales</value></data>
+  <data name="Inventory_KpiVariants" xml:space="preserve"><value>Variantes totales</value></data>
+  <data name="Inventory_KpiInStock" xml:space="preserve"><value>En stock</value></data>
+  <data name="Inventory_KpiLow" xml:space="preserve"><value>Stock bajo</value></data>
+  <data name="Inventory_KpiOut" xml:space="preserve"><value>Agotados</value></data>
+  <data name="Inventory_TabAll" xml:space="preserve"><value>Todos los productos</value></data>
+  <data name="Inventory_TabLow" xml:space="preserve"><value>Stock bajo</value></data>
+  <data name="Inventory_TabOut" xml:space="preserve"><value>Agotados</value></data>
+  <data name="Inventory_FilterCategory" xml:space="preserve"><value>Categoría</value></data>
+  <data name="Inventory_FilterBrand" xml:space="preserve"><value>Marca</value></data>
+  <data name="Inventory_FilterStatus" xml:space="preserve"><value>Estado</value></data>
+  <data name="Inventory_SortBy" xml:space="preserve"><value>Ordenar por</value></data>
+  <data name="Inventory_AllCategories" xml:space="preserve"><value>Todas las categorías</value></data>
+  <data name="Inventory_AllBrands" xml:space="preserve"><value>Todas las marcas</value></data>
+  <data name="Inventory_FilterActive" xml:space="preserve"><value>Productos activos</value></data>
+  <data name="Inventory_FilterArchived" xml:space="preserve"><value>Productos archivados</value></data>
+  <data name="Inventory_FilterAllStatuses" xml:space="preserve"><value>Todos los estados</value></data>
+  <data name="Inventory_SortName" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Inventory_SortQuantity" xml:space="preserve"><value>Cantidad</value></data>
+  <data name="Inventory_SortPrice" xml:space="preserve"><value>Precio</value></data>
+  <data name="Inventory_SortUpdated" xml:space="preserve"><value>Actualizado recientemente</value></data>
+  <data name="Inventory_SortAscending" xml:space="preserve"><value>Orden ascendente</value></data>
+  <data name="Inventory_SortDescending" xml:space="preserve"><value>Orden descendente</value></data>
+  <data name="Inventory_ColProduct" xml:space="preserve"><value>Producto</value></data>
+  <data name="Inventory_ColCode" xml:space="preserve"><value>Código</value></data>
+  <data name="Inventory_ColCategory" xml:space="preserve"><value>Categoría</value></data>
+  <data name="Inventory_ColBrand" xml:space="preserve"><value>Marca</value></data>
+  <data name="Inventory_ColVariants" xml:space="preserve"><value>Variantes</value></data>
+  <data name="Inventory_ColStock" xml:space="preserve"><value>Stock total</value></data>
+  <data name="Inventory_ColStatus" xml:space="preserve"><value>Estado</value></data>
+  <data name="Inventory_ColVariant" xml:space="preserve"><value>Variante</value></data>
+  <data name="Inventory_ColQty" xml:space="preserve"><value>Cant.</value></data>
+  <data name="Inventory_ColPrice" xml:space="preserve"><value>Precio</value></data>
+  <data name="Inventory_ColMovement" xml:space="preserve"><value>Movimiento</value></data>
+  <data name="Inventory_RowMenu" xml:space="preserve"><value>Más acciones</value></data>
+  <data name="Inventory_MenuView" xml:space="preserve"><value>Ver detalles</value></data>
+  <data name="Inventory_Archive" xml:space="preserve"><value>Archivar</value></data>
+  <data name="Inventory_Restore" xml:space="preserve"><value>Restaurar</value></data>
+  <data name="Inventory_ClearFilters" xml:space="preserve"><value>Quitar filtros</value></data>
+  <data name="Inventory_Empty" xml:space="preserve"><value>Aún no hay productos en stock. Añade uno para empezar.</value></data>
+  <data name="Inventory_EmptyFiltered" xml:space="preserve"><value>Ningún producto coincide con tu búsqueda o filtros.</value></data>
+  <data name="Inventory_Showing" xml:space="preserve"><value>Mostrando {0}–{1} de {2} productos</value></data>
+  <data name="Inventory_ShowingNone" xml:space="preserve"><value>No hay productos que mostrar</value></data>
+  <data name="Inventory_PreviousPage" xml:space="preserve"><value>Página anterior</value></data>
+  <data name="Inventory_NextPage" xml:space="preserve"><value>Página siguiente</value></data>
+  <data name="Inventory_SelectProduct" xml:space="preserve"><value>Selecciona un producto para ver sus detalles.</value></data>
+  <data name="Inventory_DetailOverview" xml:space="preserve"><value>Resumen</value></data>
+  <data name="Inventory_DetailVariants" xml:space="preserve"><value>Variantes</value></data>
+  <data name="Inventory_DetailStock" xml:space="preserve"><value>Stock</value></data>
+  <data name="Inventory_DetailHistory" xml:space="preserve"><value>Historial</value></data>
+  <data name="Inventory_DetailType" xml:space="preserve"><value>Tipo de producto</value></data>
+  <data name="Inventory_DetailSupplier" xml:space="preserve"><value>Proveedor</value></data>
+  <data name="Inventory_DetailModel" xml:space="preserve"><value>Modelo</value></data>
+  <data name="Inventory_DetailSellingPrice" xml:space="preserve"><value>Precio de venta</value></data>
+  <data name="Inventory_DetailCostPrice" xml:space="preserve"><value>Precio de costo</value></data>
+  <data name="Inventory_DetailMargin" xml:space="preserve"><value>Margen estimado</value></data>
+  <data name="Inventory_DetailSizes" xml:space="preserve"><value>Tallas</value></data>
+  <data name="Inventory_DetailColours" xml:space="preserve"><value>Colores</value></data>
+  <data name="Inventory_DetailThreshold" xml:space="preserve"><value>Umbral de stock bajo</value></data>
+  <data name="Inventory_Varies" xml:space="preserve"><value>Varía</value></data>
+  <data name="Inventory_OneSize" xml:space="preserve"><value>Talla única</value></data>
+  <data name="Inventory_StatusActive" xml:space="preserve"><value>Activo</value></data>
+  <data name="Inventory_StatusArchived" xml:space="preserve"><value>Archivado</value></data>
+  <data name="Inventory_StatusLow" xml:space="preserve"><value>Stock bajo</value></data>
+  <data name="Inventory_StatusOut" xml:space="preserve"><value>Agotado</value></data>
+  <data name="Inventory_StatusInStock" xml:space="preserve"><value>En stock</value></data>
+  <data name="Inventory_Move_add" xml:space="preserve"><value>Stock añadido</value></data>
+  <data name="Inventory_Move_sale" xml:space="preserve"><value>Venta</value></data>
+  <data name="Inventory_Move_found" xml:space="preserve"><value>Stock encontrado</value></data>
+  <data name="Inventory_Move_defect" xml:space="preserve"><value>Defectuoso</value></data>
+  <data name="Inventory_ExportDone" xml:space="preserve"><value>Se exportaron {0} productos a {1}.</value></data>
+  <data name="Inventory_ExportFailed" xml:space="preserve"><value>No se pudo guardar el archivo. Elige otra ubicación e inténtalo de nuevo.</value></data>
 </root>

@@ -1,6 +1,7 @@
 using Estoq.App.Services;
 using Estoq.App.ViewModels;
 using Estoq.App.ViewModels.AddProduct;
+using Estoq.App.ViewModels.Inventory;
 using Estoq.App.ViewModels.PointOfSale;
 using Estoq.App.ViewModels.Setup;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +55,9 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddSingleton<IPointOfSaleService, SamplePointOfSaleService>();
         services.AddSingleton<PointOfSaleViewModel>();
         services.AddSingleton<ShellViewModel>();
+        services.AddSingleton<IInventoryService, SampleInventoryService>();
+        services.AddSingleton<ICsvExportService, CsvExportService>();
+        services.AddSingleton<InventoryViewModel>();
 
         // Setup wizard. The view models are singletons so a language change can rebuild the page without losing input.
         services.AddSingleton<ILocalizer, Localizer>();
