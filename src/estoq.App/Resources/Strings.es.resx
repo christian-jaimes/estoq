@@ -195,11 +195,46 @@
   <data name="Colour_Purple" xml:space="preserve"><value>Morado</value></data>
   <data name="Colour_Brown" xml:space="preserve"><value>Café</value></data>
   <data name="Popup_Adjust_Title" xml:space="preserve"><value>Ajustes de inventario</value></data>
-  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Cuenta un artículo y registra el motivo</value></data>
+  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Corrige diferencias de existencias y registra el motivo</value></data>
   <data name="Popup_Adjust_Message" xml:space="preserve"><value>El conteo de artículos y el registro del motivo de cada cambio se construyen a continuación (ver hoja de ruta).</value></data>
-  <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Guardar ajuste</value></data>
+  <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Aplicar ajuste</value></data>
+  <data name="Adjust_Items" xml:space="preserve"><value>Ajuste de stock</value></data>
+  <data name="Adjust_ScanPlaceholder" xml:space="preserve"><value>Escanea un código o busca por nombre o SKU</value></data>
+  <data name="Adjust_ColProduct" xml:space="preserve"><value>Producto</value></data>
+  <data name="Adjust_ColCurrent" xml:space="preserve"><value>Existencias</value></data>
+  <data name="Adjust_ColNew" xml:space="preserve"><value>Nuevas</value></data>
+  <data name="Adjust_ColAdjustment" xml:space="preserve"><value>Ajuste</value></data>
+  <data name="Adjust_EmptyTitle" xml:space="preserve"><value>Aún no hay artículos</value></data>
+  <data name="Adjust_EmptyBody" xml:space="preserve"><value>Escanea un artículo o búscalo para empezar el ajuste.</value></data>
+  <data name="Adjust_Remove" xml:space="preserve"><value>Quitar artículo</value></data>
+  <data name="Adjust_Details" xml:space="preserve"><value>Detalles del ajuste</value></data>
+  <data name="Adjust_TypeLabel" xml:space="preserve"><value>Tipo de ajuste</value></data>
+  <data name="Adjust_Reference" xml:space="preserve"><value>Referencia</value></data>
+  <data name="Adjust_Notes" xml:space="preserve"><value>Notas</value></data>
+  <data name="Adjust_NotesPlaceholder" xml:space="preserve"><value>Por ejemplo, ajustado tras el conteo físico</value></data>
+  <data name="Adjust_Summary" xml:space="preserve"><value>Resumen del ajuste</value></data>
+  <data name="Adjust_Increases" xml:space="preserve"><value>Aumentos</value></data>
+  <data name="Adjust_Decreases" xml:space="preserve"><value>Disminuciones</value></data>
+  <data name="Adjust_Net" xml:space="preserve"><value>Cambio neto</value></data>
+  <data name="Adjust_NoMatch" xml:space="preserve"><value>Ningún artículo coincide con "{0}".</value></data>
+  <data name="Adjust_AlreadyAdded" xml:space="preserve"><value>{0} ya está en la lista.</value></data>
+  <data name="Adjust_NoAccessTitle" xml:space="preserve"><value>Solo gerentes y propietarios ajustan existencias</value></data>
+  <data name="Adjust_NoAccessBody" xml:space="preserve"><value>Pide a un gerente o al propietario que corrija las existencias por ti.</value></data>
+  <data name="Adjust_Type_Recount" xml:space="preserve"><value>Reconteo</value></data>
+  <data name="Adjust_Type_SoldWithoutStock" xml:space="preserve"><value>Vendido sin existencias</value></data>
+  <data name="Adjust_Type_Damaged" xml:space="preserve"><value>Dañado</value></data>
+  <data name="Adjust_Type_Lost" xml:space="preserve"><value>Perdido</value></data>
+  <data name="Adjust_Reason_StockCountDifference" xml:space="preserve"><value>Diferencia en el conteo</value></data>
+  <data name="Adjust_Reason_OutOfStockSaleCorrection" xml:space="preserve"><value>Corrección tras una venta sin existencias</value></data>
+  <data name="Adjust_Reason_DamagedUnsellable" xml:space="preserve"><value>Dañado, no se puede vender</value></data>
+  <data name="Adjust_Reason_LostOrStolen" xml:space="preserve"><value>Perdido o robado</value></data>
+  <data name="Adjust_DoneTitle" xml:space="preserve"><value>Ajuste aplicado</value></data>
+  <data name="Adjust_DoneColWas" xml:space="preserve"><value>Antes</value></data>
+  <data name="Adjust_DoneColChange" xml:space="preserve"><value>Cambio</value></data>
+  <data name="Adjust_DoneColNow" xml:space="preserve"><value>Ahora</value></data>
+  <data name="Adjust_DoneNew" xml:space="preserve"><value>Nuevo ajuste</value></data>
   <data name="Popup_Returns_Title" xml:space="preserve"><value>Devoluciones</value></data>
-  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Devolver o cambiar un artículo</value></data>
+  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Procesa la devolución de un producto con reembolso o cambio.</value></data>
   <data name="Popup_Returns_Message" xml:space="preserve"><value>Las devoluciones de clientes se construyen a continuación (ver hoja de ruta).</value></data>
   <data name="Popup_Returns_Primary" xml:space="preserve"><value>Guardar devolución</value></data>
   <data name="Popup_Settings_Title" xml:space="preserve"><value>Ajustes</value></data>
@@ -407,4 +442,66 @@
   <data name="Inventory_Move_defect" xml:space="preserve"><value>Defectuoso</value></data>
   <data name="Inventory_ExportDone" xml:space="preserve"><value>Se exportaron {0} productos a {1}.</value></data>
   <data name="Inventory_ExportFailed" xml:space="preserve"><value>No se pudo guardar el archivo. Elige otra ubicación e inténtalo de nuevo.</value></data>
+  <data name="Ret_SaleTitle" xml:space="preserve"><value>Venta original</value></data>
+  <data name="Ret_ReceiptPlaceholder" xml:space="preserve"><value>Número de recibo, por ejemplo 000120</value></data>
+  <data name="Ret_FindSale" xml:space="preserve"><value>Buscar venta</value></data>
+  <data name="Ret_ChangeSale" xml:space="preserve"><value>Cambiar</value></data>
+  <data name="Ret_NoReceipt" xml:space="preserve"><value>Devolver sin recibo</value></data>
+  <data name="Ret_NoReceiptTitle" xml:space="preserve"><value>Sin recibo</value></data>
+  <data name="Ret_NoReceiptHint" xml:space="preserve"><value>Los artículos vuelven al precio de hoy y se avisa al propietario.</value></data>
+  <data name="Ret_UseReceipt" xml:space="preserve"><value>Usar un recibo</value></data>
+  <data name="Ret_ErrNotFound" xml:space="preserve"><value>No hay ninguna venta con ese número de recibo.</value></data>
+  <data name="Ret_ErrWindow" xml:space="preserve"><value>Esta venta está fuera del plazo de devolución de {0} días.</value></data>
+  <data name="Ret_ErrNothingLeft" xml:space="preserve"><value>Todo lo de esta venta ya fue devuelto.</value></data>
+  <data name="Ret_ErrNoItem" xml:space="preserve"><value>No se encontró ningún artículo para "{0}".</value></data>
+  <data name="Ret_ItemsTitle" xml:space="preserve"><value>Artículos a devolver</value></data>
+  <data name="Ret_ItemsEmpty" xml:space="preserve"><value>Busca una venta para elegir los artículos a devolver.</value></data>
+  <data name="Ret_ScanPlaceholder" xml:space="preserve"><value>Escanea el código o busca un producto...</value></data>
+  <data name="Ret_ColItem" xml:space="preserve"><value>Artículo</value></data>
+  <data name="Ret_ColPrice" xml:space="preserve"><value>Precio</value></data>
+  <data name="Ret_ColQty" xml:space="preserve"><value>Cant.</value></data>
+  <data name="Ret_ColSold" xml:space="preserve"><value>Vendidos</value></data>
+  <data name="Ret_QtyDecrease" xml:space="preserve"><value>Disminuir cantidad</value></data>
+  <data name="Ret_QtyIncrease" xml:space="preserve"><value>Aumentar cantidad</value></data>
+  <data name="Ret_Remove" xml:space="preserve"><value>Quitar</value></data>
+  <data name="Ret_ReasonTitle" xml:space="preserve"><value>Motivo</value></data>
+  <data name="Ret_ReasonNone" xml:space="preserve"><value>Sin motivo</value></data>
+  <data name="Ret_Reason_ChangeOfMind" xml:space="preserve"><value>Cambió de opinión</value></data>
+  <data name="Ret_Reason_WrongSize" xml:space="preserve"><value>Talla incorrecta</value></data>
+  <data name="Ret_Reason_Defective" xml:space="preserve"><value>Defectuoso o dañado</value></data>
+  <data name="Ret_Reason_WrongItem" xml:space="preserve"><value>Artículo equivocado</value></data>
+  <data name="Ret_Reason_Other" xml:space="preserve"><value>Otro</value></data>
+  <data name="Ret_NotePlaceholder" xml:space="preserve"><value>Añade una nota...</value></data>
+  <data name="Ret_TypeExchange" xml:space="preserve"><value>Cambio</value></data>
+  <data name="Ret_ExchangeTitle" xml:space="preserve"><value>Artículos del cambio</value></data>
+  <data name="Ret_ExchangeEmpty" xml:space="preserve"><value>Escanea o busca los artículos que se lleva el cliente.</value></data>
+  <data name="Ret_RefundAmount" xml:space="preserve"><value>Importe a reembolsar</value></data>
+  <data name="Ret_BalancePays" xml:space="preserve"><value>El cliente paga</value></data>
+  <data name="Ret_BalanceReceives" xml:space="preserve"><value>El cliente recibe</value></data>
+  <data name="Ret_BalanceEven" xml:space="preserve"><value>Sin diferencia</value></data>
+  <data name="Ret_Capped" xml:space="preserve"><value>Limitado a lo que queda por reembolsar en esta venta.</value></data>
+  <data name="Ret_SettleIn" xml:space="preserve"><value>Liquidar en</value></data>
+  <data name="Ret_PrimaryRefund" xml:space="preserve"><value>Continuar con el reembolso</value></data>
+  <data name="Ret_PrimaryExchange" xml:space="preserve"><value>Continuar con el cambio</value></data>
+  <data name="Ret_DoneTitle" xml:space="preserve"><value>Devolución completada</value></data>
+  <data name="Ret_DoneNumber" xml:space="preserve"><value>Devolución {0}</value></data>
+  <data name="Ret_DoneSubtitleRefund" xml:space="preserve"><value>Los artículos volvieron al inventario y el reembolso quedó registrado.</value></data>
+  <data name="Ret_DoneSubtitleExchange" xml:space="preserve"><value>Los artículos volvieron al inventario y el cambio quedó registrado.</value></data>
+  <data name="Ret_DoneReturned" xml:space="preserve"><value>Artículos devueltos</value></data>
+  <data name="Ret_DoneTaken" xml:space="preserve"><value>Artículos nuevos</value></data>
+  <data name="Ret_DoneAnother" xml:space="preserve"><value>Procesar otra devolución</value></data>
+  <data name="Ret_Returned" xml:space="preserve"><value>Devuelto</value></data>
+  <data name="Ret_ReturnedSome" xml:space="preserve"><value>{0} devueltos</value></data>
+  <data name="Ret_ItemsTitleExchange" xml:space="preserve"><value>Artículos a cambiar</value></data>
+  <data name="Ret_ColTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Ret_Summary" xml:space="preserve"><value>Resumen</value></data>
+  <data name="Ret_Details" xml:space="preserve"><value>Detalles</value></data>
+  <data name="Ret_ModeLabel" xml:space="preserve"><value>Modo</value></data>
+  <data name="Ret_ModeReturn" xml:space="preserve"><value>Devolución</value></data>
+  <data name="Ret_KpiItems" xml:space="preserve"><value>Artículos</value></data>
+  <data name="Ret_KpiSubtotal" xml:space="preserve"><value>Subtotal</value></data>
+  <data name="Ret_KpiCredit" xml:space="preserve"><value>Crédito</value></data>
+  <data name="Ret_KpiNewItems" xml:space="preserve"><value>Artículos nuevos</value></data>
+  <data name="Notif_ReturnWithoutReceipt_Title" xml:space="preserve"><value>La devolución {0} no tuvo recibo</value></data>
+  <data name="Notif_ReturnWithoutReceipt_Detail" xml:space="preserve"><value>Devuelta al precio de hoy sin recibo. Revísala.</value></data>
 </root>

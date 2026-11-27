@@ -1,0 +1,70 @@
+<UserControl
+    x:Class="Estoq.App.Views.Returns.ReturnCurrencyChips"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:pos="using:Estoq.App.Views.PointOfSale"
+    xmlns:vm="using:Estoq.App.ViewModels.PointOfSale">
+
+  <UserControl.Resources>
+    <!-- Same pill as the point of sale header chips. -->
+    <Style x:Key="ReturnChipButtonStyle" TargetType="Button">
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
+      <Setter Property="FocusVisualPrimaryThickness" Value="2" />
+      <Setter Property="FocusVisualMargin" Value="-3" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Grid>
+              <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                  <VisualState x:Name="Normal" />
+                  <VisualState x:Name="PointerOver">
+                    <VisualState.Setters>
+                      <Setter Target="Chip.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                      <Setter Target="Chip.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
+                    </VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Pressed">
+                    <VisualState.Setters>
+                      <Setter Target="Chip.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                      <Setter Target="Chip.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
+                    </VisualState.Setters>
+                  </VisualState>
+                </VisualStateGroup>
+              </VisualStateManager.VisualStateGroups>
+              <Border x:Name="Chip" Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}"
+                      BorderThickness="1" CornerRadius="18" />
+              <ContentPresenter CornerRadius="18" Padding="{TemplateBinding Padding}" HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch" />
+            </Grid>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+
+  <!-- Currency chips in the Returns header: the selected one is gold. They choose the currency the refund or balance is settled in. -->
+  <ItemsRepeater ItemsSource="{x:Bind ViewModel.Currencies, Mode=OneWay}" VerticalAlignment="Center">
+    <ItemsRepeater.Layout>
+      <StackLayout Orientation="Horizontal" Spacing="8" />
+    </ItemsRepeater.Layout>
+    <ItemsRepeater.ItemTemplate>
+      <DataTemplate x:DataType="vm:CurrencyChipViewModel">
+        <Button Style="{StaticResource ReturnChipButtonStyle}" Command="{x:Bind SelectCommand}"
+                AutomationProperties.Name="{x:Bind Code}">
+          <Grid Height="{StaticResource EqControlHeight}" MinWidth="72" CornerRadius="18">
+            <Border Background="{ThemeResource EqGoldBrush}" CornerRadius="18"
+                    Visibility="{x:Bind pos:PosBindings.Visible(IsSelected), Mode=OneWay}" />
+            <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontMd}" Margin="16,0"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource EqTextBrush}"
+                       Visibility="{x:Bind pos:PosBindings.Hidden(IsSelected), Mode=OneWay}" />
+            <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontMd}" Margin="16,0"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource EqOnGoldBrush}"
+                       Visibility="{x:Bind pos:PosBindings.Visible(IsSelected), Mode=OneWay}" />
+          </Grid>
+        </Button>
+      </DataTemplate>
+    </ItemsRepeater.ItemTemplate>
+  </ItemsRepeater>
+</UserControl>
