@@ -31,6 +31,11 @@ public class SalesHistoryTests
         Sale("S-000001", new DateTime(2026, 10, 30, 9, 0, 0), "Luis R.", SaleStatus.Voided, product: "Hoodie"),
     ];
 
+    private static string Receipts(IEnumerable<SaleRecord> sales) => string.Join(",", sales.Select(sale => sale.ReceiptNumber));
+
+    // Page numbers joined by commas; 0 is the ellipsis.
+    private static string Pager(int pageCount, int current) => string.Join(",", SalesPaging.PageNumbers(pageCount, current));
+
     [Fact]
     public void WeekStartsOnMondayAndRunsSevenDays()
     {
@@ -62,10 +67,10 @@ public class SalesHistoryTests
     public void ListIsNewestFirstAndPeriodFiltersByDay()
     {
         var all = SalesHistory.Apply(Sample(), new SalesFilter(), UserRole.Owner, "Owner", Today);
-        Assert.Equal(new[] { "S-000003", "S-000002", "S-000001" }, all.Select(sale => sale.ReceiptNumber));
+        Assert.Equal("S-000003,S-000002,S-000001", Receipts(all));
 
         var today = SalesHistory.Apply(Sample(), new SalesFilter(SalesPeriod.Today), UserRole.Owner, "Owner", Today);
-        Assert.Equal(new[] { "S-000003" }, today.Select(sale => sale.ReceiptNumber));
+        Assert.Equal("S-000003", Receipts(today));
 
         var week = SalesHistory.Apply(Sample(), new SalesFilter(SalesPeriod.ThisWeek), UserRole.Manager, "Owner", Today);
         Assert.Equal(2, week.Count);
@@ -75,7 +80,7 @@ public class SalesHistoryTests
     public void CashiersSeeOnlyTheirOwnSales()
     {
         var own = SalesHistory.Apply(Sample(), new SalesFilter(), UserRole.Cashier, "John D.", Today);
-        Assert.Equal(new[] { "S-000002" }, own.Select(sale => sale.ReceiptNumber));
+        Assert.Equal("S-000002", Receipts(own));
     }
 
     [Fact]
@@ -91,10 +96,10 @@ public class SalesHistoryTests
     public void MethodStaffAndStatusFiltersCombine()
     {
         var card = SalesHistory.Apply(Sample(), new SalesFilter(Method: PaymentMethod.Card), UserRole.Owner, "x", Today);
-        Assert.Equal(new[] { "S-000002" }, card.Select(sale => sale.ReceiptNumber));
+        Assert.Equal("S-000002", Receipts(card));
 
         var voided = SalesHistory.Apply(Sample(), new SalesFilter(Status: SaleStatus.Voided), UserRole.Owner, "x", Today);
-        Assert.Equal(new[] { "S-000001" }, voided.Select(sale => sale.ReceiptNumber));
+        Assert.Equal("S-000001", Receipts(voided));
 
         var none = SalesHistory.Apply(Sample(), new SalesFilter(Staff: "Maria P.", Status: SaleStatus.Voided), UserRole.Owner, "x", Today);
         Assert.Empty(none);
@@ -160,12 +165,12 @@ public class SalesHistoryTests
     [Fact]
     public void PagerShowsNeighboursAndGaps()
     {
-        Assert.Equal(new[] { 1, 2, 3, SalesPaging.Gap, 18 }, SalesPaging.PageNumbers(18, 1));
-        Assert.Equal(new[] { 1, 2, 3, SalesPaging.Gap, 18 }, SalesPaging.PageNumbers(18, 2));
-        Assert.Equal(new[] { 1, SalesPaging.Gap, 8, 9, 10, SalesPaging.Gap, 18 }, SalesPaging.PageNumbers(18, 9));
-        Assert.Equal(new[] { 1, SalesPaging.Gap, 17, 18 }, SalesPaging.PageNumbers(18, 18));
-        Assert.Equal(new[] { 1 }, SalesPaging.PageNumbers(1, 1));
-        Assert.Equal(new[] { 1, 2, 3, 4 }, SalesPaging.PageNumbers(4, 2));
+        Assert.Equal("1,2,3,0,18", Pager(18, 1));
+        Assert.Equal("1,2,3,0,18", Pager(18, 2));
+        Assert.Equal("1,0,8,9,10,0,18", Pager(18, 9));
+        Assert.Equal("1,0,17,18", Pager(18, 18));
+        Assert.Equal("1", Pager(1, 1));
+        Assert.Equal("1,2,3,4", Pager(4, 2));
     }
 
     [Fact]

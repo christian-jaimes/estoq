@@ -70,22 +70,6 @@
 
     <!-- Selected and hovered rows take the gold tint and surface tokens instead of the system accent. -->
     <x:Boolean x:Key="ListViewItemSelectionIndicatorVisualEnabled">False</x:Boolean>
-    <ResourceDictionary.ThemeDictionaries>
-      <ResourceDictionary x:Key="Light">
-        <StaticResource x:Key="ListViewItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundSelectedPointerOver" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundSelectedPressed" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundPointerOver" ResourceKey="EqSurfaceElevatedBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundPressed" ResourceKey="EqSurfaceElevatedBrush" />
-      </ResourceDictionary>
-      <ResourceDictionary x:Key="Dark">
-        <StaticResource x:Key="ListViewItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundSelectedPointerOver" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundSelectedPressed" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundPointerOver" ResourceKey="EqSurfaceElevatedBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundPressed" ResourceKey="EqSurfaceElevatedBrush" />
-      </ResourceDictionary>
-    </ResourceDictionary.ThemeDictionaries>
 
     <!-- Borderless text box inside the search container (same overrides as EqField). -->
     <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
@@ -105,6 +89,23 @@
       <Setter Property="Padding" Value="12,0,0,0" />
       <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
+
+    <ResourceDictionary.ThemeDictionaries>
+      <ResourceDictionary x:Key="Light">
+        <StaticResource x:Key="ListViewItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
+        <StaticResource x:Key="ListViewItemBackgroundSelectedPointerOver" ResourceKey="EqGoldTintBrush" />
+        <StaticResource x:Key="ListViewItemBackgroundSelectedPressed" ResourceKey="EqGoldTintBrush" />
+        <StaticResource x:Key="ListViewItemBackgroundPointerOver" ResourceKey="EqSurfaceElevatedBrush" />
+        <StaticResource x:Key="ListViewItemBackgroundPressed" ResourceKey="EqSurfaceElevatedBrush" />
+      </ResourceDictionary>
+      <ResourceDictionary x:Key="Dark">
+        <StaticResource x:Key="ListViewItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
+        <StaticResource x:Key="ListViewItemBackgroundSelectedPointerOver" ResourceKey="EqGoldTintBrush" />
+        <StaticResource x:Key="ListViewItemBackgroundSelectedPressed" ResourceKey="EqGoldTintBrush" />
+        <StaticResource x:Key="ListViewItemBackgroundPointerOver" ResourceKey="EqSurfaceElevatedBrush" />
+        <StaticResource x:Key="ListViewItemBackgroundPressed" ResourceKey="EqSurfaceElevatedBrush" />
+      </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
     </ResourceDictionary>
   </Page.Resources>
 
