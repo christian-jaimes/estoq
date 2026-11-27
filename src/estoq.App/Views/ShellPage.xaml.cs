@@ -96,6 +96,24 @@ public sealed partial class ShellPage : Page
         args.Handled = true;
     }
 
+    private void OnAddItemsAccelerator(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.OpenAddItemsCommand.Execute(null);
+        args.Handled = true;
+    }
+
+    private void OnStockAdjustmentsAccelerator(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.OpenStockAdjustmentsCommand.Execute(null);
+        args.Handled = true;
+    }
+
+    private void OnReturnsAccelerator(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.OpenReturnsCommand.Execute(null);
+        args.Handled = true;
+    }
+
     private void OnFocusSearch(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         SearchBox.Focus(FocusState.Keyboard);
@@ -134,6 +152,8 @@ public sealed partial class ShellPage : Page
     private void OnAccountPointerExited(object sender, PointerRoutedEventArgs e) => AccountHoverGear.Opacity = 0;
 
     private void OnPopupCloseRequested(object? sender, EventArgs e) => PopupState.CloseCommand.Execute(null);
+
+    private void OnPopupPrimaryInvoked(object? sender, EventArgs e) => PopupState.PrimaryCommand.Execute(null);
 
     private void OnScrimTapped(object sender, TappedRoutedEventArgs e) => PopupState.CloseCommand.Execute(null);
 

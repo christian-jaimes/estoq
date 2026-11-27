@@ -1,0 +1,130 @@
+article_id,article_name,article_description,brand_name,category_name,product_type,model_label,size,color,supplier_barcode,sku,standard_cost_price,retail_selling_price,is_active
+ART-1001,Dress Shirt Hugo Boss Olive Poplin Cutaway,Non-iron two-ply cotton poplin dress shirt with cutaway collar.,Hugo Boss,Formalwear,Dress Shirt,Poplin Cutaway,XXL,Olive,5412051802512,BOSS-DSH-OLI-XXL-001,40.00,106.25,True
+ART-1002,Jacket The North Face Khaki Quilted Field,Diamond-quilted water-repellent utility jacket with corduroy collar.,The North Face,Outerwear,Jacket,Quilted Field,XXL,Khaki,5419963334018,TNF-JCK-KHA-XXL-002,64.00,169.00,True
+ART-1003,Chinos Hugo Boss Emerald Green Alpha Slim,Smart-casual stretch cotton twill chinos with a modern tapered fit.,Hugo Boss,Menswear,Chinos,Alpha Slim,28/30,Emerald Green,5413585650756,BOSS-CHN-EME-2830-003,42.50,112.44,True
+ART-1004,Coat Uniqlo Beige Double-Breasted Wool,Tailored mid-calf wool-blend overcoat with wide peak lapels.,Uniqlo,Outerwear,Coat,Double-Breasted Wool,S,Beige,5417825844140,UNQ-COT-BEI-S-004,93.50,237.15,True
+ART-1005,Cardigan Tommy Hilfiger Charcoal Merino Button,Lightweight fine-knit merino wool cardigan with tonal buttons.,Tommy Hilfiger,Knitwear,Cardigan,Merino Button,XXL,Charcoal,5416756332150,TMH-CRD-CHA-XXL-005,46.00,120.00,True
+ART-1006,Jacket Uniqlo White Harrington Zip,Lightweight cotton-twill Harrington jacket with tartan lining.,Uniqlo,Outerwear,Jacket,Harrington Zip,XS,White,5412631775357,UNQ-JCK-WHI-XS-006,44.20,118.15,True
+ART-1007,Hoodie Adidas Camel Zip French Terry,Loopback organic cotton zip-up hoodie with metal hardware.,Adidas,Streetwear,Hoodie,Zip French Terry,XS,Camel,5419256195745,ADI-HOD-CAM-XS-007,34.00,89.00,True
+ART-1008,Sneakers Vans Grey Court Classic,Minimalist full-grain leather court sneakers with rubber cupsole.,Vans,Footwear,Sneakers,Court Classic,42,Grey,5411298737106,VNS-SNK-GRE-42-008,48.00,125.00,True
+ART-1009,Backpack The North Face Black Commuter 20L,Water-resistant ballistic nylon backpack with padded 16-inch laptop sleeve.,The North Face,Bags & Luggage,Backpack,Commuter 20L,One Size,Black,5414721519026,TNF-BPK-BLA-ONES-009,42.00,110.00,True
+ART-1010,Watch Michael Kors Silver Minimalist Mesh,Ultra-thin case watch paired with a quick-release Milanese mesh strap.,Michael Kors,Watches & Jewelry,Watch,Minimalist Mesh,One Size,Silver,5416884882440,MCK-WTC-SIL-ONES-010,65.00,173.75,True
+ART-1011,Handbag Carhartt WIP Navy Pebbled Leather Tote,Structured pebbled leather tote bag with gold-tone hardware and zip top.,Carhartt WIP,Bags & Luggage,Handbag,Pebbled Leather Tote,Small,Navy,5414131575764,CWP-HBG-NAV-SMAL-011,115.00,295.00,True
+ART-1012,Sweater Uniqlo Off-White Merino V-Neck,Fine-gauge 100% extra-fine merino wool V-neck pullover.,Uniqlo,Knitwear,Sweater,Merino V-Neck,M,Off-White,5411240251661,UNQ-SWT-OFF-M-012,37.40,97.75,True
+ART-1013,Jeans Tommy Hilfiger Dark Blue Straight Selvedge,13oz rigid selvedge denim with button fly and straight leg.,Tommy Hilfiger,Denim,Jeans,Straight Selvedge,30/32,Dark Blue,5412351531223,TMH-JNS-DAR-3032-013,58.00,149.00,True
+ART-1014,Dress Shirt Sandro Beige Oxford Button-Down,Brushed cotton Oxford shirt with chest pocket and box pleat.,Sandro,Formalwear,Dress Shirt,Oxford Button-Down,XXL,Beige,5415908596099,SND-DSH-BEI-XXL-014,35.00,93.75,True
+ART-1015,Jacket Uniqlo Khaki Quilted Field,Diamond-quilted water-repellent utility jacket with corduroy collar.,Uniqlo,Outerwear,Jacket,Quilted Field,XL,Khaki,5417805745017,UNQ-JCK-KHA-XL-015,54.40,143.65,True
+ART-1016,Shorts The North Face Navy Chino 7-Inch,Garment-washed stretch twill shorts with slash pockets.,The North Face,Activewear,Shorts,Chino 7-Inch,S,Navy,5417483366056,TNF-SHR-NAV-S-016,24.00,59.95,True
+ART-1017,Sneakers Nike Beige Air Cushion,Low-top leather sneakers equipped with visible heel air cushioning.,Nike,Footwear,Sneakers,Air Cushion,39,Beige,5418217611860,NIK-SNK-BEI-39-017,55.00,139.99,True
+ART-1018,Sunglasses Ray-Ban Silver Aviator Metal,Lightweight gold-tone metal frame sunglasses with teardrop gradient lenses.,Ray-Ban,Eyewear,Sunglasses,Aviator Metal,One Size,Silver,5419573276057,RYB-SNG-SIL-ONES-018,62.00,165.00,True
+ART-1019,Scarf Ralph Lauren Off-White Fringed Wool,Midweight 100% virgin wool scarf finished with fringed ends and woven label.,Ralph Lauren,Accessories,Scarf,Fringed Wool,One Size,Off-White,5418519962896,RLP-SCF-OFF-ONES-019,72.00,190.00,True
+ART-1020,Socks Uniqlo Charcoal Ribbed Crew 3-Pack,Combed cotton cushioned crew socks in a three-pair value pack.,Uniqlo,Underwear & Socks,Socks,Ribbed Crew 3-Pack,39-42,Charcoal,5415974249674,UNQ-SCK-CHA-3942-020,5.52,15.30,True
+ART-1021,T-Shirt Tommy Hilfiger Khaki Graphic Back Print,Relaxed fit jersey tee with seasonal archive graphic on the back.,Tommy Hilfiger,Menswear,T-Shirt,Graphic Back Print,S,Khaki,5414919706735,TMH-TSH-KHA-S-021,18.50,49.00,True
+ART-1022,Dress Shirt Ralph Lauren Grey Poplin Cutaway,Non-iron two-ply cotton poplin dress shirt with cutaway collar.,Ralph Lauren,Formalwear,Dress Shirt,Poplin Cutaway,S,Grey,5414274958945,RLP-DSH-GRE-S-022,32.00,85.00,True
+ART-1023,Coat Hugo Boss Grey Ultra Light Down,Packable ultra-light down coat with water-repellent matte finish.,Hugo Boss,Outerwear,Coat,Ultra Light Down,XL,Grey,5413098545541,BOSS-COT-GRE-XL-023,45.00,112.38,True
+ART-1024,Dress COS Black Wrap Linen,Breathable linen-blend wrap dress with tie waist and flutter sleeves.,COS,Womenswear,Dress,Wrap Linen,S,Black,5411338258951,COS-DRS-BLA-S-024,28.00,79.00,True
+ART-1025,Cap New Balance Navy 6-Panel Twill,Brushed cotton twill dad cap with curved brim and strapback closure.,New Balance,Headwear,Cap,6-Panel Twill,One Size,Navy,5418128575500,NWB-CAP-NAV-ONES-025,12.00,35.00,True
+ART-1026,Coat Uniqlo Burgundy Double-Breasted Wool,Tailored mid-calf wool-blend overcoat with wide peak lapels.,Uniqlo,Outerwear,Coat,Double-Breasted Wool,XL,Burgundy,5416633778586,UNQ-COT-BUR-XL-026,93.50,237.15,True
+ART-1027,Backpack Carhartt WIP Tan Commuter 20L,Water-resistant ballistic nylon backpack with padded 16-inch laptop sleeve.,Carhartt WIP,Bags & Luggage,Backpack,Commuter 20L,One Size,Tan,5412064746525,CWP-BPK-TAN-ONES-027,42.00,110.00,True
+ART-1028,Sneakers Dr. Martens Core Black Air Cushion,Low-top leather sneakers equipped with visible heel air cushioning.,Dr. Martens,Footwear,Sneakers,Air Cushion,45,Core Black,5413527331058,DRM-SNK-COR-45-028,55.00,139.99,True
+ART-1029,T-Shirt Hugo Boss Black Graphic Back Print,Relaxed fit jersey tee with seasonal archive graphic on the back.,Hugo Boss,Menswear,T-Shirt,Graphic Back Print,XXL,Black,5411983297492,BOSS-TSH-BLA-XXL-029,23.12,61.25,True
+ART-1030,Jeans Tommy Hilfiger Black Slim Tapered,Stretch denim slim tapered jeans with classic five-pocket styling.,Tommy Hilfiger,Denim,Jeans,Slim Tapered,34/32,Black,5413084839399,TMH-JNS-BLA-3432-030,45.00,119.00,True
+ART-1031,Cardigan Uniqlo White Merino Button,Lightweight fine-knit merino wool cardigan with tonal buttons.,Uniqlo,Knitwear,Cardigan,Merino Button,XS,White,5418125276666,UNQ-CRD-WHI-XS-031,39.10,102.00,True
+ART-1032,Hoodie Vans Camel Zip French Terry,Loopback organic cotton zip-up hoodie with metal hardware.,Vans,Streetwear,Hoodie,Zip French Terry,L,Camel,5419822598054,VNS-HOD-CAM-L-032,34.00,89.00,True
+ART-1033,Dress Shirt Hugo Boss Camel Poplin Cutaway,Non-iron two-ply cotton poplin dress shirt with cutaway collar.,Hugo Boss,Formalwear,Dress Shirt,Poplin Cutaway,L,Camel,5414700855390,BOSS-DSH-CAM-L-033,40.00,106.25,True
+ART-1034,Blazer Massimo Dutti Beige Linen Blend,Tailored single-breasted linen-blend blazer with notched lapels.,Massimo Dutti,Formalwear,Blazer,Linen Blend,XL,Beige,5415897045684,MSD-BLZ-BEI-XL-034,68.00,169.00,True
+ART-1035,Sweater Ralph Lauren White Merino V-Neck,Fine-gauge 100% extra-fine merino wool V-neck pullover.,Ralph Lauren,Knitwear,Sweater,Merino V-Neck,S,White,5413363629219,RLP-SWT-WHI-S-035,44.00,115.00,True
+ART-1036,Jeans Levi's Black Slim Tapered,Stretch denim slim tapered jeans with classic five-pocket styling.,Levi's,Denim,Jeans,Slim Tapered,36/32,Black,5416009268066,LEV-JNS-BLA-3632-036,45.00,119.00,True
+ART-1037,Boots New Balance White 8-Eye Smooth Leather,Iconic 8-eyelet lace-up boots crafted from durable smooth leather.,New Balance,Footwear,Boots,8-Eye Smooth Leather,43,White,5416002078344,NWB-BOT-WHI-43-037,78.00,199.00,True
+ART-1038,T-Shirt Calvin Klein Olive Organic Essential,Heavyweight organic combed cotton crewneck t-shirt.,Calvin Klein,Menswear,T-Shirt,Organic Essential,L,Olive,5418380507338,CLK-TSH-OLI-L-038,15.00,39.95,True
+ART-1039,Jacket Uniqlo Black Harrington Zip,Lightweight cotton-twill Harrington jacket with tartan lining.,Uniqlo,Outerwear,Jacket,Harrington Zip,S,Black,5413328710672,UNQ-JCK-BLA-S-039,44.20,118.15,True
+ART-1040,Cap Ralph Lauren Burgundy 6-Panel Twill,Brushed cotton twill dad cap with curved brim and strapback closure.,Ralph Lauren,Headwear,Cap,6-Panel Twill,One Size,Burgundy,5413281169403,RLP-CAP-BUR-ONES-040,12.00,35.00,True
+ART-1041,Jeans Levi's Dark Blue Slim Tapered,Stretch denim slim tapered jeans with classic five-pocket styling.,Levi's,Denim,Jeans,Slim Tapered,28/30,Dark Blue,5416305160342,LEV-JNS-DAR-2830-041,45.00,119.00,True
+ART-1042,Dress Massimo Dutti Burgundy Pleated Midi,Flowing pleated midi dress with a cinched waist and V-neckline.,Massimo Dutti,Womenswear,Dress,Pleated Midi,XL,Burgundy,5419760623742,MSD-DRS-BUR-XL-042,19.00,49.95,True
+ART-1043,Sneakers New Balance Navy Retro Runner,Suede and breathable mesh vintage-inspired lifestyle sneakers.,New Balance,Footwear,Sneakers,Retro Runner,45,Navy,5419309500117,NWB-SNK-NAV-45-043,50.00,129.95,True
+ART-1044,Handbag Carhartt WIP Olive Pebbled Leather Tote,Structured pebbled leather tote bag with gold-tone hardware and zip top.,Carhartt WIP,Bags & Luggage,Handbag,Pebbled Leather Tote,Medium,Olive,5418067372072,CWP-HBG-OLI-MEDI-044,115.00,295.00,True
+ART-1045,Blouse COS Beige Oversized Poplin,Crisp organic cotton poplin blouse with concealed placket and dropped shoulders.,COS,Womenswear,Blouse,Oversized Poplin,XS,Beige,5411429416213,COS-BLS-BEI-XS-045,30.00,79.00,True
+ART-1046,Coat Uniqlo Grey Double-Breasted Wool,Tailored mid-calf wool-blend overcoat with wide peak lapels.,Uniqlo,Outerwear,Coat,Double-Breasted Wool,S,Grey,5414783282817,UNQ-COT-GRE-S-046,93.50,237.15,True
+ART-1047,Blazer Ralph Lauren Beige Structured Wool,Half-canvassed virgin wool blazer with horn buttons and double vent.,Ralph Lauren,Formalwear,Blazer,Structured Wool,S,Beige,5418316648259,RLP-BLZ-BEI-S-047,95.00,249.00,True
+ART-1048,Sunglasses Hugo Boss Silver Wayfarer Classic,Classic acetate frame sunglasses with polarized UV400 lenses.,Hugo Boss,Eyewear,Sunglasses,Wayfarer Classic,One Size,Silver,5414771526597,BOSS-SNG-SIL-ONES-048,72.50,193.75,True
+ART-1049,Running Shoes Nike Core Black Boost Sole,Responsive running shoes with energy-returning midsole and engineered mesh.,Nike,Footwear,Running Shoes,Boost Sole,45,Core Black,5416464693977,NIK-RUN-COR-45-049,62.00,159.95,True
+ART-1050,Dress Shirt Ralph Lauren Black Oxford Button-Down,Brushed cotton Oxford shirt with chest pocket and box pleat.,Ralph Lauren,Formalwear,Dress Shirt,Oxford Button-Down,M,Black,5419986353481,RLP-DSH-BLA-M-050,28.00,75.00,True
+ART-1051,Chinos Tommy Hilfiger Grey Alpha Slim,Smart-casual stretch cotton twill chinos with a modern tapered fit.,Tommy Hilfiger,Menswear,Chinos,Alpha Slim,28/30,Grey,5414311931853,TMH-CHN-GRE-2830-051,34.00,89.95,True
+ART-1052,Dress Shirt Ralph Lauren Beige Poplin Cutaway,Non-iron two-ply cotton poplin dress shirt with cutaway collar.,Ralph Lauren,Formalwear,Dress Shirt,Poplin Cutaway,XXL,Beige,5411041531046,RLP-DSH-BEI-XXL-052,32.00,85.00,True
+ART-1053,Sneakers Adidas Navy Retro Runner,Suede and breathable mesh vintage-inspired lifestyle sneakers.,Adidas,Footwear,Sneakers,Retro Runner,37,Navy,5415931025271,ADI-SNK-NAV-37-053,50.00,129.95,True
+ART-1054,Jacket The North Face Black Harrington Zip,Lightweight cotton-twill Harrington jacket with tartan lining.,The North Face,Outerwear,Jacket,Harrington Zip,M,Black,5419155819200,TNF-JCK-BLA-M-054,52.00,139.00,True
+ART-1055,Handbag The North Face Navy Pebbled Leather Tote,Structured pebbled leather tote bag with gold-tone hardware and zip top.,The North Face,Bags & Luggage,Handbag,Pebbled Leather Tote,Medium,Navy,5414993808565,TNF-HBG-NAV-MEDI-055,115.00,295.00,True
+ART-1056,Sweater COS Navy Merino V-Neck,Fine-gauge 100% extra-fine merino wool V-neck pullover.,COS,Knitwear,Sweater,Merino V-Neck,XS,Navy,5419292791081,COS-SWT-NAV-XS-056,44.00,115.00,True
+ART-1057,Cardigan COS Camel Merino Button,Lightweight fine-knit merino wool cardigan with tonal buttons.,COS,Knitwear,Cardigan,Merino Button,S,Camel,5415759234471,COS-CRD-CAM-S-057,46.00,120.00,True
+ART-1058,Jeans Calvin Klein Grey Slim Tapered,Stretch denim slim tapered jeans with classic five-pocket styling.,Calvin Klein,Denim,Jeans,Slim Tapered,30/30,Grey,5416796738787,CLK-JNS-GRE-3030-058,45.00,119.00,True
+ART-1059,Cardigan COS Off-White Merino Button,Lightweight fine-knit merino wool cardigan with tonal buttons.,COS,Knitwear,Cardigan,Merino Button,XS,Off-White,5416124453431,COS-CRD-OFF-XS-059,46.00,120.00,True
+ART-1060,Skirt COS Grey Satin Slip,Bias-cut satin midi slip skirt with a concealed elasticated waistband.,COS,Womenswear,Skirt,Satin Slip,M,Grey,5417597996327,COS-SKT-GRE-M-060,16.00,39.99,True
+ART-1061,T-Shirt Hugo Boss Burgundy Organic Essential,Heavyweight organic combed cotton crewneck t-shirt.,Hugo Boss,Menswear,T-Shirt,Organic Essential,S,Burgundy,5412140169349,BOSS-TSH-BUR-S-061,18.75,49.94,True
+ART-1062,Dress Massimo Dutti Camel Wrap Linen,Breathable linen-blend wrap dress with tie waist and flutter sleeves.,Massimo Dutti,Womenswear,Dress,Wrap Linen,M,Camel,5418672650595,MSD-DRS-CAM-M-062,28.00,79.00,True
+ART-1063,Chinos Fred Perry Burgundy Alpha Slim,Smart-casual stretch cotton twill chinos with a modern tapered fit.,Fred Perry,Menswear,Chinos,Alpha Slim,32/32,Burgundy,5416111349421,FRP-CHN-BUR-3232-063,34.00,89.95,True
+ART-1064,Jeans Calvin Klein Black Slim Tapered,Stretch denim slim tapered jeans with classic five-pocket styling.,Calvin Klein,Denim,Jeans,Slim Tapered,34/32,Black,5416859286614,CLK-JNS-BLA-3432-064,45.00,119.00,True
+ART-1065,Sneakers Dr. Martens Beige Retro Runner,Suede and breathable mesh vintage-inspired lifestyle sneakers.,Dr. Martens,Footwear,Sneakers,Retro Runner,42,Beige,5414642197907,DRM-SNK-BEI-42-065,50.00,129.95,True
+ART-1066,Cap Ralph Lauren Grey 6-Panel Twill,Brushed cotton twill dad cap with curved brim and strapback closure.,Ralph Lauren,Headwear,Cap,6-Panel Twill,One Size,Grey,5411546696950,RLP-CAP-GRE-ONES-066,12.00,35.00,True
+ART-1067,Chinos Calvin Klein Burgundy Alpha Slim,Smart-casual stretch cotton twill chinos with a modern tapered fit.,Calvin Klein,Menswear,Chinos,Alpha Slim,34/32,Burgundy,5416587537178,CLK-CHN-BUR-3432-067,34.00,89.95,True
+ART-1068,Coat The North Face Emerald Green Double-Breasted Wool,Tailored mid-calf wool-blend overcoat with wide peak lapels.,The North Face,Outerwear,Coat,Double-Breasted Wool,M,Emerald Green,5418106906538,TNF-COT-EME-M-068,110.00,279.00,True
+ART-1069,Blouse Sandro Emerald Green Silk Georgette,Fluid semi-sheer blouse with ruffled stand collar and buttoned cuffs.,Sandro,Womenswear,Blouse,Silk Georgette,XXL,Emerald Green,5417490442894,SND-BLS-EME-XXL-069,52.50,137.50,True
+ART-1070,Cardigan COS Khaki Merino Button,Lightweight fine-knit merino wool cardigan with tonal buttons.,COS,Knitwear,Cardigan,Merino Button,M,Khaki,5417954672204,COS-CRD-KHA-M-070,46.00,120.00,True
+ART-1071,Sneakers Adidas Core Black Retro Runner,Suede and breathable mesh vintage-inspired lifestyle sneakers.,Adidas,Footwear,Sneakers,Retro Runner,41,Core Black,5414464161270,ADI-SNK-COR-41-071,50.00,129.95,True
+ART-1072,Jacket The North Face Beige Waterproof Shell,Breathable seam-sealed waterproof shell jacket with adjustable hood.,The North Face,Outerwear,Jacket,Waterproof Shell,S,Beige,5414300636585,TNF-JCK-BEI-S-072,88.00,220.00,True
+ART-1073,Blouse Sandro Camel Oversized Poplin,Crisp organic cotton poplin blouse with concealed placket and dropped shoulders.,Sandro,Womenswear,Blouse,Oversized Poplin,XXL,Camel,5416944142262,SND-BLS-CAM-XXL-073,37.50,98.75,True
+ART-1074,Watch Fossil Silver Chronograph Steel,Stainless steel chronograph wristwatch with sunray dial and date window.,Fossil,Watches & Jewelry,Watch,Chronograph Steel,One Size,Silver,5418638257497,FSL-WTC-SIL-ONES-074,68.00,179.00,True
+ART-1075,Blazer Massimo Dutti Khaki Structured Wool,Half-canvassed virgin wool blazer with horn buttons and double vent.,Massimo Dutti,Formalwear,Blazer,Structured Wool,XS,Khaki,5414643576871,MSD-BLZ-KHA-XS-075,95.00,249.00,True
+ART-1076,Blouse Mango Khaki Silk Georgette,Fluid semi-sheer blouse with ruffled stand collar and buttoned cuffs.,Mango,Womenswear,Blouse,Silk Georgette,XXL,Khaki,5417852415525,MNG-BLS-KHA-XXL-076,35.70,93.50,True
+ART-1077,Socks Tommy Hilfiger Beige Ribbed Crew 3-Pack,Combed cotton cushioned crew socks in a three-pair value pack.,Tommy Hilfiger,Underwear & Socks,Socks,Ribbed Crew 3-Pack,43-46,Beige,5414853479481,TMH-SCK-BEI-4346-077,6.50,18.00,True
+ART-1078,Cap New Balance Emerald Green 6-Panel Twill,Brushed cotton twill dad cap with curved brim and strapback closure.,New Balance,Headwear,Cap,6-Panel Twill,One Size,Emerald Green,5416322520473,NWB-CAP-EME-ONES-078,12.00,35.00,True
+ART-1079,Blouse Zara Olive Silk Georgette,Fluid semi-sheer blouse with ruffled stand collar and buttoned cuffs.,Zara,Womenswear,Blouse,Silk Georgette,S,Olive,5416737421496,ZAR-BLS-OLI-S-079,35.70,93.50,True
+ART-1080,Coat The North Face Emerald Green Ultra Light Down,Packable ultra-light down coat with water-repellent matte finish.,The North Face,Outerwear,Coat,Ultra Light Down,S,Emerald Green,5411918920620,TNF-COT-EME-S-080,36.00,89.90,True
+ART-1081,Chinos Calvin Klein Beige Pleated Taper,Garment-dyed organic cotton chinos with single front pleats.,Calvin Klein,Menswear,Chinos,Pleated Taper,34/32,Beige,5412785736751,CLK-CHN-BEI-3432-081,38.00,99.00,True
+ART-1082,Handbag Sandro Navy Crossbody Saddle,Compact smooth-leather crossbody bag with magnetic flap closure.,Sandro,Bags & Luggage,Handbag,Crossbody Saddle,Mini,Navy,5416928691380,SND-HBG-NAV-MINI-082,97.50,243.75,True
+ART-1083,T-Shirt Tommy Hilfiger Charcoal Organic Essential,Heavyweight organic combed cotton crewneck t-shirt.,Tommy Hilfiger,Menswear,T-Shirt,Organic Essential,L,Charcoal,5414856070374,TMH-TSH-CHA-L-083,15.00,39.95,True
+ART-1084,Boots Adidas Cherry Red Chelsea Suede,Pull-on water-resistant suede Chelsea boots with elastic side gussets.,Adidas,Footwear,Boots,Chelsea Suede,43,Cherry Red,5415419627962,ADI-BOT-CHE-43-084,72.00,185.00,True
+ART-1085,Skirt Sandro Navy Satin Slip,Bias-cut satin midi slip skirt with a concealed elasticated waistband.,Sandro,Womenswear,Skirt,Satin Slip,L,Navy,5413294043548,SND-SKT-NAV-L-085,20.00,49.99,True
+ART-1086,Watch Hugo Boss Tan Chronograph Steel,Stainless steel chronograph wristwatch with sunray dial and date window.,Hugo Boss,Watches & Jewelry,Watch,Chronograph Steel,One Size,Tan,5412840877826,BOSS-WTC-TAN-ONES-086,85.00,223.75,True
+ART-1087,Blouse Mango Charcoal Oversized Poplin,Crisp organic cotton poplin blouse with concealed placket and dropped shoulders.,Mango,Womenswear,Blouse,Oversized Poplin,M,Charcoal,5412405969000,MNG-BLS-CHA-M-087,25.50,67.15,True
+ART-1088,Blouse COS Olive Silk Georgette,Fluid semi-sheer blouse with ruffled stand collar and buttoned cuffs.,COS,Womenswear,Blouse,Silk Georgette,L,Olive,5418868054898,COS-BLS-OLI-L-088,42.00,110.00,True
+ART-1089,Running Shoes Nike Beige Carbon Tempo,Lightweight road running shoes designed for speed training and cushioning.,Nike,Footwear,Running Shoes,Carbon Tempo,37,Beige,5413316787198,NIK-RUN-BEI-37-089,70.00,179.00,True
+ART-1090,Hoodie Nike Black Heavyweight Fleece,450gsm brushed cotton-blend pullover hoodie with kangaroo pocket.,Nike,Streetwear,Hoodie,Heavyweight Fleece,XXL,Black,5414239406957,NIK-HOD-BLA-XXL-090,38.00,99.00,True
+ART-1091,Blazer Massimo Dutti Navy Linen Blend,Tailored single-breasted linen-blend blazer with notched lapels.,Massimo Dutti,Formalwear,Blazer,Linen Blend,XL,Navy,5412024542722,MSD-BLZ-NAV-XL-091,68.00,169.00,True
+ART-1092,Boots Nike Beige 8-Eye Smooth Leather,Iconic 8-eyelet lace-up boots crafted from durable smooth leather.,Nike,Footwear,Boots,8-Eye Smooth Leather,44,Beige,5412584392711,NIK-BOT-BEI-44-092,78.00,199.00,True
+ART-1093,Sunglasses Hugo Boss Black Wayfarer Classic,Classic acetate frame sunglasses with polarized UV400 lenses.,Hugo Boss,Eyewear,Sunglasses,Wayfarer Classic,One Size,Black,5419410288290,BOSS-SNG-BLA-ONES-093,72.50,193.75,True
+ART-1094,Belt Hugo Boss Olive Full-Grain Leather,Vegetable-tanned full-grain leather dress belt with brushed buckle.,Hugo Boss,Accessories,Belt,Full-Grain Leather,105,Olive,5414361393222,BOSS-BLT-OLI-105-094,25.00,68.75,True
+ART-1095,Hoodie Vans Khaki Zip French Terry,Loopback organic cotton zip-up hoodie with metal hardware.,Vans,Streetwear,Hoodie,Zip French Terry,XS,Khaki,5418076144396,VNS-HOD-KHA-XS-095,34.00,89.00,True
+ART-1096,T-Shirt Calvin Klein Charcoal Organic Essential,Heavyweight organic combed cotton crewneck t-shirt.,Calvin Klein,Menswear,T-Shirt,Organic Essential,XS,Charcoal,5419421518487,CLK-TSH-CHA-XS-096,15.00,39.95,True
+ART-1097,Dress Shirt Sandro Navy Poplin Cutaway,Non-iron two-ply cotton poplin dress shirt with cutaway collar.,Sandro,Formalwear,Dress Shirt,Poplin Cutaway,L,Navy,5417371573279,SND-DSH-NAV-L-097,40.00,106.25,True
+ART-1098,Chinos Fred Perry Emerald Green Pleated Taper,Garment-dyed organic cotton chinos with single front pleats.,Fred Perry,Menswear,Chinos,Pleated Taper,30/32,Emerald Green,5415667181604,FRP-CHN-EME-3032-098,38.00,99.00,True
+ART-1099,Blouse Mango Burgundy Silk Georgette,Fluid semi-sheer blouse with ruffled stand collar and buttoned cuffs.,Mango,Womenswear,Blouse,Silk Georgette,XL,Burgundy,5418164814926,MNG-BLS-BUR-XL-099,35.70,93.50,True
+ART-1100,Skirt Zara Navy A-Line Denim,Button-front midi denim skirt with contrast stitching and front slit.,Zara,Womenswear,Skirt,A-Line Denim,M,Navy,5413094011037,ZAR-SKT-NAV-M-100,18.70,50.15,True
+ART-1101,"Levi's Sweater, red with motifs",,Levi's,Menswear,Sweater,red with motifs,XS,Cherry Red,,SWT-CR-XS,100.00,250.00,True
+ART-1102,"Levi's Sweater, red with motifs",,Levi's,Menswear,Sweater,red with motifs,L,Cherry Red,,SWT-CR-L,100.00,250.00,True
+ART-1103,"Zara Dress, shiny black",,Zara,Womenswear,Dress,shiny black,XS,Black,,DRS-BLC-XS,50.00,60.00,True
+ART-1104,"Zara Dress, shiny black",,Zara,Womenswear,Dress,shiny black,S,Black,,DRS-BLC-S,50.00,60.00,True
+ART-1105,"Zara Dress, shiny black",,Zara,Womenswear,Dress,shiny black,M,Black,,DRS-BLC-M,50.00,60.00,True
+ART-1106,"Zara Dress, shiny black",,Zara,Womenswear,Dress,shiny black,L,Black,,DRS-BLC-L,50.00,60.00,True
+ART-1107,"Zara Dress, shiny black",,Zara,Womenswear,Dress,shiny black,XL,Black,,DRS-BLC-XL,50.00,60.00,True
+ART-1108,"Nike Blouse, shinny blue",,Nike,Womenswear,Blouse,shinny blue,XS,Navy,,BLS-NVY-XS,10.00,15.00,True
+ART-1109,"Nike Blouse, shinny blue",,Nike,Womenswear,Blouse,shinny blue,S,Navy,,BLS-NVY-S,10.00,15.00,True
+ART-1110,"Nike Blouse, shinny blue",,Nike,Womenswear,Blouse,shinny blue,M,Navy,,BLS-NVY-M,10.00,15.00,True
+ART-1111,"Nike Blouse, shinny blue",,Nike,Womenswear,Blouse,shinny blue,L,Navy,,BLS-NVY-L,10.00,15.00,True
+ART-1112,"Nike Blouse, shinny blue",,Nike,Womenswear,Blouse,shinny blue,XL,Navy,,BLS-NVY-XL,10.00,15.00,True
+ART-1113,"Uniqlo T-Shirt, mamapapa",,Uniqlo,Maternity,T-Shirt,mamapapa,XS,Black,,TS-BLC-XS,1.00,20.00,True
+ART-1114,"Uniqlo T-Shirt, mamapapa",,Uniqlo,Maternity,T-Shirt,mamapapa,M,Black,,TS-BLC-M,1.00,20.00,True
+ART-1115,"Uniqlo T-Shirt, mamapapa",,Uniqlo,Maternity,T-Shirt,mamapapa,XS,Navy,,TS-NVY-XS,1.00,20.00,True
+ART-1116,"Uniqlo T-Shirt, mamapapa",,Uniqlo,Maternity,T-Shirt,mamapapa,S,Navy,,TS-NVY-S,1.00,20.00,True
+ART-1117,"Uniqlo T-Shirt, mamapapa",,Uniqlo,Maternity,T-Shirt,mamapapa,M,Navy,,TS-NVY-M,1.00,20.00,True
+ART-1118,"Uniqlo T-Shirt, mamapapa",,Uniqlo,Maternity,T-Shirt,mamapapa,XS,Beige,,TS-BG-XS,1.00,20.00,True
+ART-1119,"Uniqlo T-Shirt, mamapapa",,Uniqlo,Maternity,T-Shirt,mamapapa,S,Beige,,TS-BG-S,1.00,20.00,True
+ART-1120,"Levi's Dress, hohale",,Levi's,Womenswear,Dress,hohale,XS,Black,,DRS-BLC-XS-2,100.00,101.00,True
+ART-1121,"Levi's Dress, hohale",,Levi's,Womenswear,Dress,hohale,S,Black,,DRS-BLC-S-2,100.00,101.00,True
+ART-1122,"Levi's Dress, hohale",,Levi's,Womenswear,Dress,hohale,M,Black,,DRS-BLC-M-2,100.00,101.00,True
+ART-1123,"Levi's Dress, hohale",,Levi's,Womenswear,Dress,hohale,L,Black,,DRS-BLC-L-2,100.00,101.00,True
+ART-1124,"Levi's Dress, hohale",,Levi's,Womenswear,Dress,hohale,XL,Black,,DRS-BLC-XL-2,100.00,101.00,True
+ART-1125,"Levi's Dress, hohale",,Levi's,Womenswear,Dress,hohale,M,Navy,,DRS-NVY-M,100.00,101.00,True
+ART-1126,"Levi's Dress, hohale",,Levi's,Womenswear,Dress,hohale,XS,Cherry Red,,DRS-CR-XS,100.00,101.00,True
+ART-1127,"New Balance Sneakers, silver dush",,New Balance,Kidswear,Sneakers,silver dush,36,Beige,,SNK-BG-36,105.00,120.00,True
+ART-1128,"New Balance Sneakers, silver dush",,New Balance,Kidswear,Sneakers,silver dush,37,Beige,,SNK-BG-37,105.00,150.00,True
+ART-1129,"New Balance Sneakers, silver dush",,New Balance,Kidswear,Sneakers,silver dush,38,Beige,,SNK-BG-38,105.00,120.00,True

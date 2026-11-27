@@ -1,5 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 
 namespace Estoq.App.Controls;
 
@@ -29,6 +31,21 @@ public sealed partial class EqField : UserControl
 
     public static readonly DependencyProperty IsPasswordProperty =
         DependencyProperty.Register(nameof(IsPassword), typeof(bool), typeof(EqField), new PropertyMetadata(false, OnDecorationChanged));
+
+    public static readonly DependencyProperty IsNumericProperty =
+        DependencyProperty.Register(nameof(IsNumeric), typeof(bool), typeof(EqField), new PropertyMetadata(false));
+
+    public static readonly DependencyProperty NumericErrorTextProperty =
+        DependencyProperty.Register(nameof(NumericErrorText), typeof(string), typeof(EqField), new PropertyMetadata(string.Empty));
+
+    public static readonly DependencyProperty ShowErrorTextProperty =
+        DependencyProperty.Register(nameof(ShowErrorText), typeof(bool), typeof(EqField), new PropertyMetadata(true, OnErrorTextVisibilityChanged));
+
+    public static readonly DependencyProperty ShowLabelProperty =
+        DependencyProperty.Register(nameof(ShowLabel), typeof(bool), typeof(EqField), new PropertyMetadata(true, OnDecorationChanged));
+
+    private bool _updatingNumericText;
+    private Storyboard? _invalidInputStoryboard;
 
     public EqField()
     {
@@ -86,12 +103,52 @@ public sealed partial class EqField : UserControl
         set => SetValue(IsPasswordProperty, value);
     }
 
+    public bool IsNumeric
+    {
+        get => (bool)GetValue(IsNumericProperty);
+        set => SetValue(IsNumericProperty, value);
+    }
+
+    public string NumericErrorText
+    {
+        get => (string)GetValue(NumericErrorTextProperty);
+        set => SetValue(NumericErrorTextProperty, value);
+    }
+
+    public bool ShowErrorText
+    {
+        get => (bool)GetValue(ShowErrorTextProperty);
+        set => SetValue(ShowErrorTextProperty, value);
+    }
+
+    public bool ShowLabel
+    {
+        get => (bool)GetValue(ShowLabelProperty);
+        set => SetValue(ShowLabelProperty, value);
+    }
+
+    public event EventHandler? ErrorTextChanged;
+
     private static void OnErrorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var field = (EqField)d;
         var hasError = !string.IsNullOrEmpty((string)e.NewValue);
-        field.ErrorBlock.Visibility = hasError ? Visibility.Visible : Visibility.Collapsed;
+        field.ErrorBlock.Visibility = hasError && field.ShowErrorText ? Visibility.Visible : Visibility.Collapsed;
         VisualStateManager.GoToState(field, hasError ? "Invalid" : "Valid", true);
+        field.Box.BorderBrush = hasError
+            ? (Brush)Application.Current.Resources["EqDangerBrush"]
+            : field.Input.FocusState == FocusState.Unfocused
+                ? (Brush)Application.Current.Resources["EqBorderBrush"]
+                : (Brush)Application.Current.Resources["EqGoldBrush"];
+        field.ErrorTextChanged?.Invoke(field, EventArgs.Empty);
+    }
+
+    private static void OnErrorTextVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var field = (EqField)d;
+        field.ErrorBlock.Visibility = field.ShowErrorText && !string.IsNullOrEmpty(field.ErrorText)
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 
     private static void OnDecorationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -99,6 +156,7 @@ public sealed partial class EqField : UserControl
 
     private void ApplyDecoration()
     {
+        LabelContainer.Visibility = ShowLabel ? Visibility.Visible : Visibility.Collapsed;
         RequiredMark.Visibility = IsRequired ? Visibility.Visible : Visibility.Collapsed;
         OptionalMark.Visibility = IsOptional && !IsRequired ? Visibility.Visible : Visibility.Collapsed;
         Input.Visibility = IsPassword ? Visibility.Collapsed : Visibility.Visible;
@@ -107,7 +165,82 @@ public sealed partial class EqField : UserControl
         SuffixText.Visibility = string.IsNullOrEmpty(Suffix) ? Visibility.Collapsed : Visibility.Visible;
     }
 
-    private void OnInputGotFocus(object sender, RoutedEventArgs e) => VisualStateManager.GoToState(this, "Focused", true);
+    private void OnInputGotFocus(object sender, RoutedEventArgs e)
+    {
+        VisualStateManager.GoToState(this, "Focused", true);
+        if (string.IsNullOrEmpty(ErrorText)) Box.BorderBrush = (Brush)Application.Current.Resources["EqGoldBrush"];
+    }
 
-    private void OnInputLostFocus(object sender, RoutedEventArgs e) => VisualStateManager.GoToState(this, "Unfocused", true);
+    private void OnInputLostFocus(object sender, RoutedEventArgs e)
+    {
+        VisualStateManager.GoToState(this, "Unfocused", true);
+        if (string.IsNullOrEmpty(ErrorText)) Box.BorderBrush = (Brush)Application.Current.Resources["EqBorderBrush"];
+    }
+
+    private void OnInputTextChanging(TextBox sender, TextBoxTextChangingEventArgs e)
+    {
+        if (!IsNumeric || _updatingNumericText) return;
+        var separator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+        var decimalSeparator = separator.Length == 0 ? '.' : separator[0];
+        var raw = sender.Text;
+        var caret = Math.Clamp(sender.SelectionStart, 0, raw.Length);
+        var filtered = FilterNumericText(raw, decimalSeparator);
+        if (raw == filtered)
+        {
+            if (ErrorText == NumericErrorText) ErrorText = string.Empty;
+            return;
+        }
+
+        var caretText = FilterNumericText(raw[..caret], decimalSeparator);
+        _updatingNumericText = true;
+        try
+        {
+            sender.Text = filtered;
+            sender.SelectionStart = Math.Min(caretText.Length, filtered.Length);
+        }
+        finally
+        {
+            _updatingNumericText = false;
+        }
+
+        ErrorText = NumericErrorText;
+        ShakeFieldContainer();
+    }
+
+    private static string FilterNumericText(string value, char decimalSeparator)
+    {
+        var result = new System.Text.StringBuilder(value.Length);
+        var hasSeparator = false;
+        foreach (var character in value)
+        {
+            if (char.IsDigit(character)) result.Append(character);
+            else if (character == decimalSeparator && !hasSeparator)
+            {
+                result.Append(character);
+                hasSeparator = true;
+            }
+        }
+        return result.ToString();
+    }
+
+    private void ShakeFieldContainer()
+    {
+        _invalidInputStoryboard?.Stop();
+        var transform = Box.RenderTransform as CompositeTransform ?? new CompositeTransform();
+        Box.RenderTransform = transform;
+        transform.TranslateX = 0;
+        var storyboard = new Storyboard();
+        var shake = new DoubleAnimationUsingKeyFrames();
+        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero), Value = 0 });
+        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(35)), Value = -4 });
+        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(70)), Value = 4 });
+        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(105)), Value = -2 });
+        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(140)), Value = 0 });
+        Storyboard.SetTarget(shake, transform);
+        Storyboard.SetTargetProperty(shake, "TranslateX");
+        storyboard.Children.Add(shake);
+        storyboard.Completed += (_, _) => transform.TranslateX = 0;
+        _invalidInputStoryboard = storyboard;
+        storyboard.Begin();
+    }
 }

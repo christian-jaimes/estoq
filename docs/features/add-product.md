@@ -26,9 +26,23 @@ Same pop-up. The duplicate check opens the existing product; added quantities ar
 
 ## Layout guidance
 
-From the visual reference: sections General (type, category, brand, model label, generated name, description, supplier barcode), Pricing (cost, selling, margin), Size and colour (chips, swatches, "More colours"), Product image (main image and thumbnails), Summary (category, brand, price, margin, variant count such as "6 (3 sizes × 2 colours)"), Variants + stock table (swatch and name, SKU, barcode, stock stepper, delete). Footer: Cancel, Save product.
+The popup body is constrained between the shell's fixed header and footer and resizes with the popup. Sections stay inside their assigned containers: the left column contains General and Pricing, with General expanding to use available height and Pricing remaining content-height; the right column has Product image and Size and colour side by side. Future sections added below must fit and resize within the same body rather than extending behind the footer. Keep scrolling local to content that grows, such as a long list. See [[ui-implementation]] for container sizing rules.
 
 ## Rules
 
 - Cost price and margin are hidden from cashiers; editing an existing product's details and prices is manager and owner only ([[roles-and-permissions]]).
 - Products are active or archived; archiving happens in [[inventory]].
+
+## Front end build notes
+
+Built on sample data (`ICatalogService`, `SampleCatalogService`); the rules are in `estoq.Core` (`Products/`, unit-tested) and the pop-up body is `Views/AddProduct/AddProductView` driven by `AddProductViewModel`.
+
+- Product type, category and brand are autocomplete fields populated from `data/dummy_product_types.csv`, `data/dummy_categories.csv` and the active rows of `data/dummy_brands.csv`. Typing filters the suggestion list. When there are no matches, a `+ <typed value>` suggestion lets the owner stage a new value in that field. Staging does not modify master data; only saving the product appends the new value to its CSV. Canceling or closing the product popup discards it. New values receive a unique ID (`TYP-##`, `CAT-##` or `BRD-##`); new brands and product types also receive a unique short SKU code. Other master-data columns remain empty for the future master-data flow. The type's current size choices are derived from `requires_size` and a small local type-to-size mapping; a future master-data flow will own size sets. The "Add size" control adds one more size for this product.
+- Variants are every ticked colour with every ticked size. Nothing ticked leaves the variants table empty. Deleting a row removes that combination until its size or colour is ticked again. Rows keep their stock and SKU while the ticks change.
+- SKU is built from the product type, colour and size (for example `TS-WHT-S`), made unique with `-2`, `-3`; typing over it keeps the typed value. The internal barcode is an EAN-13 in the store-use range (prefix 2) from a running sequence.
+- Prices are entered in the store's base currency. Margin is the selling price minus cost, also as a percentage of the selling price. Cashiers see neither cost nor margin.
+- A duplicate (same brand, type and model label) shows a notice and blocks Save. Opening the existing product to add variants or stock waits for [[inventory]] and the stock receiving work.
+- Differences from the mockup: no Draft or Active switch (products are active or archived, archived in [[inventory]]); no per-variant print button (labels come later, [[label-printing]]); no row select boxes; the icons for General, Image and delete reuse glyphs already in the icon font.
+- Saving appends to the sample data: one row per variant in `data/dummy_article.csv` (new `ART-<n>` identifier, `is_active` True) and one `add` row per variant in `data/dummy_stock_movements.csv` (new `MOV-<n>` identifier, `dd-MM-yy HH:mm` timestamp, sample location `STORE-GHENT-CENTER`). Stock on hand is the sum of an article's movements, so there is no separate inventory table. `model_label` sits after `product_type`; the existing articles and SKUs feed the duplicate check on open. The article table has no internal-barcode column: only the supplier barcode is stored.
+- Product added pop-up: after Save the form is covered by a confirmation modelled on the point of sale's "Sale completed". Variants with 0 opening stock are not created (no article or movement row) and Save needs stock on at least one variant. It lists every article created: name with size, colour and SKU, selling price, quantity and total price. The summary shows Articles added (the units received) and Total price (selling price times units, in the store currency). Close closes the pop-up; Add another product starts a fresh form. Save stays disabled while it shows.
+- Images are stored as file paths for now; copying them into the data folder belongs to the back end.

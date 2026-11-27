@@ -18,9 +18,6 @@ public sealed partial class PopupShell : UserControl
     public static readonly DependencyProperty SubtitleProperty =
         DependencyProperty.Register(nameof(Subtitle), typeof(string), typeof(PopupShell), new PropertyMetadata(string.Empty));
 
-    public static readonly DependencyProperty GlyphProperty =
-        DependencyProperty.Register(nameof(Glyph), typeof(string), typeof(PopupShell), new PropertyMetadata(string.Empty));
-
     public static readonly DependencyProperty PrimaryTextProperty =
         DependencyProperty.Register(nameof(PrimaryText), typeof(string), typeof(PopupShell), new PropertyMetadata(string.Empty));
 
@@ -49,13 +46,6 @@ public sealed partial class PopupShell : UserControl
     {
         get => (string)GetValue(SubtitleProperty);
         set => SetValue(SubtitleProperty, value);
-    }
-
-    /// <summary>Material glyph for the header badge.</summary>
-    public string Glyph
-    {
-        get => (string)GetValue(GlyphProperty);
-        set => SetValue(GlyphProperty, value);
     }
 
     public string PrimaryText

@@ -117,10 +117,83 @@
   <data name="Popup_Sale_Subtitle" xml:space="preserve"><value>Nueva venta (F1)</value></data>
   <data name="Popup_Sale_Message" xml:space="preserve"><value>El flujo de ventas (escaneo, carrito, pago y recibo) se construye a continuación (ver hoja de ruta).</value></data>
   <data name="Popup_Sale_Primary" xml:space="preserve"><value>Completar venta</value></data>
-  <data name="Popup_Items_Title" xml:space="preserve"><value>Agregar o recibir artículos</value></data>
-  <data name="Popup_Items_Subtitle" xml:space="preserve"><value>Crear un producto o agregar existencias (F2)</value></data>
+  <data name="Popup_Items_Title" xml:space="preserve"><value>Agregar producto</value></data>
+  <data name="Popup_Items_Subtitle" xml:space="preserve"><value>Crear un producto con sus variantes y existencias iniciales (F2)</value></data>
   <data name="Popup_Items_Message" xml:space="preserve"><value>La creación de productos y la recepción de existencias se construyen a continuación (ver hoja de ruta).</value></data>
   <data name="Popup_Items_Primary" xml:space="preserve"><value>Guardar producto</value></data>
+  <data name="Add_General" xml:space="preserve"><value>General</value></data>
+  <data name="Add_ProductType" xml:space="preserve"><value>Tipo de producto</value></data>
+  <data name="Add_Category" xml:space="preserve"><value>Categoría</value></data>
+  <data name="Add_Brand" xml:space="preserve"><value>Marca</value></data>
+  <data name="Add_ModelLabel" xml:space="preserve"><value>Etiqueta de modelo</value></data>
+  <data name="Add_ModelLabelHint" xml:space="preserve"><value>p. ej. Estampado rojo</value></data>
+  <data name="Add_Name" xml:space="preserve"><value>Nombre del producto</value></data>
+  <data name="Add_NameHint" xml:space="preserve"><value>El nombre del producto se genera con la marca, el tipo de producto y el modelo.</value></data>
+  <data name="Add_UseGeneratedName" xml:space="preserve"><value>Usar nombre generado</value></data>
+  <data name="Add_Description" xml:space="preserve"><value>Descripción</value></data>
+  <data name="Add_DescriptionHint" xml:space="preserve"><value>p. ej. Camiseta de algodón, corte regular…</value></data>
+  <data name="Add_SupplierBarcode" xml:space="preserve"><value>Código de barras del proveedor</value></data>
+  <data name="Add_SupplierBarcodeHint" xml:space="preserve"><value>p. ej. 7501234567890</value></data>
+  <data name="Add_Pricing" xml:space="preserve"><value>Precios</value></data>
+  <data name="Add_Cost" xml:space="preserve"><value>Precio de costo</value></data>
+  <data name="Add_Selling" xml:space="preserve"><value>Precio de venta</value></data>
+  <data name="Add_Margin" xml:space="preserve"><value>Margen estimado</value></data>
+  <data name="Add_SizeColour" xml:space="preserve"><value>Talla y color</value></data>
+  <data name="Add_Sizes" xml:space="preserve"><value>Tallas</value></data>
+  <data name="Add_Colours" xml:space="preserve"><value>Colores</value></data>
+  <data name="Add_AddSize" xml:space="preserve"><value>Agregar talla</value></data>
+  <data name="Add_NewSizeHint" xml:space="preserve"><value>Nueva talla, p. ej. 3XL</value></data>
+  <data name="Add_AddSizeConfirm" xml:space="preserve"><value>Agregar</value></data>
+  <data name="Add_MoreColours" xml:space="preserve"><value>Más colores</value></data>
+  <data name="Add_SearchColours" xml:space="preserve"><value>Buscar colores</value></data>
+  <data name="Add_Image" xml:space="preserve"><value>Imagen del producto</value></data>
+  <data name="Add_AddImage" xml:space="preserve"><value>Agregar imagen</value></data>
+  <data name="Add_RemoveImage" xml:space="preserve"><value>Quitar imagen</value></data>
+  <data name="Add_NoImage" xml:space="preserve"><value>Aún no hay imagen</value></data>
+  <data name="Add_DragImages" xml:space="preserve"><value>Arrastra y suelta imágenes aquí</value></data>
+  <data name="Add_BrowseImages" xml:space="preserve"><value>o haz clic para buscar</value></data>
+  <data name="Add_ImageTypes" xml:space="preserve"><value>JPG, PNG o WebP</value></data>
+  <data name="Add_Summary" xml:space="preserve"><value>Resumen</value></data>
+  <data name="Add_SummaryVariants" xml:space="preserve"><value>Variantes</value></data>
+  <data name="Add_Variants" xml:space="preserve"><value>Variantes y existencias</value></data>
+  <data name="Add_VariantsHint" xml:space="preserve"><value>Se crean con las tallas y los colores seleccionados</value></data>
+  <data name="Add_ColVariant" xml:space="preserve"><value>Variante (talla – color)</value></data>
+  <data name="Add_ColSku" xml:space="preserve"><value>SKU</value></data>
+  <data name="Add_ColBarcode" xml:space="preserve"><value>Código de barras</value></data>
+  <data name="Add_ColStock" xml:space="preserve"><value>Existencias iniciales</value></data>
+  <data name="Add_ColCostPrice" xml:space="preserve"><value>Precio de coste</value></data>
+  <data name="Add_ColSellingPrice" xml:space="preserve"><value>Precio de venta</value></data>
+  <data name="Add_RemoveVariant" xml:space="preserve"><value>Quitar variante</value></data>
+  <data name="Add_PlainVariant" xml:space="preserve"><value>Variante única</value></data>
+  <data name="Add_Duplicate" xml:space="preserve"><value>Ya existe un producto con esta marca, tipo y modelo: {0}. Agrega variantes o existencias a ese producto.</value></data>
+  <data name="Add_SizeOne" xml:space="preserve"><value>talla</value></data>
+  <data name="Add_SizeMany" xml:space="preserve"><value>tallas</value></data>
+  <data name="Add_ColourOne" xml:space="preserve"><value>color</value></data>
+  <data name="Add_ColourMany" xml:space="preserve"><value>colores</value></data>
+  <data name="Error_ProductTypeRequired" xml:space="preserve"><value>Elige o escribe un tipo de producto.</value></data>
+  <data name="Error_CategoryRequired" xml:space="preserve"><value>Elige o escribe una categoría.</value></data>
+  <data name="Error_BrandRequired" xml:space="preserve"><value>Elige o escribe una marca.</value></data>
+  <data name="Error_ModelLabelRequired" xml:space="preserve"><value>Escribe una etiqueta de modelo, por ejemplo Estampado rojo.</value></data>
+  <data name="Error_NameRequired" xml:space="preserve"><value>El nombre del producto no puede estar vacío.</value></data>
+  <data name="Error_SellingPriceRequired" xml:space="preserve"><value>Escribe un precio de venta.</value></data>
+  <data name="Error_PriceInvalid" xml:space="preserve"><value>Escribe los precios como números, de 0 o más.</value></data>
+  <data name="Error_SkuRequired" xml:space="preserve"><value>Cada variante necesita un SKU.</value></data>
+  <data name="Error_SkuDuplicate" xml:space="preserve"><value>Cada SKU debe ser único.</value></data>
+  <data name="Error_StockInvalid" xml:space="preserve"><value>Las existencias iniciales no pueden ser negativas.</value></data>
+  <data name="Error_NoVariants" xml:space="preserve"><value>Marca al menos una talla o un color.</value></data>
+  <data name="Colour_White" xml:space="preserve"><value>Blanco</value></data>
+  <data name="Colour_Black" xml:space="preserve"><value>Negro</value></data>
+  <data name="Colour_Navy" xml:space="preserve"><value>Azul marino</value></data>
+  <data name="Colour_Red" xml:space="preserve"><value>Rojo</value></data>
+  <data name="Colour_Beige" xml:space="preserve"><value>Beige</value></data>
+  <data name="Colour_Grey" xml:space="preserve"><value>Gris</value></data>
+  <data name="Colour_Green" xml:space="preserve"><value>Verde</value></data>
+  <data name="Colour_Blue" xml:space="preserve"><value>Azul</value></data>
+  <data name="Colour_Yellow" xml:space="preserve"><value>Amarillo</value></data>
+  <data name="Colour_Orange" xml:space="preserve"><value>Naranja</value></data>
+  <data name="Colour_Pink" xml:space="preserve"><value>Rosa</value></data>
+  <data name="Colour_Purple" xml:space="preserve"><value>Morado</value></data>
+  <data name="Colour_Brown" xml:space="preserve"><value>Café</value></data>
   <data name="Popup_Adjust_Title" xml:space="preserve"><value>Ajustes de inventario</value></data>
   <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Cuenta un artículo y registra el motivo (F3)</value></data>
   <data name="Popup_Adjust_Message" xml:space="preserve"><value>El conteo de artículos y el registro del motivo de cada cambio se construyen a continuación (ver hoja de ruta).</value></data>
@@ -247,4 +320,14 @@
   <data name="Pos_DoneNumber" xml:space="preserve"><value>Venta {0}</value></data>
   <data name="Pos_PrintReceipt" xml:space="preserve"><value>Imprimir recibo</value></data>
   <data name="Pos_NewSale" xml:space="preserve"><value>Nueva venta</value></data>
+  <data name="Add_DoneTitle" xml:space="preserve"><value>Producto agregado</value></data>
+  <data name="Add_DoneSubtitle" xml:space="preserve"><value>Estos artículos ya están en tu catálogo</value></data>
+  <data name="Add_DoneArticles" xml:space="preserve"><value>Artículos agregados</value></data>
+  <data name="Add_DoneTotalPrice" xml:space="preserve"><value>Precio total</value></data>
+  <data name="Add_DoneAnother" xml:space="preserve"><value>Agregar otro producto</value></data>
+  <data name="Add_DoneColProduct" xml:space="preserve"><value>Producto</value></data>
+  <data name="Add_DoneColPrice" xml:space="preserve"><value>Precio de venta</value></data>
+  <data name="Add_DoneColQty" xml:space="preserve"><value>Cant.</value></data>
+  <data name="Add_DoneColTotal" xml:space="preserve"><value>Precio total</value></data>
+  <data name="Error_NoStock" xml:space="preserve"><value>Indica las existencias iniciales de al menos una variante.</value></data>
 </root>

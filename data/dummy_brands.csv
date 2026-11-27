@@ -1,0 +1,26 @@
+brand_id,brand_name,sku_code,country_of_origin,price_tier,default_supplier,website,is_active
+BRD-01,Hugo Boss,BOSS,Germany,Premium,Hugo Boss Wholesale,https://www.hugoboss.com,True
+BRD-02,Levi's,LEV,United States,Mid-Market,Levi Strauss & Co.,https://www.levi.com,True
+BRD-03,Nike,NIK,United States,Sportswear,Nike Europe Logistics,https://www.nike.com,True
+BRD-04,Zara,ZAR,Spain,Fast Fashion,Inditex Supply,https://www.zara.com,True
+BRD-05,The North Face,TNF,United States,Outdoor,VF Corporation,https://www.thenorthface.com,True
+BRD-06,Tommy Hilfiger,TMH,United States,Premium,PVH Europe,https://www.tommy.com,True
+BRD-07,Michael Kors,MCK,United States,Accessible Luxury,Capri Holdings Dist.,https://www.michaelkors.com,True
+BRD-08,Massimo Dutti,MSD,Spain,Premium,Inditex Supply,https://www.massimodutti.com,True
+BRD-09,Adidas,ADI,Germany,Sportswear,Adidas AG,https://www.adidas.com,True
+BRD-10,Ralph Lauren,RLP,United States,Premium,Ralph Lauren Europe,https://www.ralphlauren.com,True
+BRD-11,Mango,MNG,Spain,High Street,Punto Fa SL,https://shop.mango.com,True
+BRD-12,Carhartt WIP,CWP,Germany,Streetwear,Work In Progress Textil,https://www.carhartt-wip.com,True
+BRD-13,Fossil,FSL,United States,Mid-Market,Fossil Group Europe,https://www.fossil.com,True
+BRD-14,Dockers,DCK,United States,Mid-Market,Levi Strauss & Co.,https://www.dockers.com,True
+BRD-15,COS,COS,Sweden,Contemporary,H&M Group Logistics,https://www.cos.com,True
+BRD-16,Dr. Martens,DRM,United Kingdom,Heritage,Airwair International,https://www.drmartens.com,True
+BRD-17,Acne Studios,ACN,Sweden,Luxury,Acne Studios AB,https://www.acnestudios.com,True
+BRD-18,Uniqlo,UNQ,Japan,High Street,Fast Retailing Europe,https://www.uniqlo.com,True
+BRD-19,Patagonia,PTG,United States,Outdoor,Patagonia Europe,https://www.patagonia.com,True
+BRD-20,Ray-Ban,RYB,Italy,Premium,EssilorLuxottica,https://www.ray-ban.com,True
+BRD-21,Calvin Klein,CLK,United States,Premium,PVH Europe,https://www.calvinklein.com,True
+BRD-22,New Balance,NWB,United States,Sportswear,New Balance Europe,https://www.newbalance.com,True
+BRD-23,Sandro,SND,France,Contemporary,SMCP Group,https://www.sandro-paris.com,True
+BRD-24,Fred Perry,FRP,United Kingdom,Heritage,Fred Perry Ltd,https://www.fredperry.com,True
+BRD-25,Vans,VNS,United States,Streetwear,VF Corporation,https://www.vans.com,True

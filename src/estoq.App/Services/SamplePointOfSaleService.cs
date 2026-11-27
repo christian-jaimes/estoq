@@ -50,6 +50,11 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
     public SaleVariant? FindByCode(string code)
     {
         var trimmed = code.Trim();
+        if (trimmed.Length == 0)
+        {
+            return null;
+        }
+
         return _catalog.FirstOrDefault(v =>
             string.Equals(v.Barcode, trimmed, StringComparison.Ordinal)
             || string.Equals(v.Sku, trimmed, StringComparison.OrdinalIgnoreCase));
@@ -155,34 +160,83 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
         }
     }
 
+    /// <summary>
+    /// Builds the till catalog from the article table (<c>dummy_article.csv</c>) and the stock movements fact table
+    /// (<c>dummy_stock_movements.csv</c>): stock on hand is the sum of an article's movements across locations.
+    /// </summary>
     private static List<SaleVariant> LoadCatalog()
     {
-        const int demoOnHand = 100;
-        var path = Path.Combine(AppContext.BaseDirectory, "data", "dummy_inventory.csv");
+        var articles = ReadCsvRows("dummy_article.csv", "article", ["article_id", "article_name", "retail_selling_price", "sku"]);
+        var movements = ReadCsvRows("dummy_stock_movements.csv", "stock movements", ["article_id", "stock_quantity"]);
+
+        var onHand = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach (var movement in movements)
+        {
+            if (!int.TryParse(movement["stock_quantity"], NumberStyles.Integer, CultureInfo.InvariantCulture, out var quantity))
+            {
+                throw new InvalidDataException($"A stock movement for '{movement["article_id"]}' has an invalid stock_quantity.");
+            }
+
+            onHand[movement["article_id"]] = onHand.GetValueOrDefault(movement["article_id"]) + quantity;
+        }
+
+        var catalog = new List<SaleVariant>();
+        foreach (var article in articles)
+        {
+            if (article.TryGetValue("is_active", out var active) && bool.TryParse(active, out var isActive) && !isActive)
+            {
+                continue;
+            }
+
+            var id = article["article_id"];
+            var name = article["article_name"];
+            var sku = article["sku"];
+            var barcode = article.GetValueOrDefault("supplier_barcode", string.Empty);
+            if (id.Length == 0 || name.Length == 0 || sku.Length == 0)
+            {
+                throw new InvalidDataException("Every article needs an article ID, name, and SKU.");
+            }
+
+            if (!decimal.TryParse(article["retail_selling_price"], NumberStyles.Number, CultureInfo.InvariantCulture, out var price) || price < 0m)
+            {
+                throw new InvalidDataException($"Article '{id}' has an invalid retail_selling_price.");
+            }
+
+            catalog.Add(new SaleVariant(id, name, sku, barcode, price, Math.Max(0, onHand.GetValueOrDefault(id))));
+        }
+
+        if (catalog.Count == 0)
+        {
+            throw new InvalidDataException("The article table does not contain any sellable items.");
+        }
+
+        return catalog;
+    }
+
+    private static List<Dictionary<string, string>> ReadCsvRows(string fileName, string label, string[] requiredColumns)
+    {
+        var path = ResolveDataCsvPath(fileName);
         if (!File.Exists(path))
         {
-            throw new FileNotFoundException("The sample POS inventory CSV was not copied to the app's data folder.", path);
+            throw new FileNotFoundException($"The sample {label} CSV was not copied to the app's data folder.", path);
         }
 
         var rows = File.ReadAllLines(path);
         if (rows.Length < 2)
         {
-            throw new InvalidDataException("The sample POS inventory CSV must contain a header and at least one item.");
+            return [];
         }
 
-        var headers = ParseCsvRow(rows[0]);
-        var columns = headers.Select((name, index) => (name, index))
-            .ToDictionary(pair => pair.name, pair => pair.index, StringComparer.OrdinalIgnoreCase);
-        var requiredColumns = new[] { "article_id", "article_name", "price", "barcode", "sku" };
+        var headers = ParseCsvRow(rows[0]).Select(header => header.Trim()).ToArray();
         foreach (var required in requiredColumns)
         {
-            if (!columns.ContainsKey(required))
+            if (!headers.Contains(required, StringComparer.OrdinalIgnoreCase))
             {
-                throw new InvalidDataException($"The sample POS inventory CSV is missing the '{required}' column.");
+                throw new InvalidDataException($"The sample {label} CSV is missing the '{required}' column.");
             }
         }
 
-        var catalog = new List<SaleVariant>();
+        var result = new List<Dictionary<string, string>>();
         for (var rowIndex = 1; rowIndex < rows.Length; rowIndex++)
         {
             if (string.IsNullOrWhiteSpace(rows[rowIndex]))
@@ -193,34 +247,19 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
             var values = ParseCsvRow(rows[rowIndex]);
             if (values.Length != headers.Length)
             {
-                throw new InvalidDataException($"Sample POS inventory row {rowIndex + 1} has {values.Length} fields; expected {headers.Length}.");
+                throw new InvalidDataException($"Row {rowIndex + 1} of the sample {label} CSV has {values.Length} fields; expected {headers.Length}.");
             }
 
-            string Value(string column) => values[columns[column]].Trim();
-
-            var id = Value("article_id");
-            var name = Value("article_name");
-            var barcode = Value("barcode");
-            var sku = Value("sku");
-            if (id.Length == 0 || name.Length == 0 || barcode.Length == 0 || sku.Length == 0)
+            var row = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            for (var column = 0; column < headers.Length; column++)
             {
-                throw new InvalidDataException($"Sample POS inventory row {rowIndex + 1} needs an article ID, name, barcode, and SKU.");
+                row[headers[column]] = values[column].Trim();
             }
 
-            if (!decimal.TryParse(Value("price"), NumberStyles.Number, CultureInfo.InvariantCulture, out var price) || price < 0m)
-            {
-                throw new InvalidDataException($"Sample POS inventory row {rowIndex + 1} has an invalid price.");
-            }
-
-            catalog.Add(new SaleVariant(id, name, sku, barcode, price, demoOnHand));
+            result.Add(row);
         }
 
-        if (catalog.Count == 0)
-        {
-            throw new InvalidDataException("The sample POS inventory CSV does not contain any sellable items.");
-        }
-
-        return catalog;
+        return result;
     }
 
     private static List<DiscountPreset> LoadDiscountPresets()
@@ -304,6 +343,22 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
         }
 
         return Path.Combine(AppContext.BaseDirectory, "data", "dummy_discount.csv");
+    }
+
+    /// <summary>In development, reads the repository data file so products added in the app show up after a restart.</summary>
+    private static string ResolveDataCsvPath(string fileName)
+    {
+        for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
+        {
+            var repositoryMarker = Path.Combine(directory.FullName, ".git");
+            var sourcePath = Path.Combine(directory.FullName, "data", fileName);
+            if ((Directory.Exists(repositoryMarker) || File.Exists(repositoryMarker)) && File.Exists(sourcePath))
+            {
+                return sourcePath;
+            }
+        }
+
+        return Path.Combine(AppContext.BaseDirectory, "data", fileName);
     }
 
     private static string[] ParseCsvRow(string row)

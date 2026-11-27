@@ -139,13 +139,6 @@
       <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
       <Setter Property="HorizontalAlignment" Value="Right" />
     </Style>
-    <Style x:Key="PosTableHeadStyle" TargetType="TextBlock">
-      <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
-      <Setter Property="FontSize" Value="13" />
-      <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
-      <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-    </Style>
   </UserControl.Resources>
 
   <!-- Point of sale (F1): scan and cart on the left; payment methods, sale summary and completion on the right. -->
@@ -258,8 +251,7 @@
 
               <!-- Cart table -->
               <Grid Grid.Row="2" RowDefinitions="Auto,*">
-                <Grid Grid.Row="0" Height="44" Padding="12,0,8,0" ColumnSpacing="8" CornerRadius="{StaticResource EqRadiusMd}"
-                      Background="{ThemeResource EqSurfaceElevatedBrush}">
+                <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="24" />
                     <ColumnDefinition Width="*" MinWidth="80" />
@@ -268,11 +260,11 @@
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="36" />
                   </Grid.ColumnDefinitions>
-                  <TextBlock Grid.Column="0" Text="#" Style="{StaticResource PosTableHeadStyle}" />
-                  <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Pos_ColItem')}" Style="{StaticResource PosTableHeadStyle}" />
-                  <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.PriceHeader, Mode=OneWay}" Style="{StaticResource PosTableHeadStyle}" HorizontalAlignment="Right" />
-                  <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Pos_ColQty')}" Style="{StaticResource PosTableHeadStyle}" HorizontalAlignment="Center" />
-                  <TextBlock Grid.Column="4" Text="{x:Bind ViewModel.TotalHeader, Mode=OneWay}" Style="{StaticResource PosTableHeadStyle}" HorizontalAlignment="Right" />
+                  <TextBlock Grid.Column="0" Text="#" Style="{StaticResource EqTableHeaderTextStyle}" />
+                  <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Pos_ColItem')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                  <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.PriceHeader, Mode=OneWay}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
+                  <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Pos_ColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Center" />
+                  <TextBlock Grid.Column="4" Text="{x:Bind ViewModel.TotalHeader, Mode=OneWay}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
                 </Grid>
 
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
@@ -280,8 +272,8 @@
                     <ItemsControl ItemsSource="{x:Bind ViewModel.Lines, Mode=OneWay}">
                       <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:CartLineViewModel">
-                          <Grid MinHeight="72" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">
-                            <Border Background="{ThemeResource EqBgBrush}" Opacity="0.55"
+                          <Grid MinHeight="72" Style="{StaticResource EqTableRowStyle}">
+                            <Border Style="{StaticResource EqTableBandStyle}"
                                     Visibility="{x:Bind local:PosBindings.Visible(IsAlternateRow)}" />
                             <Grid Padding="12,8,8,8" ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
@@ -614,25 +606,24 @@
                   </Grid>
                   <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}"
                              Visibility="{x:Bind local:PosBindings.Visible(ViewModel.HasPaymentLines), Mode=OneWay}" />
-                  <Grid Height="36" Padding="8,0" ColumnSpacing="8" CornerRadius="{StaticResource EqRadiusMd}"
-                        Background="{ThemeResource EqSurfaceElevatedBrush}"
+                  <Grid Style="{StaticResource EqTableHeaderStyle}"
                         Visibility="{x:Bind local:PosBindings.Visible(ViewModel.HasPaymentLines), Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="*" />
                       <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Pos_PaymentMethod')}" Style="{StaticResource PosTableHeadStyle}" />
-                    <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Pos_PaymentAmount')}" Style="{StaticResource PosTableHeadStyle}" HorizontalAlignment="Right" />
+                    <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Pos_PaymentMethod')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                    <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Pos_PaymentAmount')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
                   </Grid>
                   <ItemsControl ItemsSource="{x:Bind ViewModel.PaymentLines, Mode=OneWay}"
                                 Visibility="{x:Bind local:PosBindings.Visible(ViewModel.HasPaymentLines), Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate x:DataType="vm:PaymentLineViewModel">
-                        <Grid MinHeight="40" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1"
+                        <Grid MinHeight="40" Style="{StaticResource EqTableRowStyle}"
                               PointerEntered="OnPaymentRowPointerEntered" PointerExited="OnPaymentRowPointerExited">
-                          <Border Background="{ThemeResource EqBgBrush}" Opacity="0.55"
+                          <Border Style="{StaticResource EqTableBandStyle}"
                                   Visibility="{x:Bind local:PosBindings.Visible(IsAlternateRow)}" />
-                          <Grid Padding="8,2" ColumnSpacing="8">
+                          <Grid Padding="12,2,8,2" ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
                               <ColumnDefinition Width="*" />
                               <ColumnDefinition Width="Auto" />

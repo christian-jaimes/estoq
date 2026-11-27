@@ -11,22 +11,17 @@
     <Grid RowDefinitions="Auto,*,Auto">
 
       <!-- Header -->
-      <Grid Grid.Row="0" Padding="24,20,16,16" ColumnSpacing="16">
+      <!-- Same header as the point of sale: title above subtitle, no icon badge. -->
+      <Grid Grid.Row="0" Padding="24,16,16,16" ColumnSpacing="16">
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="*" />
           <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Border Grid.Column="0" Width="44" Height="44" CornerRadius="22" VerticalAlignment="Center"
-                Background="{ThemeResource EqGoldTintBrush}">
-          <FontIcon Glyph="{x:Bind Glyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="24"
-                    Foreground="{ThemeResource EqGoldInkBrush}" />
-        </Border>
-        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
           <TextBlock Text="{x:Bind Title, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" TextTrimming="CharacterEllipsis" />
-          <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+          <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
         </StackPanel>
-        <Button x:Name="CloseButton" Grid.Column="2" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Top"
+        <Button x:Name="CloseButton" Grid.Column="1" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Top"
                 Click="OnCloseClick" ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_CloseTip')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}">
           <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
           <Button.KeyboardAccelerators>
@@ -37,8 +32,8 @@
 
       <Rectangle Grid.Row="0" Height="1" VerticalAlignment="Bottom" Fill="{ThemeResource EqBorderBrush}" />
 
-      <!-- Content area: the flow supplies this. It scrolls when taller than the window. -->
-      <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="24">
+      <!-- Content is constrained to the popup; longer tables provide their own scrolling. -->
+      <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Padding="24">
         <ContentPresenter Content="{x:Bind Body, Mode=OneWay}" />
       </ScrollViewer>
 

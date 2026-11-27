@@ -17,9 +17,41 @@ The visual spec is `Design system/` (brand book, `tokens.json`, `tokens.css`, co
 | Colour tokens, light and dark | `Themes/Tokens.xaml`, brushes `Eq<Token>Brush`; gold replaces `SystemAccentColor` |
 | Radius, spacing, sizes | `EqRadius*`, `EqSpace*`, `EqSidebarWidth` in `Tokens.xaml` |
 | Typography | `EqBrandFont` (Poppins SemiBold), `EqUiFont` / `EqUiFontSemiBold` (Manrope); styles `EqPageTitleStyle`, `EqCardTitleStyle`, `EqLabelStyle`, `EqSecondaryStyle`, `EqCaptionStyle`, `EqKpiStyle` |
-| Components | `Controls/EqField` (labelled input with required or optional mark, suffix, error text, gold focus and red error border), `EqCardStyle`, `EqBadgeStyle`, `EqInputContainerStyle`, `EqPrimaryButtonStyle`, `EqSecondaryButtonStyle`, `EqRoundIconButtonStyle`, `EqPlainIconButtonStyle`, `EqLinkButtonStyle`, `EqNavItemStyle`, `EqSidebarCollapseButtonStyle`, `EqIconStyle` in `Themes/Styles.xaml` |
+| Components | `Controls/EqField` (labelled input with required or optional mark, suffix, error text, gold focus and red error border), `EqAutoSuggestBoxStyle` / `EqAutoSuggestTextBoxStyle` (themed autocomplete field and suggestion popup), `EqCardStyle`, `EqBadgeStyle`, `EqInputContainerStyle`, `EqPrimaryButtonStyle`, `EqSecondaryButtonStyle`, `EqRoundIconButtonStyle`, `EqPlainIconButtonStyle`, `EqLinkButtonStyle`, `EqNavItemStyle`, `EqSidebarCollapseButtonStyle`, `EqIconStyle` in `Themes/Styles.xaml` |
 | Icons | Material Symbols Rounded subset in `Assets/Fonts`, addressed by code point (`Assets/Fonts/codepoints.txt`) |
 | Logos | `Assets/Logos/estoq-{wordmark,q-mark,lockup}-{charcoal,gold,ivory}.png`, swapped by theme with `Controls/ThemedImage` |
+
+## Dropdown and autocomplete fields
+
+Use the `EqAutoSuggestBoxStyle` in `Themes/Styles.xaml` as the default app dropdown pattern. Do not introduce a native editable `ComboBox` or a separate visual treatment for form dropdowns without a product-specific reason. The product type, category and brand fields in `Views/AddProduct/AddProductView.xaml` are the reference implementation.
+
+- Keep the input as one rounded `EqInputContainerStyle` surface, using theme brushes for its fill and border. The AutoSuggestBox itself is transparent and borderless so its pointer-over and focused fill spans the full field. Apply the horizontal inset to `EqAutoSuggestTextBoxStyle`, not to the outer wrapper; keep the same inset and vertical text padding as `Controls/EqField`.
+- Use the shared AutoSuggestBox template in `Themes/Styles.xaml`. It keeps the popup attached to the field, uses the same theme surface brush, overlaps the field slightly, has square top corners and rounded lower corners, and removes the popup's top border so the join has no doubled edge. Keep side and bottom borders.
+- Keep suggestions left-aligned, limit the popup to about five rows before scrolling, and filter options as the user types. Update the suggestion collection in place to avoid closing/reopening the popup on each keystroke. If there are fewer results, let the popup shrink to the result count.
+- Close an open suggestion list when the user clicks elsewhere in the containing pop-up, even when its query is empty. A field that allows creation can submit unmatched text; a selection-only field should validate that the chosen value exists before accepting it.
+- Use the app's theme tokens for all surfaces and borders so light and dark modes stay consistent. Do not hard-code colors.
+
+The popup corner treatment is set directly in the shared template because the WinUI `AutoSuggestBox` popup is a separate popup surface; a local `OverlayCornerRadius` resource did not affect it. Preserve the template part names `TextBox`, `SuggestionsPopup`, `SuggestionsContainer` and `SuggestionsList` when changing the template so WinUI's control logic can continue to connect the input and suggestions.
+
+## Tables
+
+Every table uses the shared styles in `Themes/Styles.xaml`, so tables look and feel the same; only the cell content differs (colour chips, stock steppers, article pictures, delete buttons).
+
+- Header: `EqTableHeaderStyle` on a `Grid` (44 px, rounded `EqRadiusMd`, elevated surface, 12 px start and 8 px end padding) with `EqTableHeaderTextStyle` titles (semibold 13 px). Numeric columns right-align, short count columns may centre.
+- Rows: a `Grid` with `EqTableRowStyle` (1 px divider) holding an `EqTableBandStyle` border first, visible on every second row (`IsAlternateRow` on the row view model), then the cell grid with the same column widths and 12 px start and 8 px end padding as the header.
+- Cell text: `EqTableCellStyle`, and `EqTableCellStrongStyle` for right-aligned values. No outer border around the table.
+- Used by: POS cart and payments, Add product variants, Product added.
+
+## Form field sizing
+
+Form fields must stay within their assigned layout width; the length of entered or selected text must never resize the field, sibling columns or containing card. In grid-based forms, constrain star columns and their field wrappers with `MinWidth="0"`, and let the control stretch to that allocated width. Keep single-line input text on one line so long values scroll or clip inside the field instead of expanding the layout. Use an explicit `Width` when the form calls for a fixed-size field; otherwise use a constrained grid column so the width remains stable and responsive to the available form width.
+
+### Label and field spacing
+
+- Keep the vertical gap between a field label and its input at 6 px, matching `Controls/EqField`'s `StackPanel Spacing="6"` and the Add Product General fields.
+- Put the label and input in the same vertical `StackPanel` with `Spacing="6"` when building a custom field. For labels with optional or required marks, put the label text and mark in a horizontal stack, then place the input below it in the parent stack.
+- Do not use a star-sized grid row between a label and a compact input; it can absorb extra height and make the label-to-input gap inconsistent. When an editing area is intentionally meant to fill remaining space before the next field, use a label row followed by a star-sized input row, keep the label-to-input row spacing at 6 px, and let the input stretch to the available height. Give that input a `MinHeight` rather than a fixed height.
+- Keep spacing between separate fields controlled by the parent grid or stack; do not add that spacing to the label-to-input gap.
 
 ## Fonts and icons
 
@@ -58,12 +90,22 @@ The sign-in implementation in `Views/SignIn/SignInPage` and `ViewModels/SignInVi
 
 F1 to F4 and [[settings]] share one frame so staff learn one pattern.
 
-- `Controls/PopupShell`: radius-xl surface; header (icon badge, title, subtitle, close), scrolling body, footer with secondary and one gold primary action. Properties `Title`, `Subtitle`, `Glyph`, `PrimaryText`, `IsPrimaryEnabled`, `Body`; events `CloseRequested`, `PrimaryInvoked`. No flow logic.
+- `Controls/PopupShell`: radius-xl surface; header (title above subtitle, close; no icon badge, same as the point of sale header), scrolling body, footer with secondary and one gold primary action. Properties `Title`, `Subtitle`, `PrimaryText`, `IsPrimaryEnabled`, `Body`; events `CloseRequested`, `PrimaryInvoked`. No flow logic.
 - `Services/IPopupService` (singleton) owns which pop-up is open (`PopupKind`: PointOfSale, AddItems, StockAdjustments, Returns, Settings). One at a time.
 - `ViewModels/PopupViewModel` maps the open kind to header text and icon.
 - `Views/ShellPage` hosts the overlay: dimmed `EqScrimBrush` backdrop, shell inset 40 px sides and bottom, 56 px top. Opening moves focus inside so Esc works. Esc, close, and a backdrop click close it.
+- F2 shows `Views/AddProduct/AddProductView` (state in the singleton `AddProductViewModel`, reset each time the pop-up opens); `PopupViewModel` enables the primary button from its `CanSave` and closes the pop-up when it saves.
 - The point of sale (F1) is the exception: its mockup has its own header (wordmark, F1 badge, currency chips) and no footer, so `Views/PointOfSale/PointOfSaleView` is hosted beside the frame, chosen by `PopupViewModel.IsPointOfSale` and `IsFramed`. Esc and the close button behave the same.
 - Adding a flow: put a user control in `Body` chosen by `PopupKind`, drive `IsPrimaryEnabled`, handle `PrimaryInvoked`. Never copy the frame.
+
+### Container sizing inside pop-ups
+
+- Treat the popup shell as the available boundary. Its content area is the space between the fixed header and footer; sections must size and resize inside that area when the popup changes size.
+- Keep the body and its columns constrained to the popup viewport. Do not use content-driven minimum heights or widths that push sections behind the footer or outside the popup.
+- Within a column, use flexible rows for sections that should absorb available space and `Auto` rows for sections that should stay close to their content height. For example, Add Product's General section grows while Pricing remains compact.
+- Each section fills only its assigned container. Use `VerticalAlignment="Stretch"` where it should occupy the row and constrained grid columns with `MinWidth="0"` to prevent child controls or long text from forcing overflow.
+- Recalculate viewport-bound dimensions when the popup resizes. Put scrolling on the content that can grow (such as a long list), not on fixed headers, footers, or compact sections.
+- Preserve the intended sizing of sibling sections when changing one section. A change to a card's content should not make another card overflow or acquire unnecessary blank space.
 
 ## Localisation
 
