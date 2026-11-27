@@ -37,7 +37,7 @@
       <Setter Property="FontSize" Value="13" />
       <Setter Property="CornerRadius" Value="{StaticResource EqRadiusMd}" />
       <Setter Property="MinWidth" Value="48" />
-      <Setter Property="Height" Value="36" />
+      <Setter Property="Height" Value="{StaticResource EqControlHeight}" />
       <Setter Property="Padding" Value="10,0" />
       <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
       <Setter Property="Background" Value="{ThemeResource EqSurfaceBrush}" />
@@ -74,7 +74,7 @@
     </Style>
   </UserControl.Resources>
 
-  <Grid x:Name="AddProductRoot" Tapped="OnAddProductTapped" Loaded="OnAddProductLoaded">
+  <Grid x:Name="AddProductRoot" Padding="0,0,0,2" Tapped="OnAddProductTapped" Loaded="OnAddProductLoaded">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
@@ -88,7 +88,7 @@
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <FontIcon Glyph="&#xF083;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqWarningBrush}"
+        <FontIcon Glyph="&#xF083;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqWarningBrush}"
                   VerticalAlignment="Center" />
         <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.DuplicateMessage, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}"
                    Foreground="{ThemeResource EqTextBrush}" VerticalAlignment="Center" />
@@ -123,9 +123,9 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
               </Grid.ColumnDefinitions>
-              <FontIcon Grid.Column="0" Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
-              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_General')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
-              <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.GeneralDisclaimer, Mode=OneWay}" FontSize="12"
+              <FontIcon Grid.Column="0" Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_General')}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFontXl}" />
+              <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.GeneralDisclaimer, Mode=OneWay}" FontSize="{StaticResource EqFontXs}"
                          Foreground="{ThemeResource EqDangerBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                          TextWrapping="NoWrap" Visibility="{x:Bind ViewModel.ShowGeneralDisclaimer, Mode=OneWay}" />
             </Grid>
@@ -216,7 +216,7 @@
                   <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
                 </Border.Resources>
                 <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Stretch" Background="Transparent" BorderThickness="0" Padding="0,4"
-                         FontFamily="{StaticResource EqUiFont}" FontSize="14"
+                         FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontMd}"
                          PlaceholderText="{x:Bind services:Loc.Get('Add_DescriptionHint')}"
                          Text="{x:Bind ViewModel.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          AutomationProperties.Name="{x:Bind services:Loc.Get('Add_Description')}" />
@@ -238,9 +238,9 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
               </Grid.ColumnDefinitions>
-              <FontIcon Grid.Column="0" Glyph="&#xF05B;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
-              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_Pricing')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
-              <TextBlock x:Name="PricingErrorText" Grid.Column="2" FontSize="12" Foreground="{ThemeResource EqDangerBrush}"
+              <FontIcon Grid.Column="0" Glyph="&#xF05B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_Pricing')}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFontXl}" />
+              <TextBlock x:Name="PricingErrorText" Grid.Column="2" FontSize="{StaticResource EqFontXs}" Foreground="{ThemeResource EqDangerBrush}"
                          VerticalAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Visibility="Collapsed" />
             </Grid>
             <Grid ColumnSpacing="12">
@@ -312,8 +312,8 @@
         <Border Grid.Column="0" Style="{StaticResource EqCardStyle}" Padding="12" Height="240" VerticalAlignment="Top">
             <StackPanel Spacing="8">
               <StackPanel Orientation="Horizontal" Spacing="12">
-                <FontIcon Glyph="&#xE1A1;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
-                <TextBlock Text="{x:Bind services:Loc.Get('Add_Image')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
+                <FontIcon Glyph="&#xE1A1;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+                <TextBlock Text="{x:Bind services:Loc.Get('Add_Image')}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFontXl}" />
               </StackPanel>
               <Grid Height="170" HorizontalAlignment="Stretch" AllowDrop="True" DragOver="OnProductImageDragOver" Drop="OnProductImageDrop"
                     KeyDown="OnProductImageKeyDown">
@@ -363,7 +363,7 @@
                               Command="{x:Bind ViewModel.AddImageCommand}" IsEnabled="{x:Bind ViewModel.CanAddImage, Mode=OneWay}"
                               ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_AddImage')}"
                               AutomationProperties.Name="{x:Bind services:Loc.Get('Add_AddImage')}">
-                        <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
+                        <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
                       </Button>
                     </Grid>
                   </Border>
@@ -374,7 +374,7 @@
                       <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="vm:ProductImageViewModel">
                           <Grid Width="70" Height="70" PointerEntered="OnThumbnailPointerEntered" PointerExited="OnThumbnailPointerExited">
-                            <Border CornerRadius="8" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
+                            <Border CornerRadius="{StaticResource EqRadiusMd}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
                               <Border.Background>
                                 <ImageBrush ImageSource="{x:Bind Preview}" Stretch="UniformToFill" />
                               </Border.Background>
@@ -385,7 +385,7 @@
                                       HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                       AutomationProperties.Name="{x:Bind services:Loc.Get('Add_Image')}" />
                             </Border>
-                            <Border CornerRadius="8" BorderThickness="3" BorderBrush="{ThemeResource EqGoldInkBrush}"
+                            <Border CornerRadius="{StaticResource EqRadiusMd}" BorderThickness="3" BorderBrush="{ThemeResource EqGoldInkBrush}"
                                     IsHitTestVisible="False" Visibility="{x:Bind SelectionVisibility, Mode=OneWay}" />
                             <Button x:Name="RemoveThumbnailButton" Style="{StaticResource RemoveThumbnailButtonStyle}"
                                     Width="28" Height="28"
@@ -394,7 +394,7 @@
                                     IsTabStop="True" Command="{x:Bind RemoveCommand}"
                                     ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_RemoveImage')}"
                                     AutomationProperties.Name="{x:Bind services:Loc.Get('Add_RemoveImage')}">
-                              <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="14"
+                              <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontMd}"
                                         Foreground="{ThemeResource EqTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Button>
                           </Grid>
@@ -410,15 +410,15 @@
         <Border Grid.Column="1" Style="{StaticResource EqCardStyle}" Padding="10" Height="240" VerticalAlignment="Top">
             <StackPanel Spacing="4">
               <StackPanel Orientation="Horizontal" Spacing="10" Margin="0">
-                <FontIcon Glyph="&#xE53B;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
-                <TextBlock Text="{x:Bind services:Loc.Get('Add_SizeColour')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
+                <FontIcon Glyph="&#xE53B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+                <TextBlock Text="{x:Bind services:Loc.Get('Add_SizeColour')}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFontXl}" />
               </StackPanel>
               <Grid ColumnSpacing="8">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind services:Loc.Get('Add_Sizes')}" Style="{StaticResource EqLabelStyle}" FontSize="14" VerticalAlignment="Center" />
+                <TextBlock Text="{x:Bind services:Loc.Get('Add_Sizes')}" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontMd}" VerticalAlignment="Center" />
                 <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Padding="14,8">
                   <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="+" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="18" VerticalAlignment="Center" />
+                    <TextBlock Text="+" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
                     <TextBlock Text="Add size" />
                   </StackPanel>
                 <Button.Flyout>
@@ -431,7 +431,7 @@
                           <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="vm:ChoiceItemViewModel">
                               <CheckBox Content="{x:Bind Label}" Margin="4,0" MinHeight="48" Padding="14,8,10,8"
-                                        FontFamily="{StaticResource EqUiFont}" FontSize="16" Foreground="{ThemeResource EqTextBrush}"
+                                        FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontLg}" Foreground="{ThemeResource EqTextBrush}"
                                         IsChecked="{x:Bind IsSelected, Mode=TwoWay}" Click="OnChoiceClick" />
                             </DataTemplate>
                           </ItemsRepeater.ItemTemplate>
@@ -460,10 +460,10 @@
               <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" Margin="0,3" />
               <Grid ColumnSpacing="8">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind services:Loc.Get('Add_Colours')}" Style="{StaticResource EqLabelStyle}" FontSize="14" VerticalAlignment="Center" />
+                <TextBlock Text="{x:Bind services:Loc.Get('Add_Colours')}" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontMd}" VerticalAlignment="Center" />
                 <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Padding="14,8">
                   <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="+" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="18" VerticalAlignment="Center" />
+                    <TextBlock Text="+" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
                     <TextBlock Text="Add colour" />
                   </StackPanel>
                 <Button.Flyout>
@@ -476,7 +476,7 @@
                           <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="vm:ChoiceItemViewModel">
                               <CheckBox Margin="4,0" MinHeight="48" Padding="14,8,10,8" FontFamily="{StaticResource EqUiFont}"
-                                        FontSize="16" Foreground="{ThemeResource EqTextBrush}"
+                                        FontSize="{StaticResource EqFontLg}" Foreground="{ThemeResource EqTextBrush}"
                                         IsChecked="{x:Bind IsSelected, Mode=TwoWay}" Click="OnChoiceClick">
                                 <StackPanel Orientation="Horizontal" Spacing="12"><Ellipse Width="24" Height="24" Fill="{x:Bind SwatchBrush}" Stroke="{ThemeResource EqBorderBrush}"/><TextBlock Text="{x:Bind Label}" VerticalAlignment="Center"/></StackPanel>
                               </CheckBox>
@@ -496,10 +496,10 @@
                 </Button>
               </Grid>
               <ItemsRepeater ItemsSource="{x:Bind ViewModel.QuickPickColours}" Height="40" VerticalAlignment="Top">
-                <ItemsRepeater.Layout><UniformGridLayout MinItemWidth="36" MinItemHeight="36" MinRowSpacing="2" MinColumnSpacing="5" ItemsStretch="None" /></ItemsRepeater.Layout>
+                <ItemsRepeater.Layout><UniformGridLayout MinItemWidth="36" MinItemHeight="{StaticResource EqControlHeight}" MinRowSpacing="2" MinColumnSpacing="5" ItemsStretch="None" /></ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
                   <DataTemplate x:DataType="vm:ChoiceItemViewModel">
-                    <ToggleButton Width="36" Height="36" Padding="0" CornerRadius="18" IsChecked="{x:Bind IsSelected, Mode=TwoWay}" Click="OnChoiceClick"
+                    <ToggleButton Width="36" Height="{StaticResource EqControlHeight}" Padding="0" CornerRadius="18" IsChecked="{x:Bind IsSelected, Mode=TwoWay}" Click="OnChoiceClick"
                                   ToolTipService.ToolTip="{x:Bind Label}" AutomationProperties.Name="{x:Bind Label}" Background="Transparent" BorderBrush="{ThemeResource EqBorderBrush}">
                       <Ellipse Width="28" Height="28" Fill="{x:Bind SwatchBrush}" Stroke="{ThemeResource EqBorderBrush}" StrokeThickness="1" />
                     </ToggleButton>
@@ -523,9 +523,9 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
               </Grid.ColumnDefinitions>
-              <FontIcon Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="22" Foreground="{ThemeResource EqGoldInkBrush}" />
-              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_Variants')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
-              <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.VariantsDisclaimer, Mode=OneWay}" FontSize="12"
+              <FontIcon Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_Variants')}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFontXl}" />
+              <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.VariantsDisclaimer, Mode=OneWay}" FontSize="{StaticResource EqFontXs}"
                          Foreground="{ThemeResource EqDangerBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                          TextWrapping="NoWrap" Visibility="{x:Bind ViewModel.ShowVariantsDisclaimer, Mode=OneWay}" />
             </Grid>
@@ -577,8 +577,8 @@
                                        Visibility="{x:Bind HasSwatch}" />
                             </Border>
                             <StackPanel Spacing="1" VerticalAlignment="Center">
-                              <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqLabelStyle}" FontSize="13" TextTrimming="CharacterEllipsis" />
-                              <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqSecondaryStyle}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                              <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontSm}" TextTrimming="CharacterEllipsis" />
+                              <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqSecondaryStyle}" FontSize="{StaticResource EqFontXs}" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
                           </StackPanel>
                           <TextBlock Grid.Column="1" Text="{x:Bind InternalBarcode}" Style="{StaticResource EqSecondaryStyle}"
@@ -594,29 +594,29 @@
                                             IsNumeric="True" NumericErrorText="{x:Bind services:Loc.Get('Error_PriceInvalid')}"
                                             ShowErrorText="False" Suffix="{x:Bind CurrencyCode}"
                                             Text="{x:Bind SellingPriceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                          <Grid Grid.Column="4" ColumnSpacing="1" VerticalAlignment="Center" Height="36">
+                          <Grid Grid.Column="4" ColumnSpacing="1" VerticalAlignment="Center" Height="{StaticResource EqControlHeight}">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition Width="*"/><ColumnDefinition Width="32"/></Grid.ColumnDefinitions>
                             <Button Style="{StaticResource EqSecondaryButtonStyle}" Grid.Column="0" MinWidth="0" Width="32" Height="34" Padding="0"
                                     Command="{x:Bind DecreaseOpeningStockCommand}" AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_QtyDecrease')}">
-                              <FontIcon Glyph="&#xE15B;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+                              <FontIcon Glyph="&#xE15B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
                             </Button>
                             <TextBox Grid.Column="1" Style="{StaticResource VariantStockInputStyle}"
                                      Text="{x:Bind OpeningStockText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      MaxLength="7" TextChanged="OnStockTextChanged"
                                      Padding="0,6" BorderThickness="0" Background="{ThemeResource EqSurfaceBrush}"
-                                     FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14" TextAlignment="Center"
+                                     FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}" TextAlignment="Center"
                                      VerticalContentAlignment="Center" InputScope="Number"
                                      AutomationProperties.Name="{x:Bind services:Loc.Get('Add_ColStock')}" />
                             <Button Style="{StaticResource EqSecondaryButtonStyle}" Grid.Column="2" MinWidth="0" Width="32" Height="34" Padding="0"
                                     Command="{x:Bind IncreaseOpeningStockCommand}" AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_QtyIncrease')}">
-                              <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+                              <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
                             </Button>
                           </Grid>
-                          <Button Grid.Column="5" Style="{StaticResource EqSecondaryButtonStyle}" Width="36" MinWidth="0" Height="36" Padding="0"
+                          <Button Grid.Column="5" Style="{StaticResource EqSecondaryButtonStyle}" Width="36" MinWidth="0" Height="{StaticResource EqControlHeight}" Padding="0"
                                   Command="{x:Bind RemoveCommand}" VerticalAlignment="Center"
                                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_RemoveVariant')}"
                                   AutomationProperties.Name="{x:Bind services:Loc.Get('Add_RemoveVariant')}">
-                            <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="18" Foreground="{ThemeResource EqDangerBrush}" />
+                            <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" Foreground="{ThemeResource EqDangerBrush}" />
                           </Button>
                         </Grid>
                         </Grid>

@@ -21,9 +21,9 @@
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <FontIcon Glyph="&#xE88E;" FontFamily="{StaticResource EqIconFont}" FontSize="24"
+        <FontIcon Glyph="&#xE88E;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}"
                   Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Top" />
-        <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Welcome_LocalNote')}" TextWrapping="Wrap" FontSize="14" />
+        <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Welcome_LocalNote')}" TextWrapping="Wrap" FontSize="{StaticResource EqFontMd}" />
       </Grid>
     </Border>
   </StackPanel>

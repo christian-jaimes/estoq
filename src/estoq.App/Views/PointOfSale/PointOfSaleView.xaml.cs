@@ -1,4 +1,5 @@
 using System.Globalization;
+using Estoq.App.Controls;
 using Estoq.App.Services;
 using Estoq.App.ViewModels.PointOfSale;
 using Estoq.Core.Sales;
@@ -353,20 +354,10 @@ public sealed partial class PointOfSaleView : UserControl
         }
 
         _paymentInputErrorStoryboard?.Stop();
-        var transform = border.RenderTransform as CompositeTransform ?? new CompositeTransform();
-        border.RenderTransform = transform;
-        transform.TranslateX = 0;
-        border.BorderBrush = (Brush)Application.Current.Resources["EqDangerBrush"];
+        var transform = ShakeMotion.Prepare(border);
+        border.BorderBrush = ThemeBrushes.Get(border, "EqDangerBrush");
         var storyboard = new Storyboard();
-        var shake = new DoubleAnimationUsingKeyFrames();
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero), Value = 0 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(45)), Value = -4 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(90)), Value = 4 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(135)), Value = -2 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(180)), Value = 0 });
-        Storyboard.SetTarget(shake, transform);
-        Storyboard.SetTargetProperty(shake, "TranslateX");
-        storyboard.Children.Add(shake);
+        ShakeMotion.Add(storyboard, transform, 45, -4, 4, -2, 0);
         storyboard.Completed += (_, _) => ResetPaymentInputVisual(input);
         _paymentInputErrorStoryboard = storyboard;
         storyboard.Begin();
@@ -384,7 +375,7 @@ public sealed partial class PointOfSaleView : UserControl
             transform.TranslateX = 0;
         }
 
-        border.BorderBrush = (Brush)Application.Current.Resources["EqBorderBrush"];
+        border.BorderBrush = ThemeBrushes.Get(border, "EqBorderBrush");
     }
 
     private void OnDiscountOpening(object? sender, object e)

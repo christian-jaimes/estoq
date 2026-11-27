@@ -4,10 +4,12 @@ using Estoq.App.Views.Setup;
 using Estoq.App.Views.SignIn;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Windows.UI.ViewManagement;
 
 namespace Estoq.App;
 
@@ -18,6 +20,8 @@ public sealed partial class MainWindow : Window
         InitializeComponent();
         Title = "estoq";
         AppWindow.Resize(new Windows.Graphics.SizeInt32(1440, 900));
+        // Always open maximized; the size above is what the window restores to.
+        (AppWindow.Presenter as OverlappedPresenter)?.Maximize();
         ExtendsContentIntoTitleBar = true;
         AppWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
         AppWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
@@ -80,18 +84,19 @@ public sealed partial class MainWindow : Window
         timer.Start();
     }
 
-    public void ShowShell(bool animateEntrance = false)
+    /// <summary>Shows the app shell. <paramref name="crossFade"/> is false when the page is only rebuilt in place (language change).</summary>
+    public void ShowShell(bool crossFade = true) => Transition(() =>
     {
-        HostFrame.Navigate(typeof(ShellPage), animateEntrance, new SuppressNavigationTransitionInfo());
+        HostFrame.Navigate(typeof(ShellPage), null, new SuppressNavigationTransitionInfo());
         HostFrame.BackStack.Clear();
         if (HostFrame.Content is ShellPage shell)
         {
             SetTitleBar(shell.TitleBarDragRegion);
         }
-    }
+    }, crossFade, QuickFadeMilliseconds);
 
     /// <summary>Shows the sign-in screen full window.</summary>
-    public void ShowSignIn()
+    public void ShowSignIn() => Transition(() =>
     {
         HostFrame.Navigate(typeof(SignInPage), null, new SuppressNavigationTransitionInfo());
         HostFrame.BackStack.Clear();
@@ -99,16 +104,84 @@ public sealed partial class MainWindow : Window
         {
             SetTitleBar(signIn.TitleBarDragRegion);
         }
-    }
+    }, true, HostFrame.Content is SplashPage ? SplashFadeMilliseconds : QuickFadeMilliseconds);
 
-    /// <summary>Shows the first-run wizard full window. Also used to rebuild it after a language change.</summary>
-    public void ShowSetup()
+    /// <summary>Shows the first-run wizard full window. Also used to rebuild it after a language change (no cross-fade).</summary>
+    public void ShowSetup(bool crossFade = true) => Transition(() =>
     {
         HostFrame.Navigate(typeof(SetupWizardPage), null, new SuppressNavigationTransitionInfo());
         HostFrame.BackStack.Clear();
         if (HostFrame.Content is SetupWizardPage wizard)
         {
             SetTitleBar(wizard.TitleBarDragRegion);
+        }
+    }, crossFade);
+
+    /// <summary>Fade between sign-in and the app, which people repeat often, so it stays quick.</summary>
+    private const int QuickFadeMilliseconds = 150;
+
+    /// <summary>Fade from the splash into sign-in, a one-off that can be gentler.</summary>
+    private const int SplashFadeMilliseconds = 300;
+
+    private bool _isTransitioning;
+
+    /// <summary>
+    /// Swaps the page with a soft cross-fade: a picture of the old screen is laid over the window, the page changes
+    /// underneath, and the picture fades away over <paramref name="fadeMilliseconds"/>. With animations off, while another fade runs, or on any
+    /// failure the page just changes.
+    /// </summary>
+    private async void Transition(Action swap, bool crossFade, int fadeMilliseconds = SplashFadeMilliseconds)
+    {
+        if (!crossFade || _isTransitioning || Content is not Grid host || HostFrame.Content is null
+            || host.ActualWidth <= 0 || !new UISettings().AnimationsEnabled)
+        {
+            swap();
+            return;
+        }
+
+        _isTransitioning = true;
+        Image? snapshot = null;
+        var swapped = false;
+        try
+        {
+            snapshot = await ScreenSnapshot.CaptureAsync(HostFrame);
+            host.Children.Add(snapshot);
+            swapped = true;
+            swap();
+            await ScreenSnapshot.NextFrameAsync();
+
+            var fade = new DoubleAnimation
+            {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(fadeMilliseconds),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut },
+            };
+            Storyboard.SetTarget(fade, snapshot);
+            Storyboard.SetTargetProperty(fade, "Opacity");
+            var storyboard = new Storyboard();
+            storyboard.Children.Add(fade);
+            var shown = snapshot;
+            storyboard.Completed += (_, _) =>
+            {
+                host.Children.Remove(shown);
+                _isTransitioning = false;
+            };
+            storyboard.Begin();
+        }
+        catch
+        {
+            if (snapshot is not null)
+            {
+                host.Children.Remove(snapshot);
+            }
+
+            if (!swapped)
+            {
+                swap();
+            }
+
+            _isTransitioning = false;
         }
     }
 

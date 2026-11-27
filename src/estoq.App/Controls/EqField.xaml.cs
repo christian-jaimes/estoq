@@ -1,3 +1,4 @@
+using Estoq.App.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -136,10 +137,10 @@ public sealed partial class EqField : UserControl
         field.ErrorBlock.Visibility = hasError && field.ShowErrorText ? Visibility.Visible : Visibility.Collapsed;
         VisualStateManager.GoToState(field, hasError ? "Invalid" : "Valid", true);
         field.Box.BorderBrush = hasError
-            ? (Brush)Application.Current.Resources["EqDangerBrush"]
+            ? ThemeBrushes.Get(field, "EqDangerBrush")
             : field.Input.FocusState == FocusState.Unfocused
-                ? (Brush)Application.Current.Resources["EqBorderBrush"]
-                : (Brush)Application.Current.Resources["EqGoldBrush"];
+                ? ThemeBrushes.Get(field, "EqBorderBrush")
+                : ThemeBrushes.Get(field, "EqGoldBrush");
         field.ErrorTextChanged?.Invoke(field, EventArgs.Empty);
     }
 
@@ -168,13 +169,13 @@ public sealed partial class EqField : UserControl
     private void OnInputGotFocus(object sender, RoutedEventArgs e)
     {
         VisualStateManager.GoToState(this, "Focused", true);
-        if (string.IsNullOrEmpty(ErrorText)) Box.BorderBrush = (Brush)Application.Current.Resources["EqGoldBrush"];
+        if (string.IsNullOrEmpty(ErrorText)) Box.BorderBrush = ThemeBrushes.Get(this, "EqGoldBrush");
     }
 
     private void OnInputLostFocus(object sender, RoutedEventArgs e)
     {
         VisualStateManager.GoToState(this, "Unfocused", true);
-        if (string.IsNullOrEmpty(ErrorText)) Box.BorderBrush = (Brush)Application.Current.Resources["EqBorderBrush"];
+        if (string.IsNullOrEmpty(ErrorText)) Box.BorderBrush = ThemeBrushes.Get(this, "EqBorderBrush");
     }
 
     private void OnInputTextChanging(TextBox sender, TextBoxTextChangingEventArgs e)
@@ -226,19 +227,9 @@ public sealed partial class EqField : UserControl
     private void ShakeFieldContainer()
     {
         _invalidInputStoryboard?.Stop();
-        var transform = Box.RenderTransform as CompositeTransform ?? new CompositeTransform();
-        Box.RenderTransform = transform;
-        transform.TranslateX = 0;
+        var transform = ShakeMotion.Prepare(Box);
         var storyboard = new Storyboard();
-        var shake = new DoubleAnimationUsingKeyFrames();
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero), Value = 0 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(35)), Value = -4 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(70)), Value = 4 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(105)), Value = -2 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(140)), Value = 0 });
-        Storyboard.SetTarget(shake, transform);
-        Storyboard.SetTargetProperty(shake, "TranslateX");
-        storyboard.Children.Add(shake);
+        ShakeMotion.Add(storyboard, transform, 35, -4, 4, -2, 0);
         storyboard.Completed += (_, _) => transform.TranslateX = 0;
         _invalidInputStoryboard = storyboard;
         storyboard.Begin();

@@ -7,8 +7,11 @@ namespace Estoq.App.ViewModels;
 
 public sealed partial class ShellViewModel : ObservableObject
 {
-    private const double ExpandedWidth = 240;
-    private const double CollapsedWidth = 64;
+    public const double ExpandedWidth = 240;
+    public const double CollapsedWidth = 64;
+
+    /// <summary>How far the floating collapse button overhangs the sidebar panel.</summary>
+    public const double SidebarButtonOverhang = 12;
 
     private readonly INavigationService _navigation;
     private readonly IThemeService _theme;
@@ -49,7 +52,7 @@ public sealed partial class ShellViewModel : ObservableObject
     public bool IsSidebarCollapsed => !IsSidebarExpanded;
 
     /// <summary>The sidebar plus the 12 px the floating collapse button overhangs the content column.</summary>
-    public double SidebarColumnWidth => SidebarWidth + 12;
+    public double SidebarColumnWidth => SidebarWidth + SidebarButtonOverhang;
 
     /// <summary>8 px side padding in the 64 px rail so the 24 px icons fit; 12 px when expanded.</summary>
     public Microsoft.UI.Xaml.Thickness SidebarPadding => IsSidebarExpanded ? new Microsoft.UI.Xaml.Thickness(12, 16, 12, 16) : new Microsoft.UI.Xaml.Thickness(8, 16, 8, 16);

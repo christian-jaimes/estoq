@@ -118,7 +118,7 @@
   <data name="Popup_Sale_Message" xml:space="preserve"><value>El flujo de ventas (escaneo, carrito, pago y recibo) se construye a continuación (ver hoja de ruta).</value></data>
   <data name="Popup_Sale_Primary" xml:space="preserve"><value>Completar venta</value></data>
   <data name="Popup_Items_Title" xml:space="preserve"><value>Agregar producto</value></data>
-  <data name="Popup_Items_Subtitle" xml:space="preserve"><value>Crear un producto con sus variantes y existencias iniciales (F2)</value></data>
+  <data name="Popup_Items_Subtitle" xml:space="preserve"><value>Crear un producto con sus variantes y existencias iniciales</value></data>
   <data name="Popup_Items_Message" xml:space="preserve"><value>La creación de productos y la recepción de existencias se construyen a continuación (ver hoja de ruta).</value></data>
   <data name="Popup_Items_Primary" xml:space="preserve"><value>Guardar producto</value></data>
   <data name="Add_General" xml:space="preserve"><value>General</value></data>
@@ -195,11 +195,11 @@
   <data name="Colour_Purple" xml:space="preserve"><value>Morado</value></data>
   <data name="Colour_Brown" xml:space="preserve"><value>Café</value></data>
   <data name="Popup_Adjust_Title" xml:space="preserve"><value>Ajustes de inventario</value></data>
-  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Cuenta un artículo y registra el motivo (F3)</value></data>
+  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Cuenta un artículo y registra el motivo</value></data>
   <data name="Popup_Adjust_Message" xml:space="preserve"><value>El conteo de artículos y el registro del motivo de cada cambio se construyen a continuación (ver hoja de ruta).</value></data>
   <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Guardar ajuste</value></data>
   <data name="Popup_Returns_Title" xml:space="preserve"><value>Devoluciones</value></data>
-  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Devolver o cambiar un artículo (F4)</value></data>
+  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Devolver o cambiar un artículo</value></data>
   <data name="Popup_Returns_Message" xml:space="preserve"><value>Las devoluciones de clientes se construyen a continuación (ver hoja de ruta).</value></data>
   <data name="Popup_Returns_Primary" xml:space="preserve"><value>Guardar devolución</value></data>
   <data name="Popup_Settings_Title" xml:space="preserve"><value>Ajustes</value></data>

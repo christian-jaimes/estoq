@@ -118,7 +118,7 @@
   <data name="Popup_Sale_Message" xml:space="preserve"><value>The sales workflow (scan, cart, payment and receipt) is built next (see roadmap).</value></data>
   <data name="Popup_Sale_Primary" xml:space="preserve"><value>Complete sale</value></data>
   <data name="Popup_Items_Title" xml:space="preserve"><value>Add product</value></data>
-  <data name="Popup_Items_Subtitle" xml:space="preserve"><value>Create a product with its variants and opening stock (F2)</value></data>
+  <data name="Popup_Items_Subtitle" xml:space="preserve"><value>Create a product with its variants and opening stock</value></data>
   <data name="Popup_Items_Message" xml:space="preserve"><value>Product creation and stock receiving is built next (see roadmap).</value></data>
   <data name="Popup_Items_Primary" xml:space="preserve"><value>Save product</value></data>
   <data name="Add_General" xml:space="preserve"><value>General</value></data>
@@ -195,11 +195,11 @@
   <data name="Colour_Purple" xml:space="preserve"><value>Purple</value></data>
   <data name="Colour_Brown" xml:space="preserve"><value>Brown</value></data>
   <data name="Popup_Adjust_Title" xml:space="preserve"><value>Stock adjustments</value></data>
-  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Count an item and record a reason (F3)</value></data>
+  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Count an item and record a reason</value></data>
   <data name="Popup_Adjust_Message" xml:space="preserve"><value>Counting items and recording a reason for each change is built next (see roadmap).</value></data>
   <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Save adjustment</value></data>
   <data name="Popup_Returns_Title" xml:space="preserve"><value>Returns</value></data>
-  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Return or exchange an item (F4)</value></data>
+  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Return or exchange an item</value></data>
   <data name="Popup_Returns_Message" xml:space="preserve"><value>Customer returns is built next (see roadmap).</value></data>
   <data name="Popup_Returns_Primary" xml:space="preserve"><value>Save return</value></data>
   <data name="Popup_Settings_Title" xml:space="preserve"><value>Settings</value></data>

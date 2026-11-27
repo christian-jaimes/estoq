@@ -19,10 +19,7 @@
     <KeyboardAccelerator Key="F12" Invoked="OnLogOutAccelerator" />
   </Page.KeyboardAccelerators>
 
-  <Grid x:Name="ShellRoot" Background="{ThemeResource EqBgBrush}" RenderTransformOrigin="0.5,0">
-    <Grid.RenderTransform>
-      <CompositeTransform />
-    </Grid.RenderTransform>
+  <Grid Background="{ThemeResource EqBgBrush}">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
@@ -30,25 +27,22 @@
 
     <!-- Floating sidebar (design system, Sidebar): rounded surface card, logo, nav, divider, user + settings.
          The container is 12 px wider than the panel so the floating collapse button stays inside it. -->
-    <Grid Grid.Column="0" Canvas.ZIndex="1" HorizontalAlignment="Left" Margin="24,32,0,24"
-          Width="{x:Bind ViewModel.SidebarColumnWidth, Mode=OneWay}">
-      <Border Width="{x:Bind ViewModel.SidebarWidth, Mode=OneWay}" HorizontalAlignment="Left"
+    <Grid x:Name="SidebarContainer" Grid.Column="0" Canvas.ZIndex="1" HorizontalAlignment="Left" Margin="24,32,0,24">
+      <Border x:Name="SidebarPanel" HorizontalAlignment="Left"
               Background="{ThemeResource EqSurfaceBrush}" BorderBrush="{ThemeResource EqBorderBrush}"
               BorderThickness="1" CornerRadius="{StaticResource EqRadiusXl}" Padding="{x:Bind ViewModel.SidebarPadding, Mode=OneWay}">
-        <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="4">
+        <Grid x:Name="SidebarContent" RowDefinitions="Auto,Auto,*,Auto" RowSpacing="4" SizeChanged="OnSidebarContentSizeChanged">
 
           <!-- Brand: lockup when expanded, Q mark when collapsed. -->
-          <Grid Grid.Row="0" Height="36" Margin="0,0,0,16" Padding="8,0">
-            <controls:ThemedImage Height="28" HorizontalAlignment="Left" VerticalAlignment="Center"
-                                  LightSource="ms-appx:///Assets/Logos/estoq-lockup-charcoal.png"
-                                  DarkSource="ms-appx:///Assets/Logos/estoq-lockup-ivory.png"
-                                  Visibility="{x:Bind ViewModel.IsSidebarExpanded, Mode=OneWay}"
-                                  AutomationProperties.Name="estoq" />
-            <controls:ThemedImage Height="28" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                  LightSource="ms-appx:///Assets/Logos/estoq-q-mark-charcoal.png"
-                                  DarkSource="ms-appx:///Assets/Logos/estoq-q-mark-ivory.png"
-                                  Visibility="{x:Bind ViewModel.IsSidebarCollapsed, Mode=OneWay}"
-                                  AutomationProperties.Name="estoq" />
+          <Grid Grid.Row="0" Height="{StaticResource EqControlHeight}" Margin="0,0,0,16" Padding="8,0">
+            <Image Height="28" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Source="ms-appx:///Assets/Logos/estoq-lockup-gold.png"
+                   Visibility="{x:Bind ViewModel.IsSidebarExpanded, Mode=OneWay}"
+                   AutomationProperties.Name="estoq" />
+            <Image Height="28" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Source="ms-appx:///Assets/Logos/estoq-q-mark-gold.png"
+                   Visibility="{x:Bind ViewModel.IsSidebarCollapsed, Mode=OneWay}"
+                   AutomationProperties.Name="estoq" />
           </Grid>
 
           <!-- Navigation -->
@@ -68,18 +62,18 @@
                              AutomationProperties.Name="{x:Bind Label}">
                   <StackPanel Orientation="Horizontal" Spacing="12">
                     <Grid Width="24" Height="24">
-                      <FontIcon Glyph="{x:Bind Glyph}" FontFamily="{StaticResource EqIconFont}" FontSize="24"
+                      <FontIcon Glyph="{x:Bind Glyph}" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}"
                                 Foreground="{ThemeResource EqTextSecondaryBrush}"
                                 Visibility="{x:Bind IsNotSelected, Mode=OneWay}" />
-                      <FontIcon Glyph="{x:Bind Glyph}" FontFamily="{StaticResource EqIconFontFilled}" FontSize="24"
+                      <FontIcon Glyph="{x:Bind Glyph}" FontFamily="{StaticResource EqIconFontFilled}" FontSize="{StaticResource EqFont4xl}"
                                 Foreground="{ThemeResource EqGoldInkBrush}"
                                 Visibility="{x:Bind IsSelected, Mode=OneWay}" />
                     </Grid>
                     <Grid VerticalAlignment="Center" Visibility="{x:Bind IsExpanded, Mode=OneWay}">
-                      <TextBlock Text="{x:Bind Label}" FontFamily="{StaticResource EqUiFontMedium}" FontSize="14"
+                      <TextBlock Text="{x:Bind Label}" FontFamily="{StaticResource EqUiFontMedium}" FontSize="{StaticResource EqFontMd}"
                                  Foreground="{ThemeResource EqTextBrush}"
                                  Visibility="{x:Bind IsNotSelected, Mode=OneWay}" />
-                      <TextBlock Text="{x:Bind Label}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                      <TextBlock Text="{x:Bind Label}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
                                  Foreground="{ThemeResource EqTextBrush}"
                                  Visibility="{x:Bind IsSelected, Mode=OneWay}" />
                     </Grid>
@@ -93,7 +87,7 @@
           <Rectangle Grid.Row="2" Height="1" VerticalAlignment="Bottom" Fill="{ThemeResource EqBorderBrush}" Margin="4,0,4,8" />
 
           <!-- Account settings: avatar, name and role with a gear on the right. In the rail the avatar shows the gear on hover. -->
-          <Button x:Name="AccountButton" Grid.Row="3" Background="Transparent" BorderThickness="0" CornerRadius="8" Padding="8"
+          <Button x:Name="AccountButton" Grid.Row="3" Background="Transparent" BorderThickness="0" CornerRadius="{StaticResource EqRadiusMd}" Padding="8"
                   HorizontalAlignment="{x:Bind ViewModel.AccountAlignment, Mode=OneWay}"
                   HorizontalContentAlignment="Stretch"
                   Command="{x:Bind ViewModel.OpenSettingsCommand}"
@@ -106,22 +100,22 @@
                 <ColumnDefinition Width="Auto" />
               </Grid.ColumnDefinitions>
               <Grid Grid.Column="0" Width="32" Height="32">
-                <Border CornerRadius="16" Background="#17191C" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
+                <Border CornerRadius="{StaticResource EqRadiusXl}" Background="{ThemeResource EqOnGoldBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
                   <TextBlock Text="{x:Bind ViewModel.UserInitials}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                             FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="13" Foreground="{ThemeResource EqGoldBrush}" />
+                             FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontSm}" Foreground="{ThemeResource EqGoldBrush}" />
                 </Border>
-                <Border x:Name="AccountHoverGear" CornerRadius="16" Background="{ThemeResource EqSurfaceElevatedBrush}" Opacity="0"
+                <Border x:Name="AccountHoverGear" CornerRadius="{StaticResource EqRadiusXl}" Background="{ThemeResource EqHoverFillBrush}" Opacity="0"
                         Visibility="{x:Bind ViewModel.IsSidebarCollapsed, Mode=OneWay}">
-                  <FontIcon Glyph="&#xE8B8;" FontFamily="{StaticResource EqIconFont}" FontSize="20"
+                  <FontIcon Glyph="&#xE8B8;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}"
                             Foreground="{ThemeResource EqTextBrush}" />
                 </Border>
               </Grid>
               <StackPanel Grid.Column="1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.IsSidebarExpanded, Mode=OneWay}">
-                <TextBlock Text="{x:Bind ViewModel.UserDisplayName}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                <TextBlock Text="{x:Bind ViewModel.UserDisplayName}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
                            Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
                 <TextBlock Text="{x:Bind ViewModel.UserRole}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
               </StackPanel>
-              <FontIcon Grid.Column="2" Glyph="&#xE8B8;" FontFamily="{StaticResource EqIconFont}" FontSize="24"
+              <FontIcon Grid.Column="2" Glyph="&#xE8B8;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}"
                         VerticalAlignment="Center" Foreground="{ThemeResource EqTextSecondaryBrush}"
                         Visibility="{x:Bind ViewModel.IsSidebarExpanded, Mode=OneWay}" />
             </Grid>
@@ -131,10 +125,10 @@
 
       <!-- Collapse control: 24 px circle straddling the right border, level with the logo. -->
       <Button Style="{StaticResource EqSidebarCollapseButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top"
-              Margin="0,18,0,0" Command="{x:Bind ViewModel.ToggleSidebarCommand}"
+              Margin="0,18,0,0" Click="OnSidebarToggleClick"
               ToolTipService.ToolTip="{x:Bind ViewModel.SidebarToggleToolTip, Mode=OneWay}"
               AutomationProperties.Name="{x:Bind services:Loc.Get('Shell_ToggleSidebarName')}">
-        <FontIcon Glyph="{x:Bind ViewModel.SidebarToggleGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+        <FontIcon Glyph="{x:Bind ViewModel.SidebarToggleGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
       </Button>
     </Grid>
 
@@ -160,13 +154,13 @@
               <ColumnDefinition Width="Auto" />
               <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <FontIcon Grid.Column="0" Glyph="&#xEF7A;" FontFamily="{StaticResource EqIconFont}" FontSize="20"
+            <FontIcon Grid.Column="0" Glyph="&#xEF7A;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}"
                       Foreground="{ThemeResource EqTextSecondaryBrush}" />
             <TextBox x:Name="SearchBox" Grid.Column="1" VerticalAlignment="Center"
                      PlaceholderText="{x:Bind services:Loc.Get('Shell_SearchPlaceholder')}"
                      Text="{x:Bind ViewModel.SearchText, Mode=TwoWay}"
                      Background="Transparent" BorderThickness="0" MinHeight="0" Padding="0,6"
-                     FontFamily="{StaticResource EqUiFont}" FontSize="14"
+                     FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontMd}"
                      ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_SearchTip')}"
                      AutomationProperties.Name="{x:Bind services:Loc.Get('Shell_SearchName')}">
               <TextBox.Resources>
@@ -193,29 +187,29 @@
         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenPointOfSaleCommand}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipSale')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Sale_Title')}">
-            <FontIcon Glyph="&#xF17E;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
+            <FontIcon Glyph="&#xF17E;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" />
           </Button>
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenAddItemsCommand}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipItems')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Items_Title')}">
-            <FontIcon Glyph="&#xE146;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
+            <FontIcon Glyph="&#xE146;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" />
           </Button>
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenStockAdjustmentsCommand}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipAdjust')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Adjust_Title')}">
-            <FontIcon Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
+            <FontIcon Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" />
           </Button>
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenReturnsCommand}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipReturns')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Returns_Title')}">
-            <FontIcon Glyph="&#xE5DB;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
+            <FontIcon Glyph="&#xE5DB;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" />
           </Button>
         </StackPanel>
 
         <Rectangle Grid.Column="3" Width="1" Height="28" Fill="{ThemeResource EqBorderBrush}" VerticalAlignment="Center" />
 
-        <Button Grid.Column="4" Style="{StaticResource EqPlainIconButtonStyle}" Command="{x:Bind ViewModel.ToggleThemeCommand}"
+        <Button Grid.Column="4" Style="{StaticResource EqPlainIconButtonStyle}" Click="OnThemeToggleClick" Command="{x:Bind ViewModel.ToggleThemeCommand}"
                 VerticalAlignment="Center"
                 ToolTipService.ToolTip="{x:Bind ViewModel.ThemeToolTip, Mode=OneWay}"
                 AutomationProperties.Name="{x:Bind services:Loc.Get('Shell_SwitchTheme')}">
-          <FontIcon Glyph="{x:Bind ViewModel.ThemeGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
+          <FontIcon Glyph="{x:Bind ViewModel.ThemeGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
         </Button>
 
         <!-- Notifications bell: opens the notifications pop-up (design system, NotificationPanel). Gold dot while unread. -->
@@ -223,7 +217,7 @@
                 ToolTipService.ToolTip="{x:Bind services:Loc.Get('Notif_Title')}"
                 AutomationProperties.Name="{x:Bind Notifications.BellLabel, Mode=OneWay}">
           <Grid>
-            <FontIcon Glyph="&#xE7F5;" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
+            <FontIcon Glyph="&#xE7F5;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
             <Ellipse Width="8" Height="8" Fill="{ThemeResource EqGoldBrush}" HorizontalAlignment="Right" VerticalAlignment="Top"
                      Margin="0,1,3,0" Visibility="{x:Bind Notifications.UnreadDotVisibility, Mode=OneWay}" />
           </Grid>
@@ -236,7 +230,7 @@
                     <ColumnDefinition Width="Auto" />
                   </Grid.ColumnDefinitions>
                   <StackPanel>
-                    <TextBlock Text="{x:Bind services:Loc.Get('Notif_Title')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="16"
+                    <TextBlock Text="{x:Bind services:Loc.Get('Notif_Title')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontLg}"
                                Foreground="{ThemeResource EqTextBrush}" />
                     <TextBlock Text="{x:Bind Notifications.Summary, Mode=OneWay}" Style="{StaticResource EqCaptionStyle}" />
                   </StackPanel>
@@ -262,13 +256,13 @@
                               <ColumnDefinition Width="*" />
                               <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <Border Width="36" Height="36" CornerRadius="18" Background="{ThemeResource EqSurfaceBrush}"
+                            <Border Width="36" Height="{StaticResource EqControlHeight}" CornerRadius="18" Background="{ThemeResource EqSurfaceBrush}"
                                     BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1" VerticalAlignment="Top">
-                              <FontIcon Glyph="{x:Bind Glyph}" FontFamily="{StaticResource EqIconFont}" FontSize="20"
+                              <FontIcon Glyph="{x:Bind Glyph}" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}"
                                         Foreground="{ThemeResource EqWarningBrush}" />
                             </Border>
                             <StackPanel Grid.Column="1" Spacing="2">
-                              <TextBlock Text="{x:Bind Title}" TextWrapping="Wrap" FontSize="14"
+                              <TextBlock Text="{x:Bind Title}" TextWrapping="Wrap" FontSize="{StaticResource EqFontMd}"
                                          FontFamily="{StaticResource EqUiFontSemiBold}" Foreground="{ThemeResource EqTextBrush}" />
                               <TextBlock Text="{x:Bind Detail}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
                             </StackPanel>
@@ -282,7 +276,7 @@
                                       Tag="{x:Bind NotificationId}" Click="OnClearNotificationClick"
                                       Visibility="{x:Bind ReadVisibility}"
                                       ToolTipService.ToolTip="{x:Bind services:Loc.Get('Notif_Clear')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Notif_ClearName')}">
-                                <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+                                <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
                               </Button>
                             </StackPanel>
                           </Grid>
@@ -294,7 +288,7 @@
                               Visibility="{x:Bind Notifications.EmptyVisibility, Mode=OneWay}">
                     <FontIcon Glyph="&#xE7F5;" FontFamily="{StaticResource EqIconFont}" FontSize="32"
                               Foreground="{ThemeResource EqTextSecondaryBrush}" HorizontalAlignment="Center" />
-                    <TextBlock Text="{x:Bind services:Loc.Get('Notif_EmptyTitle')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                    <TextBlock Text="{x:Bind services:Loc.Get('Notif_EmptyTitle')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
                                Foreground="{ThemeResource EqTextBrush}" HorizontalAlignment="Center" />
                     <TextBlock Text="{x:Bind services:Loc.Get('Notif_EmptyBody')}" Style="{StaticResource EqSecondaryStyle}"
                                HorizontalAlignment="Center" />
@@ -311,10 +305,12 @@
     <!-- Pop-up host for F1 to F4: dimmed scrim over the whole window with the shared pop-up shell centred.
          Clicking the scrim, Esc or Close dismisses it. -->
     <Grid x:Name="PopupOverlay" Grid.ColumnSpan="2" Canvas.ZIndex="10" Background="{ThemeResource EqScrimBrush}"
-          Padding="40,56,40,40" Visibility="{x:Bind PopupState.IsOpen, Mode=OneWay}" Tapped="OnScrimTapped">
+          Padding="40,56,40,40" Visibility="Collapsed" Opacity="0" Tapped="OnScrimTapped">
       <controls:PopupShell x:Name="PopupFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                            Visibility="{x:Bind PopupState.IsFramed, Mode=OneWay}"
                            Title="{x:Bind PopupState.Title, Mode=OneWay}" Subtitle="{x:Bind PopupState.Subtitle, Mode=OneWay}"
+                           ShortcutHint="{x:Bind PopupState.ShortcutHint, Mode=OneWay}"
+                           IsShortcutHintVisible="{x:Bind PopupState.IsShortcutHintVisible, Mode=OneWay}"
                            PrimaryText="{x:Bind PopupState.PrimaryText, Mode=OneWay}"
                            IsPrimaryEnabled="{x:Bind PopupState.IsPrimaryEnabled, Mode=OneWay}"
                            CloseRequested="OnPopupCloseRequested" PrimaryInvoked="OnPopupPrimaryInvoked" Tapped="OnPopupTapped">
@@ -340,7 +336,7 @@
               <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" VerticalAlignment="Center"
                       Command="{x:Bind PopupState.LogOutCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                  <FontIcon Glyph="&#xE9BA;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+                  <FontIcon Glyph="&#xE9BA;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
                   <TextBlock Text="{x:Bind services:Loc.Get('Account_LogOut')}" />
                 </StackPanel>
               </Button>
@@ -407,7 +403,7 @@
             </Grid>
             <Grid>
               <TextBlock Text="{x:Bind services:Loc.Get('Add_DoneTotalPrice')}" Style="{StaticResource EqTableCellStyle}" FontFamily="{StaticResource EqUiFontSemiBold}" />
-              <TextBlock Text="{x:Bind PopupState.AddProduct.DoneTotalText, Mode=OneWay}" Style="{StaticResource EqTableCellStrongStyle}" FontSize="20" />
+              <TextBlock Text="{x:Bind PopupState.AddProduct.DoneTotalText, Mode=OneWay}" Style="{StaticResource EqTableCellStrongStyle}" FontSize="{StaticResource EqFont2xl}" />
             </Grid>
           </StackPanel>
           <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Padding="0,8,0,0">

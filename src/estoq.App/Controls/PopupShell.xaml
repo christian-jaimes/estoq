@@ -18,12 +18,19 @@
           <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
-          <TextBlock Text="{x:Bind Title, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" TextTrimming="CharacterEllipsis" />
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <TextBlock Text="{x:Bind Title, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" TextTrimming="CharacterEllipsis" />
+            <Border Style="{StaticResource EqBadgeStyle}" CornerRadius="{StaticResource EqRadiusSm}" Padding="8,2"
+                    Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1"
+                    VerticalAlignment="Center" Visibility="{x:Bind IsShortcutHintVisible, Mode=OneWay}">
+              <TextBlock Text="{x:Bind ShortcutHint, Mode=OneWay}" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontXs}" />
+            </Border>
+          </StackPanel>
           <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
         </StackPanel>
         <Button x:Name="CloseButton" Grid.Column="1" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Top"
                 Click="OnCloseClick" ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_CloseTip')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}">
-          <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
+          <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
           <Button.KeyboardAccelerators>
             <KeyboardAccelerator Key="Escape" />
           </Button.KeyboardAccelerators>

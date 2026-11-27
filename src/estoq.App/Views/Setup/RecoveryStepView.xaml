@@ -17,7 +17,7 @@
           <Button Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Recovery_Print')}"
                   Command="{x:Bind ViewModel.PrintKeyCommand}" />
         </StackPanel>
-        <TextBlock Text="{x:Bind ViewModel.PrintMessage, Mode=OneWay}" FontSize="13" TextWrapping="Wrap"
+        <TextBlock Text="{x:Bind ViewModel.PrintMessage, Mode=OneWay}" FontSize="{StaticResource EqFontSm}" TextWrapping="Wrap"
                    Foreground="{ThemeResource EqDangerBrush}" />
       </StackPanel>
     </Border>
@@ -29,9 +29,9 @@
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <FontIcon Glyph="&#xF083;" FontFamily="{StaticResource EqIconFontFilled}" FontSize="24"
+        <FontIcon Glyph="&#xF083;" FontFamily="{StaticResource EqIconFontFilled}" FontSize="{StaticResource EqFont4xl}"
                   Foreground="{ThemeResource EqWarningBrush}" VerticalAlignment="Top" />
-        <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Recovery_Warning')}" TextWrapping="Wrap" FontSize="14" />
+        <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Recovery_Warning')}" TextWrapping="Wrap" FontSize="{StaticResource EqFontMd}" />
       </Grid>
     </Border>
 

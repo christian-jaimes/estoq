@@ -60,13 +60,13 @@
                  PlaceholderText="{x:Bind PlaceholderText, Mode=OneWay}"
                  Text="{x:Bind Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Background="Transparent" BorderThickness="0" MinHeight="0" Padding="0,6"
-                 FontFamily="{StaticResource EqUiFont}" FontSize="14"
+                 FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontMd}"
                  AutomationProperties.Name="{x:Bind Label, Mode=OneWay}"
                  GotFocus="OnInputGotFocus" LostFocus="OnInputLostFocus" />
         <PasswordBox x:Name="SecretInput" Grid.Column="0" VerticalAlignment="Center" Visibility="Collapsed"
                      Password="{x:Bind Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Background="Transparent" BorderThickness="0" MinHeight="0" Padding="0,6"
-                     FontFamily="{StaticResource EqUiFont}" FontSize="14"
+                     FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontMd}"
                      AutomationProperties.Name="{x:Bind Label, Mode=OneWay}"
                      GotFocus="OnInputGotFocus" LostFocus="OnInputLostFocus" />
         <TextBlock x:Name="SuffixText" Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource EqSecondaryStyle}"
@@ -74,7 +74,7 @@
       </Grid>
     </Border>
 
-    <TextBlock x:Name="ErrorBlock" Text="{x:Bind ErrorText, Mode=OneWay}" FontSize="12"
+    <TextBlock x:Name="ErrorBlock" Text="{x:Bind ErrorText, Mode=OneWay}" FontSize="{StaticResource EqFontXs}"
                Foreground="{ThemeResource EqDangerBrush}" TextWrapping="Wrap" Visibility="Collapsed" />
   </StackPanel>
 </UserControl>

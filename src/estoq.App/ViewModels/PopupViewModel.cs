@@ -16,7 +16,7 @@ public sealed partial class PopupViewModel : ObservableObject
     private readonly ISessionService _session;
     private readonly AddProductViewModel _addProduct;
     private PopupKind? _shown;
-    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _subtitleTimer;
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _hintTimer;
 
     public PopupViewModel(IPopupService popups, ILocalizer localizer, ISessionService session, AddProductViewModel addProduct)
     {
@@ -33,10 +33,6 @@ public sealed partial class PopupViewModel : ObservableObject
             if (e.PropertyName == nameof(AddProductViewModel.Name) && _popups.Current == PopupKind.AddItems)
             {
                 Title = _addProduct.Name.Length == 0 ? Text("Items", "Title") : $"{Text("Items", "Title")} – {_addProduct.Name}";
-                if (_subtitleTimer is null)
-                {
-                    Subtitle = _addProduct.Name.Length == 0 ? string.Empty : _localizer["Add_NameHint"];
-                }
             }
             if (e.PropertyName is nameof(AddProductViewModel.CanSave) or nameof(AddProductViewModel.IsCompleted) && _popups.Current == PopupKind.AddItems)
             {
@@ -58,6 +54,13 @@ public sealed partial class PopupViewModel : ObservableObject
 
     [ObservableProperty]
     public partial string Subtitle { get; set; } = string.Empty;
+
+    /// <summary>The key that opens this pop-up (F2 to F4), shown next to the title for four seconds after it opens.</summary>
+    [ObservableProperty]
+    public partial string ShortcutHint { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial bool IsShortcutHintVisible { get; set; }
 
     /// <summary>Material glyph shown in the header badge.</summary>
     [ObservableProperty]
@@ -108,14 +111,37 @@ public sealed partial class PopupViewModel : ObservableObject
     [RelayCommand]
     private void LogOut() => _session.SignOut(SignOutReason.UserRequested);
 
+    private void ShowShortcutHintForFourSeconds()
+    {
+        _hintTimer?.Stop();
+        _hintTimer = null;
+        IsShortcutHintVisible = ShortcutHint.Length > 0;
+        if (!IsShortcutHintVisible)
+        {
+            return;
+        }
+
+        _hintTimer = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().CreateTimer();
+        _hintTimer.Interval = TimeSpan.FromSeconds(4);
+        _hintTimer.IsRepeating = false;
+        _hintTimer.Tick += (_, _) =>
+        {
+            IsShortcutHintVisible = false;
+            _hintTimer?.Stop();
+            _hintTimer = null;
+        };
+        _hintTimer.Start();
+    }
+
     private string Text(string popup, string part) => _localizer[$"Popup_{popup}_{part}"];
 
     private void Refresh()
     {
         if (_popups.Current is not { } kind)
         {
-            _subtitleTimer?.Stop();
-            _subtitleTimer = null;
+            _hintTimer?.Stop();
+            _hintTimer = null;
+            IsShortcutHintVisible = false;
 
             // Closing the pop-up also dismisses a "Product added" confirmation so it never shows over another pop-up.
             if (_addProduct.IsCompleted)
@@ -183,23 +209,19 @@ public sealed partial class PopupViewModel : ObservableObject
         {
             Title = _addProduct.Name.Length == 0 ? Text("Items", "Title") : $"{Text("Items", "Title")} – {_addProduct.Name}";
             Subtitle = Text("Items", "Subtitle");
-            if (_shown != kind)
-            {
-                _subtitleTimer?.Stop();
-                _subtitleTimer = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().CreateTimer();
-                _subtitleTimer.Interval = TimeSpan.FromSeconds(5);
-                _subtitleTimer.IsRepeating = false;
-                _subtitleTimer.Tick += (_, _) =>
-                {
-                    if (_popups.Current == PopupKind.AddItems)
-                    {
-                        Subtitle = _addProduct.Name.Length == 0 ? string.Empty : _localizer["Add_NameHint"];
-                    }
-                    _subtitleTimer?.Stop();
-                    _subtitleTimer = null;
-                };
-                _subtitleTimer.Start();
-            }
+        }
+
+        // Only the shortcut key is temporary: it shows for four seconds on a fresh open, the subtitle always stays.
+        ShortcutHint = kind switch
+        {
+            PopupKind.AddItems => "F2",
+            PopupKind.StockAdjustments => "F3",
+            PopupKind.Returns => "F4",
+            _ => string.Empty,
+        };
+        if (_shown != kind)
+        {
+            ShowShortcutHintForFourSeconds();
         }
 
         _shown = kind;

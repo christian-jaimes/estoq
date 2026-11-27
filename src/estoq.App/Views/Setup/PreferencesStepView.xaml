@@ -15,7 +15,7 @@
                   SelectedValue="{x:Bind ViewModel.BaseCurrencyCode, Mode=TwoWay}"
                   AutomationProperties.Name="{x:Bind services:Loc.Get('Prefs_BaseCurrency')}" />
       </Border>
-      <TextBlock Text="{x:Bind ViewModel.BaseCurrencyError, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource EqDangerBrush}" />
+      <TextBlock Text="{x:Bind ViewModel.BaseCurrencyError, Mode=OneWay}" FontSize="{StaticResource EqFontXs}" Foreground="{ThemeResource EqDangerBrush}" />
       <TextBlock Text="{x:Bind services:Loc.Get('Prefs_BaseCurrencyHelp')}" Style="{StaticResource EqSecondaryStyle}" />
     </StackPanel>
 
@@ -38,7 +38,7 @@
             <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
             <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
           </Grid.Resources>
-          <FontIcon Glyph="&#xEF7A;" FontFamily="{StaticResource EqIconFont}" FontSize="20"
+          <FontIcon Glyph="&#xEF7A;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}"
                     Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
           <AutoSuggestBox Grid.Column="1" VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
                           PlaceholderText="{x:Bind services:Loc.Get('Prefs_AcceptedSearch')}"
@@ -69,14 +69,14 @@
                   <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel VerticalAlignment="Center">
-                  <TextBlock Text="{x:Bind Code}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14" />
+                  <TextBlock Text="{x:Bind Code}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}" />
                   <TextBlock Text="{x:Bind Name}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
                 </StackPanel>
                 <Button Grid.Column="1" Style="{StaticResource EqPlainIconButtonStyle}" Width="28" Height="28"
                         Tag="{x:Bind Code}" Click="OnRemoveCurrency"
                         AutomationProperties.Name="{x:Bind services:Loc.Get('Prefs_RemoveCurrency')}"
                         ToolTipService.ToolTip="{x:Bind services:Loc.Get('Prefs_RemoveCurrency')}">
-                  <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+                  <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
                 </Button>
               </Grid>
             </Border>
@@ -105,7 +105,7 @@
           </Grid.ColumnDefinitions>
           <ToggleSwitch MinWidth="0" OnContent="" OffContent="" IsOn="{x:Bind ViewModel.PricesIncludeTax, Mode=TwoWay}"
                         AutomationProperties.Name="{x:Bind services:Loc.Get('Prefs_TaxIncluded')}" />
-          <TextBlock Grid.Column="1" VerticalAlignment="Center" TextWrapping="Wrap" FontSize="14"
+          <TextBlock Grid.Column="1" VerticalAlignment="Center" TextWrapping="Wrap" FontSize="{StaticResource EqFontMd}"
                      Text="{x:Bind ViewModel.TaxModeText, Mode=OneWay}" />
         </Grid>
       </StackPanel>

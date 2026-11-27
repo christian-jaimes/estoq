@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using Estoq.App.Controls;
+using Estoq.App.Services;
 using Estoq.App.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
@@ -7,6 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.System;
 
 namespace Estoq.App.Views.SignIn;
@@ -26,7 +29,14 @@ public sealed partial class SignInPage : Page
         InitializeComponent();
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
+        ActualThemeChanged += (_, _) => ApplySilk();
     }
+
+    /// <summary>The silk background follows the app theme: dark texture in dark, ivory in light.</summary>
+    private void ApplySilk() =>
+        SilkImage.Source = new BitmapImage(new Uri(ActualTheme == ElementTheme.Light
+            ? "ms-appx:///Assets/Backgrounds/signin-silk-light.jpg"
+            : "ms-appx:///Assets/Backgrounds/signin-silk.jpg"));
 
     public SignInViewModel ViewModel { get; }
 
@@ -39,6 +49,7 @@ public sealed partial class SignInPage : Page
         ViewModel.SignedIn += OnSignedIn;
         ViewModel.FailureAnimationRequested += OnFailureAnimationRequested;
         _lastEmailMode = ViewModel.IsEmailMode;
+        ApplySilk();
         ApplyMessageColor();
         CodeInput.Focus(FocusState.Programmatic);
     }
@@ -61,25 +72,10 @@ public sealed partial class SignInPage : Page
             return;
         }
 
+        // The window cross-fades from this screen to the shell, so the page itself does not animate out.
         _isTransitioningToShell = true;
         SignInRoot.IsHitTestVisible = false;
-        var transform = (CompositeTransform)SignInRoot.RenderTransform;
-        var duration = TimeSpan.FromMilliseconds(50);
-        var easing = new CubicEase { EasingMode = EasingMode.EaseInOut };
-        var storyboard = new Storyboard();
-
-        var fade = new DoubleAnimation { To = 0, Duration = duration, EasingFunction = easing };
-        Storyboard.SetTarget(fade, SignInRoot);
-        Storyboard.SetTargetProperty(fade, "Opacity");
-
-        var move = new DoubleAnimation { To = -16, Duration = duration, EasingFunction = easing };
-        Storyboard.SetTarget(move, transform);
-        Storyboard.SetTargetProperty(move, "TranslateY");
-
-        storyboard.Children.Add(fade);
-        storyboard.Children.Add(move);
-        storyboard.Completed += (_, _) => App.Current.MainWindow?.ShowShell(animateEntrance: true);
-        storyboard.Begin();
+        App.Current.MainWindow?.ShowShell();
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -205,7 +201,7 @@ public sealed partial class SignInPage : Page
     }
 
     private void ApplyMessageColor() =>
-        MessageText.Foreground = (Brush)Application.Current.Resources[ViewModel.IsMessageError ? "EqDangerBrush" : "EqTextSecondaryBrush"];
+        MessageText.Foreground = ThemeBrushes.Get(MessageText, ViewModel.IsMessageError ? "EqDangerBrush" : "EqTextSecondaryBrush");
 
     private void OnFailureAnimationRequested(bool emailMode)
     {
@@ -242,26 +238,12 @@ public sealed partial class SignInPage : Page
 
     private static void AddInvalidFieldMotion(FrameworkElement element)
     {
-        var transform = element.RenderTransform as CompositeTransform ?? new CompositeTransform();
-        element.RenderTransform = transform;
-        transform.TranslateX = 0;
-        ((Border)element).BorderBrush = (Brush)Application.Current.Resources["EqDangerBrush"];
+        ShakeMotion.Prepare(element);
+        ((Border)element).BorderBrush = ThemeBrushes.Get(element, "EqDangerBrush");
     }
 
-    private static void AddShake(Storyboard storyboard, FrameworkElement element)
-    {
-        var transform = (CompositeTransform)element.RenderTransform;
-        var shake = new DoubleAnimationUsingKeyFrames();
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero), Value = 0 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(45)), Value = -8 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(90)), Value = 8 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(135)), Value = -6 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(180)), Value = 6 });
-        shake.KeyFrames.Add(new EasingDoubleKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(225)), Value = 0 });
-        Storyboard.SetTarget(shake, transform);
-        Storyboard.SetTargetProperty(shake, "TranslateX");
-        storyboard.Children.Add(shake);
-    }
+    private static void AddShake(Storyboard storyboard, FrameworkElement element) =>
+        ShakeMotion.Add(storyboard, (CompositeTransform)element.RenderTransform, 45, -8, 8, -6, 6, 0);
 
     private static void RestoreFieldBorder(Border border, bool hasFocus)
     {
@@ -298,7 +280,7 @@ public sealed partial class SignInPage : Page
     }
 
     private static void SetGoldBorder(Border box, bool focused) =>
-        box.BorderBrush = (Brush)Application.Current.Resources[focused ? "EqGoldBrush" : "EqBorderBrush"];
+        box.BorderBrush = ThemeBrushes.Get(box, focused ? "EqGoldBrush" : "EqBorderBrush");
 
     private void OnIdentifierKeyDown(object sender, KeyRoutedEventArgs e)
     {

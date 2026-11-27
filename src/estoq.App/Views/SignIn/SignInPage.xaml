@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:services="using:Estoq.App.Services"
-    RequestedTheme="Dark"
     Foreground="{ThemeResource EqTextBrush}">
 
   <Page.Resources>
@@ -22,8 +21,8 @@
 
     <!-- Large gold primary button of the mockup: soft vertical-diagonal gold gradient, dark label. -->
     <LinearGradientBrush x:Key="SignInGoldGradient" StartPoint="0,0" EndPoint="1,1">
-      <GradientStop Color="{ThemeResource EqGoldHover}" Offset="0" />
-      <GradientStop Color="{ThemeResource EqGoldInk}" Offset="1" />
+      <GradientStop Color="{StaticResource SystemAccentColorLight3}" Offset="0" />
+      <GradientStop Color="{StaticResource SystemAccentColor}" Offset="1" />
     </LinearGradientBrush>
 
     <Style x:Key="SignInPrimaryButtonStyle" TargetType="Button">
@@ -38,7 +37,7 @@
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="Button">
-            <Grid x:Name="Root" Background="{StaticResource SignInGoldGradient}" CornerRadius="16">
+            <Grid x:Name="Root" Background="{StaticResource SignInGoldGradient}" CornerRadius="{StaticResource EqRadiusXl}">
               <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
                   <VisualState x:Name="Normal" />
@@ -73,8 +72,8 @@
     <Grid.RenderTransform>
       <CompositeTransform />
     </Grid.RenderTransform>
-    <!-- Dark silk texture; the form stays on the quiet middle. -->
-    <Image Source="ms-appx:///Assets/Backgrounds/signin-silk.jpg" Stretch="UniformToFill" IsHitTestVisible="False"
+    <!-- Silk texture (dark or ivory with the theme); the form stays on the quiet middle. -->
+    <Image x:Name="SilkImage" Source="ms-appx:///Assets/Backgrounds/signin-silk.jpg" Stretch="UniformToFill" IsHitTestVisible="False"
            AutomationProperties.AccessibilityView="Raw" />
 
     <ScrollViewer x:Name="SignInScrollViewer" VerticalAlignment="Center" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -93,9 +92,9 @@
 
           <TextBlock Margin="0,36,0,0" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
                      Text="{x:Bind services:Loc.Get('SignIn_Title')}" Style="{StaticResource EqPageTitleStyle}"
-                     FontSize="29" LineHeight="36" />
+                     FontSize="29" LineHeight="{StaticResource EqControlHeight}" />
           <TextBlock Margin="0,8,0,0" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
-                     Text="{x:Bind ViewModel.Subtitle, Mode=OneWay}" FontSize="16"
+                     Text="{x:Bind ViewModel.Subtitle, Mode=OneWay}" FontSize="{StaticResource EqFontLg}"
                      Foreground="{ThemeResource EqTextSecondaryBrush}" />
 
           <!-- Identifier: a code (scanner icon, divider) or, once a letter is typed, an email (person icon). -->
@@ -116,7 +115,7 @@
               <Rectangle Grid.Column="1" Width="1" Height="30" Fill="{ThemeResource EqBorderBrush}" VerticalAlignment="Center"
                          Visibility="{x:Bind ViewModel.IsCodeMode, Mode=OneWay}" />
               <PasswordBox x:Name="CodeInput" Grid.Column="2" VerticalAlignment="Center" BorderThickness="0" MinHeight="0"
-                           Padding="0,6" FontFamily="{StaticResource EqUiFont}" FontSize="16" MaxLength="6"
+                           Padding="0,6" FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontLg}" MaxLength="6"
                            PasswordRevealMode="Hidden"
                            PlaceholderText="{x:Bind services:Loc.Get('SignIn_IdentifierPlaceholder')}"
                            Password="{x:Bind ViewModel.Identifier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -125,7 +124,7 @@
                            Visibility="{x:Bind ViewModel.IsCodeMode, Mode=OneWay}"
                            GotFocus="OnIdentifierGotFocus" LostFocus="OnIdentifierLostFocus" KeyDown="OnIdentifierKeyDown" />
               <TextBox x:Name="EmailIdentifierInput" Grid.Column="2" VerticalAlignment="Center" BorderThickness="0" MinHeight="0"
-                       Padding="0,6" FontFamily="{StaticResource EqUiFont}" FontSize="16"
+                       Padding="0,6" FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontLg}"
                        PlaceholderText="{x:Bind services:Loc.Get('SignIn_IdentifierPlaceholder')}"
                        Text="{x:Bind ViewModel.Identifier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        IsEnabled="{x:Bind ViewModel.IsNotLocked, Mode=OneWay}"
@@ -149,7 +148,7 @@
             <FontIcon Grid.Column="0" Glyph="&#xE899;" FontFamily="{StaticResource EqIconFont}" FontSize="25"
                       Foreground="{ThemeResource EqTextBrush}" VerticalAlignment="Center" />
             <PasswordBox x:Name="PasswordInput" Grid.Column="1" VerticalAlignment="Center" BorderThickness="0" MinHeight="0"
-                         Padding="0,6" FontFamily="{StaticResource EqUiFont}" FontSize="16"
+                         Padding="0,6" FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontLg}"
                          PlaceholderText="{x:Bind services:Loc.Get('SignIn_PasswordPlaceholder')}"
                          Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IsEnabled="{x:Bind ViewModel.IsNotLocked, Mode=OneWay}"
@@ -159,7 +158,7 @@
                     Command="{x:Bind ViewModel.TogglePasswordRevealCommand}"
                     ToolTipService.ToolTip="{x:Bind ViewModel.RevealToolTip, Mode=OneWay}"
                     AutomationProperties.Name="{x:Bind ViewModel.RevealToolTip, Mode=OneWay}">
-              <FontIcon Glyph="{x:Bind ViewModel.RevealGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="22"
+              <FontIcon Glyph="{x:Bind ViewModel.RevealGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}"
                         Foreground="{ThemeResource EqTextBrush}" />
             </Button>
           </Grid>
@@ -171,21 +170,21 @@
             <CompositeTransform />
           </StackPanel.RenderTransform>
           <TextBlock x:Name="MessageText" Margin="0,10,0,0" Height="40" MinHeight="40" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
-                     FontSize="12" Text="{x:Bind ViewModel.Message, Mode=OneWay}"
+                     FontSize="{StaticResource EqFontXs}" Text="{x:Bind ViewModel.Message, Mode=OneWay}"
                      AutomationProperties.LiveSetting="Assertive" />
 
           <Button Margin="0,4,0,0" Style="{StaticResource SignInPrimaryButtonStyle}" Command="{x:Bind ViewModel.SubmitCommand}"
                   IsEnabled="{x:Bind ViewModel.IsNotLocked, Mode=OneWay}">
             <StackPanel Orientation="Horizontal" Spacing="12">
               <TextBlock Text="{x:Bind services:Loc.Get('SignIn_Button')}" VerticalAlignment="Center" />
-              <FontIcon Glyph="&#xE5C8;" FontFamily="{StaticResource EqIconFont}" FontSize="22" VerticalAlignment="Center" />
+              <FontIcon Glyph="&#xE5C8;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
 
           <StackPanel Margin="0,22,0,0" Orientation="Horizontal" Spacing="9" HorizontalAlignment="Center">
-            <FontIcon Glyph="&#xE899;" FontFamily="{StaticResource EqIconFont}" FontSize="18"
+            <FontIcon Glyph="&#xE899;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}"
                       Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
-            <TextBlock Text="{x:Bind services:Loc.Get('SignIn_Footer')}" FontSize="12" TextWrapping="Wrap"
+            <TextBlock Text="{x:Bind services:Loc.Get('SignIn_Footer')}" FontSize="{StaticResource EqFontXs}" TextWrapping="Wrap"
                        Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
           </StackPanel>
         </StackPanel>

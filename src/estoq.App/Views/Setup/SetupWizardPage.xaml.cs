@@ -35,7 +35,7 @@ public sealed partial class SetupWizardPage : Page
 
     /// <summary>Static labels are read when a page is built, so a language change builds the page again. Entered values live in the view models.</summary>
     private void OnLanguageApplied(object? sender, EventArgs e) =>
-        DispatcherQueue.TryEnqueue(() => App.Current.MainWindow?.ShowSetup());
+        DispatcherQueue.TryEnqueue(() => App.Current.MainWindow?.ShowSetup(crossFade: false));
 
     private void OnCompleted(object? sender, EventArgs e) =>
         DispatcherQueue.TryEnqueue(() => App.Current.MainWindow?.ShowShell());

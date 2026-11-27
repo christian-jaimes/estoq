@@ -5,13 +5,13 @@
   <!-- Design tokens from Branding/estoq design system.md (v1.1). Components read tokens only; never hard-code a hex. -->
 
   <!-- Gold replaces the Windows accent colour for stock controls (focus, selection, toggles). -->
-  <Color x:Key="SystemAccentColor">#D6B77A</Color>
-  <Color x:Key="SystemAccentColorLight1">#E2C995</Color>
-  <Color x:Key="SystemAccentColorLight2">#E2C995</Color>
+  <Color x:Key="SystemAccentColor">#B99A5E</Color>
+  <Color x:Key="SystemAccentColorLight1">#CBB07A</Color>
+  <Color x:Key="SystemAccentColorLight2">#D6BE8F</Color>
   <Color x:Key="SystemAccentColorLight3">#E2C995</Color>
-  <Color x:Key="SystemAccentColorDark1">#B99A5E</Color>
-  <Color x:Key="SystemAccentColorDark2">#B99A5E</Color>
-  <Color x:Key="SystemAccentColorDark3">#9C7B40</Color>
+  <Color x:Key="SystemAccentColorDark1">#A68A55</Color>
+  <Color x:Key="SystemAccentColorDark2">#8F7640</Color>
+  <Color x:Key="SystemAccentColorDark3">#7D6128</Color>
 
   <!-- Radius: sm 6, md 8, lg 12, xl 16. -->
   <CornerRadius x:Key="EqRadiusSm">6</CornerRadius>
@@ -32,6 +32,16 @@
   <x:Double x:Key="EqTopBarHeight">56</x:Double>
   <x:Double x:Key="EqControlHeight">36</x:Double>
 
+  <!-- Type scale (px). Use these instead of numeric FontSize values. -->
+  <x:Double x:Key="EqFontXs">12</x:Double>
+  <x:Double x:Key="EqFontSm">13</x:Double>
+  <x:Double x:Key="EqFontMd">14</x:Double>
+  <x:Double x:Key="EqFontLg">16</x:Double>
+  <x:Double x:Key="EqFontXl">18</x:Double>
+  <x:Double x:Key="EqFont2xl">20</x:Double>
+  <x:Double x:Key="EqFont3xl">22</x:Double>
+  <x:Double x:Key="EqFont4xl">24</x:Double>
+
   <!-- Typography: Poppins for headings, Manrope for the working UI (bundled under Assets/Fonts). -->
   <FontFamily x:Key="EqUiFont">ms-appx:///Assets/Fonts/Manrope-Regular.ttf#Manrope, Segoe UI Variable Text, Segoe UI</FontFamily>
   <FontFamily x:Key="EqUiFontMedium">ms-appx:///Assets/Fonts/Manrope-Medium.ttf#Manrope Medium, Segoe UI Variable Text, Segoe UI</FontFamily>
@@ -42,20 +52,26 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
-      <Color x:Key="EqGoldInk">#9C7B40</Color>
-      <Color x:Key="EqGoldHover">#E2C995</Color>
+      <Color x:Key="EqGoldInk">#7D6128</Color>
+      <Color x:Key="EqGoldHover">#A38750</Color>
       <SolidColorBrush x:Key="EqBgBrush" Color="#F1EFE9" />
       <SolidColorBrush x:Key="EqSurfaceBrush" Color="#FFFFFF" />
       <SolidColorBrush x:Key="EqSurfaceElevatedBrush" Color="#FAF9F6" />
       <SolidColorBrush x:Key="EqTextBrush" Color="#24262A" />
-      <SolidColorBrush x:Key="EqTextSecondaryBrush" Color="#777A80" />
+      <SolidColorBrush x:Key="EqTextSecondaryBrush" Color="#65686E" />
       <SolidColorBrush x:Key="EqBorderBrush" Color="#DFDDD6" />
-      <SolidColorBrush x:Key="EqGoldBrush" Color="#D6B77A" />
-      <SolidColorBrush x:Key="EqGoldHoverBrush" Color="#E2C995" />
-      <SolidColorBrush x:Key="EqGoldPressedBrush" Color="#B99A5E" />
-      <SolidColorBrush x:Key="EqGoldInkBrush" Color="#9C7B40" />
+      <SolidColorBrush x:Key="EqGoldBrush" Color="#B99A5E" />
+      <SolidColorBrush x:Key="EqGoldHoverBrush" Color="#A38750" />
+      <SolidColorBrush x:Key="EqGoldPressedBrush" Color="#8C7240" />
+      <SolidColorBrush x:Key="EqGoldInkBrush" Color="#7D6128" />
       <SolidColorBrush x:Key="EqOnGoldBrush" Color="#17191C" />
       <SolidColorBrush x:Key="EqGoldTintBrush" Color="#F9F5EC" />
+      <!-- Fill for hovered buttons and tiles: a warm tint in light, a lighter golden grey in dark. Pair it with a gold border on bordered controls. -->
+      <SolidColorBrush x:Key="EqHoverFillBrush" Color="#F9F5EC" />
+      <!-- Stock toggle buttons (size chips, colour swatches) hover like every other control: tinted fill and gold border. -->
+      <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="#F9F5EC" />
+      <SolidColorBrush x:Key="ToggleButtonBorderBrushPointerOver" Color="#B99A5E" />
+      <SolidColorBrush x:Key="ToggleButtonForegroundPointerOver" Color="#24262A" />
       <SolidColorBrush x:Key="EqSuccessBrush" Color="#43876A" />
       <SolidColorBrush x:Key="EqWarningBrush" Color="#C18B42" />
       <SolidColorBrush x:Key="EqDangerBrush" Color="#C45D58" />
@@ -69,7 +85,7 @@
       <SolidColorBrush x:Key="EqScrimBrush" Color="#8C141619" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <Color x:Key="EqGoldInk">#D6B77A</Color>
+      <Color x:Key="EqGoldInk">#B99A5E</Color>
       <Color x:Key="EqGoldHover">#E2C995</Color>
       <SolidColorBrush x:Key="EqBgBrush" Color="#141619" />
       <SolidColorBrush x:Key="EqSurfaceBrush" Color="#1C2023" />
@@ -77,12 +93,16 @@
       <SolidColorBrush x:Key="EqTextBrush" Color="#F1EFE9" />
       <SolidColorBrush x:Key="EqTextSecondaryBrush" Color="#A9AAAD" />
       <SolidColorBrush x:Key="EqBorderBrush" Color="#33373D" />
-      <SolidColorBrush x:Key="EqGoldBrush" Color="#D6B77A" />
+      <SolidColorBrush x:Key="EqGoldBrush" Color="#B99A5E" />
       <SolidColorBrush x:Key="EqGoldHoverBrush" Color="#E2C995" />
-      <SolidColorBrush x:Key="EqGoldPressedBrush" Color="#B99A5E" />
-      <SolidColorBrush x:Key="EqGoldInkBrush" Color="#D6B77A" />
+      <SolidColorBrush x:Key="EqGoldPressedBrush" Color="#9C7B40" />
+      <SolidColorBrush x:Key="EqGoldInkBrush" Color="#B99A5E" />
       <SolidColorBrush x:Key="EqOnGoldBrush" Color="#17191C" />
       <SolidColorBrush x:Key="EqGoldTintBrush" Color="#2F2F2C" />
+      <SolidColorBrush x:Key="EqHoverFillBrush" Color="#363530" />
+      <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="#363530" />
+      <SolidColorBrush x:Key="ToggleButtonBorderBrushPointerOver" Color="#B99A5E" />
+      <SolidColorBrush x:Key="ToggleButtonForegroundPointerOver" Color="#F1EFE9" />
       <SolidColorBrush x:Key="EqSuccessBrush" Color="#43876A" />
       <SolidColorBrush x:Key="EqWarningBrush" Color="#C18B42" />
       <SolidColorBrush x:Key="EqDangerBrush" Color="#C45D58" />
@@ -110,6 +130,7 @@
       <SolidColorBrush x:Key="EqGoldInkBrush" Color="{ThemeResource SystemColorHighlightColor}" />
       <SolidColorBrush x:Key="EqOnGoldBrush" Color="{ThemeResource SystemColorHighlightTextColor}" />
       <SolidColorBrush x:Key="EqGoldTintBrush" Color="{ThemeResource SystemColorWindowColor}" />
+      <SolidColorBrush x:Key="EqHoverFillBrush" Color="{ThemeResource SystemColorWindowColor}" />
       <SolidColorBrush x:Key="EqSuccessBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
       <SolidColorBrush x:Key="EqWarningBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
       <SolidColorBrush x:Key="EqDangerBrush" Color="{ThemeResource SystemColorWindowTextColor}" />

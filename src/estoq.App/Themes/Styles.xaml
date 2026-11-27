@@ -15,22 +15,22 @@
   </Style>
   <Style x:Key="EqCardTitleStyle" TargetType="TextBlock">
     <Setter Property="FontFamily" Value="{StaticResource EqBrandFont}" />
-    <Setter Property="FontSize" Value="20" />
+    <Setter Property="FontSize" Value="{StaticResource EqFont2xl}" />
     <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
   </Style>
   <Style x:Key="EqLabelStyle" TargetType="TextBlock">
     <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
-    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontSize" Value="{StaticResource EqFontMd}" />
   </Style>
   <Style x:Key="EqSecondaryStyle" TargetType="TextBlock">
     <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
-    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontSize" Value="{StaticResource EqFontSm}" />
     <Setter Property="Foreground" Value="{ThemeResource EqTextSecondaryBrush}" />
     <Setter Property="TextWrapping" Value="Wrap" />
   </Style>
   <Style x:Key="EqCaptionStyle" TargetType="TextBlock">
     <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
-    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontSize" Value="{StaticResource EqFontXs}" />
     <Setter Property="Foreground" Value="{ThemeResource EqTextSecondaryBrush}" />
   </Style>
   <Style x:Key="EqKpiStyle" TargetType="TextBlock">
@@ -42,7 +42,7 @@
   <!-- Material Symbols Rounded icon (glyph code from Assets/Fonts/codepoints.txt). -->
   <Style x:Key="EqIconStyle" TargetType="FontIcon">
     <Setter Property="FontFamily" Value="{StaticResource EqIconFont}" />
-    <Setter Property="FontSize" Value="24" />
+    <Setter Property="FontSize" Value="{StaticResource EqFont4xl}" />
   </Style>
 
   <Style x:Key="EqCardStyle" TargetType="Border">
@@ -67,7 +67,7 @@
 
   <Style x:Key="EqTableHeaderTextStyle" TargetType="TextBlock">
     <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
-    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontSize" Value="{StaticResource EqFontSm}" />
     <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="TextTrimming" Value="CharacterEllipsis" />
@@ -116,9 +116,8 @@
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="PointerOver">
                   <VisualState.Setters>
-                    <Setter Target="Root.Background" Value="{ThemeResource EqGoldBrush}" />
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
                     <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
-                    <Setter Target="Presenter.Foreground" Value="{ThemeResource EqOnGoldBrush}" />
                   </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Pressed">
@@ -154,19 +153,19 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="Button">
-          <Grid x:Name="Root" Background="Transparent" CornerRadius="8">
+          <Grid x:Name="Root" Background="Transparent" CornerRadius="{StaticResource EqRadiusMd}">
             <VisualStateManager.VisualStateGroups>
               <VisualStateGroup x:Name="CommonStates">
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="PointerOver">
                   <VisualState.Setters>
-                    <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
                     <Setter Target="Presenter.Foreground" Value="{ThemeResource EqTextBrush}" />
                   </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Pressed">
                   <VisualState.Setters>
-                    <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
                     <Setter Target="Presenter.Foreground" Value="{ThemeResource EqTextBrush}" />
                   </VisualState.Setters>
                 </VisualState>
@@ -204,14 +203,14 @@
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="PointerOver">
                   <VisualState.Setters>
-                    <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
                     <Setter Target="Root.BorderBrush" Value="{ThemeResource EqTextSecondaryBrush}" />
                     <Setter Target="Presenter.Foreground" Value="{ThemeResource EqTextBrush}" />
                   </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Pressed">
                   <VisualState.Setters>
-                    <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
                     <Setter Target="Presenter.Foreground" Value="{ThemeResource EqTextBrush}" />
                   </VisualState.Setters>
                 </VisualState>
@@ -229,7 +228,7 @@
   <Style x:Key="EqLinkButtonStyle" TargetType="HyperlinkButton">
     <Setter Property="Foreground" Value="{ThemeResource EqGoldInkBrush}" />
     <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
-    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontSize" Value="{StaticResource EqFontSm}" />
     <Setter Property="Padding" Value="8,4" />
   </Style>
 
@@ -254,12 +253,12 @@
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="PointerOver">
                   <VisualState.Setters>
-                    <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
                   </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Pressed">
                   <VisualState.Setters>
-                    <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
                   </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Disabled">
@@ -273,7 +272,7 @@
                 <VisualState x:Name="Indeterminate" />
                 <VisualState x:Name="Checked">
                   <VisualState.Setters>
-                    <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
                     <Setter Target="Indicator.Visibility" Value="Visible" />
                   </VisualState.Setters>
                 </VisualState>
@@ -302,17 +301,6 @@
     <Setter Property="Padding" Value="12,0" />
   </Style>
 
-  <!-- One input surface for editable ComboBoxes; the native editable template otherwise draws its own TextBox. -->
-  <Style x:Key="EqEditableComboBoxStyle" TargetType="ComboBox">
-    <Setter Property="MinHeight" Value="38" />
-    <Setter Property="Padding" Value="10,0" />
-    <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
-    <Setter Property="Background" Value="{ThemeResource EqSurfaceBrush}" />
-    <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="CornerRadius" Value="{StaticResource EqRadiusMd}" />
-  </Style>
-
   <Style x:Key="EqAutoSuggestTextBoxStyle" TargetType="TextBox">
     <Setter Property="MinWidth" Value="0" />
     <Setter Property="TextWrapping" Value="NoWrap" />
@@ -324,7 +312,7 @@
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
     <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
-    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontSize" Value="{StaticResource EqFontMd}" />
   </Style>
 
   <Style x:Key="EqAutoSuggestBoxStyle" TargetType="AutoSuggestBox">
@@ -382,7 +370,7 @@
     <Setter Property="MinWidth" Value="88" />
     <Setter Property="Padding" Value="16,0" />
     <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
-    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontSize" Value="{StaticResource EqFontMd}" />
     <Setter Property="Foreground" Value="{ThemeResource EqOnGoldBrush}" />
     <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
     <Setter Property="FocusVisualPrimaryThickness" Value="2" />
@@ -426,7 +414,7 @@
     <Setter Property="MinWidth" Value="88" />
     <Setter Property="Padding" Value="16,0" />
     <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
-    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontSize" Value="{StaticResource EqFontMd}" />
     <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
     <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
     <Setter Property="FocusVisualPrimaryThickness" Value="2" />
@@ -441,12 +429,14 @@
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="PointerOver">
                   <VisualState.Setters>
-                    <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                    <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
                   </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Pressed">
                   <VisualState.Setters>
-                    <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                    <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
                   </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Disabled">

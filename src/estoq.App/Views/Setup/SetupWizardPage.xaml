@@ -42,7 +42,7 @@
       <TextBlock Grid.Row="1" Margin="0,28,0,8" Text="{x:Bind ViewModel.WizardTitle, Mode=OneWay}"
                  Style="{StaticResource EqPageTitleStyle}" TextWrapping="Wrap" />
       <TextBlock Grid.Row="2" Margin="0,0,0,28" Text="{x:Bind ViewModel.WizardTagline, Mode=OneWay}"
-                 Style="{StaticResource EqSecondaryStyle}" FontSize="14" />
+                 Style="{StaticResource EqSecondaryStyle}" FontSize="{StaticResource EqFontMd}" />
 
       <ItemsControl Grid.Row="3" ItemsSource="{x:Bind ViewModel.Steps}" IsTabStop="False">
         <ItemsControl.ItemTemplate>
@@ -63,24 +63,24 @@
 
               <!-- Number badge: gold when current, a check when done, an outline when upcoming. Text is never colour alone. -->
               <Grid Grid.Column="0" Width="32" Height="32" VerticalAlignment="Center">
-                <Border Background="{ThemeResource EqGoldBrush}" CornerRadius="16"
+                <Border Background="{ThemeResource EqGoldBrush}" CornerRadius="{StaticResource EqRadiusXl}"
                         Visibility="{x:Bind IsCurrent, Mode=OneWay}">
                   <TextBlock Text="{x:Bind NumberText}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                             FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                             FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
                              Foreground="{ThemeResource EqOnGoldBrush}" />
                 </Border>
                 <FontIcon Glyph="&#xF0BE;" FontFamily="{StaticResource EqIconFontFilled}" FontSize="32"
                           Foreground="{ThemeResource EqGoldInkBrush}" Visibility="{x:Bind IsDone, Mode=OneWay}" />
-                <Border BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1" CornerRadius="16"
+                <Border BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1" CornerRadius="{StaticResource EqRadiusXl}"
                         Visibility="{x:Bind IsUpcoming, Mode=OneWay}">
                   <TextBlock Text="{x:Bind NumberText}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                             FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                             FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
                              Foreground="{ThemeResource EqTextSecondaryBrush}" />
                 </Border>
               </Grid>
 
               <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
                            TextTrimming="CharacterEllipsis" />
                 <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" Style="{StaticResource EqCaptionStyle}"
                            TextTrimming="CharacterEllipsis" />
@@ -137,19 +137,19 @@
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
           <TextBlock Grid.Column="0" Text="{x:Bind ViewModel.FinishError, Mode=OneWay}" VerticalAlignment="Center"
-                     Foreground="{ThemeResource EqDangerBrush}" FontSize="13" TextWrapping="Wrap"
+                     Foreground="{ThemeResource EqDangerBrush}" FontSize="{StaticResource EqFontSm}" TextWrapping="Wrap"
                      Visibility="{x:Bind ViewModel.HasFinishError, Mode=OneWay}" />
           <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.BackCommand}"
                   Visibility="{x:Bind ViewModel.IsBackVisible, Mode=OneWay}">
             <StackPanel Orientation="Horizontal" Spacing="4">
-              <FontIcon Glyph="&#xE5CB;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+              <FontIcon Glyph="&#xE5CB;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
               <TextBlock Text="{x:Bind ViewModel.BackText, Mode=OneWay}" />
             </StackPanel>
           </Button>
           <Button Grid.Column="2" Style="{StaticResource EqPrimaryButtonStyle}" Command="{x:Bind ViewModel.NextCommand}">
             <StackPanel Orientation="Horizontal" Spacing="4">
               <TextBlock Text="{x:Bind ViewModel.NextText, Mode=OneWay}" />
-              <FontIcon Glyph="&#xE5CC;" FontFamily="{StaticResource EqIconFont}" FontSize="18"
+              <FontIcon Glyph="&#xE5CC;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}"
                         Visibility="{x:Bind ViewModel.ShowNextArrow, Mode=OneWay}" />
             </StackPanel>
           </Button>

@@ -18,6 +18,12 @@ public sealed partial class PopupShell : UserControl
     public static readonly DependencyProperty SubtitleProperty =
         DependencyProperty.Register(nameof(Subtitle), typeof(string), typeof(PopupShell), new PropertyMetadata(string.Empty));
 
+    public static readonly DependencyProperty ShortcutHintProperty =
+        DependencyProperty.Register(nameof(ShortcutHint), typeof(string), typeof(PopupShell), new PropertyMetadata(string.Empty));
+
+    public static readonly DependencyProperty IsShortcutHintVisibleProperty =
+        DependencyProperty.Register(nameof(IsShortcutHintVisible), typeof(bool), typeof(PopupShell), new PropertyMetadata(false));
+
     public static readonly DependencyProperty PrimaryTextProperty =
         DependencyProperty.Register(nameof(PrimaryText), typeof(string), typeof(PopupShell), new PropertyMetadata(string.Empty));
 
@@ -46,6 +52,19 @@ public sealed partial class PopupShell : UserControl
     {
         get => (string)GetValue(SubtitleProperty);
         set => SetValue(SubtitleProperty, value);
+    }
+
+    /// <summary>Key that opens the pop-up, shown as a badge beside the title while <see cref="IsShortcutHintVisible"/>.</summary>
+    public string ShortcutHint
+    {
+        get => (string)GetValue(ShortcutHintProperty);
+        set => SetValue(ShortcutHintProperty, value);
+    }
+
+    public bool IsShortcutHintVisible
+    {
+        get => (bool)GetValue(IsShortcutHintVisibleProperty);
+        set => SetValue(IsShortcutHintVisibleProperty, value);
     }
 
     public string PrimaryText

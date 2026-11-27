@@ -33,7 +33,7 @@
             <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="32"
                       Foreground="{ThemeResource EqGoldInkBrush}" HorizontalAlignment="Center" />
             <TextBlock Text="{x:Bind ViewModel.LogoButtonText, Mode=OneWay}" FontFamily="{StaticResource EqUiFontSemiBold}"
-                       FontSize="14" HorizontalAlignment="Center" />
+                       FontSize="{StaticResource EqFontMd}" HorizontalAlignment="Center" />
             <TextBlock Text="{x:Bind services:Loc.Get('Store_LogoHint')}" Style="{StaticResource EqCaptionStyle}"
                        HorizontalAlignment="Center" />
           </StackPanel>
@@ -43,7 +43,7 @@
         <HyperlinkButton Style="{StaticResource EqLinkButtonStyle}" Content="{x:Bind services:Loc.Get('Store_RemoveLogo')}"
                 Command="{x:Bind ViewModel.RemoveLogoCommand}" />
       </StackPanel>
-      <TextBlock Text="{x:Bind ViewModel.LogoError, Mode=OneWay}" FontSize="12" TextWrapping="Wrap"
+      <TextBlock Text="{x:Bind ViewModel.LogoError, Mode=OneWay}" FontSize="{StaticResource EqFontXs}" TextWrapping="Wrap"
                  Foreground="{ThemeResource EqDangerBrush}" />
     </StackPanel>
 

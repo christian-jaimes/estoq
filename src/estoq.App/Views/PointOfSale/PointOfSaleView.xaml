@@ -26,6 +26,43 @@
       </Setter>
     </Style>
 
+    <!-- Currency chip: a pill that hovers like every other control; the gold selected fill sits inside it. -->
+    <Style x:Key="PosChipButtonStyle" TargetType="Button">
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
+      <Setter Property="FocusVisualPrimaryThickness" Value="2" />
+      <Setter Property="FocusVisualMargin" Value="-3" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Grid>
+              <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                  <VisualState x:Name="Normal" />
+                  <VisualState x:Name="PointerOver">
+                    <VisualState.Setters>
+                      <Setter Target="Chip.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                      <Setter Target="Chip.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
+                    </VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Pressed">
+                    <VisualState.Setters>
+                      <Setter Target="Chip.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                      <Setter Target="Chip.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
+                    </VisualState.Setters>
+                  </VisualState>
+                </VisualStateGroup>
+              </VisualStateManager.VisualStateGroups>
+              <Border x:Name="Chip" Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}"
+                      BorderThickness="1" CornerRadius="18" />
+              <ContentPresenter CornerRadius="18" Padding="{TemplateBinding Padding}" HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch" />
+            </Grid>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
     <!-- Payment tiles act like spring buttons: show hover/press feedback without a persistent selected state. -->
     <Style x:Key="PosPaymentMethodButtonStyle" TargetType="Button">
       <Setter Property="Padding" Value="0" />
@@ -41,6 +78,7 @@
                   <VisualState x:Name="Normal" />
                   <VisualState x:Name="PointerOver">
                     <VisualState.Setters>
+                      <Setter Target="Tile.Background" Value="{ThemeResource EqHoverFillBrush}" />
                       <Setter Target="Tile.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
                     </VisualState.Setters>
                   </VisualState>
@@ -72,7 +110,7 @@
     <!-- Round 32 px stepper button for the quantity (minus and plus). -->
     <Style x:Key="PosStepButtonStyle" TargetType="Button">
       <Setter Property="Width" Value="36" />
-      <Setter Property="Height" Value="36" />
+      <Setter Property="Height" Value="{StaticResource EqControlHeight}" />
       <Setter Property="Padding" Value="0" />
       <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
       <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
@@ -87,6 +125,7 @@
                   <VisualState x:Name="Normal" />
                   <VisualState x:Name="PointerOver">
                     <VisualState.Setters>
+                      <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
                       <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
                     </VisualState.Setters>
                   </VisualState>
@@ -161,7 +200,7 @@
               <Border Style="{StaticResource EqBadgeStyle}" CornerRadius="{StaticResource EqRadiusSm}" Padding="8,2"
                       Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1"
                       VerticalAlignment="Center" Visibility="{x:Bind local:PosBindings.Visible(ViewModel.ShowShortcutHints), Mode=OneWay}">
-                <TextBlock Text="F1" Style="{StaticResource EqLabelStyle}" FontSize="12" />
+                <TextBlock Text="F1" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontXs}" />
               </Border>
             </StackPanel>
             <TextBlock Text="{x:Bind services:Loc.Get('Pos_Subtitle')}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
@@ -174,17 +213,15 @@
             </ItemsRepeater.Layout>
             <ItemsRepeater.ItemTemplate>
               <DataTemplate x:DataType="vm:CurrencyChipViewModel">
-                <Button Style="{StaticResource PosFlatButtonStyle}" Command="{x:Bind SelectCommand}"
+                <Button Style="{StaticResource PosChipButtonStyle}" Command="{x:Bind SelectCommand}"
                         AutomationProperties.Name="{x:Bind Code}">
-                  <Grid Height="36" MinWidth="72" CornerRadius="18">
-                    <Border Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}"
-                            BorderThickness="1" CornerRadius="18" />
+                  <Grid Height="{StaticResource EqControlHeight}" MinWidth="72" CornerRadius="18">
                     <Border Background="{ThemeResource EqGoldBrush}" CornerRadius="18"
                             Visibility="{x:Bind local:PosBindings.Visible(IsSelected), Mode=OneWay}" />
-                    <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqLabelStyle}" FontSize="14" Margin="16,0"
+                    <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontMd}" Margin="16,0"
                                HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource EqTextBrush}"
                                Visibility="{x:Bind local:PosBindings.Hidden(IsSelected), Mode=OneWay}" />
-                    <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqLabelStyle}" FontSize="14" Margin="16,0"
+                    <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontMd}" Margin="16,0"
                                HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource EqOnGoldBrush}"
                                Visibility="{x:Bind local:PosBindings.Visible(IsSelected), Mode=OneWay}" />
                   </Grid>
@@ -196,7 +233,7 @@
           <Button x:Name="CloseButton" Grid.Column="3" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Top"
                   Click="OnCloseClick" ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_CloseTip')}"
                   AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}">
-            <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
+            <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
             <Button.KeyboardAccelerators>
               <KeyboardAccelerator Key="Escape" />
             </Button.KeyboardAccelerators>
@@ -236,7 +273,7 @@
                   <FontIcon Grid.Column="0" Glyph="&#xE70C;" FontFamily="{StaticResource EqIconFont}" FontSize="26"
                             Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
                   <TextBox x:Name="ScanInput" Grid.Column="1" Style="{StaticResource PosBareTextBoxStyle}" 
-                           FontSize="16" TextAlignment="Left" MinHeight="0" Padding="0,6"
+                           FontSize="{StaticResource EqFontLg}" TextAlignment="Left" MinHeight="0" Padding="0,6"
                            PlaceholderText="{x:Bind services:Loc.Get('Pos_ScanPlaceholder')}"
                            Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                            AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_ScanPlaceholder')}"
@@ -246,7 +283,7 @@
 
               <!-- Message under the field when nothing matches -->
               <TextBlock Grid.Row="1" Text="{x:Bind ViewModel.ScanMessage, Mode=OneWay}" Foreground="{ThemeResource EqDangerBrush}"
-                         FontSize="13" TextWrapping="Wrap"
+                         FontSize="{StaticResource EqFontSm}" TextWrapping="Wrap"
                          Visibility="{x:Bind local:PosBindings.Visible(ViewModel.HasScanMessage), Mode=OneWay}" />
 
               <!-- Cart table -->
@@ -294,7 +331,7 @@
                               <!-- First-letter placeholder until a product image is available. -->
                               <Border Grid.Column="0" Width="52" Height="52" CornerRadius="{StaticResource EqRadiusMd}"
                                       Background="{ThemeResource EqGoldTintBrush}" VerticalAlignment="Center">
-                                <TextBlock Text="{x:Bind Initial}" FontFamily="{StaticResource EqBrandFont}" FontSize="20"
+                                <TextBlock Text="{x:Bind Initial}" FontFamily="{StaticResource EqBrandFont}" FontSize="{StaticResource EqFont2xl}"
                                            Foreground="{ThemeResource EqGoldInkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                               </Border>
                               <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
@@ -302,9 +339,9 @@
                                            Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
                                 <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
                                 <StackPanel Orientation="Horizontal" Spacing="4" Visibility="{x:Bind StockNoteVisibility}">
-                                  <FontIcon Glyph="&#xF083;" FontFamily="{StaticResource EqIconFont}" FontSize="14"
+                                  <FontIcon Glyph="&#xF083;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontMd}"
                                             Foreground="{ThemeResource EqWarningBrush}" VerticalAlignment="Center" />
-                                  <TextBlock Text="{x:Bind StockNote}" FontSize="12" Foreground="{ThemeResource EqWarningBrush}"
+                                  <TextBlock Text="{x:Bind StockNote}" FontSize="{StaticResource EqFontXs}" Foreground="{ThemeResource EqWarningBrush}"
                                              TextWrapping="Wrap" />
                                 </StackPanel>
                               </StackPanel>
@@ -315,9 +352,9 @@
                             <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center" VerticalAlignment="Center">
                               <Button Style="{StaticResource PosStepButtonStyle}" Command="{x:Bind DecreaseCommand}"
                                       AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_QtyDecrease')}">
-                                <FontIcon Glyph="&#xE15B;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+                                <FontIcon Glyph="&#xE15B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
                               </Button>
-                              <TextBox Text="{x:Bind QuantityText}" Width="40" Height="36" Padding="0,9"
+                              <TextBox Text="{x:Bind QuantityText}" Width="40" Height="{StaticResource EqControlHeight}" Padding="0,9"
                                        TextAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource PosBareTextBoxStyle}"
                                        FontFamily="{StaticResource EqUiFontSemiBold}" InputScope="Number" MaxLength="4"
                                        AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_ColQty')}"
@@ -335,17 +372,17 @@
                               </TextBox>
                               <Button Style="{StaticResource PosStepButtonStyle}" Command="{x:Bind IncreaseCommand}"
                                       AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_QtyIncrease')}">
-                                <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="18" />
+                                <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
                               </Button>
                             </StackPanel>
 
                             <TextBlock Grid.Column="4" Text="{x:Bind TotalText}" Style="{StaticResource PosRowValueStyle}" />
 
                             <Button Grid.Column="5" Style="{StaticResource PosStepButtonStyle}" Command="{x:Bind RemoveCommand}"
-                                    Width="36" Height="36" HorizontalAlignment="Right"
+                                    Width="36" Height="{StaticResource EqControlHeight}" HorizontalAlignment="Right"
                                     ToolTipService.ToolTip="{x:Bind services:Loc.Get('Pos_RemoveItem')}"
                                     AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_RemoveItem')}">
-                              <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
+                              <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" />
                             </Button>
                             </Grid>
                           </Grid>
@@ -375,7 +412,7 @@
                               <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
-                              <TextBlock Text="{x:Bind Name}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="14"
+                              <TextBlock Text="{x:Bind Name}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
                                          Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
                               <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqSecondaryStyle}" />
                                 <TextBlock Text="{x:Bind Barcode}" Style="{StaticResource EqSecondaryStyle}" />
@@ -399,7 +436,7 @@
               <!-- Payment -->
               <Border Style="{StaticResource EqCardStyle}" Padding="16">
                 <StackPanel Spacing="12">
-                  <TextBlock Text="{x:Bind services:Loc.Get('Pos_PaymentMethod')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
+                  <TextBlock Text="{x:Bind services:Loc.Get('Pos_PaymentMethod')}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFontXl}" />
 
                   <ItemsRepeater ItemsSource="{x:Bind ViewModel.Methods, Mode=OneWay}">
                     <ItemsRepeater.Layout>
@@ -422,7 +459,7 @@
                                              Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
                               </Grid>
-                              <TextBlock Text="{x:Bind Label}" FontFamily="{StaticResource EqUiFont}" FontSize="13" TextAlignment="Center"
+                              <TextBlock Text="{x:Bind Label}" FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontSm}" TextAlignment="Center"
                                          TextWrapping="Wrap" MaxLines="2" Foreground="{ThemeResource EqTextBrush}" HorizontalAlignment="Center" />
                             </StackPanel>
                           </Grid>
@@ -438,7 +475,7 @@
                                     <ColumnDefinition Width="40" />
                                   </Grid.ColumnDefinitions>
                                   <TextBlock x:Name="PaymentCurrencySymbol" Grid.Column="0" Text="$" FontFamily="{StaticResource EqUiFontSemiBold}"
-                                             FontSize="16" Foreground="{ThemeResource EqTextBrush}" VerticalAlignment="Center" Margin="4,0" />
+                                             FontSize="{StaticResource EqFontLg}" Foreground="{ThemeResource EqTextBrush}" VerticalAlignment="Center" Margin="4,0" />
                                   <Border Grid.Column="1" Height="40" Background="{ThemeResource EqSurfaceBrush}" BorderBrush="{ThemeResource EqBorderBrush}"
                                           BorderThickness="1" CornerRadius="{StaticResource EqRadiusMd}">
                                     <Border.RenderTransform>
@@ -455,7 +492,7 @@
                                         Tag="{x:Bind Method}"
                                         Click="OnPaymentSubmit" AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_SubmitPayment')}"
                                         ToolTipService.ToolTip="{x:Bind services:Loc.Get('Pos_SubmitPayment')}">
-                                    <FontIcon Glyph="&#xF0BE;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
+                                    <FontIcon Glyph="&#xF0BE;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" />
                                   </Button>
                                 </Grid>
                               </Border>
@@ -478,7 +515,7 @@
                       <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                      <TextBlock Text="{x:Bind services:Loc.Get('Pos_Summary')}" Style="{StaticResource EqCardTitleStyle}" FontSize="18" />
+                      <TextBlock Text="{x:Bind services:Loc.Get('Pos_Summary')}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFontXl}" />
                       <TextBlock Text="{x:Bind ViewModel.ItemsText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" />
                     </StackPanel>
                     <!-- Gold tint rather than a second gold fill: one gold primary per view (design system). -->
@@ -486,9 +523,9 @@
                       <Border Height="40" Padding="14,0" CornerRadius="{StaticResource EqRadiusMd}"
                               Background="{ThemeResource EqGoldTintBrush}" BorderBrush="{ThemeResource EqGoldBrush}" BorderThickness="1">
                         <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                          <FontIcon Glyph="&#xF05B;" FontFamily="{StaticResource EqIconFont}" FontSize="20" Foreground="{ThemeResource EqGoldInkBrush}" />
+                          <FontIcon Glyph="&#xF05B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
                           <TextBlock Text="{x:Bind services:Loc.Get('Pos_AddDiscount')}" FontFamily="{StaticResource EqUiFontSemiBold}"
-                                     FontSize="14" Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center" />
+                                     FontSize="{StaticResource EqFontMd}" Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center" />
                         </StackPanel>
                       </Border>
                       <Button.Flyout>
@@ -503,7 +540,7 @@
                                 </ItemsRepeater.Layout>
                                 <ItemsRepeater.ItemTemplate>
                                   <DataTemplate x:DataType="vm:DiscountPresetViewModel">
-                                    <Button Width="{x:Bind ButtonWidth}" Height="36" MinWidth="0" Padding="0"
+                                    <Button Width="{x:Bind ButtonWidth}" Height="{StaticResource EqControlHeight}" MinWidth="0" Padding="0"
                                             Style="{StaticResource EqSecondaryButtonStyle}"
                                             Content="{x:Bind Label}" Tag="{x:Bind Tag}" Click="OnDiscountPresetClick" />
                                   </DataTemplate>
@@ -511,7 +548,7 @@
                               </ItemsRepeater>
                               <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
                               <StackPanel Orientation="Horizontal" Spacing="6">
-                                <FontIcon Glyph="&#xE88E;" FontFamily="{StaticResource EqIconFont}" FontSize="13"
+                                <FontIcon Glyph="&#xE88E;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontSm}"
                                           Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
                                 <TextBlock Text="{x:Bind ViewModel.DiscountHint, Mode=OneWay}" Style="{StaticResource EqCaptionStyle}"
                                            TextWrapping="Wrap" VerticalAlignment="Center" />
@@ -523,7 +560,7 @@
                                   <PasswordBox x:Name="DiscountApprovalInput" Password="{x:Bind ViewModel.ApprovalCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                Height="40" VerticalContentAlignment="Center" KeyDown="OnDiscountKeyDown"
                                                MaxLength="6" Background="Transparent" BorderThickness="0" MinHeight="0" Padding="0,6"
-                                               VerticalAlignment="Center" FontFamily="{StaticResource EqUiFont}" FontSize="14"
+                                               VerticalAlignment="Center" FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontMd}"
                                                PlaceholderText="{x:Bind services:Loc.Get('Pos_DiscountApprovalCode')}"
                                                AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_DiscountApprovalCode')}">
                                     <PasswordBox.Resources>
@@ -541,7 +578,7 @@
                                 <Button Style="{StaticResource EqPrimaryButtonStyle}" Content="{x:Bind services:Loc.Get('Pos_DiscountApply')}"
                                         HorizontalAlignment="Right" Click="OnDiscountApply" />
                               </StackPanel>
-                              <TextBlock Text="{x:Bind ViewModel.DiscountError, Mode=OneWay}" FontSize="12" TextWrapping="Wrap"
+                              <TextBlock Text="{x:Bind ViewModel.DiscountError, Mode=OneWay}" FontSize="{StaticResource EqFontXs}" TextWrapping="Wrap"
                                        Foreground="{ThemeResource EqDangerBrush}"
                                        Visibility="{x:Bind local:PosBindings.Visible(ViewModel.HasDiscountError), Mode=OneWay}" />
 
@@ -572,7 +609,7 @@
                         <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                           <TextBlock Text="{x:Bind ViewModel.DiscountTotalText, Mode=OneWay}" FontFamily="{StaticResource EqUiFontSemiBold}"
                                      FontSize="15" Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center" />
-                          <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="16"
+                          <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontLg}"
                                     Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center" />
                         </StackPanel>
                       </Border>
@@ -585,7 +622,7 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
                       <TextBlock Text="{x:Bind ViewModel.TaxLabel, Mode=OneWay}" Style="{StaticResource PosRowLabelStyle}" />
-                      <FontIcon Glyph="&#xE88E;" FontFamily="{StaticResource EqIconFont}" FontSize="18"
+                      <FontIcon Glyph="&#xE88E;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}"
                                 Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center"
                                 ToolTipService.ToolTip="{x:Bind ViewModel.TaxInfo, Mode=OneWay}" />
                     </StackPanel>
@@ -599,7 +636,7 @@
                       <ColumnDefinition Width="Auto" />
                       <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Pos_Total')}" FontFamily="{StaticResource EqBrandFont}" FontSize="24"
+                    <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Pos_Total')}" FontFamily="{StaticResource EqBrandFont}" FontSize="{StaticResource EqFont4xl}"
                                Foreground="{ThemeResource EqTextBrush}" VerticalAlignment="Center" />
                     <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.TotalText, Mode=OneWay}" FontFamily="{StaticResource EqBrandFont}" FontSize="30"
                                Foreground="{ThemeResource EqTextBrush}" HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" />
@@ -628,7 +665,7 @@
                               <ColumnDefinition Width="*" />
                               <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Amount}" Style="{StaticResource PosRowValueStyle}" FontSize="14" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind Amount}" Style="{StaticResource PosRowValueStyle}" FontSize="{StaticResource EqFontMd}" />
                             <Button Grid.Column="1" Style="{StaticResource PosFlatButtonStyle}" Width="40" Height="40" Padding="0"
                                     HorizontalAlignment="Center" VerticalAlignment="Center" Command="{x:Bind RemoveCommand}"
                                     Tag="PaymentRemove" Opacity="0" IsHitTestVisible="False"
@@ -637,13 +674,13 @@
                               <Button.RenderTransform>
                                 <CompositeTransform TranslateX="12" />
                               </Button.RenderTransform>
-                              <Border Width="36" Height="36" Background="{ThemeResource EqDangerBrush}"
+                              <Border Width="36" Height="{StaticResource EqControlHeight}" Background="{ThemeResource EqDangerBrush}"
                                       CornerRadius="{StaticResource EqRadiusMd}">
                                 <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="19"
                                           Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
                               </Border>
                             </Button>
-                            <TextBlock Grid.Column="0" Text="{x:Bind Method}" Style="{StaticResource PosRowLabelStyle}" FontSize="14" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Grid.Column="0" Text="{x:Bind Method}" Style="{StaticResource PosRowLabelStyle}" FontSize="{StaticResource EqFontMd}" TextTrimming="CharacterEllipsis" />
                           </Grid>
                         </Grid>
                       </DataTemplate>
@@ -655,11 +692,11 @@
                       <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Pos_AmountToReturn')}" FontFamily="{StaticResource EqUiFontSemiBold}"
-                               FontSize="16" Foreground="{ThemeResource EqTextBrush}" VerticalAlignment="Center" />
+                               FontSize="{StaticResource EqFontLg}" Foreground="{ThemeResource EqTextBrush}" VerticalAlignment="Center" />
                     <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.BalanceText, Mode=OneWay}" FontFamily="{StaticResource EqBrandFont}"
-                               FontSize="24" Foreground="{ThemeResource EqSuccessBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                               FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqSuccessBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" />
                   </Grid>
-                  <TextBlock Text="{x:Bind services:Loc.Get('Pos_ChangeNeedsCash')}" FontSize="12" TextWrapping="Wrap"
+                  <TextBlock Text="{x:Bind services:Loc.Get('Pos_ChangeNeedsCash')}" FontSize="{StaticResource EqFontXs}" TextWrapping="Wrap"
                              Foreground="{ThemeResource EqDangerBrush}"
                              Visibility="{x:Bind local:PosBindings.Visible(ViewModel.NeedsCashForChange), Mode=OneWay}" />
                   <Grid Visibility="{x:Bind local:PosBindings.Visible(ViewModel.HasRemainingToPay), Mode=OneWay}" ColumnSpacing="12">
@@ -668,9 +705,9 @@
                       <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Pos_RemainingToPay')}" FontFamily="{StaticResource EqUiFontSemiBold}"
-                               FontSize="16" Foreground="{ThemeResource EqTextBrush}" VerticalAlignment="Center" />
+                               FontSize="{StaticResource EqFontLg}" Foreground="{ThemeResource EqTextBrush}" VerticalAlignment="Center" />
                     <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.RemainingToPayText, Mode=OneWay}" FontFamily="{StaticResource EqBrandFont}"
-                               FontSize="24" Foreground="{ThemeResource EqTextBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                               FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqTextBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" />
                   </Grid>
                 </StackPanel>
               </Border>
@@ -685,12 +722,12 @@
                       Command="{x:Bind ViewModel.CompleteCommand}" IsEnabled="{x:Bind ViewModel.CanComplete, Mode=OneWay}"
                       ToolTipService.ToolTip="{x:Bind services:Loc.Get('Pos_CompleteTip')}">
                 <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
-                  <FontIcon Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="24" />
-                  <TextBlock Text="{x:Bind services:Loc.Get('Pos_Complete')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="18"
+                  <FontIcon Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
+                  <TextBlock Text="{x:Bind services:Loc.Get('Pos_Complete')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontXl}"
                              VerticalAlignment="Center" />
                   <Border Padding="8,3" CornerRadius="{StaticResource EqRadiusSm}" Background="{ThemeResource EqOnGoldBrush}" VerticalAlignment="Center"
                           Visibility="{x:Bind local:PosBindings.Visible(ViewModel.ShowShortcutHints), Mode=OneWay}">
-                    <TextBlock Text="Ctrl+Enter" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="12" Foreground="{ThemeResource EqGoldBrush}" />
+                    <TextBlock Text="Ctrl+Enter" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontXs}" Foreground="{ThemeResource EqGoldBrush}" />
                   </Border>
                 </StackPanel>
                 <Button.KeyboardAccelerators>
@@ -700,7 +737,7 @@
                 <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Width="48" MinWidth="0" Padding="0" Height="56"
                         IsEnabled="{x:Bind local:PosBindings.Not(ViewModel.IsCartEmpty), Mode=OneWay}"
                         ToolTipService.ToolTip="{x:Bind services:Loc.Get('Pos_ClearSale')}">
-                  <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
+                  <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" />
                   <Button.Flyout>
                     <Flyout x:Name="ClearFlyout">
                       <StackPanel Width="260" Spacing="12">
@@ -755,7 +792,7 @@
                 <ItemsControl ItemsSource="{x:Bind ViewModel.CompletedPaymentLines, Mode=OneWay}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:PaymentLineViewModel">
-                      <Grid MinHeight="36" Padding="8,4" ColumnSpacing="8">
+                      <Grid MinHeight="{StaticResource EqControlHeight}" Padding="8,4" ColumnSpacing="8">
                         <Grid.ColumnDefinitions>
                           <ColumnDefinition Width="*" />
                           <ColumnDefinition Width="Auto" />
@@ -777,7 +814,7 @@
             </Grid>
             <Grid>
               <TextBlock Text="{x:Bind services:Loc.Get('Pos_Total')}" Style="{StaticResource PosRowLabelStyle}" FontFamily="{StaticResource EqUiFontSemiBold}" />
-              <TextBlock Text="{x:Bind ViewModel.DoneTotalText, Mode=OneWay}" Style="{StaticResource PosRowValueStyle}" FontSize="20" />
+              <TextBlock Text="{x:Bind ViewModel.DoneTotalText, Mode=OneWay}" Style="{StaticResource PosRowValueStyle}" FontSize="{StaticResource EqFont2xl}" />
             </Grid>
             <Grid Visibility="{x:Bind local:PosBindings.Visible(ViewModel.HasPaymentLines), Mode=OneWay}">
               <TextBlock Text="{x:Bind services:Loc.Get('Pos_AmountPaid')}" Style="{StaticResource PosRowLabelStyle}" />
@@ -787,7 +824,7 @@
           <Grid Grid.Row="4" Visibility="{x:Bind local:PosBindings.Visible(ViewModel.DoneHasChange), Mode=OneWay}">
             <TextBlock Text="{x:Bind services:Loc.Get('Pos_ChangeDue')}" Style="{StaticResource PosRowLabelStyle}" />
             <TextBlock Text="{x:Bind ViewModel.DoneChangeText, Mode=OneWay}" Style="{StaticResource PosRowValueStyle}"
-                       Foreground="{ThemeResource EqSuccessBrush}" FontSize="20" />
+                       Foreground="{ThemeResource EqSuccessBrush}" FontSize="{StaticResource EqFont2xl}" />
           </Grid>
           <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Padding="0,8,0,0">
             <Button Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Popup_Close')}" Click="OnCloseClick" />
