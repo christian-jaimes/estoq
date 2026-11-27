@@ -13,6 +13,9 @@
   <!-- F12 logs out from anywhere in the shell, pop-ups included. -->
   <Page.KeyboardAccelerators>
     <KeyboardAccelerator Key="F1" Invoked="OnPointOfSaleAccelerator" />
+    <KeyboardAccelerator Key="F2" Invoked="OnAddItemsAccelerator" />
+    <KeyboardAccelerator Key="F3" Invoked="OnStockAdjustmentsAccelerator" />
+    <KeyboardAccelerator Key="F4" Invoked="OnReturnsAccelerator" />
     <KeyboardAccelerator Key="F12" Invoked="OnLogOutAccelerator" />
   </Page.KeyboardAccelerators>
 
@@ -195,23 +198,14 @@
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenAddItemsCommand}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipItems')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Items_Title')}">
             <FontIcon Glyph="&#xE146;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
-            <Button.KeyboardAccelerators>
-              <KeyboardAccelerator Key="F2" />
-            </Button.KeyboardAccelerators>
           </Button>
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenStockAdjustmentsCommand}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipAdjust')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Adjust_Title')}">
             <FontIcon Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
-            <Button.KeyboardAccelerators>
-              <KeyboardAccelerator Key="F3" />
-            </Button.KeyboardAccelerators>
           </Button>
           <Button Style="{StaticResource EqRoundIconButtonStyle}" Command="{x:Bind ViewModel.OpenReturnsCommand}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Shell_TipReturns')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Returns_Title')}">
             <FontIcon Glyph="&#xE5DB;" FontFamily="{StaticResource EqIconFont}" FontSize="20" />
-            <Button.KeyboardAccelerators>
-              <KeyboardAccelerator Key="F4" />
-            </Button.KeyboardAccelerators>
           </Button>
         </StackPanel>
 
@@ -321,7 +315,7 @@
       <controls:PopupShell x:Name="PopupFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                            Visibility="{x:Bind PopupState.IsFramed, Mode=OneWay}"
                            Title="{x:Bind PopupState.Title, Mode=OneWay}" Subtitle="{x:Bind PopupState.Subtitle, Mode=OneWay}"
-                           Glyph="{x:Bind PopupState.Glyph, Mode=OneWay}" PrimaryText="{x:Bind PopupState.PrimaryText, Mode=OneWay}"
+                           PrimaryText="{x:Bind PopupState.PrimaryText, Mode=OneWay}"
                            IsPrimaryEnabled="{x:Bind PopupState.IsPrimaryEnabled, Mode=OneWay}"
                            CloseRequested="OnPopupCloseRequested" PrimaryInvoked="OnPopupPrimaryInvoked" Tapped="OnPopupTapped">
         <StackPanel Spacing="20">

@@ -138,25 +138,28 @@ public sealed partial class ShellViewModel : ObservableObject
     private void OpenSettings() => _popups.Show(PopupKind.Settings);
 
     [RelayCommand]
-    private void OpenPointOfSale()
+    private void OpenPointOfSale() => TogglePopup(PopupKind.PointOfSale);
+
+    [RelayCommand]
+    private void OpenAddItems() => TogglePopup(PopupKind.AddItems);
+
+    [RelayCommand]
+    private void OpenStockAdjustments() => TogglePopup(PopupKind.StockAdjustments);
+
+    [RelayCommand]
+    private void OpenReturns() => TogglePopup(PopupKind.Returns);
+
+    /// <summary>The F1 to F4 standard: the shortcut opens its pop-up, and pressing it again while open closes it.</summary>
+    private void TogglePopup(PopupKind kind)
     {
-        if (_popups.Current == PopupKind.PointOfSale)
+        if (_popups.Current == kind)
         {
             _popups.Close();
             return;
         }
 
-        _popups.Show(PopupKind.PointOfSale);
+        _popups.Show(kind);
     }
-
-    [RelayCommand]
-    private void OpenAddItems() => _popups.Show(PopupKind.AddItems);
-
-    [RelayCommand]
-    private void OpenStockAdjustments() => _popups.Show(PopupKind.StockAdjustments);
-
-    [RelayCommand]
-    private void OpenReturns() => _popups.Show(PopupKind.Returns);
 
     /// <summary>Ends the session (F12 and the Account settings button). The window then shows sign-in.</summary>
     [RelayCommand]

@@ -90,7 +90,7 @@ The sign-in implementation in `Views/SignIn/SignInPage` and `ViewModels/SignInVi
 
 F1 to F4 and [[settings]] share one frame so staff learn one pattern.
 
-- `Controls/PopupShell`: radius-xl surface; header (icon badge, title, subtitle, close), scrolling body, footer with secondary and one gold primary action. Properties `Title`, `Subtitle`, `Glyph`, `PrimaryText`, `IsPrimaryEnabled`, `Body`; events `CloseRequested`, `PrimaryInvoked`. No flow logic.
+- `Controls/PopupShell`: radius-xl surface; header (title above subtitle, close; no icon badge, same as the point of sale header), scrolling body, footer with secondary and one gold primary action. Properties `Title`, `Subtitle`, `PrimaryText`, `IsPrimaryEnabled`, `Body`; events `CloseRequested`, `PrimaryInvoked`. No flow logic.
 - `Services/IPopupService` (singleton) owns which pop-up is open (`PopupKind`: PointOfSale, AddItems, StockAdjustments, Returns, Settings). One at a time.
 - `ViewModels/PopupViewModel` maps the open kind to header text and icon.
 - `Views/ShellPage` hosts the overlay: dimmed `EqScrimBrush` backdrop, shell inset 40 px sides and bottom, 56 px top. Opening moves focus inside so Esc works. Esc, close, and a backdrop click close it.

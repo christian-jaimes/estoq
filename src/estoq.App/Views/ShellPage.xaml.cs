@@ -96,6 +96,24 @@ public sealed partial class ShellPage : Page
         args.Handled = true;
     }
 
+    private void OnAddItemsAccelerator(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.OpenAddItemsCommand.Execute(null);
+        args.Handled = true;
+    }
+
+    private void OnStockAdjustmentsAccelerator(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.OpenStockAdjustmentsCommand.Execute(null);
+        args.Handled = true;
+    }
+
+    private void OnReturnsAccelerator(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.OpenReturnsCommand.Execute(null);
+        args.Handled = true;
+    }
+
     private void OnFocusSearch(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         SearchBox.Focus(FocusState.Keyboard);
