@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Estoq.App.Services;
 using Estoq.App.ViewModels.AddProduct;
+using Estoq.App.ViewModels.PointOfSale;
 using Estoq.Core.Returns;
 using Estoq.Core.Sales;
 
@@ -11,10 +12,12 @@ namespace Estoq.App.ViewModels.Returns;
 
 /// <summary>
 /// The Returns pop-up (F4, docs/features/returns-and-voids.md): find the original sale by receipt number (or return without
-/// one), tick the items and quantities, pick Refund or Exchange, and save. The rules live in <see cref="ReturnRules"/>.
+/// one), tick the items and quantities, pick Return or Exchange mode (Exchange also searches the new items), and save. The rules live in <see cref="ReturnRules"/>.
 /// </summary>
 public sealed partial class ReturnsViewModel : ObservableObject
 {
+    private const int MaxSuggestions = 6;
+
     private readonly IReturnsService _service;
     private readonly IPointOfSaleService _pointOfSale;
     private readonly ILocalizer _localizer;
@@ -29,8 +32,8 @@ public sealed partial class ReturnsViewModel : ObservableObject
         _pointOfSale = pointOfSale;
         _localizer = localizer;
         _settings = pointOfSale.GetSettings();
-        Currencies = [.. _settings.Currencies];
         SelectedCurrency = _settings.Rates.BaseCurrency;
+        RebuildCurrencies();
         _localizer.LanguageChanged += (_, _) => RefreshText();
         Recalculate();
     }
@@ -42,8 +45,11 @@ public sealed partial class ReturnsViewModel : ObservableObject
 
     public ObservableCollection<ExchangeLineViewModel> ExchangeLines { get; } = [];
 
-    /// <summary>Currency codes the refund or balance can be handed over in.</summary>
-    public ObservableCollection<string> Currencies { get; }
+    /// <summary>The currency chips in the pop-up header: the currency the refund or balance is handed over in (gold = selected).</summary>
+    public ObservableCollection<CurrencyChipViewModel> Currencies { get; } = [];
+
+    /// <summary>Matches shown under the exchange search box.</summary>
+    public ObservableCollection<SaleVariant> ExchangeSuggestions { get; } = [];
 
     public ObservableCollection<AddedItemViewModel> DoneReturned { get; } = [];
 
@@ -55,8 +61,9 @@ public sealed partial class ReturnsViewModel : ObservableObject
     [ObservableProperty]
     public partial string ReturnScanText { get; set; } = string.Empty;
 
+    /// <summary>Why a scanned or searched item could not be added (shown under the search box in use).</summary>
     [ObservableProperty]
-    public partial string ExchangeScanText { get; set; } = string.Empty;
+    public partial string ScanError { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial string LookupError { get; set; } = string.Empty;
@@ -87,14 +94,22 @@ public sealed partial class ReturnsViewModel : ObservableObject
     [ObservableProperty]
     public partial string? SelectedCurrency { get; set; }
 
+    /// <summary>Title of the first items table: the items to return, or the receipt items to exchange.</summary>
     [ObservableProperty]
-    public partial string SummaryTitle { get; set; } = string.Empty;
+    public partial string ItemsTitle { get; set; } = string.Empty;
+
+    /// <summary>The summary's first two figures (items and subtotal, or credit and new items); the third is the amount.</summary>
+    [ObservableProperty]
+    public partial string Kpi1Label { get; set; } = string.Empty;
 
     [ObservableProperty]
-    public partial string SubtotalLabel { get; set; } = string.Empty;
+    public partial string Kpi1Text { get; set; } = string.Empty;
 
     [ObservableProperty]
-    public partial string SubtotalText { get; set; } = string.Empty;
+    public partial string Kpi2Label { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string Kpi2Text { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial string AmountLabel { get; set; } = string.Empty;
@@ -105,12 +120,6 @@ public sealed partial class ReturnsViewModel : ObservableObject
     /// <summary>The amount in the chosen currency; empty while that is the base currency.</summary>
     [ObservableProperty]
     public partial string SettleText { get; set; } = string.Empty;
-
-    [ObservableProperty]
-    public partial string CreditText { get; set; } = string.Empty;
-
-    [ObservableProperty]
-    public partial string NewItemsText { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial string CappedNote { get; set; } = string.Empty;
@@ -143,6 +152,8 @@ public sealed partial class ReturnsViewModel : ObservableObject
 
     public bool HasLookupError => LookupError.Length > 0;
 
+    public bool HasScanError => ScanError.Length > 0;
+
     public bool HasCappedNote => CappedNote.Length > 0;
 
     public bool ShowSettle => SettleText.Length > 0;
@@ -153,22 +164,13 @@ public sealed partial class ReturnsViewModel : ObservableObject
 
     public bool ShowDoneTaken => DoneTaken.Count > 0;
 
-    public bool IsBalanceRow => IsExchange;
-
-    /// <summary>Starts a fresh return: nothing found, nothing ticked, Refund selected.</summary>
+    /// <summary>Starts a fresh return: nothing found, nothing ticked, Return mode selected.</summary>
     public void Reset()
     {
         _isResetting = true;
         _settings = _pointOfSale.GetSettings();
-        var codes = _settings.Currencies;
-        if (!Currencies.SequenceEqual(codes))
-        {
-            Currencies.Clear();
-            foreach (var code in codes)
-            {
-                Currencies.Add(code);
-            }
-        }
+        SelectedCurrency = _settings.Rates.BaseCurrency;
+        RebuildCurrencies();
 
         _sale = null;
         _newItems.Clear();
@@ -178,7 +180,8 @@ public sealed partial class ReturnsViewModel : ObservableObject
         DoneTaken.Clear();
         ReceiptText = string.Empty;
         ReturnScanText = string.Empty;
-        ExchangeScanText = string.Empty;
+        ExchangeSuggestions.Clear();
+        ScanError = string.Empty;
         LookupError = string.Empty;
         HasSale = false;
         IsNoReceipt = false;
@@ -187,7 +190,6 @@ public sealed partial class ReturnsViewModel : ObservableObject
         IsExchange = false;
         ReasonIndex = 0;
         Note = string.Empty;
-        SelectedCurrency = _settings.Rates.BaseCurrency;
         IsCompleted = false;
         _isResetting = false;
         Recalculate();
@@ -240,6 +242,7 @@ public sealed partial class ReturnsViewModel : ObservableObject
     private void StartNoReceipt()
     {
         LookupError = string.Empty;
+        ScanError = string.Empty;
         _sale = null;
         HasSale = false;
         IsNoReceipt = true;
@@ -255,6 +258,7 @@ public sealed partial class ReturnsViewModel : ObservableObject
         HasSale = false;
         IsNoReceipt = false;
         LookupError = string.Empty;
+        ScanError = string.Empty;
         ReturnScanText = string.Empty;
         Lines.Clear();
         Recalculate();
@@ -266,18 +270,18 @@ public sealed partial class ReturnsViewModel : ObservableObject
     [RelayCommand]
     private void SelectExchange() => IsExchange = true;
 
-    /// <summary>Enter in the left scan box (return without a receipt): adds the item at today's price.</summary>
+    /// <summary>Enter in the scan box (return without a receipt): adds the item at today's price.</summary>
     [RelayCommand]
     private void ScanReturnItem()
     {
         var variant = Find(ReturnScanText);
         if (variant is null)
         {
-            LookupError = ReturnScanText.Trim().Length == 0 ? string.Empty : _localizer.Format("Ret_ErrNoItem", ReturnScanText.Trim());
+            ScanError = ReturnScanText.Trim().Length == 0 ? string.Empty : _localizer.Format("Ret_ErrNoItem", ReturnScanText.Trim());
             return;
         }
 
-        LookupError = string.Empty;
+        ScanError = string.Empty;
         ReturnScanText = string.Empty;
         var existing = Lines.FirstOrDefault(line => line.VariantId == variant.VariantId);
         if (existing is not null)
@@ -297,21 +301,43 @@ public sealed partial class ReturnsViewModel : ObservableObject
         Recalculate();
     }
 
-    /// <summary>Enter in the exchange scan box: adds a new item the customer takes.</summary>
-    [RelayCommand]
-    private void ScanExchangeItem()
+    /// <summary>Fills the suggestions for the text typed in the exchange search box.</summary>
+    public void UpdateExchangeSuggestions(string text)
     {
-        var variant = Find(ExchangeScanText);
-        if (variant is null)
+        ExchangeSuggestions.Clear();
+        var query = text.Trim();
+        if (query.Length == 0)
         {
-            LookupError = ExchangeScanText.Trim().Length == 0 ? string.Empty : _localizer.Format("Ret_ErrNoItem", ExchangeScanText.Trim());
             return;
         }
 
-        LookupError = string.Empty;
-        ExchangeScanText = string.Empty;
+        foreach (var match in _pointOfSale.Search(query, MaxSuggestions))
+        {
+            ExchangeSuggestions.Add(match);
+        }
+    }
+
+    /// <summary>Adds an exchange item the customer takes; returns false when nothing matched.</summary>
+    public bool AddExchangeItem(SaleVariant variant)
+    {
+        ScanError = string.Empty;
         _newItems.Add(variant.VariantId, variant.Name, variant.Sku, variant.UnitPrice);
+        ExchangeSuggestions.Clear();
         Recalculate();
+        return true;
+    }
+
+    /// <summary>Enter in the exchange search box without choosing a suggestion: a scanned code or the best match.</summary>
+    public bool AddExchangeByQuery(string text)
+    {
+        var variant = Find(text);
+        if (variant is null)
+        {
+            ScanError = text.Trim().Length == 0 ? string.Empty : _localizer.Format("Ret_ErrNoItem", text.Trim());
+            return false;
+        }
+
+        return AddExchangeItem(variant);
     }
 
     [RelayCommand]
@@ -375,6 +401,8 @@ public sealed partial class ReturnsViewModel : ObservableObject
 
     partial void OnLookupErrorChanged(string value) => OnPropertyChanged(nameof(HasLookupError));
 
+    partial void OnScanErrorChanged(string value) => OnPropertyChanged(nameof(HasScanError));
+
     partial void OnCappedNoteChanged(string value) => OnPropertyChanged(nameof(HasCappedNote));
 
     partial void OnSettleTextChanged(string value) => OnPropertyChanged(nameof(ShowSettle));
@@ -382,15 +410,29 @@ public sealed partial class ReturnsViewModel : ObservableObject
     partial void OnIsExchangeChanged(bool value)
     {
         OnPropertyChanged(nameof(IsRefund));
-        OnPropertyChanged(nameof(IsBalanceRow));
         Recalculate();
     }
 
     partial void OnSelectedCurrencyChanged(string? value)
     {
+        foreach (var chip in Currencies)
+        {
+            chip.IsSelected = string.Equals(chip.Code, value, StringComparison.OrdinalIgnoreCase);
+        }
+
         if (!_isResetting)
         {
             Recalculate();
+        }
+    }
+
+    private void RebuildCurrencies()
+    {
+        Currencies.Clear();
+        foreach (var code in _settings.Currencies)
+        {
+            Currencies.Add(new CurrencyChipViewModel(code, CurrencyFormat.ChipLabel(code),
+                string.Equals(code, SelectedCurrency, StringComparison.OrdinalIgnoreCase), chosen => SelectedCurrency = chosen));
         }
     }
 
@@ -425,11 +467,21 @@ public sealed partial class ReturnsViewModel : ObservableObject
         var newTotal = NewItemsTotal();
         var balance = ReturnRules.ExchangeBalance(amounts.Refund, newTotal);
 
-        SummaryTitle = _localizer[IsExchange ? "Ret_SummaryTitleExchange" : "Ret_SummaryTitleRefund"];
-        SubtotalLabel = count == 1 ? _localizer["Ret_SubtotalOne"] : _localizer.Format("Ret_SubtotalMany", count);
-        SubtotalText = FormatBase(amounts.Value);
-        CreditText = FormatBase(amounts.Refund);
-        NewItemsText = FormatBase(newTotal);
+        ItemsTitle = _localizer[IsExchange ? "Ret_ItemsTitleExchange" : "Ret_ItemsTitle"];
+        if (IsExchange)
+        {
+            Kpi1Label = _localizer["Ret_KpiCredit"];
+            Kpi1Text = FormatBase(amounts.Refund);
+            Kpi2Label = _localizer["Ret_KpiNewItems"];
+            Kpi2Text = FormatBase(newTotal);
+        }
+        else
+        {
+            Kpi1Label = _localizer["Ret_KpiItems"];
+            Kpi1Text = count.ToString(CultureInfo.InvariantCulture);
+            Kpi2Label = _localizer["Ret_KpiSubtotal"];
+            Kpi2Text = FormatBase(amounts.Value);
+        }
         CappedNote = amounts.IsCapped ? _localizer["Ret_Capped"] : string.Empty;
         (AmountLabel, AmountText) = AmountParts(IsExchange, balance, amounts.Refund, null);
 
@@ -449,7 +501,7 @@ public sealed partial class ReturnsViewModel : ObservableObject
         ExchangeLines.Clear();
         foreach (var line in _newItems.Lines)
         {
-            ExchangeLines.Add(new ExchangeLineViewModel(line.VariantId, line.Name, line.Sku, line.Quantity, FormatBase(line.LineTotal), SetNewItem));
+            ExchangeLines.Add(new ExchangeLineViewModel(ExchangeLines.Count + 1, line.VariantId, line.Name, line.Sku, line.Quantity, FormatBase(line.LineTotal), SetNewItem));
         }
 
         OnPropertyChanged(nameof(HasExchangeLines));

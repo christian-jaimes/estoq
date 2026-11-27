@@ -7,8 +7,9 @@ namespace Estoq.App.ViewModels.Returns;
 /// <summary>One new item the customer takes in an exchange. Built again after every change, so it holds plain values.</summary>
 public sealed class ExchangeLineViewModel
 {
-    public ExchangeLineViewModel(string variantId, string name, string sku, int quantity, string totalText, Action<string, int> setQuantity)
+    public ExchangeLineViewModel(int number, string variantId, string name, string sku, int quantity, string totalText, Action<string, int> setQuantity)
     {
+        IsAlternateRow = number % 2 == 0;
         VariantId = variantId;
         Name = name;
         Sku = sku;
@@ -19,6 +20,8 @@ public sealed class ExchangeLineViewModel
         DecreaseCommand = new RelayCommand(() => setQuantity(VariantId, Quantity - 1));
         RemoveCommand = new RelayCommand(() => setQuantity(VariantId, 0));
     }
+
+    public bool IsAlternateRow { get; }
 
     public string VariantId { get; }
 

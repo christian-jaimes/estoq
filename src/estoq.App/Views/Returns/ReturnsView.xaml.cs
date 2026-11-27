@@ -1,7 +1,9 @@
+using Estoq.App.Services;
 using Estoq.App.ViewModels.Returns;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.System;
@@ -17,6 +19,14 @@ public sealed partial class ReturnsView : UserControl
     {
         ViewModel = App.Current.Services.GetRequiredService<ReturnsViewModel>();
         InitializeComponent();
+        ViewModel.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(ReturnsViewModel.IsExchange))
+            {
+                UpdateExchangeRow();
+            }
+        };
+        UpdateExchangeRow();
     }
 
     public ReturnsViewModel ViewModel { get; }
@@ -43,6 +53,22 @@ public sealed partial class ReturnsView : UserControl
         UpdateHeight();
     }
 
+    /// <summary>Keeps the right column at least as tall as the pop-up body, so its cards fill the workable area.</summary>
+    private void OnRightScrollSizeChanged(object sender, SizeChangedEventArgs e) => RightPanel.MinHeight = RightScroll.ActualHeight;
+
+    /// <summary>Return mode gives the receipt items the whole left column; Exchange splits it with the new-items table.</summary>
+    private void UpdateExchangeRow() => ExchangeRow.Height = new GridLength(ViewModel.IsExchange ? 1 : 0, GridUnitType.Star);
+
+    /// <summary>Clicking the chosen mode again keeps it chosen: the toggle is put back in line with the view model.</summary>
+    private void OnModeClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is ToggleButton toggle)
+        {
+            toggle.DispatcherQueue.TryEnqueue(() =>
+                toggle.IsChecked = ReferenceEquals(toggle.Command, ViewModel.SelectExchangeCommand) ? ViewModel.IsExchange : ViewModel.IsRefund);
+        }
+    }
+
     private void UpdateHeight()
     {
         if (_popupBody is { ViewportHeight: > 0 and var height } && !double.IsInfinity(height))
@@ -55,7 +81,34 @@ public sealed partial class ReturnsView : UserControl
 
     private void OnReturnScanKeyDown(object sender, KeyRoutedEventArgs e) => RunOnEnter(e, ViewModel.ScanReturnItemCommand);
 
-    private void OnExchangeScanKeyDown(object sender, KeyRoutedEventArgs e) => RunOnEnter(e, ViewModel.ScanExchangeItemCommand);
+    private void OnExchangeSearchTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput)
+        {
+            return;
+        }
+
+        ViewModel.UpdateExchangeSuggestions(sender.Text);
+        sender.IsSuggestionListOpen = ViewModel.ExchangeSuggestions.Count > 0;
+    }
+
+    private void OnExchangeSearchQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        sender.IsSuggestionListOpen = false;
+        var added = args.ChosenSuggestion is SaleVariant variant
+            ? ViewModel.AddExchangeItem(variant)
+            : ViewModel.AddExchangeByQuery(args.QueryText ?? sender.Text);
+
+        // Ready for the next scan; a failed match keeps the text so it can be corrected.
+        if (added)
+        {
+            sender.DispatcherQueue.TryEnqueue(() =>
+            {
+                sender.Text = string.Empty;
+                sender.Focus(FocusState.Programmatic);
+            });
+        }
+    }
 
     private void OnQuantityCommit(object sender, RoutedEventArgs e)
     {

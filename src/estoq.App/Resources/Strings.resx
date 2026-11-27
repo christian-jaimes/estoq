@@ -386,7 +386,7 @@
   <data name="Ret_QtyDecrease" xml:space="preserve"><value>Decrease quantity</value></data>
   <data name="Ret_QtyIncrease" xml:space="preserve"><value>Increase quantity</value></data>
   <data name="Ret_Remove" xml:space="preserve"><value>Remove</value></data>
-  <data name="Ret_ReasonTitle" xml:space="preserve"><value>Return reason</value></data>
+  <data name="Ret_ReasonTitle" xml:space="preserve"><value>Reason</value></data>
   <data name="Ret_ReasonNone" xml:space="preserve"><value>No reason</value></data>
   <data name="Ret_Reason_ChangeOfMind" xml:space="preserve"><value>Change of mind</value></data>
   <data name="Ret_Reason_WrongSize" xml:space="preserve"><value>Wrong size</value></data>
@@ -394,19 +394,9 @@
   <data name="Ret_Reason_WrongItem" xml:space="preserve"><value>Wrong item</value></data>
   <data name="Ret_Reason_Other" xml:space="preserve"><value>Other</value></data>
   <data name="Ret_NotePlaceholder" xml:space="preserve"><value>Add a note...</value></data>
-  <data name="Ret_TypeTitle" xml:space="preserve"><value>Return type</value></data>
-  <data name="Ret_TypeRefund" xml:space="preserve"><value>Refund</value></data>
-  <data name="Ret_TypeRefundHint" xml:space="preserve"><value>Return the items and give the money back to the customer.</value></data>
   <data name="Ret_TypeExchange" xml:space="preserve"><value>Exchange</value></data>
-  <data name="Ret_TypeExchangeHint" xml:space="preserve"><value>Return the items and exchange them for other products.</value></data>
-  <data name="Ret_ExchangeTitle" xml:space="preserve"><value>New items</value></data>
+  <data name="Ret_ExchangeTitle" xml:space="preserve"><value>Exchange items</value></data>
   <data name="Ret_ExchangeEmpty" xml:space="preserve"><value>Scan or search the items the customer takes.</value></data>
-  <data name="Ret_SummaryTitleRefund" xml:space="preserve"><value>Refund summary</value></data>
-  <data name="Ret_SummaryTitleExchange" xml:space="preserve"><value>Exchange summary</value></data>
-  <data name="Ret_SubtotalOne" xml:space="preserve"><value>Subtotal (1 item)</value></data>
-  <data name="Ret_SubtotalMany" xml:space="preserve"><value>Subtotal ({0} items)</value></data>
-  <data name="Ret_ExchangeCredit" xml:space="preserve"><value>Credit for returned items</value></data>
-  <data name="Ret_NewItemsTotal" xml:space="preserve"><value>New items</value></data>
   <data name="Ret_RefundAmount" xml:space="preserve"><value>Refund amount</value></data>
   <data name="Ret_BalancePays" xml:space="preserve"><value>Customer pays</value></data>
   <data name="Ret_BalanceReceives" xml:space="preserve"><value>Customer receives</value></data>
@@ -422,6 +412,16 @@
   <data name="Ret_DoneReturned" xml:space="preserve"><value>Returned items</value></data>
   <data name="Ret_DoneTaken" xml:space="preserve"><value>New items</value></data>
   <data name="Ret_DoneAnother" xml:space="preserve"><value>Process another return</value></data>
+  <data name="Ret_ItemsTitleExchange" xml:space="preserve"><value>Items to exchange</value></data>
+  <data name="Ret_ColTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Ret_Summary" xml:space="preserve"><value>Summary</value></data>
+  <data name="Ret_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Ret_ModeLabel" xml:space="preserve"><value>Mode</value></data>
+  <data name="Ret_ModeReturn" xml:space="preserve"><value>Return</value></data>
+  <data name="Ret_KpiItems" xml:space="preserve"><value>Items</value></data>
+  <data name="Ret_KpiSubtotal" xml:space="preserve"><value>Subtotal</value></data>
+  <data name="Ret_KpiCredit" xml:space="preserve"><value>Credit</value></data>
+  <data name="Ret_KpiNewItems" xml:space="preserve"><value>New items</value></data>
   <data name="Notif_ReturnWithoutReceipt_Title" xml:space="preserve"><value>Return {0} had no receipt</value></data>
   <data name="Notif_ReturnWithoutReceipt_Detail" xml:space="preserve"><value>Returned at today's price without a receipt. Review it.</value></data>
 </root>

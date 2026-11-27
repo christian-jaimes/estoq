@@ -386,7 +386,7 @@
   <data name="Ret_QtyDecrease" xml:space="preserve"><value>Disminuir cantidad</value></data>
   <data name="Ret_QtyIncrease" xml:space="preserve"><value>Aumentar cantidad</value></data>
   <data name="Ret_Remove" xml:space="preserve"><value>Quitar</value></data>
-  <data name="Ret_ReasonTitle" xml:space="preserve"><value>Motivo de la devolución</value></data>
+  <data name="Ret_ReasonTitle" xml:space="preserve"><value>Motivo</value></data>
   <data name="Ret_ReasonNone" xml:space="preserve"><value>Sin motivo</value></data>
   <data name="Ret_Reason_ChangeOfMind" xml:space="preserve"><value>Cambió de opinión</value></data>
   <data name="Ret_Reason_WrongSize" xml:space="preserve"><value>Talla incorrecta</value></data>
@@ -394,19 +394,9 @@
   <data name="Ret_Reason_WrongItem" xml:space="preserve"><value>Artículo equivocado</value></data>
   <data name="Ret_Reason_Other" xml:space="preserve"><value>Otro</value></data>
   <data name="Ret_NotePlaceholder" xml:space="preserve"><value>Añade una nota...</value></data>
-  <data name="Ret_TypeTitle" xml:space="preserve"><value>Tipo de devolución</value></data>
-  <data name="Ret_TypeRefund" xml:space="preserve"><value>Reembolso</value></data>
-  <data name="Ret_TypeRefundHint" xml:space="preserve"><value>Devuelve los artículos y devuelve el dinero al cliente.</value></data>
   <data name="Ret_TypeExchange" xml:space="preserve"><value>Cambio</value></data>
-  <data name="Ret_TypeExchangeHint" xml:space="preserve"><value>Devuelve los artículos y cámbialos por otros productos.</value></data>
-  <data name="Ret_ExchangeTitle" xml:space="preserve"><value>Artículos nuevos</value></data>
+  <data name="Ret_ExchangeTitle" xml:space="preserve"><value>Artículos del cambio</value></data>
   <data name="Ret_ExchangeEmpty" xml:space="preserve"><value>Escanea o busca los artículos que se lleva el cliente.</value></data>
-  <data name="Ret_SummaryTitleRefund" xml:space="preserve"><value>Resumen del reembolso</value></data>
-  <data name="Ret_SummaryTitleExchange" xml:space="preserve"><value>Resumen del cambio</value></data>
-  <data name="Ret_SubtotalOne" xml:space="preserve"><value>Subtotal (1 artículo)</value></data>
-  <data name="Ret_SubtotalMany" xml:space="preserve"><value>Subtotal ({0} artículos)</value></data>
-  <data name="Ret_ExchangeCredit" xml:space="preserve"><value>Crédito por lo devuelto</value></data>
-  <data name="Ret_NewItemsTotal" xml:space="preserve"><value>Artículos nuevos</value></data>
   <data name="Ret_RefundAmount" xml:space="preserve"><value>Importe a reembolsar</value></data>
   <data name="Ret_BalancePays" xml:space="preserve"><value>El cliente paga</value></data>
   <data name="Ret_BalanceReceives" xml:space="preserve"><value>El cliente recibe</value></data>
@@ -422,6 +412,16 @@
   <data name="Ret_DoneReturned" xml:space="preserve"><value>Artículos devueltos</value></data>
   <data name="Ret_DoneTaken" xml:space="preserve"><value>Artículos nuevos</value></data>
   <data name="Ret_DoneAnother" xml:space="preserve"><value>Procesar otra devolución</value></data>
+  <data name="Ret_ItemsTitleExchange" xml:space="preserve"><value>Artículos a cambiar</value></data>
+  <data name="Ret_ColTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Ret_Summary" xml:space="preserve"><value>Resumen</value></data>
+  <data name="Ret_Details" xml:space="preserve"><value>Detalles</value></data>
+  <data name="Ret_ModeLabel" xml:space="preserve"><value>Modo</value></data>
+  <data name="Ret_ModeReturn" xml:space="preserve"><value>Devolución</value></data>
+  <data name="Ret_KpiItems" xml:space="preserve"><value>Artículos</value></data>
+  <data name="Ret_KpiSubtotal" xml:space="preserve"><value>Subtotal</value></data>
+  <data name="Ret_KpiCredit" xml:space="preserve"><value>Crédito</value></data>
+  <data name="Ret_KpiNewItems" xml:space="preserve"><value>Artículos nuevos</value></data>
   <data name="Notif_ReturnWithoutReceipt_Title" xml:space="preserve"><value>La devolución {0} no tuvo recibo</value></data>
   <data name="Notif_ReturnWithoutReceipt_Detail" xml:space="preserve"><value>Devuelta al precio de hoy sin recibo. Revísala.</value></data>
 </root>

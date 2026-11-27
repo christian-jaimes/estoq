@@ -1,12 +1,17 @@
 # Returns (F4) and voids
 
-Visual reference: `5 - Dark Return Process Modal.png`. Returns take items back from a settled sale. Voids cancel a whole sale on the same day.
+Visual reference: `5 - Dark Return Process Modal.png` (UI elements only; the layout follows Stock adjustments, see below). Returns take items back from a settled sale. Voids cancel a whole sale on the same day.
 
 ## Returns
 
 Entry: F4, or a sale's menu on [[sales]]. All roles.
 
-Layout: left: original sale (receipt number, date, "View sale"), return items (tick, image, name, colour · size, price, quantity stepper), return reason (dropdown, optional) and note. Right: return type (Refund or Exchange, radio cards), refund summary (subtotal, refund amount). Footer: Cancel, "Proceed with refund" (label follows the type).
+Layout (same two-column shape as [[stock-adjustments]]): the wide left column holds the receipt lookup and the tables; the narrow right column (fixed width, scrolls) holds Details (mode, reason, note) above Summary (three figures side by side). Footer: Cancel and the primary button (label follows the mode).
+
+- Return mode (default): look up or scan a receipt; its items load into a table with a tick box on the left of each row, then price and a quantity stepper. Tick the items to return. Reason is optional.
+- Exchange mode: look up or scan a receipt; its items load into the same table (tick the ones coming back). A second table below searches or scans the articles the customer takes (name, quantity stepper, total, remove). Reason is optional.
+- Currency chips in the pop-up header (like the point of sale) choose the currency the refund or balance is settled in; there is no "Settle in" drop-down.
+- Summary: Return shows items, subtotal and refund amount; Exchange shows credit, new items and the balance (customer pays, receives, or no difference), and, when the settle currency is not the base currency, the amount to hand over or take.
 
 Rules:
 - Start from the receipt number; this links price, payment and rate.
@@ -16,9 +21,9 @@ Rules:
 - No receipt: allowed at the current price, flagged for the owner.
 - Return window: owner setting with a no-limit option ([[settings]]).
 - Saved in one transaction: return, movements, refund or exchange.
-- Reason: optional in the mockup, required in the legacy flow. Working default: optional.
+- Reason: optional in both modes (the mockup shows it optional; the legacy flow required it).
 
-Built so far (sample data, CPT9): receipt lookup (six digits; "#" and zeros optional), tick and quantity per item (never more than was sold less earlier returns), reason and note, Refund or Exchange, refund share of what was paid (a discount or tax on the sale is refunded in proportion, never more than is left to refund), settle currency at the current rate, the return window (sample setting 30 days), no-receipt returns at the current price with an owner notification, and a "Return completed" confirmation. Stock goes back as `return` rows (and exchange items as `sale` rows) appended to `data/dummy_stock_movements.csv`. Not built: voids, "View sale" (needs the Sales page), choosing the refund method (recorded as cash), approval or limits for no-receipt returns.
+Built so far (sample data, CPT9): receipt lookup (six digits; "#" and zeros optional), tick and quantity per item (never more than was sold less earlier returns), reason and note, Return or Exchange mode (the Core "Refund" type is the Return mode), refund share of what was paid (a discount or tax on the sale is refunded in proportion, never more than is left to refund), settle currency at the current rate, the return window (sample setting 30 days), no-receipt returns at the current price with an owner notification, and a "Return completed" confirmation. Stock goes back as `return` rows (and exchange items as `sale` rows) appended to `data/dummy_stock_movements.csv`. Not built: voids, "View sale" (needs the Sales page), choosing the refund method (recorded as cash), approval or limits for no-receipt returns.
 
 ## Voids
 

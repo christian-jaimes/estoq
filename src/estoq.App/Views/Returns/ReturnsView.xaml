@@ -7,108 +7,141 @@
     xmlns:vm="using:Estoq.App.ViewModels.Returns">
 
   <UserControl.Resources>
-    <!-- Square stepper button for the quantity (minus and plus); same look as the point of sale. -->
-    <Style x:Key="ReturnStepButtonStyle" TargetType="Button">
-      <Setter Property="Width" Value="36" />
-      <Setter Property="Height" Value="{StaticResource EqControlHeight}" />
-      <Setter Property="Padding" Value="0" />
-      <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
-      <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
-      <Setter Property="FocusVisualPrimaryThickness" Value="2" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="Button">
-            <Grid x:Name="Root" Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}"
-                  BorderThickness="1" CornerRadius="{StaticResource EqRadiusMd}">
-              <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="CommonStates">
-                  <VisualState x:Name="Normal" />
-                  <VisualState x:Name="PointerOver">
-                    <VisualState.Setters>
-                      <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
-                      <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
-                    </VisualState.Setters>
-                  </VisualState>
-                  <VisualState x:Name="Pressed">
-                    <VisualState.Setters>
-                      <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
-                      <Setter Target="Root.Background" Value="{ThemeResource EqGoldTintBrush}" />
-                    </VisualState.Setters>
-                  </VisualState>
-                  <VisualState x:Name="Disabled">
-                    <VisualState.Setters>
-                      <Setter Target="Root.Opacity" Value="0.4" />
-                    </VisualState.Setters>
-                  </VisualState>
-                </VisualStateGroup>
-              </VisualStateManager.VisualStateGroups>
-              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
-            </Grid>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
+    <ResourceDictionary>
+      <!-- Drop-downs sit inside an input container that draws the fill; the ComboBox itself stays transparent in every state (same as the setup wizard). -->
+      <SolidColorBrush x:Key="ComboBoxBackground" Color="Transparent" />
+      <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="Transparent" />
+      <SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="Transparent" />
+      <SolidColorBrush x:Key="ComboBoxBackgroundFocused" Color="Transparent" />
 
-    <!-- Return type card (Refund, Exchange): a bordered tile that fills on hover; the selected one is drawn by the content. -->
-    <Style x:Key="ReturnTypeCardStyle" TargetType="Button">
-      <Setter Property="Padding" Value="0" />
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
-      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-      <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
-      <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
-      <Setter Property="FocusVisualPrimaryThickness" Value="2" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="Button">
-            <Grid x:Name="Root" Background="{ThemeResource EqSurfaceBrush}" BorderBrush="{ThemeResource EqBorderBrush}"
-                  BorderThickness="1" CornerRadius="{StaticResource EqRadiusLg}">
-              <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="CommonStates">
-                  <VisualState x:Name="Normal" />
-                  <VisualState x:Name="PointerOver">
-                    <VisualState.Setters>
-                      <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
-                      <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
-                    </VisualState.Setters>
-                  </VisualState>
-                  <VisualState x:Name="Pressed">
-                    <VisualState.Setters>
-                      <Setter Target="Root.Background" Value="{ThemeResource EqGoldTintBrush}" />
-                      <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
-                    </VisualState.Setters>
-                  </VisualState>
-                </VisualStateGroup>
-              </VisualStateManager.VisualStateGroups>
-              <ContentPresenter Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="Stretch" />
-            </Grid>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
+      <Thickness x:Key="ComboBoxDropdownBorderThickness">1</Thickness>
+      <CornerRadius x:Key="OverlayCornerRadius">12</CornerRadius>
 
-    <!-- Borderless text box inside a bordered container (the container draws the border). -->
-    <Style x:Key="ReturnBareTextBoxStyle" TargetType="TextBox">
-      <Setter Property="Background" Value="Transparent" />
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="MinHeight" Value="0" />
-      <Setter Property="Padding" Value="0" />
-      <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="VerticalContentAlignment" Value="Center" />
-      <Setter Property="TextAlignment" Value="Left" />
-      <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
-      <Setter Property="FontSize" Value="{StaticResource EqFontLg}" />
-    </Style>
+      <!-- Square stepper button for the quantity (minus and plus); same look as the point of sale. -->
+      <Style x:Key="ReturnStepButtonStyle" TargetType="Button">
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="{StaticResource EqControlHeight}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+        <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
+        <Setter Property="FocusVisualPrimaryThickness" Value="2" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="Button">
+              <Grid x:Name="Root" Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}"
+                    BorderThickness="1" CornerRadius="{StaticResource EqRadiusMd}">
+                <VisualStateManager.VisualStateGroups>
+                  <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                      <VisualState.Setters>
+                        <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                        <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
+                      </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                      <VisualState.Setters>
+                        <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
+                        <Setter Target="Root.Background" Value="{ThemeResource EqGoldTintBrush}" />
+                      </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                      <VisualState.Setters>
+                        <Setter Target="Root.Opacity" Value="0.4" />
+                      </VisualState.Setters>
+                    </VisualState>
+                  </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
+              </Grid>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+
+      <!-- Mode chip (Return, Exchange): outlined when off, gold when on; same chip as the adjustment types of Stock adjustments. -->
+      <Style x:Key="ReturnModeToggleStyle" TargetType="ToggleButton">
+        <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
+        <Setter Property="FontSize" Value="{StaticResource EqFontSm}" />
+        <Setter Property="CornerRadius" Value="{StaticResource EqRadiusMd}" />
+        <Setter Property="Height" Value="{StaticResource EqControlHeight}" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+        <Setter Property="Background" Value="{ThemeResource EqSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
+      </Style>
+
+      <DataTemplate x:Key="ReturnSuggestionTemplate" x:DataType="services:SaleVariant">
+        <Grid ColumnSpacing="12">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="{x:Bind Name}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
+                       Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
+            <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
+          </StackPanel>
+          <TextBlock Grid.Column="1" Text="{x:Bind OnHand}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" />
+        </Grid>
+      </DataTemplate>
+
+      <!-- Borderless text box inside a bordered container (the container draws the border). -->
+      <Style x:Key="ReturnBareTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="Padding" Value="0,7" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
+        <Setter Property="FontSize" Value="{StaticResource EqFontLg}" />
+      </Style>
+
+      <!-- The open list uses the same surface, border and hover as the Add product flyouts, not the stock grey. -->
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+          <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="EqSurfaceElevatedBrush" />
+          <StaticResource x:Key="ComboBoxDropDownBorderBrush" ResourceKey="EqBorderBrush" />
+          <StaticResource x:Key="ComboBoxItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelectedPointerOver" ResourceKey="EqHoverFillBrush" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light">
+          <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="EqSurfaceElevatedBrush" />
+          <StaticResource x:Key="ComboBoxDropDownBorderBrush" ResourceKey="EqBorderBrush" />
+          <StaticResource x:Key="ComboBoxItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelectedPointerOver" ResourceKey="EqHoverFillBrush" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="EqSurfaceElevatedBrush" />
+          <StaticResource x:Key="ComboBoxDropDownBorderBrush" ResourceKey="EqBorderBrush" />
+          <StaticResource x:Key="ComboBoxItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelectedPointerOver" ResourceKey="EqHoverFillBrush" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary>
   </UserControl.Resources>
 
-  <!-- Returns (F4), mockup 5: original sale, items, reason and note on the left; type and summary on the right. -->
+  <!-- Returns (F4). Left: receipt lookup and the tables (receipt items, then the exchange items); right: summary, mode, reason and note. -->
   <Grid x:Name="ReturnsRoot" ColumnSpacing="16" Loaded="OnReturnsLoaded">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="3*" MinWidth="0" />
-      <ColumnDefinition Width="2*" MinWidth="0" />
+      <ColumnDefinition Width="*" MinWidth="0" />
+      <ColumnDefinition Width="340" />
     </Grid.ColumnDefinitions>
 
     <!-- LEFT -->
-    <Grid Grid.Column="0" RowDefinitions="Auto,*,Auto" RowSpacing="16">
+    <!-- No RowSpacing: an empty Return-mode exchange row would still add a gap at the bottom, so the cards carry their own top margin. -->
+    <Grid Grid.Column="0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition x:Name="ExchangeRow" Height="0" />
+      </Grid.RowDefinitions>
 
       <!-- Original sale: receipt lookup, the found sale, or the no-receipt notice. -->
       <Border Grid.Row="0" Style="{StaticResource EqCardStyle}" Padding="20">
@@ -122,7 +155,8 @@
           <StackPanel Spacing="8" Visibility="{x:Bind pos:PosBindings.Hidden(ViewModel.HasItemsSource), Mode=OneWay}">
             <Grid ColumnSpacing="8">
               <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" MinWidth="120" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
               </Grid.ColumnDefinitions>
               <Border Grid.Column="0" Style="{StaticResource EqInputContainerStyle}">
@@ -152,11 +186,11 @@
               </Border>
               <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.FindSaleCommand}"
                       Content="{x:Bind services:Loc.Get('Ret_FindSale')}" />
+              <Button Grid.Column="2" Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.StartNoReceiptCommand}"
+                      Content="{x:Bind services:Loc.Get('Ret_NoReceipt')}" />
             </Grid>
             <TextBlock Text="{x:Bind ViewModel.LookupError, Mode=OneWay}" Foreground="{ThemeResource EqDangerBrush}" FontSize="{StaticResource EqFontMd}"
                        TextWrapping="Wrap" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.HasLookupError), Mode=OneWay}" />
-            <Button Style="{StaticResource EqLinkButtonStyle}" Command="{x:Bind ViewModel.StartNoReceiptCommand}"
-                    Content="{x:Bind services:Loc.Get('Ret_NoReceipt')}" HorizontalAlignment="Left" />
           </StackPanel>
 
           <!-- A sale was found -->
@@ -181,7 +215,6 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
               <TextBlock Text="{x:Bind services:Loc.Get('Ret_NoReceiptTitle')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontXl}" />
-              <TextBlock Text="{x:Bind services:Loc.Get('Ret_NoReceiptHint')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
             </StackPanel>
             <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.ChangeSaleCommand}"
                     Content="{x:Bind services:Loc.Get('Ret_UseReceipt')}" VerticalAlignment="Center" />
@@ -190,15 +223,16 @@
       </Border>
 
       <!-- Return items -->
-      <Border Grid.Row="1" Style="{StaticResource EqCardStyle}" Padding="20">
+      <Border Grid.Row="1" Style="{StaticResource EqCardStyle}" Padding="20" Margin="0,16,0,0">
         <Grid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="12">
           <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12">
             <FontIcon Glyph="&#xE1A1;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
-            <TextBlock Text="{x:Bind services:Loc.Get('Ret_ItemsTitle')}" Style="{StaticResource EqCardTitleStyle}" VerticalAlignment="Center" />
+            <TextBlock Text="{x:Bind ViewModel.ItemsTitle, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" VerticalAlignment="Center" />
           </StackPanel>
 
           <!-- Scan or search (only without a receipt) -->
-          <Border Grid.Row="1" Style="{StaticResource EqInputContainerStyle}" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsNoReceipt), Mode=OneWay}">
+          <StackPanel Grid.Row="1" Spacing="6" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsNoReceipt), Mode=OneWay}">
+          <Border Style="{StaticResource EqInputContainerStyle}">
             <Grid ColumnSpacing="8">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -223,6 +257,9 @@
               </TextBox>
             </Grid>
           </Border>
+          <TextBlock Text="{x:Bind ViewModel.ScanError, Mode=OneWay}" Foreground="{ThemeResource EqDangerBrush}" FontSize="{StaticResource EqFontSm}"
+                     TextWrapping="Wrap" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.HasScanError), Mode=OneWay}" />
+          </StackPanel>
 
           <!-- Table header -->
           <Grid Grid.Row="2" Style="{StaticResource EqTableHeaderStyle}" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.HasLines), Mode=OneWay}">
@@ -311,244 +348,200 @@
         </Grid>
       </Border>
 
-      <!-- Reason (optional) and note -->
-      <Border Grid.Row="2" Style="{StaticResource EqCardStyle}" Padding="20">
-        <StackPanel Spacing="12">
-          <StackPanel Orientation="Horizontal" Spacing="12">
-            <FontIcon Glyph="&#xF05B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
-            <TextBlock Text="{x:Bind services:Loc.Get('Ret_ReasonTitle')}" Style="{StaticResource EqCardTitleStyle}" VerticalAlignment="Center" />
-            <TextBlock Text="{x:Bind services:Loc.Get('Label_Optional')}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" />
+      <!-- Exchange only: search the articles the customer takes, in a second table below the receipt items -->
+      <Border Grid.Row="2" Style="{StaticResource EqCardStyle}" Padding="20" Margin="0,16,0,0" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsExchange), Mode=OneWay}">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" RowSpacing="12">
+          <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12">
+            <FontIcon Glyph="&#xE8D4;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+            <TextBlock Text="{x:Bind services:Loc.Get('Ret_ExchangeTitle')}" Style="{StaticResource EqCardTitleStyle}" VerticalAlignment="Center" />
           </StackPanel>
-          <Border Style="{StaticResource EqInputContainerStyle}" Padding="4,0">
-            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
-                      SelectedIndex="{x:Bind ViewModel.ReasonIndex, Mode=TwoWay}"
-                      AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_ReasonTitle')}">
-              <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_ReasonNone')}" />
-              <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_Reason_ChangeOfMind')}" />
-              <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_Reason_WrongSize')}" />
-              <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_Reason_Defective')}" />
-              <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_Reason_WrongItem')}" />
-              <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_Reason_Other')}" />
-            </ComboBox>
+
+          <!-- Scan or search: Enter adds the matching item, a barcode scanner types the code and presses Enter. -->
+          <Border Grid.Row="1" Style="{StaticResource EqInputContainerStyle}" Padding="0">
+            <AutoSuggestBox x:Name="ExchangeSearchBox" Style="{StaticResource EqAutoSuggestBoxStyle}" HorizontalAlignment="Stretch"
+                            TextMemberPath="Name" ItemsSource="{x:Bind ViewModel.ExchangeSuggestions}"
+                            ItemTemplate="{StaticResource ReturnSuggestionTemplate}"
+                            PlaceholderText="{x:Bind services:Loc.Get('Ret_ScanPlaceholder')}"
+                            TextChanged="OnExchangeSearchTextChanged" QuerySubmitted="OnExchangeSearchQuerySubmitted"
+                            MaxSuggestionListHeight="240" AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_ScanPlaceholder')}" />
           </Border>
-          <Border Style="{StaticResource EqInputContainerStyle}" Height="72" Padding="12,8">
-            <TextBox Style="{StaticResource ReturnBareTextBoxStyle}" AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Stretch"
-                     VerticalContentAlignment="Top" Text="{x:Bind ViewModel.Note, Mode=TwoWay}"
-                     PlaceholderText="{x:Bind services:Loc.Get('Ret_NotePlaceholder')}"
-                     AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_NotePlaceholder')}">
-              <TextBox.Resources>
-                <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
-                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
-                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
-                <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent" />
-                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
-                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
-                <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
-                <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
-              </TextBox.Resources>
-            </TextBox>
-          </Border>
-        </StackPanel>
+
+          <TextBlock Grid.Row="2" Text="{x:Bind ViewModel.ScanError, Mode=OneWay}" Foreground="{ThemeResource EqDangerBrush}" FontSize="{StaticResource EqFontSm}"
+                     TextWrapping="Wrap" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.HasScanError), Mode=OneWay}" />
+
+          <Grid Grid.Row="3" Style="{StaticResource EqTableHeaderStyle}" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.HasExchangeLines), Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" MinWidth="120" />
+              <ColumnDefinition Width="132" />
+              <ColumnDefinition Width="96" />
+              <ColumnDefinition Width="36" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Ret_ColItem')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+            <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Ret_ColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Center" HorizontalAlignment="Center" />
+            <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Ret_ColTotal')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+          </Grid>
+
+          <Grid Grid.Row="4">
+            <TextBlock Text="{x:Bind services:Loc.Get('Ret_ExchangeEmpty')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" VerticalAlignment="Top"
+                       Visibility="{x:Bind pos:PosBindings.Hidden(ViewModel.HasExchangeLines), Mode=OneWay}" />
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0"
+                          Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.HasExchangeLines), Mode=OneWay}">
+              <ItemsControl ItemsSource="{x:Bind ViewModel.ExchangeLines, Mode=OneWay}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:ExchangeLineViewModel">
+                    <Grid MinHeight="56" Style="{StaticResource EqTableRowStyle}">
+                      <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind pos:PosBindings.Visible(IsAlternateRow)}" />
+                      <Grid Padding="8" ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="*" MinWidth="120" />
+                          <ColumnDefinition Width="132" />
+                          <ColumnDefinition Width="96" />
+                          <ColumnDefinition Width="36" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                          <TextBlock Text="{x:Bind Name}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center" VerticalAlignment="Center">
+                          <Button Style="{StaticResource ReturnStepButtonStyle}" Command="{x:Bind DecreaseCommand}"
+                                  AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_QtyDecrease')}">
+                            <FontIcon Glyph="&#xE15B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
+                          </Button>
+                          <TextBlock Text="{x:Bind QuantityText}" Width="28" TextAlignment="Center" VerticalAlignment="Center" Style="{StaticResource EqTableCellStrongStyle}" />
+                          <Button Style="{StaticResource ReturnStepButtonStyle}" Command="{x:Bind IncreaseCommand}"
+                                  AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_QtyIncrease')}">
+                            <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
+                          </Button>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="{x:Bind TotalText}" Style="{StaticResource EqTableCellStyle}"
+                                   TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <Button Grid.Column="3" Style="{StaticResource EqPlainIconButtonStyle}" Command="{x:Bind RemoveCommand}" VerticalAlignment="Center"
+                                ToolTipService.ToolTip="{x:Bind services:Loc.Get('Ret_Remove')}"
+                                AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_Remove')}">
+                          <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Grid>
+        </Grid>
       </Border>
     </Grid>
 
-    <!-- RIGHT -->
-    <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0">
-      <StackPanel Spacing="16">
+    <!-- RIGHT: summary, then the details (mode, reason, note); scrolls when the window is short, like Stock adjustments. -->
+    <ScrollViewer x:Name="RightScroll" Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" MinWidth="0"
+                  SizeChanged="OnRightScrollSizeChanged">
+      <!-- At least as tall as the pop-up body: Details takes the spare height (the note grows), the Summary sits at the bottom. -->
+      <Grid x:Name="RightPanel" RowDefinitions="*,Auto" RowSpacing="12" MinWidth="0">
 
-        <!-- Return type -->
-        <Border Style="{StaticResource EqCardStyle}" Padding="20">
-          <StackPanel Spacing="12">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <FontIcon Glyph="&#xE53B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
-              <TextBlock Text="{x:Bind services:Loc.Get('Ret_TypeTitle')}" Style="{StaticResource EqCardTitleStyle}" VerticalAlignment="Center" />
+        <!-- Details: mode, optional reason, note -->
+        <Border Grid.Row="0" Style="{StaticResource EqCardStyle}" Padding="20">
+          <Grid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="12">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
+              <FontIcon Glyph="&#xEF6E;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Text="{x:Bind services:Loc.Get('Ret_Details')}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
             </StackPanel>
 
-            <Button Style="{StaticResource ReturnTypeCardStyle}" Command="{x:Bind ViewModel.SelectRefundCommand}"
-                    AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_TypeRefund')}">
-              <Grid>
-                <Border BorderBrush="{ThemeResource EqGoldBrush}" BorderThickness="2" CornerRadius="{StaticResource EqRadiusLg}"
-                        Background="{ThemeResource EqGoldTintBrush}" IsHitTestVisible="False"
-                        Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsRefund), Mode=OneWay}" />
-                <Grid Padding="16" ColumnSpacing="12">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <FontIcon Grid.Column="0" Glyph="&#xEF63;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}"
-                            Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center" />
-                  <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                    <TextBlock Text="{x:Bind services:Loc.Get('Ret_TypeRefund')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontXl}" />
-                    <TextBlock Text="{x:Bind services:Loc.Get('Ret_TypeRefundHint')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
-                  </StackPanel>
-                  <Grid Grid.Column="2" Width="20" Height="20" VerticalAlignment="Top">
-                    <Ellipse Stroke="{ThemeResource EqBorderBrush}" StrokeThickness="2" />
-                    <Ellipse Width="20" Height="20" Stroke="{ThemeResource EqGoldBrush}" StrokeThickness="2" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsRefund), Mode=OneWay}" />
-                    <Ellipse Width="10" Height="10" Fill="{ThemeResource EqGoldBrush}" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsRefund), Mode=OneWay}" />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Button>
-
-            <Button Style="{StaticResource ReturnTypeCardStyle}" Command="{x:Bind ViewModel.SelectExchangeCommand}"
-                    AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_TypeExchange')}">
-              <Grid>
-                <Border BorderBrush="{ThemeResource EqGoldBrush}" BorderThickness="2" CornerRadius="{StaticResource EqRadiusLg}"
-                        Background="{ThemeResource EqGoldTintBrush}" IsHitTestVisible="False"
-                        Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsExchange), Mode=OneWay}" />
-                <Grid Padding="16" ColumnSpacing="12">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <FontIcon Grid.Column="0" Glyph="&#xE8D4;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}"
-                            Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center" />
-                  <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                    <TextBlock Text="{x:Bind services:Loc.Get('Ret_TypeExchange')}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontXl}" />
-                    <TextBlock Text="{x:Bind services:Loc.Get('Ret_TypeExchangeHint')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
-                  </StackPanel>
-                  <Grid Grid.Column="2" Width="20" Height="20" VerticalAlignment="Top">
-                    <Ellipse Stroke="{ThemeResource EqBorderBrush}" StrokeThickness="2" />
-                    <Ellipse Width="20" Height="20" Stroke="{ThemeResource EqGoldBrush}" StrokeThickness="2" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsExchange), Mode=OneWay}" />
-                    <Ellipse Width="10" Height="10" Fill="{ThemeResource EqGoldBrush}" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsExchange), Mode=OneWay}" />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Button>
-          </StackPanel>
-        </Border>
-
-        <!-- Exchange: the new items the customer takes -->
-        <Border Style="{StaticResource EqCardStyle}" Padding="20" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsExchange), Mode=OneWay}">
-          <StackPanel Spacing="12">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <FontIcon Glyph="&#xE8D4;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
-              <TextBlock Text="{x:Bind services:Loc.Get('Ret_ExchangeTitle')}" Style="{StaticResource EqCardTitleStyle}" VerticalAlignment="Center" />
-            </StackPanel>
-            <Border Style="{StaticResource EqInputContainerStyle}">
+            <StackPanel Grid.Row="1" Spacing="6">
+              <TextBlock Text="{x:Bind services:Loc.Get('Ret_ModeLabel')}" Style="{StaticResource EqLabelStyle}" />
               <Grid ColumnSpacing="8">
                 <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
                   <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <FontIcon Grid.Column="0" Glyph="&#xF206;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}"
-                          Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
-                <TextBox Grid.Column="1" Style="{StaticResource ReturnBareTextBoxStyle}"
-                         Text="{x:Bind ViewModel.ExchangeScanText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         PlaceholderText="{x:Bind services:Loc.Get('Ret_ScanPlaceholder')}" KeyDown="OnExchangeScanKeyDown"
-                         AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_ScanPlaceholder')}">
-                  <TextBox.Resources>
-                    <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
-                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
-                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
-                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent" />
-                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
-                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
-                    <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
-                    <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
-                  </TextBox.Resources>
-                </TextBox>
+                <ToggleButton Grid.Column="0" Style="{StaticResource ReturnModeToggleStyle}" Content="{x:Bind services:Loc.Get('Ret_ModeReturn')}"
+                              IsChecked="{x:Bind ViewModel.IsRefund, Mode=OneWay}" Command="{x:Bind ViewModel.SelectRefundCommand}" Click="OnModeClick" />
+                <ToggleButton Grid.Column="1" Style="{StaticResource ReturnModeToggleStyle}" Content="{x:Bind services:Loc.Get('Ret_TypeExchange')}"
+                              IsChecked="{x:Bind ViewModel.IsExchange, Mode=OneWay}" Command="{x:Bind ViewModel.SelectExchangeCommand}" Click="OnModeClick" />
               </Grid>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Spacing="6">
+              <StackPanel Orientation="Horizontal" Spacing="4">
+                <TextBlock Text="{x:Bind services:Loc.Get('Ret_ReasonTitle')}" Style="{StaticResource EqLabelStyle}" />
+                <TextBlock Text="{x:Bind services:Loc.Get('Label_Optional')}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" />
+              </StackPanel>
+              <Border Style="{StaticResource EqInputContainerStyle}" Padding="4,0">
+                <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
+                          SelectedIndex="{x:Bind ViewModel.ReasonIndex, Mode=TwoWay}"
+                          AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_ReasonTitle')}">
+                  <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_ReasonNone')}" />
+                  <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_Reason_ChangeOfMind')}" />
+                  <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_Reason_WrongSize')}" />
+                  <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_Reason_Defective')}" />
+                  <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_Reason_WrongItem')}" />
+                  <ComboBoxItem Content="{x:Bind services:Loc.Get('Ret_Reason_Other')}" />
+                </ComboBox>
+              </Border>
+            </StackPanel>
+
+            <Border Grid.Row="3" Style="{StaticResource EqInputContainerStyle}" Height="NaN" MinHeight="88" Padding="12,8">
+              <TextBox Style="{StaticResource ReturnBareTextBoxStyle}" Padding="0" AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Stretch"
+                       VerticalContentAlignment="Top" Text="{x:Bind ViewModel.Note, Mode=TwoWay}" MaxLength="500"
+                       PlaceholderText="{x:Bind services:Loc.Get('Ret_NotePlaceholder')}"
+                       AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_NotePlaceholder')}">
+                <TextBox.Resources>
+                  <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
+                  <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
+                  <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                </TextBox.Resources>
+              </TextBox>
             </Border>
-            <TextBlock Text="{x:Bind services:Loc.Get('Ret_ExchangeEmpty')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap"
-                       Visibility="{x:Bind pos:PosBindings.Hidden(ViewModel.HasExchangeLines), Mode=OneWay}" />
-            <ItemsControl ItemsSource="{x:Bind ViewModel.ExchangeLines, Mode=OneWay}">
-              <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="vm:ExchangeLineViewModel">
-                  <Grid MinHeight="56" Style="{StaticResource EqTableRowStyle}">
-                    <Grid Padding="4,8" ColumnSpacing="8">
-                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                      </Grid.ColumnDefinitions>
-                      <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
-                        <TextBlock Text="{x:Bind Name}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
-                        <TextBlock Text="{x:Bind TotalText}" Style="{StaticResource EqSecondaryStyle}" />
-                      </StackPanel>
-                      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                        <Button Style="{StaticResource ReturnStepButtonStyle}" Command="{x:Bind DecreaseCommand}"
-                                AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_QtyDecrease')}">
-                          <FontIcon Glyph="&#xE15B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
-                        </Button>
-                        <TextBlock Text="{x:Bind QuantityText}" Width="28" TextAlignment="Center" VerticalAlignment="Center" Style="{StaticResource EqTableCellStrongStyle}" />
-                        <Button Style="{StaticResource ReturnStepButtonStyle}" Command="{x:Bind IncreaseCommand}"
-                                AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_QtyIncrease')}">
-                          <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
-                        </Button>
-                      </StackPanel>
-                      <Button Grid.Column="2" Style="{StaticResource EqPlainIconButtonStyle}" Command="{x:Bind RemoveCommand}"
-                              AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_Remove')}">
-                        <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </StackPanel>
+          </Grid>
         </Border>
 
-        <!-- Summary -->
-        <Border Style="{StaticResource EqCardStyle}" Padding="20">
+        <!-- Summary: three figures side by side; labels wrap so longer Spanish text never clips. -->
+        <Border Grid.Row="1" Style="{StaticResource EqCardStyle}" Padding="20">
           <StackPanel Spacing="12">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <FontIcon Glyph="&#xEF63;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
-              <TextBlock Text="{x:Bind ViewModel.SummaryTitle, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <FontIcon Glyph="&#xF190;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Text="{x:Bind services:Loc.Get('Ret_Summary')}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
             </StackPanel>
 
-            <Grid>
-              <TextBlock Text="{x:Bind ViewModel.SubtotalLabel, Mode=OneWay}" Style="{StaticResource EqTableCellStyle}" />
-              <TextBlock Text="{x:Bind ViewModel.SubtotalText, Mode=OneWay}" Style="{StaticResource EqTableCellStrongStyle}" HorizontalAlignment="Right" />
+            <Grid ColumnSpacing="12">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <StackPanel Grid.Column="0" Spacing="2" MinWidth="0">
+                <TextBlock Text="{x:Bind ViewModel.Kpi1Label, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
+                <TextBlock Text="{x:Bind ViewModel.Kpi1Text, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="{StaticResource EqFontXl}" TextWrapping="WrapWholeWords" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="2" MinWidth="0">
+                <TextBlock Text="{x:Bind ViewModel.Kpi2Label, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
+                <TextBlock Text="{x:Bind ViewModel.Kpi2Text, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="{StaticResource EqFontXl}" TextWrapping="WrapWholeWords" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Spacing="2" MinWidth="0">
+                <TextBlock Text="{x:Bind ViewModel.AmountLabel, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
+                <TextBlock Text="{x:Bind ViewModel.AmountText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="{StaticResource EqFontXl}"
+                           Foreground="{ThemeResource EqGoldInkBrush}" TextWrapping="WrapWholeWords" />
+              </StackPanel>
             </Grid>
-
-            <!-- Exchange: credit and new items before the balance -->
-            <StackPanel Spacing="12" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsBalanceRow), Mode=OneWay}">
-              <Grid>
-                <TextBlock Text="{x:Bind services:Loc.Get('Ret_ExchangeCredit')}" Style="{StaticResource EqTableCellStyle}" />
-                <TextBlock Text="{x:Bind ViewModel.CreditText, Mode=OneWay}" Style="{StaticResource EqTableCellStrongStyle}" HorizontalAlignment="Right" />
-              </Grid>
-              <Grid>
-                <TextBlock Text="{x:Bind services:Loc.Get('Ret_NewItemsTotal')}" Style="{StaticResource EqTableCellStyle}" />
-                <TextBlock Text="{x:Bind ViewModel.NewItemsText, Mode=OneWay}" Style="{StaticResource EqTableCellStrongStyle}" HorizontalAlignment="Right" />
-              </Grid>
-            </StackPanel>
-
-            <!-- The highlighted amount: refund amount, or what the customer pays or receives -->
-            <Border Background="{ThemeResource EqGoldTintBrush}" CornerRadius="{StaticResource EqRadiusMd}" Padding="12,10">
-              <Grid ColumnSpacing="12">
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{x:Bind ViewModel.AmountLabel, Mode=OneWay}" FontFamily="{StaticResource EqUiFontSemiBold}"
-                           FontSize="{StaticResource EqFontXl}" Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center" TextWrapping="Wrap" />
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                  <TextBlock Text="{x:Bind ViewModel.AmountText, Mode=OneWay}" FontFamily="{StaticResource EqUiFontSemiBold}"
-                             FontSize="{StaticResource EqFont2xl}" Foreground="{ThemeResource EqGoldInkBrush}" TextAlignment="Right" HorizontalAlignment="Right" />
-                  <TextBlock Text="{x:Bind ViewModel.SettleText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextAlignment="Right" HorizontalAlignment="Right"
-                             Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.ShowSettle), Mode=OneWay}" />
-                </StackPanel>
-              </Grid>
-            </Border>
 
             <TextBlock Text="{x:Bind ViewModel.CappedNote, Mode=OneWay}" Style="{StaticResource EqCaptionStyle}" TextWrapping="Wrap"
                        Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.HasCappedNote), Mode=OneWay}" />
 
-            <!-- Currency to hand over or take, at the current rate -->
-            <StackPanel Spacing="6">
-              <TextBlock Text="{x:Bind services:Loc.Get('Ret_SettleIn')}" Style="{StaticResource EqLabelStyle}" />
-              <Border Style="{StaticResource EqInputContainerStyle}" Padding="4,0">
-                <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
-                          ItemsSource="{x:Bind ViewModel.Currencies}" SelectedItem="{x:Bind ViewModel.SelectedCurrency, Mode=TwoWay}"
-                          AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_SettleIn')}" />
-              </Border>
-            </StackPanel>
+            <!-- What to hand over or take in the chosen currency (chips in the header), at the current rate -->
+            <Grid ColumnSpacing="12" Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.ShowSettle), Mode=OneWay}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Ret_SettleIn')}" Style="{StaticResource EqLabelStyle}" TextWrapping="Wrap" />
+              <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SettleText, Mode=OneWay}" Style="{StaticResource EqTableCellStrongStyle}" TextAlignment="Right" />
+            </Grid>
           </StackPanel>
         </Border>
-      </StackPanel>
+      </Grid>
     </ScrollViewer>
   </Grid>
 </UserControl>
