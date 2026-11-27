@@ -59,12 +59,6 @@
       </Setter>
     </Style>
 
-    <!-- Table header cell and row text. -->
-    <Style x:Key="SalesHeaderCellStyle" TargetType="TextBlock" BasedOn="{StaticResource EqLabelStyle}">
-      <Setter Property="Foreground" Value="{ThemeResource EqTextSecondaryBrush}" />
-      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-    </Style>
-
     <Style x:Key="SalesRowStyle" TargetType="ListViewItem">
       <Setter Property="Padding" Value="0" />
       <Setter Property="MinHeight" Value="52" />
@@ -290,30 +284,30 @@
           <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Auto"
                         VerticalScrollBarVisibility="Disabled" VerticalScrollMode="Disabled">
             <Grid MinWidth="900" RowDefinitions="Auto,*">
-              <Grid Grid.Row="0" Padding="16,14" ColumnDefinitions="110,2*,80,110,170,*,140,44" ColumnSpacing="12"
-                    BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">
-                <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Sales_ColReceipt')}" Style="{StaticResource SalesHeaderCellStyle}" />
-                <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Sales_ColDate')}" Style="{StaticResource SalesHeaderCellStyle}" />
-                <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Sales_ColItems')}" Style="{StaticResource SalesHeaderCellStyle}" HorizontalAlignment="Center" />
-                <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Sales_ColTotal')}" Style="{StaticResource SalesHeaderCellStyle}" HorizontalAlignment="Right" />
-                <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Sales_ColMethod')}" Style="{StaticResource SalesHeaderCellStyle}" />
-                <TextBlock Grid.Column="5" Text="{x:Bind services:Loc.Get('Sales_ColStaff')}" Style="{StaticResource SalesHeaderCellStyle}" />
-                <TextBlock Grid.Column="6" Text="{x:Bind services:Loc.Get('Sales_ColStatus')}" Style="{StaticResource SalesHeaderCellStyle}" />
+              <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Margin="8,8,8,4" ColumnDefinitions="110,2*,80,110,170,*,140,44">
+                <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Sales_ColReceipt')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Sales_ColDate')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Sales_ColItems')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Sales_ColTotal')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
+                <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Sales_ColMethod')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                <TextBlock Grid.Column="5" Text="{x:Bind services:Loc.Get('Sales_ColStaff')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                <TextBlock Grid.Column="6" Text="{x:Bind services:Loc.Get('Sales_ColStatus')}" Style="{StaticResource EqTableHeaderTextStyle}" />
               </Grid>
 
-              <ListView Grid.Row="1" ItemsSource="{x:Bind ViewModel.Rows}" SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
+              <ListView Grid.Row="1" Margin="8,0,8,0" ItemsSource="{x:Bind ViewModel.Rows}" SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
                         SelectionMode="Single" ItemContainerStyle="{StaticResource SalesRowStyle}">
                 <ListView.ItemTemplate>
                   <DataTemplate x:DataType="vm:SaleRowViewModel">
-                    <Grid Padding="16,0" ColumnDefinitions="110,2*,80,110,170,*,140,44" ColumnSpacing="12" MinHeight="52"
-                          BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">
-                      <TextBlock Grid.Column="0" Text="{x:Bind ReceiptNumber}" VerticalAlignment="Center"
+                    <Grid Style="{StaticResource EqTableRowStyle}" Padding="12,0,8,0" ColumnSpacing="8" MinHeight="52"
+                          ColumnDefinitions="110,2*,80,110,170,*,140,44">
+                      <Border Grid.ColumnSpan="8" Margin="-12,0,-8,0" Style="{StaticResource EqTableBandStyle}"
+                              Visibility="{x:Bind local:SalesBindings.Visible(IsAlternateRow)}" />
+                      <TextBlock Grid.Column="0" Text="{x:Bind ReceiptNumber}" Style="{StaticResource EqTableCellStyle}"
                                  FontFamily="{StaticResource EqUiFontSemiBold}" TextTrimming="CharacterEllipsis" />
-                      <TextBlock Grid.Column="1" Text="{x:Bind DateText}" VerticalAlignment="Center"
-                                 Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
-                      <TextBlock Grid.Column="2" Text="{x:Bind ItemsText}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                      <TextBlock Grid.Column="3" Text="{x:Bind TotalText}" VerticalAlignment="Center" HorizontalAlignment="Right"
-                                 FontFamily="{StaticResource EqUiFontSemiBold}" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="1" Text="{x:Bind DateText}" Style="{StaticResource EqTableCellStyle}" FontSize="13"
+                                 TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="2" Text="{x:Bind ItemsText}" Style="{StaticResource EqTableCellStyle}" HorizontalAlignment="Center" />
+                      <TextBlock Grid.Column="3" Text="{x:Bind TotalText}" Style="{StaticResource EqTableCellStrongStyle}" TextTrimming="CharacterEllipsis" />
 
                       <!-- Payment method badge: icon or brand letter, then the name. -->
                       <Border Grid.Column="4" Style="{StaticResource EqBadgeStyle}" HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -331,7 +325,7 @@
                         </StackPanel>
                       </Border>
 
-                      <TextBlock Grid.Column="5" Text="{x:Bind StaffText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="5" Text="{x:Bind StaffText}" Style="{StaticResource EqTableCellStyle}" FontSize="14" TextTrimming="CharacterEllipsis" />
 
                       <!-- Status badge: colour tint plus the word, never colour alone. -->
                       <Border Grid.Column="6" Style="{StaticResource EqBadgeStyle}" HorizontalAlignment="Left" VerticalAlignment="Center"

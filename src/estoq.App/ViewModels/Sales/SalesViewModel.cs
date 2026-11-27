@@ -341,7 +341,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         Rows.Clear();
         foreach (var sale in _filtered.Skip((_page - 1) * PageSize).Take(PageSize))
         {
-            Rows.Add(new SaleRowViewModel(sale, Currency, _localizer));
+            Rows.Add(new SaleRowViewModel(sale, Currency, _localizer, Rows.Count % 2 == 1));
         }
 
         PageButtons.Clear();

@@ -9,9 +9,10 @@ namespace Estoq.App.ViewModels.Sales;
 /// <summary>One row of the sales table, with every value already formatted for the current language.</summary>
 public sealed class SaleRowViewModel
 {
-    public SaleRowViewModel(SaleRecord sale, string currency, ILocalizer localizer)
+    public SaleRowViewModel(SaleRecord sale, string currency, ILocalizer localizer, bool isAlternateRow)
     {
         Sale = sale;
+        IsAlternateRow = isAlternateRow;
         var culture = localizer.Culture;
         ReceiptNumber = sale.ReceiptNumber;
         DateText = FormatDate(sale.SoldAt, culture);
@@ -27,6 +28,9 @@ public sealed class SaleRowViewModel
     }
 
     public SaleRecord Sale { get; }
+
+    /// <summary>Every second row is banded, as in every table (EqTableBandStyle).</summary>
+    public bool IsAlternateRow { get; }
 
     public string ReceiptNumber { get; }
 
