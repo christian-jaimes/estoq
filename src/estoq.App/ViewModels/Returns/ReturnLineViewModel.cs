@@ -24,7 +24,9 @@ public sealed partial class ReturnLineViewModel : ObservableObject
         int maxQuantity,
         bool isSelected,
         Func<decimal, string> formatPrice,
-        Action changed)
+        Action changed,
+        int returnedQuantity = 0,
+        int? soldQuantity = null)
     {
         IsAlternateRow = number % 2 == 0;
         VariantId = variantId;
@@ -35,8 +37,10 @@ public sealed partial class ReturnLineViewModel : ObservableObject
         UnitPrice = unitPrice;
         MaxQuantity = maxQuantity;
         _formatPrice = formatPrice;
-        Quantity = 1;
-        IsSelected = isSelected;
+        ReturnedQuantity = returnedQuantity;
+        SoldText = soldQuantity?.ToString(CultureInfo.InvariantCulture) ?? "-";
+        Quantity = Math.Min(1, maxQuantity);
+        IsSelected = isSelected && maxQuantity > 0;
         IncreaseCommand = new RelayCommand(() => SetQuantity(Quantity + 1));
         DecreaseCommand = new RelayCommand(() => SetQuantity(Quantity - 1));
         RemoveCommand = new RelayCommand(() => RemoveRequested?.Invoke(this, EventArgs.Empty));
@@ -63,6 +67,22 @@ public sealed partial class ReturnLineViewModel : ObservableObject
     /// <summary>Units that can still come back: what was sold less what earlier returns took.</summary>
     public int MaxQuantity { get; }
 
+    /// <summary>Units bought on the sale (the "Sold" column); a dash for an item added without a receipt.</summary>
+    public string SoldText { get; }
+
+    /// <summary>Units of this line that earlier returns already took back (read from the logged stock movements).</summary>
+    public int ReturnedQuantity { get; }
+
+    /// <summary>False once everything sold on this line was returned: the row is shown disabled and cannot be ticked.</summary>
+    public bool CanReturn => MaxQuantity > 0;
+
+    public double RowOpacity => CanReturn ? 1d : 0.5d;
+
+    /// <summary>"Returned" when the whole line came back, "2 returned" when part of it did; empty when none did.</summary>
+    public string StatusText { get; private set; } = string.Empty;
+
+    public bool HasStatus => StatusText.Length > 0;
+
     public string PriceText => _formatPrice(UnitPrice);
 
     [ObservableProperty]
@@ -88,6 +108,14 @@ public sealed partial class ReturnLineViewModel : ObservableObject
         }
 
         OnPropertyChanged(nameof(QuantityText));
+    }
+
+    /// <summary>Sets the pill text (the view model that owns the language builds it) and redraws it.</summary>
+    public void SetStatus(string text)
+    {
+        StatusText = text;
+        OnPropertyChanged(nameof(StatusText));
+        OnPropertyChanged(nameof(HasStatus));
     }
 
     /// <summary>Redraws the price after a language change (number format).</summary>

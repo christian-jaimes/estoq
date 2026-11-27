@@ -218,22 +218,22 @@ public sealed partial class ReturnsViewModel : ObservableObject
             return;
         }
 
-        if (sale.Lines.All(line => line.Returnable == 0))
-        {
-            LookupError = _localizer["Ret_ErrNothingLeft"];
-            return;
-        }
-
         _sale = sale;
         HasSale = true;
         SaleNumberText = $"#{sale.Number}";
         SaleDateText = sale.Date.ToString("g", _localizer.Culture);
         Lines.Clear();
-        foreach (var line in sale.Lines.Where(line => line.Returnable > 0))
+        var ticked = false;
+        foreach (var line in sale.Lines)
         {
-            Lines.Add(new ReturnLineViewModel(Lines.Count + 1, line.VariantId, line.Name, line.Detail, line.Sku, line.UnitPrice,
-                line.Returnable, Lines.Count == 0, FormatBase, Recalculate));
+            // Lines already returned stay in the table, disabled and marked, so the same item cannot be returned twice.
+            var row = new ReturnLineViewModel(Lines.Count + 1, line.VariantId, line.Name, line.Detail, line.Sku, line.UnitPrice,
+                line.Returnable, !ticked && line.Returnable > 0, FormatBase, Recalculate, line.QuantityReturned, line.QuantitySold);
+            ticked |= row.IsSelected;
+            Lines.Add(row);
         }
+
+        RefreshLineStatus();
 
         Recalculate();
     }
@@ -426,6 +426,17 @@ public sealed partial class ReturnsViewModel : ObservableObject
         }
     }
 
+    /// <summary>The "Returned" pill of lines that earlier returns took back, fully or in part.</summary>
+    private void RefreshLineStatus()
+    {
+        foreach (var line in Lines)
+        {
+            line.SetStatus(line.ReturnedQuantity == 0
+                ? string.Empty
+                : line.CanReturn ? _localizer.Format("Ret_ReturnedSome", line.ReturnedQuantity) : _localizer["Ret_Returned"]);
+        }
+    }
+
     private void RebuildCurrencies()
     {
         Currencies.Clear();
@@ -532,6 +543,8 @@ public sealed partial class ReturnsViewModel : ObservableObject
         {
             line.Refresh();
         }
+
+        RefreshLineStatus();
 
         if (!IsCompleted)
         {

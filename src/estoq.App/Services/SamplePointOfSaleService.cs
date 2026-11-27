@@ -22,13 +22,14 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
     private readonly Dictionary<PaymentMethod, int> _paymentUsage = [];
     private readonly List<SaleVariant> _catalog;
 
-    private int _lastSaleNumber = 124;
+    private int _lastSaleNumber;
 
     public SamplePointOfSaleService(INotificationService notifications, ISaleHistory history)
     {
         _notifications = notifications;
         _history = history;
         _catalog = LoadCatalog();
+        _lastSaleNumber = LastReceiptNumber();
     }
 
     public UserRole CurrentRole => UserRole.Owner;
@@ -41,8 +42,7 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
             ["VES"] = 36.50m,
             ["COP"] = 4100m,
         });
-        Assert16(out var tax);
-        return new SaleSettings(rates, ["USD", "EUR", "VES", "COP"], tax, TaxMode.Excluded, DiscountPolicy.DefaultCapPercent);
+        return new SaleSettings(rates, ["USD", "EUR", "VES", "COP"], SampleStoreTax.Rate, SampleStoreTax.Mode, DiscountPolicy.DefaultCapPercent);
     }
 
     public IReadOnlyList<DiscountPreset> GetDiscountPresets() => LoadDiscountPresets();
@@ -117,6 +117,16 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
             }
         }
 
+        // Log the sale's stock movements with the receipt number, so Returns can find the sale again (also after a restart).
+        try
+        {
+            StockMovementLog.Append([.. request.Lines.Select(line => new MovementEntry(line.VariantId, "sale", line.UnitPrice, -line.Quantity, number))]);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // The sample CSV is a development fixture: a log failure must not lose a sale that is already rung up.
+        }
+
         // Keep the sale so Returns (F4) can find it by receipt number.
         _history.Record(new SettledSale(
             number,
@@ -127,6 +137,29 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
             0m));
 
         return new SaleReceipt(number, request.Totals, settlement.Change);
+    }
+
+    /// <summary>The highest receipt number used so far: the seeded sales (up to 000124) or the last one logged in the movements file.</summary>
+    private static int LastReceiptNumber()
+    {
+        var last = 124;
+        try
+        {
+            foreach (var row in SampleCsv.Read(StockMovementLog.MovementFile))
+            {
+                var digits = SampleCsv.Get(row, "receipt_number");
+                if (int.TryParse(digits, NumberStyles.None, CultureInfo.InvariantCulture, out var number))
+                {
+                    last = Math.Max(last, number);
+                }
+            }
+        }
+        catch (IOException)
+        {
+            // Without the file the numbering simply starts after the seeded sales.
+        }
+
+        return last;
     }
 
     /// <summary>Moves a variant's on-hand count by <paramref name="delta"/> (a customer return adds, an exchange item takes).</summary>
@@ -422,14 +455,5 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
 
         values.Add(value.ToString());
         return [.. values];
-    }
-
-    private static void Assert16(out TaxRate tax)
-    {
-        // Sample store charges 16 % to exercise the tax rows; the setup default is 0 %.
-        if (!TaxRate.TryCreate(16m, out tax))
-        {
-            tax = TaxRate.Default;
-        }
     }
 }

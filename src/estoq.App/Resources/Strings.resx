@@ -383,6 +383,7 @@
   <data name="Ret_ColItem" xml:space="preserve"><value>Item</value></data>
   <data name="Ret_ColPrice" xml:space="preserve"><value>Price</value></data>
   <data name="Ret_ColQty" xml:space="preserve"><value>Qty</value></data>
+  <data name="Ret_ColSold" xml:space="preserve"><value>Sold</value></data>
   <data name="Ret_QtyDecrease" xml:space="preserve"><value>Decrease quantity</value></data>
   <data name="Ret_QtyIncrease" xml:space="preserve"><value>Increase quantity</value></data>
   <data name="Ret_Remove" xml:space="preserve"><value>Remove</value></data>
@@ -412,6 +413,8 @@
   <data name="Ret_DoneReturned" xml:space="preserve"><value>Returned items</value></data>
   <data name="Ret_DoneTaken" xml:space="preserve"><value>New items</value></data>
   <data name="Ret_DoneAnother" xml:space="preserve"><value>Process another return</value></data>
+  <data name="Ret_Returned" xml:space="preserve"><value>Returned</value></data>
+  <data name="Ret_ReturnedSome" xml:space="preserve"><value>{0} returned</value></data>
   <data name="Ret_ItemsTitleExchange" xml:space="preserve"><value>Items to exchange</value></data>
   <data name="Ret_ColTotal" xml:space="preserve"><value>Total</value></data>
   <data name="Ret_Summary" xml:space="preserve"><value>Summary</value></data>

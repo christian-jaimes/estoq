@@ -41,3 +41,5 @@ After applying, the pop-up resets to empty and stays open for the next adjustmen
 - Sample data: each changed item appends one row to `data/dummy_stock_movements.csv` with movement type `recount`, `correction` (sold without stock), `defect` (damaged) or `lost`, and the signed difference as `stock_quantity`. Items without a difference write nothing. Reason, reference, notes and user have no columns in the sample table; the back end keeps them in the audit log.
 - After applying, an "Adjustment applied" confirmation covers the whole pop-up; "New adjustment" returns to an empty form and "Close" closes the pop-up.
 - Not built yet: opening the pop-up from a "sold without stock" notification with that item already added (notifications do not carry the article yet).
+
+Sample data: each adjusted item is appended to `data/dummy_stock_movements.csv` with `movement_description` set to `<reference> - <note>` (one of them alone when the other is empty).

@@ -57,7 +57,14 @@ public sealed partial class ReturnsView : UserControl
     private void OnRightScrollSizeChanged(object sender, SizeChangedEventArgs e) => RightPanel.MinHeight = RightScroll.ActualHeight;
 
     /// <summary>Return mode gives the receipt items the whole left column; Exchange splits it with the new-items table.</summary>
-    private void UpdateExchangeRow() => ExchangeRow.Height = new GridLength(ViewModel.IsExchange ? 1 : 0, GridUnitType.Star);
+    private void UpdateExchangeRow()
+    {
+        ExchangeRow.Height = new GridLength(ViewModel.IsExchange ? 1 : 0, GridUnitType.Star);
+        ExchangeRow.MinHeight = ViewModel.IsExchange ? 200 : 0;
+    }
+
+    /// <summary>Keeps the left column at least as tall as the pop-up body, so its cards fill the workable area.</summary>
+    private void OnLeftScrollSizeChanged(object sender, SizeChangedEventArgs e) => LeftPanel.MinHeight = LeftScroll.ActualHeight;
 
     /// <summary>Clicking the chosen mode again keeps it chosen: the toggle is put back in line with the view model.</summary>
     private void OnModeClick(object sender, RoutedEventArgs e)

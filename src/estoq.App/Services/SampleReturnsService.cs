@@ -9,9 +9,6 @@ namespace Estoq.App.Services;
 /// </summary>
 public sealed class SampleReturnsService : IReturnsService
 {
-    private const string MovementFile = "dummy_stock_movements.csv";
-    private const string ArticleFile = "dummy_article.csv";
-    private const string DefaultLocation = "STORE-GHENT-CENTER";
 
     private readonly ISaleHistory _history;
     private readonly IPointOfSaleService _pointOfSale;
@@ -51,6 +48,7 @@ public sealed class SampleReturnsService : IReturnsService
         if (request.SaleNumber is { } saleNumber)
         {
             _history.ApplyReturn(saleNumber, request.Returned, request.RefundBase);
+            _history.AddItems(saleNumber, request.NewItems);
         }
         else
         {
@@ -67,36 +65,29 @@ public sealed class SampleReturnsService : IReturnsService
         return new ReturnReceipt(number);
     }
 
+    /// <summary>The return's reason and note as "&lt;reason&gt; - &lt;note&gt;"; just one of them when the other is empty. The reason is stored in English.</summary>
+    internal static string Describe(ReturnReason? reason, string note)
+    {
+        var text = reason switch
+        {
+            ReturnReason.ChangeOfMind => "Change of mind",
+            ReturnReason.WrongSize => "Wrong size",
+            ReturnReason.Defective => "Defective or damaged",
+            ReturnReason.WrongItem => "Wrong item",
+            ReturnReason.Other => "Other",
+            _ => string.Empty,
+        };
+        return StockMovementLog.Describe(text, note);
+    }
+
+    /// <summary>Logs the returned units as "return" rows carrying the original receipt number, and exchange items as "sale" rows with the same receipt number.</summary>
     private static void WriteMovements(ReturnRequest request)
     {
-        var costs = SamplePointOfSaleService.ReadCsvRows(ArticleFile, "article", ["article_id", "standard_cost_price"])
-            .ToDictionary(row => row["article_id"], row => row["standard_cost_price"], StringComparer.OrdinalIgnoreCase);
-        var path = SamplePointOfSaleService.ResolveDataCsvPath(MovementFile);
-        if (!File.Exists(path))
-        {
-            throw new FileNotFoundException("The sample stock movements CSV was not copied to the app's data folder.", path);
-        }
-
-        var next = File.ReadAllLines(path)
-            .Select(row => row.Split(',')[0])
-            .Where(id => id.StartsWith("MOV-", StringComparison.OrdinalIgnoreCase))
-            .Select(id => int.TryParse(id.AsSpan(4), NumberStyles.None, CultureInfo.InvariantCulture, out var n) ? n : 0)
-            .DefaultIfEmpty(0).Max() + 1;
-        var now = DateTime.Now.ToString("dd-MM-yy HH:mm", CultureInfo.InvariantCulture);
-
-        string Row(string variantId, string type, decimal price, int quantity) => string.Join(',',
-            $"MOV-{next++}", variantId, type, costs.GetValueOrDefault(variantId, "0"),
-            price.ToString("0.##", CultureInfo.InvariantCulture), quantity.ToString(CultureInfo.InvariantCulture), now, DefaultLocation);
-
-        var rows = request.Returned.Select(line => Row(line.VariantId, "return", line.UnitPrice, line.Quantity)).ToList();
-        rows.AddRange(request.NewItems.Select(line => Row(line.VariantId, "sale", line.UnitPrice, -line.Quantity)));
-        if (rows.Count == 0)
-        {
-            return;
-        }
-
-        var text = File.ReadAllText(path);
-        var prefix = text.Length == 0 || text.EndsWith('\n') ? string.Empty : Environment.NewLine;
-        File.AppendAllText(path, prefix + string.Join(Environment.NewLine, rows) + Environment.NewLine);
+        var receipt = request.SaleNumber ?? string.Empty;
+        var description = Describe(request.Reason, request.Note);
+        var entries = request.Returned.Select(line => new MovementEntry(line.VariantId, "return", line.UnitPrice, line.Quantity, receipt, description)).ToList();
+        // Exchange items inherit the receipt number, so they can be returned or exchanged later like any item of that sale.
+        entries.AddRange(request.NewItems.Select(line => new MovementEntry(line.VariantId, "sale", line.UnitPrice, -line.Quantity, receipt)));
+        StockMovementLog.Append(entries);
     }
 }

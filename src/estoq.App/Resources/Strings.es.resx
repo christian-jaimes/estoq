@@ -383,6 +383,7 @@
   <data name="Ret_ColItem" xml:space="preserve"><value>Artículo</value></data>
   <data name="Ret_ColPrice" xml:space="preserve"><value>Precio</value></data>
   <data name="Ret_ColQty" xml:space="preserve"><value>Cant.</value></data>
+  <data name="Ret_ColSold" xml:space="preserve"><value>Vendidos</value></data>
   <data name="Ret_QtyDecrease" xml:space="preserve"><value>Disminuir cantidad</value></data>
   <data name="Ret_QtyIncrease" xml:space="preserve"><value>Aumentar cantidad</value></data>
   <data name="Ret_Remove" xml:space="preserve"><value>Quitar</value></data>
@@ -412,6 +413,8 @@
   <data name="Ret_DoneReturned" xml:space="preserve"><value>Artículos devueltos</value></data>
   <data name="Ret_DoneTaken" xml:space="preserve"><value>Artículos nuevos</value></data>
   <data name="Ret_DoneAnother" xml:space="preserve"><value>Procesar otra devolución</value></data>
+  <data name="Ret_Returned" xml:space="preserve"><value>Devuelto</value></data>
+  <data name="Ret_ReturnedSome" xml:space="preserve"><value>{0} devueltos</value></data>
   <data name="Ret_ItemsTitleExchange" xml:space="preserve"><value>Artículos a cambiar</value></data>
   <data name="Ret_ColTotal" xml:space="preserve"><value>Total</value></data>
   <data name="Ret_Summary" xml:space="preserve"><value>Resumen</value></data>

@@ -1,4 +1,5 @@
 using Estoq.Core.Returns;
+using Estoq.Core.Sales;
 
 namespace Estoq.App.Services;
 
@@ -21,6 +22,12 @@ public interface ISaleHistory
     SettledSale? Find(string receiptNumber);
 
     void Record(SettledSale sale);
+
+    /// <summary>
+    /// Adds the new items of an exchange to the sale they were exchanged on, so they can be returned or exchanged later under the same
+    /// receipt number. The sale's subtotal and total grow by what the new items cost.
+    /// </summary>
+    void AddItems(string receiptNumber, IReadOnlyList<CartLine> items);
 
     /// <summary>Counts the returned units and the refund against the sale so a second return cannot exceed it.</summary>
     void ApplyReturn(string receiptNumber, IReadOnlyList<ReturnedLine> returned, decimal refund);

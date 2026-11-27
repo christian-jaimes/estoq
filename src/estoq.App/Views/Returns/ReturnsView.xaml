@@ -136,10 +136,13 @@
 
     <!-- LEFT -->
     <!-- No RowSpacing: an empty Return-mode exchange row would still add a gap at the bottom, so the cards carry their own top margin. -->
-    <Grid Grid.Column="0">
+    <!-- The column scrolls when both Exchange tables cannot keep their minimum height, so rows are always readable. -->
+    <ScrollViewer x:Name="LeftScroll" Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" MinWidth="0"
+                  SizeChanged="OnLeftScrollSizeChanged">
+    <Grid x:Name="LeftPanel">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
-        <RowDefinition Height="*" />
+        <RowDefinition Height="*" MinHeight="200" />
         <RowDefinition x:Name="ExchangeRow" Height="0" />
       </Grid.RowDefinitions>
 
@@ -199,9 +202,9 @@
               <ColumnDefinition Width="*" />
               <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
-              <TextBlock Text="{x:Bind ViewModel.SaleNumberText, Mode=OneWay}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontXl}" />
-              <TextBlock Text="{x:Bind ViewModel.SaleDateText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" />
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+              <TextBlock Text="{x:Bind ViewModel.SaleNumberText, Mode=OneWay}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+              <TextBlock Text="{x:Bind ViewModel.SaleDateText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
             </StackPanel>
             <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.ChangeSaleCommand}"
                     Content="{x:Bind services:Loc.Get('Ret_ChangeSale')}" VerticalAlignment="Center" />
@@ -266,18 +269,17 @@
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="40" />
               <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="72" />
               <ColumnDefinition Width="96" />
               <ColumnDefinition Width="132" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Ret_ColItem')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-            <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Ret_ColPrice')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
-            <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Ret_ColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Center" HorizontalAlignment="Center" />
+            <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Ret_ColSold')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+            <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Ret_ColPrice')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+            <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Ret_ColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Center" HorizontalAlignment="Center" />
           </Grid>
 
           <Grid Grid.Row="3">
-            <TextBlock Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" VerticalAlignment="Top"
-                       Text="{x:Bind services:Loc.Get('Ret_ItemsEmpty')}"
-                       Visibility="{x:Bind pos:PosBindings.Hidden(ViewModel.HasLines), Mode=OneWay}" />
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0"
                           Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.HasLines), Mode=OneWay}">
               <ItemsControl ItemsSource="{x:Bind ViewModel.Lines, Mode=OneWay}">
@@ -285,14 +287,15 @@
                   <DataTemplate x:DataType="vm:ReturnLineViewModel">
                     <Grid MinHeight="64" Style="{StaticResource EqTableRowStyle}">
                       <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind pos:PosBindings.Visible(IsAlternateRow)}" />
-                      <Grid Padding="8,8,8,8" ColumnSpacing="8">
+                      <Grid Padding="8,8,8,8" ColumnSpacing="8" Opacity="{x:Bind RowOpacity}">
                         <Grid.ColumnDefinitions>
                           <ColumnDefinition Width="32" />
                           <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="72" />
                           <ColumnDefinition Width="96" />
                           <ColumnDefinition Width="132" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="0" MinWidth="0" Padding="0" VerticalAlignment="Center" IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                        <CheckBox Grid.Column="0" MinWidth="0" Padding="0" VerticalAlignment="Center" IsChecked="{x:Bind IsSelected, Mode=TwoWay}" IsEnabled="{x:Bind CanReturn}"
                                   AutomationProperties.Name="{x:Bind Name}" />
                         <Grid Grid.Column="1" ColumnSpacing="12">
                           <Grid.ColumnDefinitions>
@@ -306,18 +309,34 @@
                                        Foreground="{ThemeResource EqGoldInkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                           </Border>
                           <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
+                            <Grid ColumnSpacing="8">
+                              <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                              </Grid.ColumnDefinitions>
+                              <TextBlock Grid.Column="0" Text="{x:Bind Name}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
+                              <!-- "Returned" pill: shown when earlier returns (read from the stock movements) took this line back. -->
+                              <!-- Same pill as the currency chips: elevated fill, 1 px border, themed text. -->
+                              <Border Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="12,0" Height="26" CornerRadius="13"
+                                      Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1"
+                                      Visibility="{x:Bind pos:PosBindings.Visible(HasStatus), Mode=OneWay}">
+                                <TextBlock Text="{x:Bind StatusText, Mode=OneWay}" Style="{StaticResource EqLabelStyle}" FontSize="{StaticResource EqFontSm}"
+                                           Foreground="{ThemeResource EqTextBrush}" VerticalAlignment="Center" />
+                              </Border>
+                            </Grid>
                             <TextBlock Text="{x:Bind Detail}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
                           </StackPanel>
                         </Grid>
-                        <TextBlock Grid.Column="2" Text="{x:Bind PriceText, Mode=OneWay}" Style="{StaticResource EqTableCellStyle}"
+                        <TextBlock Grid.Column="2" Text="{x:Bind SoldText}" Style="{StaticResource EqTableCellStyle}"
+                                   TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="3" Text="{x:Bind PriceText, Mode=OneWay}" Style="{StaticResource EqTableCellStyle}"
                                    TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                        <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center" VerticalAlignment="Center">
-                          <Button Style="{StaticResource ReturnStepButtonStyle}" Command="{x:Bind DecreaseCommand}"
+                        <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center" VerticalAlignment="Center">
+                          <Button Style="{StaticResource ReturnStepButtonStyle}" Command="{x:Bind DecreaseCommand}" IsEnabled="{x:Bind CanReturn}"
                                   AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_QtyDecrease')}">
                             <FontIcon Glyph="&#xE15B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
                           </Button>
-                          <TextBox Text="{x:Bind QuantityText, Mode=OneWay}" Width="40" Height="{StaticResource EqControlHeight}" Padding="0,9"
+                          <TextBox IsEnabled="{x:Bind CanReturn}" Text="{x:Bind QuantityText, Mode=OneWay}" Width="40" Height="{StaticResource EqControlHeight}" Padding="0,9"
                                    TextAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ReturnBareTextBoxStyle}"
                                    FontFamily="{StaticResource EqUiFontSemiBold}" InputScope="Number" MaxLength="4"
                                    AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_ColQty')}"
@@ -333,7 +352,7 @@
                               <Thickness x:Key="TextControlBorderThemeThicknessFocused">0,0,0,2</Thickness>
                             </TextBox.Resources>
                           </TextBox>
-                          <Button Style="{StaticResource ReturnStepButtonStyle}" Command="{x:Bind IncreaseCommand}"
+                          <Button Style="{StaticResource ReturnStepButtonStyle}" Command="{x:Bind IncreaseCommand}" IsEnabled="{x:Bind CanReturn}"
                                   AutomationProperties.Name="{x:Bind services:Loc.Get('Ret_QtyIncrease')}">
                             <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
                           </Button>
@@ -382,8 +401,6 @@
           </Grid>
 
           <Grid Grid.Row="4">
-            <TextBlock Text="{x:Bind services:Loc.Get('Ret_ExchangeEmpty')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" VerticalAlignment="Top"
-                       Visibility="{x:Bind pos:PosBindings.Hidden(ViewModel.HasExchangeLines), Mode=OneWay}" />
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0"
                           Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.HasExchangeLines), Mode=OneWay}">
               <ItemsControl ItemsSource="{x:Bind ViewModel.ExchangeLines, Mode=OneWay}">
@@ -430,6 +447,7 @@
         </Grid>
       </Border>
     </Grid>
+    </ScrollViewer>
 
     <!-- RIGHT: summary, then the details (mode, reason, note); scrolls when the window is short, like Stock adjustments. -->
     <ScrollViewer x:Name="RightScroll" Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" MinWidth="0"
@@ -506,25 +524,24 @@
               <TextBlock Text="{x:Bind services:Loc.Get('Ret_Summary')}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
             </StackPanel>
 
-            <Grid ColumnSpacing="12">
+            <!-- Labels share one row and the values another, so the figures stay on one line even when a label wraps (longer Spanish text). -->
+            <Grid ColumnSpacing="12" RowSpacing="2">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
               </Grid.ColumnDefinitions>
-              <StackPanel Grid.Column="0" Spacing="2" MinWidth="0">
-                <TextBlock Text="{x:Bind ViewModel.Kpi1Label, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
-                <TextBlock Text="{x:Bind ViewModel.Kpi1Text, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="{StaticResource EqFontXl}" TextWrapping="WrapWholeWords" />
-              </StackPanel>
-              <StackPanel Grid.Column="1" Spacing="2" MinWidth="0">
-                <TextBlock Text="{x:Bind ViewModel.Kpi2Label, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
-                <TextBlock Text="{x:Bind ViewModel.Kpi2Text, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="{StaticResource EqFontXl}" TextWrapping="WrapWholeWords" />
-              </StackPanel>
-              <StackPanel Grid.Column="2" Spacing="2" MinWidth="0">
-                <TextBlock Text="{x:Bind ViewModel.AmountLabel, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
-                <TextBlock Text="{x:Bind ViewModel.AmountText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="{StaticResource EqFontXl}"
-                           Foreground="{ThemeResource EqGoldInkBrush}" TextWrapping="WrapWholeWords" />
-              </StackPanel>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+              </Grid.RowDefinitions>
+              <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Bind ViewModel.Kpi1Label, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" VerticalAlignment="Top" />
+              <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.Kpi2Label, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" VerticalAlignment="Top" />
+              <TextBlock Grid.Row="0" Grid.Column="2" Text="{x:Bind ViewModel.AmountLabel, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" VerticalAlignment="Top" />
+              <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Bind ViewModel.Kpi1Text, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="{StaticResource EqFontXl}" TextWrapping="WrapWholeWords" VerticalAlignment="Top" />
+              <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.Kpi2Text, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="{StaticResource EqFontXl}" TextWrapping="WrapWholeWords" VerticalAlignment="Top" />
+              <TextBlock Grid.Row="1" Grid.Column="2" Text="{x:Bind ViewModel.AmountText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="{StaticResource EqFontXl}"
+                         Foreground="{ThemeResource EqGoldInkBrush}" TextWrapping="WrapWholeWords" VerticalAlignment="Top" />
             </Grid>
 
             <TextBlock Text="{x:Bind ViewModel.CappedNote, Mode=OneWay}" Style="{StaticResource EqCaptionStyle}" TextWrapping="Wrap"
