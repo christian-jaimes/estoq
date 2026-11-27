@@ -1,0 +1,110 @@
+<UserControl
+    x:Class="Estoq.App.Views.Returns.ReturnCompletedOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:services="using:Estoq.App.Services"
+    xmlns:pos="using:Estoq.App.Views.PointOfSale"
+    xmlns:addvm="using:Estoq.App.ViewModels.AddProduct">
+
+  <!-- Return completed: confirmation over the whole pop-up (header and footer included), modelled on Sale completed and Product added. -->
+  <Border Background="{ThemeResource EqScrimBrush}" CornerRadius="{StaticResource EqRadiusXl}" Tapped="OnTapped"
+          Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.IsCompleted), Mode=OneWay}">
+    <Border Width="640" MaxHeight="680" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource EqCardStyle}" Padding="24"
+            Background="{ThemeResource EqSurfaceBrush}">
+      <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" RowSpacing="12">
+        <FontIcon Glyph="&#xF0BE;" FontFamily="{StaticResource EqIconFont}" FontSize="48" Foreground="{ThemeResource EqSuccessBrush}"
+                  HorizontalAlignment="Center" Grid.Row="0" />
+        <StackPanel Grid.Row="1" Spacing="4">
+          <TextBlock Text="{x:Bind services:Loc.Get('Ret_DoneTitle')}" Style="{StaticResource EqCardTitleStyle}" HorizontalAlignment="Center" />
+          <TextBlock Text="{x:Bind ViewModel.DoneNumberText, Mode=OneWay}" Style="{StaticResource EqLabelStyle}" HorizontalAlignment="Center" />
+          <TextBlock Text="{x:Bind ViewModel.DoneSubtitle, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" HorizontalAlignment="Center" />
+        </StackPanel>
+
+        <Grid Grid.Row="2" Style="{StaticResource EqTableHeaderStyle}">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="104" />
+            <ColumnDefinition Width="56" />
+            <ColumnDefinition Width="112" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Add_DoneColProduct')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+          <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Ret_ColPrice')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+          <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Add_DoneColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+          <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Add_DoneColTotal')}" Style="{StaticResource EqTableHeaderTextStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="3" MaxHeight="260" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0">
+          <StackPanel>
+            <TextBlock Text="{x:Bind services:Loc.Get('Ret_DoneReturned')}" Style="{StaticResource EqCaptionStyle}" Margin="12,8,0,4" />
+            <ItemsControl ItemsSource="{x:Bind ViewModel.DoneReturned, Mode=OneWay}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="addvm:AddedItemViewModel">
+                  <Grid MinHeight="56" Style="{StaticResource EqTableRowStyle}">
+                    <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind pos:PosBindings.Visible(IsAlternateRow)}" />
+                    <Grid Padding="12,8,8,8" ColumnSpacing="8">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="104" />
+                        <ColumnDefinition Width="56" />
+                        <ColumnDefinition Width="112" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="{x:Bind Name}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{x:Bind DetailText}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="1" Text="{x:Bind PriceText}" Style="{StaticResource EqTableCellStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+                      <TextBlock Grid.Column="2" Text="{x:Bind QuantityText}" Style="{StaticResource EqTableCellStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+                      <TextBlock Grid.Column="3" Text="{x:Bind TotalText}" Style="{StaticResource EqTableCellStrongStyle}" TextAlignment="Right" />
+                    </Grid>
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <StackPanel Visibility="{x:Bind pos:PosBindings.Visible(ViewModel.ShowDoneTaken), Mode=OneWay}">
+              <TextBlock Text="{x:Bind services:Loc.Get('Ret_DoneTaken')}" Style="{StaticResource EqCaptionStyle}" Margin="12,12,0,4" />
+              <ItemsControl ItemsSource="{x:Bind ViewModel.DoneTaken, Mode=OneWay}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="addvm:AddedItemViewModel">
+                    <Grid MinHeight="56" Style="{StaticResource EqTableRowStyle}">
+                      <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind pos:PosBindings.Visible(IsAlternateRow)}" />
+                      <Grid Padding="12,8,8,8" ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="104" />
+                          <ColumnDefinition Width="56" />
+                          <ColumnDefinition Width="112" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                          <TextBlock Text="{x:Bind Name}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Text="{x:Bind DetailText}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" Text="{x:Bind PriceText}" Style="{StaticResource EqTableCellStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+                        <TextBlock Grid.Column="2" Text="{x:Bind QuantityText}" Style="{StaticResource EqTableCellStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+                        <TextBlock Grid.Column="3" Text="{x:Bind TotalText}" Style="{StaticResource EqTableCellStrongStyle}" TextAlignment="Right" />
+                      </Grid>
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="4" Spacing="8">
+          <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
+          <Grid>
+            <TextBlock Text="{x:Bind ViewModel.DoneAmountLabel, Mode=OneWay}" Style="{StaticResource EqTableCellStyle}" FontFamily="{StaticResource EqUiFontSemiBold}" />
+            <TextBlock Text="{x:Bind ViewModel.DoneAmountText, Mode=OneWay}" Style="{StaticResource EqTableCellStrongStyle}" FontSize="{StaticResource EqFont2xl}" />
+          </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Padding="0,8,0,0">
+          <Button Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Popup_Close')}" Command="{x:Bind ViewModel.DoneCommand}" />
+          <Button Style="{StaticResource EqPrimaryButtonStyle}" Command="{x:Bind ViewModel.ProcessAnotherCommand}"
+                  Content="{x:Bind services:Loc.Get('Ret_DoneAnother')}" />
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Border>
+</UserControl>

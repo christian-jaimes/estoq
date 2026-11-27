@@ -2,6 +2,7 @@ using Estoq.App.Services;
 using Estoq.App.ViewModels;
 using Estoq.App.ViewModels.AddProduct;
 using Estoq.App.ViewModels.PointOfSale;
+using Estoq.App.ViewModels.Returns;
 using Estoq.App.ViewModels.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -50,8 +51,11 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddSingleton<NotificationsViewModel>();
         services.AddSingleton<ICatalogService, SampleCatalogService>();
         services.AddSingleton<AddProductViewModel>();
+        services.AddSingleton<ReturnsViewModel>();
         services.AddSingleton<PopupViewModel>();
+        services.AddSingleton<ISaleHistory, SampleSaleHistory>();
         services.AddSingleton<IPointOfSaleService, SamplePointOfSaleService>();
+        services.AddSingleton<IReturnsService, SampleReturnsService>();
         services.AddSingleton<PointOfSaleViewModel>();
         services.AddSingleton<ShellViewModel>();
 

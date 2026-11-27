@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using Estoq.Core.Returns;
 using Estoq.Core.Roles;
 using Estoq.Core.Sales;
 using Estoq.Core.Setup;
@@ -17,14 +18,16 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
     private const string PaymentUsagePrefix = "pos_payment_usage_";
 
     private readonly INotificationService _notifications;
+    private readonly ISaleHistory _history;
     private readonly Dictionary<PaymentMethod, int> _paymentUsage = [];
     private readonly List<SaleVariant> _catalog;
 
     private int _lastSaleNumber = 124;
 
-    public SamplePointOfSaleService(INotificationService notifications)
+    public SamplePointOfSaleService(INotificationService notifications, ISaleHistory history)
     {
         _notifications = notifications;
+        _history = history;
         _catalog = LoadCatalog();
     }
 
@@ -114,7 +117,26 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
             }
         }
 
+        // Keep the sale so Returns (F4) can find it by receipt number.
+        _history.Record(new SettledSale(
+            number,
+            DateTime.Now,
+            [.. request.Lines.Select(line => new SoldLine(line.VariantId, line.Name, line.Sku, line.Sku, line.UnitPrice, line.Quantity, 0))],
+            request.Totals.Subtotal,
+            request.Totals.Total,
+            0m));
+
         return new SaleReceipt(number, request.Totals, settlement.Change);
+    }
+
+    /// <summary>Moves a variant's on-hand count by <paramref name="delta"/> (a customer return adds, an exchange item takes).</summary>
+    public void ApplyStockChange(string variantId, int delta)
+    {
+        var index = _catalog.FindIndex(v => v.VariantId == variantId);
+        if (index >= 0)
+        {
+            _catalog[index] = _catalog[index] with { OnHand = Math.Max(0, _catalog[index].OnHand + delta) };
+        }
     }
 
     private int GetPaymentUsage(PaymentMethod method)
@@ -213,7 +235,7 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
         return catalog;
     }
 
-    private static List<Dictionary<string, string>> ReadCsvRows(string fileName, string label, string[] requiredColumns)
+    internal static List<Dictionary<string, string>> ReadCsvRows(string fileName, string label, string[] requiredColumns)
     {
         var path = ResolveDataCsvPath(fileName);
         if (!File.Exists(path))
@@ -346,7 +368,7 @@ public sealed class SamplePointOfSaleService : IPointOfSaleService
     }
 
     /// <summary>In development, reads the repository data file so products added in the app show up after a restart.</summary>
-    private static string ResolveDataCsvPath(string fileName)
+    internal static string ResolveDataCsvPath(string fileName)
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
         {

@@ -6,6 +6,7 @@
     xmlns:vm="using:Estoq.App.ViewModels"
     xmlns:services="using:Estoq.App.Services"
     xmlns:addproduct="using:Estoq.App.Views.AddProduct"
+    xmlns:returns="using:Estoq.App.Views.Returns"
     xmlns:pos="using:Estoq.App.Views.PointOfSale"
     xmlns:addvm="using:Estoq.App.ViewModels.AddProduct"
     Foreground="{ThemeResource EqTextBrush}">
@@ -321,6 +322,9 @@
           <!-- F2: the Add product form. -->
           <addproduct:AddProductView Visibility="{x:Bind PopupState.IsAddProduct, Mode=OneWay}" />
 
+          <!-- F4: the Returns form. -->
+          <returns:ReturnsView Visibility="{x:Bind PopupState.IsReturns, Mode=OneWay}" />
+
           <!-- Account settings: end the session. Same action as F12. -->
           <Border Style="{StaticResource EqCardStyle}" Visibility="{x:Bind PopupState.IsSettings, Mode=OneWay}">
             <Grid ColumnSpacing="16">
@@ -414,6 +418,8 @@
         </Grid>
       </Border>
     </Border>
+    <!-- Return completed: same placement as Product added. -->
+    <returns:ReturnCompletedOverlay />
       <!-- The point of sale has its own layout (mockup 3) and does not use the shared frame. -->
       <pos:PointOfSaleView x:Name="PosView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                            Visibility="{x:Bind PopupState.IsPointOfSale, Mode=OneWay}" Tapped="OnPopupTapped" />

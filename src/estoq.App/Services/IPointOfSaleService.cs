@@ -56,4 +56,7 @@ public interface IPointOfSaleService
     bool ApproveAsManager(string userCode);
 
     SaleReceipt Complete(SaleRequest request);
+
+    /// <summary>Moves a variant's on-hand count by <paramref name="delta"/> after stock movements are written elsewhere (Returns).</summary>
+    void ApplyStockChange(string variantId, int delta);
 }
