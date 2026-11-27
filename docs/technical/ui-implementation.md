@@ -33,6 +33,15 @@ Use the `EqAutoSuggestBoxStyle` in `Themes/Styles.xaml` as the default app dropd
 
 The popup corner treatment is set directly in the shared template because the WinUI `AutoSuggestBox` popup is a separate popup surface; a local `OverlayCornerRadius` resource did not affect it. Preserve the template part names `TextBox`, `SuggestionsPopup`, `SuggestionsContainer` and `SuggestionsList` when changing the template so WinUI's control logic can continue to connect the input and suggestions.
 
+## Tables
+
+Every table uses the shared styles in `Themes/Styles.xaml`, so tables look and feel the same; only the cell content differs (colour chips, stock steppers, article pictures, delete buttons).
+
+- Header: `EqTableHeaderStyle` on a `Grid` (44 px, rounded `EqRadiusMd`, elevated surface, 12 px start and 8 px end padding) with `EqTableHeaderTextStyle` titles (semibold 13 px). Numeric columns right-align, short count columns may centre.
+- Rows: a `Grid` with `EqTableRowStyle` (1 px divider) holding an `EqTableBandStyle` border first, visible on every second row (`IsAlternateRow` on the row view model), then the cell grid with the same column widths and 12 px start and 8 px end padding as the header.
+- Cell text: `EqTableCellStyle`, and `EqTableCellStrongStyle` for right-aligned values. No outer border around the table.
+- Used by: POS cart and payments, Add product variants, Product added.
+
 ## Form field sizing
 
 Form fields must stay within their assigned layout width; the length of entered or selected text must never resize the field, sibling columns or containing card. In grid-based forms, constrain star columns and their field wrappers with `MinWidth="0"`, and let the control stretch to that allocated width. Keep single-line input text on one line so long values scroll or clip inside the field instead of expanding the layout. Use an explicit `Width` when the form calls for a fixed-size field; otherwise use a constrained grid column so the width remains stable and responsive to the available form width.

@@ -531,13 +531,13 @@
             </Grid>
 
             <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-            <Border BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1" CornerRadius="{StaticResource EqRadiusMd}" MinHeight="0">
+            <Border CornerRadius="{StaticResource EqRadiusMd}" MinHeight="0">
               <Grid MinWidth="760" MinHeight="0">
                 <Grid.RowDefinitions>
                   <RowDefinition Height="Auto" />
                   <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Grid Padding="10,8" ColumnSpacing="10" Background="{ThemeResource EqSurfaceElevatedBrush}">
+                <Grid Style="{StaticResource EqTableHeaderStyle}" ColumnSpacing="10">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1.45*" MinWidth="150" />
                     <ColumnDefinition Width="1.1*" MinWidth="112" />
@@ -546,22 +546,22 @@
                     <ColumnDefinition Width="1.2*" MinWidth="136" />
                     <ColumnDefinition Width="36" />
                   </Grid.ColumnDefinitions>
-                  <TextBlock Text="{x:Bind services:Loc.Get('Add_ColVariant')}" Style="{StaticResource EqLabelStyle}" FontSize="13" />
-                  <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_ColBarcode')}" Style="{StaticResource EqLabelStyle}" FontSize="13" />
-                  <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Add_ColCostPrice')}" Style="{StaticResource EqLabelStyle}" FontSize="13"
+                  <TextBlock Text="{x:Bind services:Loc.Get('Add_ColVariant')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                  <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_ColBarcode')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                  <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Add_ColCostPrice')}" Style="{StaticResource EqTableHeaderTextStyle}"
                              Visibility="{x:Bind ViewModel.ShowCost, Mode=OneWay}" />
-                  <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Add_ColSellingPrice')}" Style="{StaticResource EqLabelStyle}" FontSize="13" />
-                  <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Add_ColStock')}" Style="{StaticResource EqLabelStyle}" FontSize="13"
+                  <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Add_ColSellingPrice')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                  <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Add_ColStock')}" Style="{StaticResource EqTableHeaderTextStyle}"
                              TextAlignment="Center" AutomationProperties.Name="{x:Bind services:Loc.Get('Add_ColStock')}" />
                 </Grid>
-                <Rectangle Grid.Row="0" Height="1" Fill="{ThemeResource EqBorderBrush}" VerticalAlignment="Bottom" />
                 <ScrollViewer Grid.Row="1" MaxHeight="300" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                   <ItemsRepeater ItemsSource="{x:Bind ViewModel.Variants}">
                     <ItemsRepeater.Layout><StackLayout Spacing="0" /></ItemsRepeater.Layout>
                     <ItemsRepeater.ItemTemplate>
                       <DataTemplate x:DataType="vm:VariantRowViewModel">
-                        <Border BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1" Background="{ThemeResource EqSurfaceBrush}">
-                        <Grid MinHeight="64" Padding="10,7" ColumnSpacing="10" Background="{ThemeResource EqSurfaceBrush}">
+                        <Grid Style="{StaticResource EqTableRowStyle}">
+                        <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind IsAlternateRow}" />
+                        <Grid MinHeight="64" Padding="12,7,8,7" ColumnSpacing="10">
                           <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1.45*" MinWidth="150" />
                             <ColumnDefinition Width="1.1*" MinWidth="112" />
@@ -619,7 +619,7 @@
                             <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="18" Foreground="{ThemeResource EqDangerBrush}" />
                           </Button>
                         </Grid>
-                        </Border>
+                        </Grid>
                       </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                   </ItemsRepeater>

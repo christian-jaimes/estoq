@@ -53,6 +53,50 @@
     <Setter Property="Padding" Value="24" />
   </Style>
 
+  <!-- Table standard (design system, Table): every table in the app shares this look. Only the cells differ.
+       Header: 44 px rounded bar on the elevated surface, semibold 13 px titles. Rows: hairline divider, every second
+       row banded. Set ColumnDefinitions on the header and the row content so the columns line up; the header and row
+       content use the same 12 px start and 8 px end padding. -->
+  <Style x:Key="EqTableHeaderStyle" TargetType="Grid">
+    <Setter Property="Height" Value="44" />
+    <Setter Property="Padding" Value="12,0,8,0" />
+    <Setter Property="ColumnSpacing" Value="8" />
+    <Setter Property="CornerRadius" Value="{StaticResource EqRadiusMd}" />
+    <Setter Property="Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+  </Style>
+
+  <Style x:Key="EqTableHeaderTextStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+  </Style>
+
+  <!-- Row container: put a EqTableBandStyle border first (visible on every second row), then the row content. -->
+  <Style x:Key="EqTableRowStyle" TargetType="Grid">
+    <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
+    <Setter Property="BorderThickness" Value="0,0,0,1" />
+  </Style>
+
+  <Style x:Key="EqTableBandStyle" TargetType="Border">
+    <Setter Property="Background" Value="{ThemeResource EqBgBrush}" />
+    <Setter Property="Opacity" Value="0.55" />
+    <Setter Property="IsHitTestVisible" Value="False" />
+  </Style>
+
+  <Style x:Key="EqTableCellStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style x:Key="EqTableCellStrongStyle" TargetType="TextBlock" BasedOn="{StaticResource EqTableCellStyle}">
+    <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
+    <Setter Property="HorizontalAlignment" Value="Right" />
+  </Style>
+
   <!-- Round 40px icon button: shortcuts and quick actions (design system, IconButton round). -->
   <Style x:Key="EqRoundIconButtonStyle" TargetType="Button">
     <Setter Property="Width" Value="40" />
