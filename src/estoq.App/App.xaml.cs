@@ -1,6 +1,7 @@
 using Estoq.App.Services;
 using Estoq.App.ViewModels;
 using Estoq.App.ViewModels.AddProduct;
+using Estoq.App.ViewModels.StockAdjustments;
 using Estoq.App.ViewModels.PointOfSale;
 using Estoq.App.ViewModels.Returns;
 using Estoq.App.ViewModels.Setup;
@@ -52,6 +53,8 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddSingleton<ICatalogService, SampleCatalogService>();
         services.AddSingleton<AddProductViewModel>();
         services.AddSingleton<ReturnsViewModel>();
+        services.AddSingleton<IStockAdjustmentService, SampleStockAdjustmentService>();
+        services.AddSingleton<StockAdjustmentViewModel>();
         services.AddSingleton<PopupViewModel>();
         services.AddSingleton<ISaleHistory, SampleSaleHistory>();
         services.AddSingleton<IPointOfSaleService, SamplePointOfSaleService>();

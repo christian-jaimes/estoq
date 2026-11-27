@@ -31,3 +31,13 @@ After applying, the pop-up resets to empty and stays open for the next adjustmen
 - All items in one adjustment are saved in one transaction.
 - Applying clears the "needs stock correction" flag and its notification for those items.
 - Unsellable returned items are written off here with the Damaged type ([[returns-and-voids]]).
+
+## Build notes (CPT8)
+
+- The type is chosen with four chips instead of a dropdown, since the list is fixed. Each type has one fixed reason, applied automatically and recorded with the adjustment (no separate field on screen). Layout: the Stock Adjustment items on the left, summary (increases, decreases, net change) and details on the right.
+- The counted quantity is the new stock, so there is no separate "new stock" column: the input column is the new stock, and the stepper and the difference beside it stay in step with it.
+- Damaged and Lost can only decrease stock (counted quantity cannot be above current stock). Recount and Sold without stock may go either way. Stock never goes below zero.
+- Scanning or choosing an item that is already in the list does not add it twice.
+- Sample data: each changed item appends one row to `data/dummy_stock_movements.csv` with movement type `recount`, `correction` (sold without stock), `defect` (damaged) or `lost`, and the signed difference as `stock_quantity`. Items without a difference write nothing. Reason, reference, notes and user have no columns in the sample table; the back end keeps them in the audit log.
+- After applying, an "Adjustment applied" confirmation covers the whole pop-up; "New adjustment" returns to an empty form and "Close" closes the pop-up.
+- Not built yet: opening the pop-up from a "sold without stock" notification with that item already added (notifications do not carry the article yet).
