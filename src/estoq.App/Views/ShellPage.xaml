@@ -7,7 +7,29 @@
     xmlns:services="using:Estoq.App.Services"
     xmlns:addproduct="using:Estoq.App.Views.AddProduct"
     xmlns:pos="using:Estoq.App.Views.PointOfSale"
+    xmlns:addvm="using:Estoq.App.ViewModels.AddProduct"
     Foreground="{ThemeResource EqTextBrush}">
+
+  <Page.Resources>
+    <Style x:Key="DoneRowLabelStyle" TargetType="TextBlock">
+      <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
+      <Setter Property="FontSize" Value="15" />
+      <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style x:Key="DoneRowValueStyle" TargetType="TextBlock" BasedOn="{StaticResource DoneRowLabelStyle}">
+      <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
+      <Setter Property="HorizontalAlignment" Value="Right" />
+    </Style>
+    <!-- Table standard (matches the point of sale cart): rounded elevated header, banded rows with a hairline divider. -->
+    <Style x:Key="DoneTableHeadStyle" TargetType="TextBlock">
+      <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+  </Page.Resources>
 
   <!-- F12 logs out from anywhere in the shell, pop-ups included. -->
   <Page.KeyboardAccelerators>
@@ -353,6 +375,77 @@
           </Border>
         </StackPanel>
       </controls:PopupShell>
+
+    <!-- Product added: confirmation over the whole pop-up (header and footer included), modelled on the point of sale's Sale completed. -->
+    <Border Background="{ThemeResource EqScrimBrush}" Tapped="OnPopupTapped" CornerRadius="{StaticResource EqRadiusXl}"
+            Visibility="{x:Bind PopupState.AddProduct.IsCompleted, Mode=OneWay}">
+      <Border Width="640" MaxHeight="680" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource EqCardStyle}" Padding="24"
+              Background="{ThemeResource EqSurfaceBrush}">
+        <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" RowSpacing="12">
+          <FontIcon Glyph="&#xF0BE;" FontFamily="{StaticResource EqIconFont}" FontSize="48" Foreground="{ThemeResource EqSuccessBrush}"
+                    HorizontalAlignment="Center" Grid.Row="0" />
+          <StackPanel Grid.Row="1" Spacing="4">
+            <TextBlock Text="{x:Bind services:Loc.Get('Add_DoneTitle')}" Style="{StaticResource EqCardTitleStyle}" HorizontalAlignment="Center" />
+            <TextBlock Text="{x:Bind services:Loc.Get('Add_DoneSubtitle')}" Style="{StaticResource EqSecondaryStyle}" HorizontalAlignment="Center" />
+          </StackPanel>
+          <Grid Grid.Row="2" Height="44" Padding="12,0,8,0" ColumnSpacing="8" CornerRadius="{StaticResource EqRadiusMd}"
+                Background="{ThemeResource EqSurfaceElevatedBrush}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="104" />
+              <ColumnDefinition Width="56" />
+              <ColumnDefinition Width="112" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Add_DoneColProduct')}" Style="{StaticResource DoneTableHeadStyle}" />
+            <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_DoneColPrice')}" Style="{StaticResource DoneTableHeadStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+            <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Add_DoneColQty')}" Style="{StaticResource DoneTableHeadStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+            <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Add_DoneColTotal')}" Style="{StaticResource DoneTableHeadStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+          </Grid>
+          <ScrollViewer Grid.Row="3" MaxHeight="260" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0">
+            <ItemsControl ItemsSource="{x:Bind PopupState.AddProduct.CompletedItems, Mode=OneWay}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="addvm:AddedItemViewModel">
+                  <Grid MinHeight="56" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">
+                    <Border Background="{ThemeResource EqBgBrush}" Opacity="0.55" Visibility="{x:Bind IsAlternateRow}" />
+                    <Grid Padding="12,8,8,8" ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="104" />
+                      <ColumnDefinition Width="56" />
+                      <ColumnDefinition Width="112" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                      <TextBlock Text="{x:Bind Name}" Style="{StaticResource DoneRowLabelStyle}" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{x:Bind DetailText}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" Text="{x:Bind PriceText}" Style="{StaticResource DoneRowLabelStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+                    <TextBlock Grid.Column="2" Text="{x:Bind QuantityText}" Style="{StaticResource DoneRowLabelStyle}" TextAlignment="Right" HorizontalAlignment="Right" />
+                    <TextBlock Grid.Column="3" Text="{x:Bind TotalText}" Style="{StaticResource DoneRowValueStyle}" TextAlignment="Right" />
+                    </Grid>
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+          <StackPanel Grid.Row="4" Spacing="8">
+            <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
+            <Grid>
+              <TextBlock Text="{x:Bind services:Loc.Get('Add_DoneArticles')}" Style="{StaticResource DoneRowLabelStyle}" />
+              <TextBlock Text="{x:Bind PopupState.AddProduct.DoneArticlesText, Mode=OneWay}" Style="{StaticResource DoneRowValueStyle}" />
+            </Grid>
+            <Grid>
+              <TextBlock Text="{x:Bind services:Loc.Get('Add_DoneTotalPrice')}" Style="{StaticResource DoneRowLabelStyle}" FontFamily="{StaticResource EqUiFontSemiBold}" />
+              <TextBlock Text="{x:Bind PopupState.AddProduct.DoneTotalText, Mode=OneWay}" Style="{StaticResource DoneRowValueStyle}" FontSize="20" />
+            </Grid>
+          </StackPanel>
+          <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Padding="0,8,0,0">
+            <Button Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Popup_Close')}" Command="{x:Bind PopupState.AddProduct.DoneCommand}" />
+            <Button Style="{StaticResource EqPrimaryButtonStyle}" Command="{x:Bind PopupState.AddProduct.AddAnotherCommand}"
+                    Content="{x:Bind services:Loc.Get('Add_DoneAnother')}" />
+          </StackPanel>
+        </Grid>
+      </Border>
+    </Border>
       <!-- The point of sale has its own layout (mockup 3) and does not use the shared frame. -->
       <pos:PointOfSaleView x:Name="PosView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                            Visibility="{x:Bind PopupState.IsPointOfSale, Mode=OneWay}" Tapped="OnPopupTapped" />

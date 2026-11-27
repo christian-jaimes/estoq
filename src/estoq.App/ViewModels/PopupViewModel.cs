@@ -38,13 +38,17 @@ public sealed partial class PopupViewModel : ObservableObject
                     Subtitle = _addProduct.Name.Length == 0 ? string.Empty : _localizer["Add_NameHint"];
                 }
             }
-            if (e.PropertyName == nameof(AddProductViewModel.CanSave) && _popups.Current == PopupKind.AddItems)
+            if (e.PropertyName is nameof(AddProductViewModel.CanSave) or nameof(AddProductViewModel.IsCompleted) && _popups.Current == PopupKind.AddItems)
             {
-                IsPrimaryEnabled = _addProduct.CanSave;
+                // Save stays off while the "Product added" confirmation is showing.
+                IsPrimaryEnabled = _addProduct.CanSave && !_addProduct.IsCompleted;
             }
         };
-        _addProduct.Saved += (_, _) => _popups.Close();
+        _addProduct.CloseRequested += (_, _) => _popups.Close();
     }
+
+    /// <summary>The Add product form; the shell binds its "Product added" confirmation over the whole pop-up.</summary>
+    public AddProductViewModel AddProduct => _addProduct;
 
     [ObservableProperty]
     public partial bool IsOpen { get; set; }
@@ -112,6 +116,13 @@ public sealed partial class PopupViewModel : ObservableObject
         {
             _subtitleTimer?.Stop();
             _subtitleTimer = null;
+
+            // Closing the pop-up also dismisses a "Product added" confirmation so it never shows over another pop-up.
+            if (_addProduct.IsCompleted)
+            {
+                _addProduct.Reset();
+            }
+
             if (!IsOpen)
             {
                 return;

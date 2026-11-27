@@ -49,7 +49,7 @@ All in `estoq.Core/Sales`, unit-tested in `SaleRulesTests`:
 
 ## Stubs until the back end and sign-in
 
-`IPointOfSaleService` (`SamplePointOfSaleService`) loads the 20 sample products from `data/dummy_inventory.csv`, plus store settings, the role (owner) and the sale save. Since the CSV has no stock column, each sample item starts with 100 demo units. Article names and barcodes are searchable; exact barcode or SKU entry adds the item directly, and partial name/barcode/SKU matches appear in suggestions. Stock drops per sale for the session only; completed payment-method counts persist locally and sort the methods on the next sale. The sample store charges 16 % tax, prices excluded, to exercise the tax rows; the setup default stays 0 %. The sample manager approval code is a placeholder.
+`IPointOfSaleService` (`SamplePointOfSaleService`) loads the sellable articles from `data/dummy_article.csv` (active rows, supplier barcode may be empty), plus store settings, the role (owner) and the sale save. Stock on hand is the sum of an article's `stock_quantity` in `data/dummy_stock_movements.csv` across locations (never below zero). Article names and barcodes are searchable; exact barcode or SKU entry adds the item directly, and partial name/barcode/SKU matches appear in suggestions. Stock drops per sale for the session only; completed payment-method counts persist locally and sort the methods on the next sale. The sample store charges 16 % tax, prices excluded, to exercise the tax rows; the setup default stays 0 %. The sample manager approval code is a placeholder.
 
 ## Rules
 

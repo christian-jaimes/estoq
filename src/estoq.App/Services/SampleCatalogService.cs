@@ -19,6 +19,11 @@ public sealed class SampleCatalogService : ICatalogService
 
     private readonly HashSet<string> _skus = new(StringComparer.OrdinalIgnoreCase) { "TS-BLC-S" };
 
+    // Sample store location that receives opening stock until locations exist in the app.
+    private const string OpeningStockLocation = "STORE-GHENT-CENTER";
+    private const string ArticleFile = "dummy_article.csv";
+    private const string MovementFile = "dummy_stock_movements.csv";
+
     public SampleCatalogService()
     {
         _brandDetails = LoadBrands();
@@ -26,6 +31,20 @@ public sealed class SampleCatalogService : ICatalogService
         _types = LoadTypes(_categories);
         _sizes = LoadSizes();
         _colours = LoadColours().ToList();
+
+        // SKUs already in the article table stay unique for new products,
+        // and the products already in it (brand, product type, model label) feed the duplicate check.
+        foreach (var row in ReadCsv(ArticleFile))
+        {
+            var sku = Get(row, "sku");
+            if (sku.Length > 0) _skus.Add(sku);
+
+            var identity = new ProductIdentity(Get(row, "brand_name"), Get(row, "product_type"), Get(row, "model_label"));
+            if (identity.ModelLabel.Length > 0 && !_products.Any(existing => existing.Identity == identity))
+            {
+                _products.Add(new ExistingProduct(Get(row, "article_id"), identity, Get(row, "article_name")));
+            }
+        }
     }
 
     public string DefaultCurrencyCode => "USD";
@@ -49,7 +68,7 @@ public sealed class SampleCatalogService : ICatalogService
     // Next free internal barcode sequence number; moves on after every save.
     public long NextBarcodeSequence { get; private set; } = 1;
 
-    public Task SaveAsync(NewProduct product)
+    public Task<IReadOnlyList<AddedArticle>> SaveAsync(NewProduct product)
     {
         ArgumentNullException.ThrowIfNull(product);
 
@@ -63,7 +82,8 @@ public sealed class SampleCatalogService : ICatalogService
             new ProductIdentity(product.Brand, product.ProductType, product.ModelLabel),
             product.Name));
 
-        foreach (var variant in product.Variants)
+        // Variants without opening stock are not created, so their SKUs stay free.
+        foreach (var variant in product.Variants.Where(v => v.OpeningStock > 0))
         {
             _skus.Add(variant.Sku);
         }
@@ -74,7 +94,60 @@ public sealed class SampleCatalogService : ICatalogService
             .DefaultIfEmpty(NextBarcodeSequence - 1)
             .Max();
         NextBarcodeSequence = Math.Max(NextBarcodeSequence, highest + 1);
-        return Task.CompletedTask;
+        return Task.FromResult(AppendArticlesAndMovements(product));
+    }
+
+    /// <summary>
+    /// Appends one article row per variant to <c>dummy_article.csv</c> and one "add" movement per variant to <c>dummy_stock_movements.csv</c>. Stock on hand is the sum of an article's movements.
+    /// </summary>
+    private static IReadOnlyList<AddedArticle> AppendArticlesAndMovements(NewProduct product)
+    {
+        var articleRows = ReadCsv(ArticleFile).ToList();
+        var movementRows = ReadCsv(MovementFile).ToList();
+        var nextArticle = MaxNumber(articleRows.Select(row => Get(row, "article_id")), "ART-") + 1;
+        var nextMovement = MaxNumber(movementRows.Select(row => Get(row, "movement_id")), "MOV-") + 1;
+        var now = DateTime.Now.ToString("dd-MM-yy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+
+        var added = new List<AddedArticle>();
+        var articleLines = new List<string>();
+        var movementLines = new List<string>();
+        foreach (var variant in product.Variants.Where(v => v.OpeningStock > 0))
+        {
+            var id = $"ART-{nextArticle++}";
+            var cost = variant.CostPrice ?? product.CostPrice;
+            var price = variant.SellingPrice ?? product.SellingPrice;
+            added.Add(new AddedArticle(id, product.Name, variant.Size, variant.Colour, variant.Sku, variant.OpeningStock, cost, price));
+
+            articleLines.Add(string.Join(',',
+                id, EscapeCsv(product.Name), EscapeCsv(product.Description), EscapeCsv(product.Brand), EscapeCsv(product.Category),
+                EscapeCsv(product.ProductType), EscapeCsv(product.ModelLabel), EscapeCsv(variant.Size ?? string.Empty), EscapeCsv(variant.Colour ?? string.Empty),
+                EscapeCsv(product.SupplierBarcode), EscapeCsv(variant.Sku), Price(cost, "0.00"), Price(price, "0.00"), "True"));
+
+            movementLines.Add(string.Join(',',
+                $"MOV-{nextMovement++}", id, "add", Price(cost, "0.##"), Price(price, "0.##"),
+                variant.OpeningStock.ToString(System.Globalization.CultureInfo.InvariantCulture), now, OpeningStockLocation));
+        }
+
+        AppendLines(ResolveCsvPath(ArticleFile), articleLines);
+        AppendLines(ResolveCsvPath(MovementFile), movementLines);
+        return added;
+    }
+
+    private static string Price(decimal? value, string format) =>
+        value?.ToString(format, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
+
+    private static int MaxNumber(IEnumerable<string> ids, string prefix) => ids
+        .Where(id => id.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        .Select(id => int.TryParse(id.AsSpan(prefix.Length), out var number) ? number : 0)
+        .DefaultIfEmpty(0).Max();
+
+    /// <summary>Appends rows after the last line, whether or not the file ends with a line break.</summary>
+    private static void AppendLines(string path, IReadOnlyList<string> lines)
+    {
+        if (lines.Count == 0 || !File.Exists(path)) return;
+        var text = File.ReadAllText(path);
+        var prefix = text.Length == 0 || text.EndsWith('\n') ? string.Empty : Environment.NewLine;
+        File.AppendAllText(path, prefix + string.Join(Environment.NewLine, lines) + Environment.NewLine);
     }
 
     private void AddBrandIfNew(string value)

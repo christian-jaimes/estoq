@@ -29,6 +29,9 @@ public sealed record NewProduct(
     IReadOnlyList<string> ImagePaths,
     IReadOnlyList<NewVariant> Variants);
 
+/// <summary>One article (variant) created by a save: a row of the article dimension table and its opening stock.</summary>
+public sealed record AddedArticle(string ArticleId, string Name, string? Size, string? Colour, string Sku, int OpeningStock, decimal? CostPrice, decimal SellingPrice);
+
 /// <summary>
 /// Master data and products for the Add product flow. The sample implementation keeps everything in memory;
 /// the back end replaces it, and Save then creates the product and its variants in one transaction.
@@ -59,6 +62,9 @@ public interface ICatalogService
     /// <summary>The next unused internal barcode sequence number.</summary>
     long NextBarcodeSequence { get; }
 
-    /// <summary>Creates the product and its variants, and any category, brand or product type that is new.</summary>
-    Task SaveAsync(NewProduct product);
+    /// <summary>
+    /// Creates the product and its variants, and any category, brand or product type that is new. Only variants with opening
+    /// stock above zero are created; returns one <see cref="AddedArticle"/> for each.
+    /// </summary>
+    Task<IReadOnlyList<AddedArticle>> SaveAsync(NewProduct product);
 }

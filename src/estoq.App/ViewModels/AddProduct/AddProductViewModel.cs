@@ -39,8 +39,24 @@ public sealed partial class AddProductViewModel : ObservableObject
         Reset();
     }
 
-    /// <summary>Raised after a product was saved; the pop-up closes.</summary>
+    /// <summary>Raised after a product was saved; the "Product added" confirmation takes over the pop-up body.</summary>
     public event EventHandler? Saved;
+
+    /// <summary>Raised when the confirmation's Close button is pressed; the pop-up closes.</summary>
+    public event EventHandler? CloseRequested;
+
+    /// <summary>True while the "Product added" confirmation is showing.</summary>
+    [ObservableProperty]
+    public partial bool IsCompleted { get; set; }
+
+    /// <summary>The articles created by the last save, one per variant.</summary>
+    public ObservableCollection<AddedItemViewModel> CompletedItems { get; } = [];
+
+    [ObservableProperty]
+    public partial string DoneArticlesText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string DoneTotalText { get; set; } = string.Empty;
 
     public ObservableCollection<string> ProductTypeNames { get; } = [];
 
@@ -213,6 +229,8 @@ public sealed partial class AddProductViewModel : ObservableObject
         _removed.Clear();
         _sizesFor = string.Empty;
         _nextBarcode = _catalog.NextBarcodeSequence;
+        IsCompleted = false;
+        CompletedItems.Clear();
 
         Fill(ProductTypeNames, _catalog.ProductTypes.Select(t => t.Name));
         Fill(CategoryNames, _catalog.Categories);
@@ -513,7 +531,9 @@ public sealed partial class AddProductViewModel : ObservableObject
                         !v.IsSellingPriceCustomized || string.IsNullOrWhiteSpace(v.SellingPriceText) ? null : decimal.Parse(v.SellingPriceText.Trim(), NumberStyles.Number, _localizer.Culture),
                         !v.IsCostPriceCustomized || string.IsNullOrWhiteSpace(v.CostPriceText) ? null : decimal.Parse(v.CostPriceText.Trim(), NumberStyles.Number, _localizer.Culture)))
                     .ToList());
-            await _catalog.SaveAsync(product);
+            var rows = Variants.ToList();
+            var added = await _catalog.SaveAsync(product);
+            ShowCompleted(added, rows);
             Saved?.Invoke(this, EventArgs.Empty);
         }
         finally
@@ -521,6 +541,37 @@ public sealed partial class AddProductViewModel : ObservableObject
             IsSaving = false;
         }
     }
+
+    private void ShowCompleted(IReadOnlyList<AddedArticle> added, IReadOnlyList<VariantRowViewModel> rows)
+    {
+        CompletedItems.Clear();
+        foreach (var article in added)
+        {
+            var row = rows.FirstOrDefault(r => string.Equals(r.Sku.Trim(), article.Sku, StringComparison.OrdinalIgnoreCase));
+            var label = row is not null && (article.Size is not null || article.Colour is not null) ? row.Label : string.Empty;
+            CompletedItems.Add(new AddedItemViewModel(
+                article.Name,
+                label,
+                article.Sku,
+                Money(article.SellingPrice),
+                article.OpeningStock.ToString("N0", _localizer.Culture),
+                Money(article.SellingPrice * article.OpeningStock),
+                CompletedItems.Count % 2 == 1));
+        }
+
+        // Articles added is the units received in this movement; total price is selling price times units.
+        DoneArticlesText = added.Sum(item => item.OpeningStock).ToString("N0", _localizer.Culture);
+        DoneTotalText = Money(added.Sum(item => item.SellingPrice * item.OpeningStock));
+        IsCompleted = true;
+    }
+
+    /// <summary>Leaves the confirmation and starts a fresh form.</summary>
+    [RelayCommand]
+    private void AddAnother() => Reset();
+
+    /// <summary>Closes the confirmation and the pop-up.</summary>
+    [RelayCommand]
+    private void Done() => CloseRequested?.Invoke(this, EventArgs.Empty);
 
     private void OnChoiceChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
@@ -919,6 +970,11 @@ public sealed partial class AddProductViewModel : ObservableObject
         else if (Variants.Count == 0)
         {
             message = _localizer["Error_NoVariants"];
+            section = "variants";
+        }
+        else if (Variants.All(v => v.OpeningStockUnits == 0))
+        {
+            message = _localizer["Error_NoStock"];
             section = "variants";
         }
         else if (variantPriceBad)

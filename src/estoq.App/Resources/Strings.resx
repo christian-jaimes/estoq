@@ -320,4 +320,14 @@
   <data name="Pos_DoneNumber" xml:space="preserve"><value>Sale {0}</value></data>
   <data name="Pos_PrintReceipt" xml:space="preserve"><value>Print receipt</value></data>
   <data name="Pos_NewSale" xml:space="preserve"><value>New sale</value></data>
+  <data name="Add_DoneTitle" xml:space="preserve"><value>Product added</value></data>
+  <data name="Add_DoneSubtitle" xml:space="preserve"><value>These articles are now in your catalog</value></data>
+  <data name="Add_DoneArticles" xml:space="preserve"><value>Articles added</value></data>
+  <data name="Add_DoneTotalPrice" xml:space="preserve"><value>Total price</value></data>
+  <data name="Add_DoneAnother" xml:space="preserve"><value>Add another product</value></data>
+  <data name="Add_DoneColProduct" xml:space="preserve"><value>Product</value></data>
+  <data name="Add_DoneColPrice" xml:space="preserve"><value>Selling price</value></data>
+  <data name="Add_DoneColQty" xml:space="preserve"><value>Qty</value></data>
+  <data name="Add_DoneColTotal" xml:space="preserve"><value>Total price</value></data>
+  <data name="Error_NoStock" xml:space="preserve"><value>Enter opening stock for at least one variant.</value></data>
 </root>
