@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Estoq.App.Services;
 using Estoq.App.ViewModels.AddProduct;
+using Estoq.App.ViewModels.StockAdjustments;
 
 namespace Estoq.App.ViewModels;
 
@@ -15,15 +16,17 @@ public sealed partial class PopupViewModel : ObservableObject
     private readonly ILocalizer _localizer;
     private readonly ISessionService _session;
     private readonly AddProductViewModel _addProduct;
+    private readonly StockAdjustmentViewModel _adjustment;
     private PopupKind? _shown;
     private Microsoft.UI.Dispatching.DispatcherQueueTimer? _hintTimer;
 
-    public PopupViewModel(IPopupService popups, ILocalizer localizer, ISessionService session, AddProductViewModel addProduct)
+    public PopupViewModel(IPopupService popups, ILocalizer localizer, ISessionService session, AddProductViewModel addProduct, StockAdjustmentViewModel adjustment)
     {
         _popups = popups;
         _localizer = localizer;
         _session = session;
         _addProduct = addProduct;
+        _adjustment = adjustment;
         _popups.Changed += (_, _) => Refresh();
         _localizer.LanguageChanged += (_, _) => Refresh();
 
@@ -41,6 +44,16 @@ public sealed partial class PopupViewModel : ObservableObject
             }
         };
         _addProduct.CloseRequested += (_, _) => _popups.Close();
+
+        // Same for stock adjustments: the form decides when Apply is allowed, and the confirmation hides it.
+        _adjustment.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is nameof(StockAdjustmentViewModel.CanApply) or nameof(StockAdjustmentViewModel.IsCompleted) && _popups.Current == PopupKind.StockAdjustments)
+            {
+                IsPrimaryEnabled = _adjustment.CanApply && !_adjustment.IsCompleted;
+            }
+        };
+        _adjustment.CloseRequested += (_, _) => _popups.Close();
     }
 
     /// <summary>The Add product form; the shell binds its "Product added" confirmation over the whole pop-up.</summary>
@@ -92,6 +105,13 @@ public sealed partial class PopupViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsAddProduct { get; set; }
 
+    /// <summary>The Stock adjustments form; the shell binds its "Adjustment applied" confirmation over the whole pop-up.</summary>
+    public StockAdjustmentViewModel Adjustment => _adjustment;
+
+    /// <summary>True for F3: the body shows the Stock adjustments form.</summary>
+    [ObservableProperty]
+    public partial bool IsStockAdjustment { get; set; }
+
     /// <summary>True while a placeholder message (a flow that is not built yet) is shown.</summary>
     [ObservableProperty]
     public partial bool ShowMessage { get; set; } = true;
@@ -105,6 +125,10 @@ public sealed partial class PopupViewModel : ObservableObject
         if (_popups.Current == PopupKind.AddItems)
         {
             await _addProduct.SaveCommand.ExecuteAsync(null);
+        }
+        else if (_popups.Current == PopupKind.StockAdjustments)
+        {
+            _adjustment.ApplyCommand.Execute(null);
         }
     }
 
@@ -147,6 +171,11 @@ public sealed partial class PopupViewModel : ObservableObject
             if (_addProduct.IsCompleted)
             {
                 _addProduct.Reset();
+            }
+
+            if (_adjustment.IsCompleted)
+            {
+                _adjustment.Reset();
             }
 
             if (!IsOpen)
@@ -197,12 +226,18 @@ public sealed partial class PopupViewModel : ObservableObject
 
         IsSettings = kind == PopupKind.Settings;
         IsAddProduct = kind == PopupKind.AddItems;
-        ShowMessage = !IsAddProduct;
+        IsStockAdjustment = kind == PopupKind.StockAdjustments;
+        ShowMessage = !IsAddProduct && !IsStockAdjustment;
 
         // A language change refreshes the text only; a fresh open starts a fresh form.
         if (kind == PopupKind.AddItems && _shown != kind)
         {
             _addProduct.Reset();
+        }
+
+        if (kind == PopupKind.StockAdjustments && _shown != kind)
+        {
+            _adjustment.Reset();
         }
 
         if (kind == PopupKind.AddItems)
@@ -225,7 +260,12 @@ public sealed partial class PopupViewModel : ObservableObject
         }
 
         _shown = kind;
-        IsPrimaryEnabled = kind == PopupKind.AddItems && _addProduct.CanSave;
+        IsPrimaryEnabled = kind switch
+        {
+            PopupKind.AddItems => _addProduct.CanSave,
+            PopupKind.StockAdjustments => _adjustment.CanApply,
+            _ => false,
+        };
         IsPointOfSale = kind == PopupKind.PointOfSale;
         IsFramed = !IsPointOfSale;
         IsOpen = true;
