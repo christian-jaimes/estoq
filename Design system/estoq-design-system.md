@@ -213,10 +213,10 @@ All components read tokens only, so both themes come for free; never hard-code a
 
 | Token | Light | Dark | Usage |
 |---|---|---|---|
-| `gold` | `#D6B77A` | `#D6B77A` | Champagne Gold, the signature accent. Primary button fill, active nav indicator, selected rows, primary chart series, logo. Never a large background and never small text on light grounds (1.7:1 on ivory) — use `gold-ink` there. |
-| `gold-hover` | `#E2C995` | `#E2C995` | Hover state of gold actions (primary button, gold toggles). |
-| `gold-pressed` | `#B99A5E` | `#B99A5E` | Pressed/active state of gold actions. |
-| `gold-ink` | `#9C7B40` | `#D6B77A` | Gold for text, icons and links. Light: darker gold #9C7B40 — 3.4:1 on `bg`, 3.9:1 on `surface`: meets 3:1 for icons, focus rings and text 24px+, NOT 4.5:1 for body-size text (source value kept). Dark: 9.4:1 on `bg`, 8.5:1 on `surface`. |
+| `gold` | `#B99A5E` | `#B99A5E` | Champagne Gold, the signature accent. Primary button fill, active nav indicator, selected rows, primary chart series, logo. Never a large background and never small text on light grounds (1.7:1 on ivory) — use `gold-ink` there. |
+| `gold-hover` | `#A38750` | `#E2C995` | Hover state of gold actions (primary button, gold toggles). |
+| `gold-pressed` | `#8C7240` | `#9C7B40` | Pressed/active state of gold actions. |
+| `gold-ink` | `#7D6128` | `#B99A5E` | Gold for text, icons and links. Light: darker gold #7D6128 — 5.1:1 on `bg`, 5.8:1 on `surface`: meets 4.5:1 for body-size text (darkened from #9C7B40, 3.4:1, in CPT7). Dark: 9.4:1 on `bg`, 8.5:1 on `surface`. |
 | `on-gold` | `#17191C` | `#17191C` | Text and icons on a `gold` fill (charcoal on gold, 9.2:1). Never white on gold. |
 | `gold-tint` | `#F9F5EC` | `#2F2F2C` | Selected tile/option background (Selector), behind a `gold-ink` border. Assumption: 14% gold over `surface` (light), 10% (dark). |
 | `on-gold-tint` | `{text}` | `{gold}` | Label on `gold-tint`: charcoal text in light (14:1), gold in dark (7.0:1). |
@@ -226,7 +226,7 @@ All components read tokens only, so both themes come for free; never hard-code a
 | `surface` | `#FFFFFF` | `#1C2023` | Cards, panels, tables, sidebar, top bar and inputs (containers). |
 | `surface-elevated` | `#FAF9F6` | `#282C31` | Dialogs, menus, popovers, table header rows and hover rows. |
 | `text` | `#24262A` | `#F1EFE9` | Primary text on `bg`, `surface`, `surface-elevated` (13:1+ light, 12:1+ dark). |
-| `text-secondary` | `#777A80` | `#A9AAAD` | Labels, captions, metadata. Dark: 6:1+ on every ground. Light: 3.7:1 on `bg`, 4.3:1 on `surface` — below 4.5:1 for small text (source value kept); prefer it on `surface` and at 13px+. |
+| `text-secondary` | `#65686E` | `#A9AAAD` | Labels, captions, metadata. Dark: 6:1+ on every ground. Light: 4.9:1 on `bg`, 5.6:1 on `surface` (darkened from #777A80, 3.7:1, in CPT7). |
 | `border` | `#DFDDD6` | `#33373D` | Card outlines, table dividers, input borders. Light from source; dark value is an assumption (not in the guidelines). |
 | `focus-ring` | `{gold-ink}` | `{gold-ink}` | 2px keyboard focus outline on every control, offset 2px. 3:1+ on all grounds in both themes. |
 | `success` | `#43876A` | `#43876A` | Positive status: in stock, completed, positive trend. Dot, icon, chart line or badge marker — always with a word or icon, never colour alone. As text it misses 4.5:1 in both themes. |

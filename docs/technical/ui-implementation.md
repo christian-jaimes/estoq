@@ -19,7 +19,7 @@ The visual spec is `Design system/` (brand book, `tokens.json`, `tokens.css`, co
 | Typography | `EqBrandFont` (Poppins SemiBold), `EqUiFont` / `EqUiFontSemiBold` (Manrope); styles `EqPageTitleStyle`, `EqCardTitleStyle`, `EqLabelStyle`, `EqSecondaryStyle`, `EqCaptionStyle`, `EqKpiStyle` |
 | Components | `Controls/EqField` (labelled input with required or optional mark, suffix, error text, gold focus and red error border), `EqAutoSuggestBoxStyle` / `EqAutoSuggestTextBoxStyle` (themed autocomplete field and suggestion popup), `EqCardStyle`, `EqBadgeStyle`, `EqInputContainerStyle`, `EqPrimaryButtonStyle`, `EqSecondaryButtonStyle`, `EqRoundIconButtonStyle`, `EqPlainIconButtonStyle`, `EqLinkButtonStyle`, `EqNavItemStyle`, `EqSidebarCollapseButtonStyle`, `EqIconStyle` in `Themes/Styles.xaml` |
 | Icons | Material Symbols Rounded subset in `Assets/Fonts`, addressed by code point (`Assets/Fonts/codepoints.txt`) |
-| Logos | `Assets/Logos/estoq-{wordmark,q-mark,lockup}-{charcoal,gold,ivory}.png`, swapped by theme with `Controls/ThemedImage` |
+| Logos | `Assets/Logos/estoq-{wordmark,q-mark,lockup}-{charcoal,gold,ivory}.png`, the gold version is used in every theme (sidebar, splash, sign-in, wizard) |
 
 ## Dropdown and autocomplete fields
 

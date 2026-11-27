@@ -1,9 +1,9 @@
 /* estoq — generated from tokens.json */
 :root, [data-theme="light"] {
-  --gold: #d6b77a; /* Champagne Gold, the signature accent. Primary button fill, active nav indicator, selected rows, primary chart series, logo. Never a large background and never small text on light grounds (1.7:1 on ivory) — use `gold-ink` there. */
-  --gold-hover: #e2c995; /* Hover state of gold actions (primary button, gold toggles). */
-  --gold-pressed: #b99a5e; /* Pressed/active state of gold actions. */
-  --gold-ink: #9c7b40; /* Gold for text, icons and links. Light: darker gold #9C7B40 — 3.4:1 on `bg`, 3.9:1 on `surface`: meets 3:1 for icons, focus rings and text 24px+, NOT 4.5:1 for body-size text (source value kept). Dark: 9.4:1 on `bg`, 8.5:1 on `surface`. */
+  --gold: #b99a5e; /* Champagne Gold, the signature accent. Primary button fill, active nav indicator, selected rows, primary chart series, logo. Never a large background and never small text on light grounds (1.7:1 on ivory) — use `gold-ink` there. */
+  --gold-hover: #a38750; /* Hover state of gold actions (primary button, gold toggles). */
+  --gold-pressed: #8c7240; /* Pressed/active state of gold actions. */
+  --gold-ink: #7d6128; /* Gold for text, icons and links. Light: darker gold #9C7B40 — 3.4:1 on `bg`, 3.9:1 on `surface`: meets 3:1 for icons, focus rings and text 24px+, NOT 4.5:1 for body-size text (source value kept). Dark: 9.4:1 on `bg`, 8.5:1 on `surface`. */
   --on-gold: #17191c; /* Text and icons on a `gold` fill (charcoal on gold, 9.2:1). Never white on gold. */
   --gold-tint: #f9f5ec; /* Selected tile/option background (Selector), behind a `gold-ink` border. Assumption: 14% gold over `surface` (light), 10% (dark). */
   --on-gold-tint: var(--text); /* Label on `gold-tint`: charcoal text in light (14:1), gold in dark (7.0:1). */
@@ -29,10 +29,10 @@
   --shadow-dialog: 0 16px 48px rgba(23,25,28,0.16); /* Dialogs, menus and popovers. */
 }
 [data-theme="dark"] {
-  --gold: #d6b77a;
+  --gold: #b99a5e;
   --gold-hover: #e2c995;
-  --gold-pressed: #b99a5e;
-  --gold-ink: #d6b77a;
+  --gold-pressed: #9c7b40;
+  --gold-ink: #b99a5e;
   --on-gold: #17191c;
   --gold-tint: #2f2f2c;
   --on-gold-tint: var(--gold);
