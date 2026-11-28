@@ -37,6 +37,11 @@ public interface ISettingsService
 
     bool SaveInactivityTimeout(TimeSpan timeout);
 
+    /// <summary>Stock at or below this count is "Low stock" (see <see cref="LowStockPolicy"/>). Only the owner may change it.</summary>
+    int LowStockThreshold { get; }
+
+    bool SaveLowStockThreshold(int threshold);
+
     IReadOnlyList<StaffMember> Staff { get; }
 
     StaffError AddStaff(string name, string? email, UserRole role, out StaffMember? added);

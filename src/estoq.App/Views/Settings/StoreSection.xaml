@@ -178,7 +178,7 @@
       </StackPanel>
     </Grid>
 
-    <!-- Automatic log out: owner only (docs/features/sign-in.md). -->
+    <!-- Owner-only settings: automatic log out (docs/features/sign-in.md) and the low stock threshold. -->
     <StackPanel Spacing="12" Visibility="{x:Bind ViewModel.CanEditTimeout, Mode=OneWay}">
       <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
       <Grid ColumnSpacing="24" MinHeight="84">
@@ -189,6 +189,16 @@
         <controls:EqField Label="{x:Bind services:Loc.Get('Settings_Timeout')}" Suffix="{x:Bind services:Loc.Get('Settings_TimeoutUnit')}" Text="{x:Bind ViewModel.TimeoutText, Mode=TwoWay}"
                           ErrorText="{x:Bind ViewModel.TimeoutError, Mode=OneWay}" />
         <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Settings_TimeoutHelp')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0,28,0,0" />
+      </Grid>
+      <!-- Low stock threshold: at or below it an item is Low stock, at 0 it is No stock. -->
+      <Grid ColumnSpacing="24" MinHeight="84">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="240" />
+          <ColumnDefinition Width="*" MinWidth="0" />
+        </Grid.ColumnDefinitions>
+        <controls:EqField Label="{x:Bind services:Loc.Get('Settings_LowStock')}" Suffix="{x:Bind services:Loc.Get('Settings_LowStockUnit')}" Text="{x:Bind ViewModel.LowStockText, Mode=TwoWay}"
+                          ErrorText="{x:Bind ViewModel.LowStockError, Mode=OneWay}" />
+        <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Settings_LowStockHelp')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0,28,0,0" />
       </Grid>
     </StackPanel>
   </StackPanel>

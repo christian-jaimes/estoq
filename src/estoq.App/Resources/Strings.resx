@@ -554,4 +554,9 @@
   <data name="SettingsValue_Cashier" xml:space="preserve"><value>Cashier</value></data>
   <data name="SettingsValue_Active" xml:space="preserve"><value>Active</value></data>
   <data name="SettingsValue_Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="Settings_LowStock" xml:space="preserve"><value>Low stock threshold</value></data>
+  <data name="Settings_LowStockUnit" xml:space="preserve"><value>units</value></data>
+  <data name="Settings_LowStockHelp" xml:space="preserve"><value>An item with this many units or fewer is Low stock; at 0 it is No stock. Only the owner can change it.</value></data>
+  <data name="Settings_LowStockInvalid" xml:space="preserve"><value>Enter a whole number from {0} to {1}.</value></data>
+  <data name="SettingsField_LowStockThreshold" xml:space="preserve"><value>Low stock threshold (units)</value></data>
 </root>

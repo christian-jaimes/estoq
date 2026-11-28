@@ -19,6 +19,7 @@ public sealed class SampleSettingsService : ISettingsService
     private readonly List<SettingChange> _audit = [];
     private readonly ExchangeRateBook _rates = new(Currencies.Default);
     private readonly StaffDirectory _staff;
+    private int _lowStockThreshold = LowStockPolicy.DefaultThreshold;
     private AccountProfile? _account;
     private StoreProfile _store;
 
@@ -48,6 +49,8 @@ public sealed class SampleSettingsService : ISettingsService
     public event EventHandler? Changed;
 
     public TimeSpan InactivityTimeout => _security.InactivityTimeout;
+
+    public int LowStockThreshold => _lowStockThreshold;
 
     public IReadOnlyList<StaffMember> Staff => _staff.Members;
 
@@ -148,6 +151,26 @@ public sealed class SampleSettingsService : ISettingsService
             _audit.Add(new SettingChange(SettingsSection.Store, "InactivityTimeout",
                 before.TotalMinutes.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture),
                 timeout.TotalMinutes.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture), ActorName, DateTimeOffset.Now));
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+
+        return true;
+    }
+
+    public bool SaveLowStockThreshold(int threshold)
+    {
+        if (ActorRole != UserRole.Owner || !LowStockPolicy.IsValid(threshold))
+        {
+            return false;
+        }
+
+        var before = _lowStockThreshold;
+        if (before != threshold)
+        {
+            _lowStockThreshold = threshold;
+            _audit.Add(new SettingChange(SettingsSection.Store, LowStockPolicy.SettingKey,
+                before.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                threshold.ToString(System.Globalization.CultureInfo.InvariantCulture), ActorName, DateTimeOffset.Now));
             Changed?.Invoke(this, EventArgs.Empty);
         }
 

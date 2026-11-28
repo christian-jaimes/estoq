@@ -26,6 +26,7 @@ public sealed partial class StoreSettingsViewModel : ObservableObject
     private readonly ILogoPickerService _picker;
     private StoreProfile _saved;
     private TimeSpan _savedTimeout;
+    private int _savedLowStock;
     private bool _loading;
 
     public StoreSettingsViewModel(ISettingsService settings, ISessionService session, ILocalizer localizer, ILogoPickerService picker)
@@ -36,6 +37,7 @@ public sealed partial class StoreSettingsViewModel : ObservableObject
         _picker = picker;
         _saved = settings.GetStore();
         _savedTimeout = settings.InactivityTimeout;
+        _savedLowStock = settings.LowStockThreshold;
         Accepted.CollectionChanged += (_, _) =>
         {
             OnPropertyChanged(nameof(HasAccepted));
@@ -122,6 +124,13 @@ public sealed partial class StoreSettingsViewModel : ObservableObject
     [ObservableProperty]
     public partial string TimeoutError { get; set; } = string.Empty;
 
+    // Low stock threshold: owner only (shares CanEditTimeout, which means "is the owner").
+    [ObservableProperty]
+    public partial string LowStockText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string LowStockError { get; set; } = string.Empty;
+
     [ObservableProperty]
     public partial string StoreNameError { get; set; } = string.Empty;
 
@@ -134,7 +143,8 @@ public sealed partial class StoreSettingsViewModel : ObservableObject
     [ObservableProperty]
     public partial string TaxRateError { get; set; } = string.Empty;
 
-    public bool IsDirty => !_loading && (!ProfileFields().SequenceEqual(_saved.ToFields()) || TimeoutMinutesOrSaved() != _savedTimeout.TotalMinutes);
+    public bool IsDirty => !_loading && (!ProfileFields().SequenceEqual(_saved.ToFields()) || TimeoutMinutesOrSaved() != _savedTimeout.TotalMinutes
+        || LowStockOrSaved() != _savedLowStock);
 
     /// <summary>Loads the saved store details and drops unsaved edits.</summary>
     public void Reset()
@@ -142,6 +152,7 @@ public sealed partial class StoreSettingsViewModel : ObservableObject
         _loading = true;
         _saved = _settings.GetStore();
         _savedTimeout = _settings.InactivityTimeout;
+        _savedLowStock = _settings.LowStockThreshold;
         BuildCountries();
         StoreName = _saved.Name;
         TaxId = _saved.TaxId;
@@ -166,7 +177,8 @@ public sealed partial class StoreSettingsViewModel : ObservableObject
         LogoError = string.Empty;
         CanEditTimeout = _session.Role == UserRole.Owner;
         TimeoutText = _savedTimeout.TotalMinutes.ToString("0.##", _localizer.Culture);
-        StoreNameError = EmailError = BaseCurrencyError = TaxRateError = TimeoutError = string.Empty;
+        LowStockText = _savedLowStock.ToString(_localizer.Culture);
+        StoreNameError = EmailError = BaseCurrencyError = TaxRateError = TimeoutError = LowStockError = string.Empty;
         Suggestions.Clear();
         _loading = false;
         OnPropertyChanged(nameof(NoAcceptedText));
@@ -196,8 +208,10 @@ public sealed partial class StoreSettingsViewModel : ObservableObject
         var timeoutOk = !CanEditTimeout || TimeoutIsValid();
         TimeoutError = timeoutOk ? string.Empty : _localizer.Format("Settings_TimeoutInvalid",
             (int)InactivityPolicy.MinTimeout.TotalMinutes, (int)InactivityPolicy.MaxTimeout.TotalMinutes);
+        var lowStockOk = !CanEditTimeout || LowStockIsValid();
+        LowStockError = lowStockOk ? string.Empty : _localizer.Format("Settings_LowStockInvalid", LowStockPolicy.MinThreshold, LowStockPolicy.MaxThreshold);
         return name == ValidationCode.None && email == ValidationCode.None && currency == ValidationCode.None
-            && tax == ValidationCode.None && timeoutOk;
+            && tax == ValidationCode.None && timeoutOk && lowStockOk;
     }
 
     /// <summary>Saves the store details and, for the owner, the log out time.</summary>
@@ -211,6 +225,11 @@ public sealed partial class StoreSettingsViewModel : ObservableObject
         if (CanEditTimeout && TimeoutIsValid())
         {
             _settings.SaveInactivityTimeout(TimeSpan.FromMinutes(TimeoutMinutes()));
+        }
+
+        if (CanEditTimeout && LowStockIsValid())
+        {
+            _settings.SaveLowStockThreshold(LowStockValue());
         }
 
         return true;
@@ -320,6 +339,14 @@ public sealed partial class StoreSettingsViewModel : ObservableObject
     private double TimeoutMinutes() =>
         double.TryParse(TimeoutText, NumberStyles.AllowDecimalPoint, _localizer.Culture, out var minutes) ? minutes : _savedTimeout.TotalMinutes;
 
+    private bool LowStockIsValid() =>
+        int.TryParse(LowStockText, NumberStyles.None, _localizer.Culture, out var value) && LowStockPolicy.IsValid(value);
+
+    private int LowStockValue() =>
+        int.TryParse(LowStockText, NumberStyles.None, _localizer.Culture, out var value) ? value : _savedLowStock;
+
+    private int LowStockOrSaved() => CanEditTimeout ? LowStockValue() : _savedLowStock;
+
     private double TimeoutMinutesOrSaved() => CanEditTimeout ? TimeoutMinutes() : _savedTimeout.TotalMinutes;
 
     private string Describe(ValidationCode code) => code == ValidationCode.None ? string.Empty : _localizer[$"Error_{code}"];
@@ -371,6 +398,8 @@ public sealed partial class StoreSettingsViewModel : ObservableObject
     partial void OnPhoneChanged(string value) => Touch();
 
     partial void OnStoreLanguageIndexChanged(int value) => Touch();
+
+    partial void OnLowStockTextChanged(string value) { LowStockError = string.Empty; Touch(); }
 
     partial void OnTimeoutTextChanged(string value) { TimeoutError = string.Empty; Touch(); }
 

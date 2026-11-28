@@ -554,4 +554,9 @@
   <data name="SettingsValue_Cashier" xml:space="preserve"><value>Cajero</value></data>
   <data name="SettingsValue_Active" xml:space="preserve"><value>Activo</value></data>
   <data name="SettingsValue_Inactive" xml:space="preserve"><value>Inactivo</value></data>
+  <data name="Settings_LowStock" xml:space="preserve"><value>Umbral de stock bajo</value></data>
+  <data name="Settings_LowStockUnit" xml:space="preserve"><value>unid.</value></data>
+  <data name="Settings_LowStockHelp" xml:space="preserve"><value>Un artículo con esta cantidad o menos tiene stock bajo; en 0 no tiene stock. Solo el propietario puede cambiarlo.</value></data>
+  <data name="Settings_LowStockInvalid" xml:space="preserve"><value>Escribe un número entero de {0} a {1}.</value></data>
+  <data name="SettingsField_LowStockThreshold" xml:space="preserve"><value>Umbral de stock bajo (unidades)</value></data>
 </root>

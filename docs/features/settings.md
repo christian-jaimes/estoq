@@ -53,3 +53,7 @@ Built: the pop-up with the section list (only the sections the role may open), A
 - Exchange rates: a new rate starts "now" (no effective time picker yet); a currency has no rate until one is set.
 - Not built: Defaults and rules, Data (backup), real photo and logo storage, password storage, effective time picker. The sample staff list is not yet the list sign-in checks; the sample sign-in gains an owner (code 100200) so the owner view can be tested.
 - Icons reuse glyphs already in the font subset (no pencil, store or group icon yet); add them with the font instancing steps in [[ui-implementation]] if wanted.
+
+### Low stock threshold (added after CPT13)
+
+Stock status has three values: In stock, Low stock and No stock. The owner sets the low-stock threshold in the Store section (owner only, whole number 1 to 10,000). On hand of 0 or less is No stock; at or below the threshold is Low stock; above it is In stock. Names used: setting key and audit field `LowStockThreshold`, default `5` (`LowStockPolicy.SettingKey` and `LowStockPolicy.DefaultThreshold` in `estoq.Core/Settings/LowStockPolicy.cs`, which also has `Classify(onHand, threshold)` and the `StockLevel` enum). The app reads it from `ISettingsService.LowStockThreshold`. Changes are audited as a Store change. Inventory (CPT10) should call `LowStockPolicy.Classify` with that value once the branches are merged.

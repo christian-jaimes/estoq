@@ -281,3 +281,25 @@ public class ExchangeRateBookTests
     [InlineData(UserRole.Owner)]
     public void EveryRoleMayUpdateRates(UserRole role) => Assert.True(ExchangeRateBook.CanUpdate(role));
 }
+
+public class LowStockPolicyTests
+{
+    [Theory]
+    [InlineData(-1, 5, StockLevel.NoStock)]
+    [InlineData(0, 5, StockLevel.NoStock)]
+    [InlineData(1, 5, StockLevel.LowStock)]
+    [InlineData(5, 5, StockLevel.LowStock)]
+    [InlineData(6, 5, StockLevel.InStock)]
+    public void ClassifiesOnHand(int onHand, int threshold, StockLevel expected) =>
+        Assert.Equal(expected, LowStockPolicy.Classify(onHand, threshold));
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, true)]
+    [InlineData(10_000, true)]
+    [InlineData(10_001, false)]
+    public void ThresholdRange(int value, bool valid) => Assert.Equal(valid, LowStockPolicy.IsValid(value));
+
+    [Fact]
+    public void DefaultIsValid() => Assert.True(LowStockPolicy.IsValid(LowStockPolicy.DefaultThreshold));
+}
