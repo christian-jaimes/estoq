@@ -41,13 +41,6 @@
       </Setter>
     </Style>
 
-    <!-- Filter and sort buttons: secondary button, left text that trims, chevron at the end. -->
-    <Style x:Key="InvFilterButtonStyle" TargetType="Button" BasedOn="{StaticResource EqSecondaryButtonStyle}">
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
-      <Setter Property="MinWidth" Value="0" />
-      <Setter Property="Padding" Value="12,0" />
-      <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
-    </Style>
   </Page.Resources>
 
   <Grid RowDefinitions="Auto,Auto,*" RowSpacing="16" Background="Transparent" Tapped="OnPageTapped">
@@ -184,7 +177,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Sort -->
-            <Button Grid.Column="0" Style="{StaticResource InvFilterButtonStyle}" Width="172"
+            <Button Grid.Column="0" Style="{StaticResource EqFilterButtonStyle}" Width="172"
                     Click="OnSortClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_SortBy')}"
                     ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_SortBy')}">
               <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
@@ -203,7 +196,7 @@
             <Border Grid.Column="2" Width="1" Height="24" Background="{ThemeResource EqBorderBrush}" Margin="4,0" VerticalAlignment="Center" />
 
             <!-- Filters -->
-            <Button Grid.Column="4" Style="{StaticResource InvFilterButtonStyle}" Width="176"
+            <Button Grid.Column="4" Style="{StaticResource EqFilterButtonStyle}" Width="176"
                     Click="OnCategoryClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_FilterCategory')}"
                     ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_FilterCategory')}">
               <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
@@ -211,7 +204,7 @@
                 <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
               </Grid>
             </Button>
-            <Button Grid.Column="3" Style="{StaticResource InvFilterButtonStyle}" Width="176"
+            <Button Grid.Column="3" Style="{StaticResource EqFilterButtonStyle}" Width="176"
                     Click="OnTypeClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_FilterType')}"
                     ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_FilterType')}">
               <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
@@ -219,7 +212,7 @@
                 <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
               </Grid>
             </Button>
-            <Button Grid.Column="5" Style="{StaticResource InvFilterButtonStyle}" Width="176"
+            <Button Grid.Column="5" Style="{StaticResource EqFilterButtonStyle}" Width="176"
                     Click="OnBrandClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_FilterBrand')}"
                     ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_FilterBrand')}">
               <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">

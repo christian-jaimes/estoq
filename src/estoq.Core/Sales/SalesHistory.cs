@@ -12,15 +12,26 @@ public enum SalesPeriod
     Custom,
 }
 
-/// <summary>What the filter bar and period tabs ask for. Null or empty means "no restriction".</summary>
+/// <summary>What the filter bar and period tabs ask for. Null or empty means "no restriction"; the multi-select filters match any ticked value.</summary>
 public sealed record SalesFilter(
     SalesPeriod Period = SalesPeriod.All,
     DateOnly? CustomFrom = null,
     DateOnly? CustomTo = null,
     string? Text = null,
-    PaymentMethod? Method = null,
-    string? Staff = null,
-    SaleStatus? Status = null);
+    IReadOnlyCollection<PaymentMethod>? Methods = null,
+    IReadOnlyCollection<string>? StaffNames = null);
+
+/// <summary>The columns the sales table can be sorted by.</summary>
+public enum SalesSort
+{
+    Date,
+    Receipt,
+    Staff,
+    Total,
+    Items,
+    Tax,
+    Status,
+}
 
 /// <summary>The four KPI cards. Voided and returned sales are not revenue, so they are left out of every figure.</summary>
 public readonly record struct SalesSummary(decimal TotalSales, int Transactions, int ItemsSold, decimal AverageSale)
@@ -87,13 +98,35 @@ public static class SalesHistory
             .Where(sale => access != Access.Own || string.Equals(sale.Staff, currentStaff, StringComparison.OrdinalIgnoreCase))
             .Where(sale => from is null || DateOnly.FromDateTime(sale.SoldAt) >= from)
             .Where(sale => to is null || DateOnly.FromDateTime(sale.SoldAt) <= to)
-            .Where(sale => filter.Method is null || sale.Payments.Any(payment => payment.Method == filter.Method))
-            .Where(sale => string.IsNullOrEmpty(filter.Staff) || string.Equals(sale.Staff, filter.Staff, StringComparison.OrdinalIgnoreCase))
-            .Where(sale => filter.Status is null || sale.Status == filter.Status)
+            .Where(sale => filter.Methods is not { Count: > 0 } || sale.Payments.Any(payment => filter.Methods.Contains(payment.Method)))
+            .Where(sale => filter.StaffNames is not { Count: > 0 } || filter.StaffNames.Contains(sale.Staff, StringComparer.OrdinalIgnoreCase))
             .Where(sale => string.IsNullOrEmpty(text) || Matches(sale, text))
             .OrderByDescending(sale => sale.SoldAt)
             .ToList();
     }
+
+    /// <summary>
+    /// Orders sales by one column. Ties (and the default view) fall back to newest first, then receipt number, so the order is
+    /// always stable. The default is <see cref="SalesSort.Date"/>, descending.
+    /// </summary>
+    public static IReadOnlyList<SaleRecord> Sort(IEnumerable<SaleRecord> sales, SalesSort sort, bool descending)
+    {
+        IOrderedEnumerable<SaleRecord> ordered = sort switch
+        {
+            SalesSort.Receipt => Order(sales, sale => sale.ReceiptNumber, StringComparer.OrdinalIgnoreCase, descending),
+            SalesSort.Staff => Order(sales, sale => sale.Staff, StringComparer.CurrentCultureIgnoreCase, descending),
+            SalesSort.Total => Order(sales, sale => sale.Totals.Total, Comparer<decimal>.Default, descending),
+            SalesSort.Items => Order(sales, sale => sale.ItemCount, Comparer<int>.Default, descending),
+            SalesSort.Tax => Order(sales, sale => sale.Totals.Tax, Comparer<decimal>.Default, descending),
+            SalesSort.Status => Order(sales, sale => (int)sale.Status, Comparer<int>.Default, descending),
+            _ => Order(sales, sale => sale.SoldAt, Comparer<DateTime>.Default, descending),
+        };
+
+        return ordered.ThenByDescending(sale => sale.SoldAt).ThenBy(sale => sale.ReceiptNumber, StringComparer.OrdinalIgnoreCase).ToList();
+    }
+
+    private static IOrderedEnumerable<SaleRecord> Order<TKey>(IEnumerable<SaleRecord> sales, Func<SaleRecord, TKey> key, IComparer<TKey> comparer, bool descending) =>
+        descending ? sales.OrderByDescending(key, comparer) : sales.OrderBy(key, comparer);
 
     /// <summary>Search in sales: receipt number, staff name, or a product name or SKU.</summary>
     public static bool Matches(SaleRecord sale, string text) =>

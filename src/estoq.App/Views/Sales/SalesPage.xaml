@@ -20,15 +20,6 @@
     <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
     <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
 
-    <Style x:Key="SalesComboStyle" TargetType="ComboBox">
-      <Setter Property="Height" Value="36" />
-      <Setter Property="CornerRadius" Value="{StaticResource EqRadiusMd}" />
-      <Setter Property="Background" Value="{ThemeResource EqSurfaceBrush}" />
-      <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
-      <Setter Property="Padding" Value="12,0,0,0" />
-      <Setter Property="VerticalContentAlignment" Value="Center" />
-    </Style>
-
     </ResourceDictionary>
   </Page.Resources>
 
@@ -44,25 +35,6 @@
         </StackPanel>
 
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-          <!-- Date range: editing either date switches the period to Custom. -->
-          <Button Style="{StaticResource EqSecondaryButtonStyle}" AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_DateRange')}">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-              <FontIcon Glyph="&#xE935;" Style="{StaticResource EqIconStyle}" FontSize="18" />
-              <TextBlock Text="{x:Bind ViewModel.DateRangeText, Mode=OneWay}" VerticalAlignment="Center" />
-              <FontIcon Glyph="&#xE313;" Style="{StaticResource EqIconStyle}" FontSize="18" />
-            </StackPanel>
-            <Button.Flyout>
-              <Flyout>
-                <StackPanel Spacing="12" MinWidth="240">
-                  <CalendarDatePicker Header="{x:Bind services:Loc.Get('Sales_From')}" HorizontalAlignment="Stretch"
-                                      Date="{x:Bind ViewModel.CustomFromDate, Mode=TwoWay}" />
-                  <CalendarDatePicker Header="{x:Bind services:Loc.Get('Sales_To')}" HorizontalAlignment="Stretch"
-                                      Date="{x:Bind ViewModel.CustomToDate, Mode=TwoWay}" />
-                </StackPanel>
-              </Flyout>
-            </Button.Flyout>
-          </Button>
-
           <Button Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.PrintReportCommand}">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <FontIcon Glyph="&#xEF6E;" Style="{StaticResource EqIconStyle}" FontSize="18" />
@@ -167,10 +139,82 @@
         </ItemsControl>
       </Border>
 
-      <!-- Toolbar: search, payment method, staff, status (same card toolbar as Inventory). -->
+      <!-- Toolbar (same as Inventory): sort | date filter, filters | search | clear all. -->
       <Border Grid.Row="4" Style="{StaticResource EqCardStyle}" Padding="12,10" Margin="0,0,0,16">
-        <Grid ColumnDefinitions="*,240,190,190" ColumnSpacing="8">
-          <Border Grid.Column="0" MinWidth="140" Height="36" Background="{ThemeResource EqBgBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1"
+        <Grid ColumnSpacing="8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+
+          <!-- Sort -->
+          <Button Grid.Column="0" Style="{StaticResource EqFilterButtonStyle}" Width="172"
+                  Click="OnSortClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_SortBy')}"
+                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Sales_SortBy')}">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+              <FontIcon Glyph="&#xE152;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SortLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+              <FontIcon Grid.Column="2" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+            </Grid>
+          </Button>
+          <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Width="40" MinWidth="0" Padding="0"
+                  Command="{x:Bind ViewModel.ToggleSortDirectionCommand}"
+                  ToolTipService.ToolTip="{x:Bind ViewModel.SortDirectionToolTip, Mode=OneWay}"
+                  AutomationProperties.Name="{x:Bind ViewModel.SortDirectionToolTip, Mode=OneWay}">
+            <FontIcon Glyph="{x:Bind ViewModel.SortDirectionGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
+          </Button>
+
+          <Border Grid.Column="2" Width="1" Height="24" Background="{ThemeResource EqBorderBrush}" Margin="4,0" VerticalAlignment="Center" />
+
+          <!-- Date filter: editing either date switches the period to Custom. -->
+          <Button Grid.Column="3" Style="{StaticResource EqFilterButtonStyle}" Width="190"
+                  AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_DateRange')}"
+                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Sales_DateRange')}">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+              <FontIcon Glyph="&#xE935;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.DateRangeText, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+              <FontIcon Grid.Column="2" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+            </Grid>
+            <Button.Flyout>
+              <Flyout>
+                <StackPanel Spacing="12" MinWidth="240">
+                  <CalendarDatePicker Header="{x:Bind services:Loc.Get('Sales_From')}" HorizontalAlignment="Stretch"
+                                      Date="{x:Bind ViewModel.CustomFromDate, Mode=TwoWay}" />
+                  <CalendarDatePicker Header="{x:Bind services:Loc.Get('Sales_To')}" HorizontalAlignment="Stretch"
+                                      Date="{x:Bind ViewModel.CustomToDate, Mode=TwoWay}" />
+                </StackPanel>
+              </Flyout>
+            </Button.Flyout>
+          </Button>
+
+          <!-- Filters -->
+          <Button Grid.Column="4" Style="{StaticResource EqFilterButtonStyle}" Width="176"
+                  Click="OnMethodClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColMethod')}"
+                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Sales_ColMethod')}">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+              <TextBlock Text="{x:Bind ViewModel.MethodLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+              <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+            </Grid>
+          </Button>
+          <Button Grid.Column="5" Style="{StaticResource EqFilterButtonStyle}" Width="176"
+                  Click="OnStaffClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColStaff')}"
+                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Sales_ColStaff')}">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+              <TextBlock Text="{x:Bind ViewModel.StaffLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+              <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+            </Grid>
+          </Button>
+          <Border Grid.Column="6" Width="1" Height="24" Background="{ThemeResource EqBorderBrush}" Margin="4,0" VerticalAlignment="Center" />
+
+          <!-- Search -->
+          <Border Grid.Column="7" MinWidth="140" Height="36" Background="{ThemeResource EqBgBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1"
                   CornerRadius="{StaticResource EqRadiusMd}" Padding="12,0">
             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
               <FontIcon Glyph="&#xEF7A;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}"
@@ -182,18 +226,11 @@
                        AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_SearchPlaceholder')}" />
             </Grid>
           </Border>
-          <ComboBox Grid.Column="1" Style="{StaticResource SalesComboStyle}" HorizontalAlignment="Stretch"
-                    ItemsSource="{x:Bind ViewModel.MethodOptions}" DisplayMemberPath="Label"
-                    SelectedItem="{x:Bind ViewModel.SelectedMethod, Mode=TwoWay}"
-                    AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColMethod')}" />
-          <ComboBox Grid.Column="2" Style="{StaticResource SalesComboStyle}" HorizontalAlignment="Stretch"
-                    ItemsSource="{x:Bind ViewModel.StaffOptions}" DisplayMemberPath="Label"
-                    SelectedItem="{x:Bind ViewModel.SelectedStaff, Mode=TwoWay}"
-                    AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColStaff')}" />
-          <ComboBox Grid.Column="3" Style="{StaticResource SalesComboStyle}" HorizontalAlignment="Stretch"
-                    ItemsSource="{x:Bind ViewModel.StatusOptions}" DisplayMemberPath="Label"
-                    SelectedItem="{x:Bind ViewModel.SelectedStatus, Mode=TwoWay}"
-                    AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColStatus')}" />
+
+          <!-- Clear all -->
+          <HyperlinkButton Grid.Column="8" Content="{x:Bind services:Loc.Get('Sales_ClearAll')}" Style="{StaticResource EqLinkButtonStyle}" VerticalAlignment="Center"
+                           Command="{x:Bind ViewModel.ClearFiltersCommand}"
+                           Visibility="{x:Bind local:SalesBindings.Visible(ViewModel.HasActiveFilters), Mode=OneWay}" />
         </Grid>
       </Border>
 

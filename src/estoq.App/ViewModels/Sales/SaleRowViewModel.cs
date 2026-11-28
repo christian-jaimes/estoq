@@ -87,6 +87,3 @@ public sealed record SaleDetailLineViewModel(string Name, string Sku, string Pri
 
 /// <summary>One payment in the detail panel: the method, the amount in the currency paid, and the rate snapshot when it is not the base currency.</summary>
 public sealed record SalePaymentViewModel(string MethodText, string AmountText, string RateText, bool HasRate);
-
-/// <summary>An entry of a filter drop-down. An empty <see cref="Key"/> means "all".</summary>
-public sealed record SalesFilterOption(string Key, string Label);

@@ -30,6 +30,12 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
     private SalesPeriod _period = SalesPeriod.All;
     private int _shown = BatchSize;
 
+    // The ticked values of the multi-select filters (the dropdowns edit these sets), and the sort.
+    private readonly HashSet<string> _methods = [];
+    private readonly HashSet<string> _staff = [];
+    private SalesSort _sort = SalesSort.Date;
+    private bool _sortDescending = true;
+
     // True while the view model changes its own bound state (rebuilding lists, moving selections), so those changes
     // are not mistaken for something the user did.
     private bool _building;
@@ -65,12 +71,6 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
 
     public ObservableCollection<PeriodTabViewModel> Tabs { get; } = [];
 
-    public ObservableCollection<SalesFilterOption> MethodOptions { get; } = [];
-
-    public ObservableCollection<SalesFilterOption> StaffOptions { get; } = [];
-
-    public ObservableCollection<SalesFilterOption> StatusOptions { get; } = [];
-
     public ObservableCollection<SaleRowViewModel> Rows { get; } = [];
 
     public ObservableCollection<SaleDetailLineViewModel> DetailLines { get; } = [];
@@ -90,13 +90,23 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
     public partial string SearchText { get; set; } = string.Empty;
 
     [ObservableProperty]
-    public partial SalesFilterOption? SelectedMethod { get; set; }
+    public partial string MethodLabel { get; set; } = string.Empty;
 
     [ObservableProperty]
-    public partial SalesFilterOption? SelectedStaff { get; set; }
+    public partial string StaffLabel { get; set; } = string.Empty;
 
     [ObservableProperty]
-    public partial SalesFilterOption? SelectedStatus { get; set; }
+    public partial string SortLabel { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string SortDirectionGlyph { get; set; } = "";
+
+    [ObservableProperty]
+    public partial string SortDirectionToolTip { get; set; } = string.Empty;
+
+    /// <summary>True when a filter, the search or a non-default date range is active: shows "Clear all".</summary>
+    [ObservableProperty]
+    public partial bool HasActiveFilters { get; set; }
 
     [ObservableProperty]
     public partial DateTimeOffset? CustomFromDate { get; set; }
@@ -182,12 +192,6 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
 
     partial void OnSearchTextChanged(string value) => OnFilterChanged();
 
-    partial void OnSelectedMethodChanged(SalesFilterOption? value) => OnFilterChanged();
-
-    partial void OnSelectedStaffChanged(SalesFilterOption? value) => OnFilterChanged();
-
-    partial void OnSelectedStatusChanged(SalesFilterOption? value) => OnFilterChanged();
-
     // Choosing a date in the range picker means the period is now a custom one.
     partial void OnCustomFromDateChanged(DateTimeOffset? value) => OnCustomDateChanged();
 
@@ -215,6 +219,8 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
 
     private void OnLanguageChanged(object? sender, EventArgs e)
     {
+        // Method ticks are held as words of the old language; staff names are the same in every language.
+        _methods.Clear();
         BuildChoices();
         Reload();
     }
@@ -261,13 +267,9 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         Reload();
     }
 
-    /// <summary>Builds the tabs and drop-downs in the current language, keeping what the user had chosen.</summary>
+    /// <summary>Builds the period tabs in the current language.</summary>
     private void BuildChoices()
     {
-        var methodKey = SelectedMethod?.Key ?? string.Empty;
-        var staffKey = SelectedStaff?.Key ?? string.Empty;
-        var statusKey = SelectedStatus?.Key ?? string.Empty;
-
         _building = true;
 
         Tabs.Clear();
@@ -283,50 +285,112 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
             Tabs.Add(new PeriodTabViewModel(period, _localizer[key], period == _period, OnTabSelected));
         }
 
-        MethodOptions.Clear();
-        MethodOptions.Add(new SalesFilterOption(string.Empty, _localizer["Sales_AllMethods"]));
-        foreach (var method in PaymentMethods.All)
-        {
-            MethodOptions.Add(new SalesFilterOption(method.ToString(), _localizer["Pos_Method_" + method]));
-        }
-
-        StatusOptions.Clear();
-        StatusOptions.Add(new SalesFilterOption(string.Empty, _localizer["Sales_AllStatus"]));
-        foreach (var status in Enum.GetValues<SaleStatus>())
-        {
-            StatusOptions.Add(new SalesFilterOption(status.ToString(), _localizer["Sales_Status_" + status]));
-        }
-
-        StaffOptions.Clear();
-        StaffOptions.Add(new SalesFilterOption(string.Empty, _localizer["Sales_AllStaff"]));
-        var visible = SalesHistory.Apply(_sales.GetSales(), new SalesFilter(), _session.Role, _session.UserName ?? string.Empty, Today);
-        foreach (var name in visible.Select(sale => sale.Staff).Distinct(StringComparer.OrdinalIgnoreCase).Order(StringComparer.CurrentCultureIgnoreCase))
-        {
-            StaffOptions.Add(new SalesFilterOption(name, name));
-        }
-
-        SelectedMethod = MethodOptions.FirstOrDefault(option => option.Key == methodKey) ?? MethodOptions[0];
-        SelectedStaff = StaffOptions.FirstOrDefault(option => option.Key == staffKey) ?? StaffOptions[0];
-        SelectedStatus = StatusOptions.FirstOrDefault(option => option.Key == statusKey) ?? StatusOptions[0];
-
         _building = false;
     }
+
+    // Dropdown contents. The page builds its flyouts from these when they open.
+
+    public IReadOnlyList<string> MethodValues => PaymentMethods.All.Select(MethodWord).ToList();
+
+    public IReadOnlyList<string> StaffValues =>
+        SalesHistory.Apply(_sales.GetSales(), new SalesFilter(), _session.Role, _session.UserName ?? string.Empty, Today)
+            .Select(sale => sale.Staff)
+            .Concat(_staff)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Order(StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+
+    /// <summary>The ticked values of each multi-select filter. The dropdowns edit these sets and then call <see cref="FiltersChanged"/>.</summary>
+    public ISet<string> SelectedMethods => _methods;
+
+    public ISet<string> SelectedStaff => _staff;
+
+    public IReadOnlyList<FilterOption> SortOptions =>
+    [
+        new FilterOption(nameof(SalesSort.Date), _localizer["Sales_SortDate"]),
+        new FilterOption(nameof(SalesSort.Receipt), _localizer["Sales_SortReceipt"]),
+        new FilterOption(nameof(SalesSort.Staff), _localizer["Sales_SortStaff"]),
+        new FilterOption(nameof(SalesSort.Total), _localizer["Sales_SortTotal"]),
+        new FilterOption(nameof(SalesSort.Items), _localizer["Sales_SortItems"]),
+        new FilterOption(nameof(SalesSort.Tax), _localizer["Sales_SortTax"]),
+        new FilterOption(nameof(SalesSort.Status), _localizer["Sales_SortStatus"]),
+    ];
+
+    public string SelectedSort => _sort.ToString();
+
+    private string MethodWord(PaymentMethod method) => _localizer["Pos_Method_" + method];
+
+    /// <summary>Called by a multi-select dropdown after it ticked or unticked a value.</summary>
+    public void FiltersChanged() => OnFilterChanged();
+
+    public void SelectSort(string? value)
+    {
+        _sort = Enum.TryParse<SalesSort>(value, out var parsed) ? parsed : SalesSort.Date;
+        OnFilterChanged();
+    }
+
+    [RelayCommand]
+    private void ToggleSortDirection()
+    {
+        _sortDescending = !_sortDescending;
+        OnFilterChanged();
+    }
+
+    /// <summary>Clears every filter, the search and the date range (back to all sales). The sort stays as the user set it.</summary>
+    [RelayCommand]
+    private void ClearFilters()
+    {
+        _building = true;
+        _methods.Clear();
+        _staff.Clear();
+        SearchText = string.Empty;
+        _period = SalesPeriod.All;
+        foreach (var tab in Tabs)
+        {
+            tab.IsSelected = tab.Period == SalesPeriod.All;
+        }
+
+        var today = Today;
+        CustomToDate = new DateTimeOffset(today.ToDateTime(TimeOnly.MinValue));
+        CustomFromDate = new DateTimeOffset(today.AddDays(-29).ToDateTime(TimeOnly.MinValue));
+        _building = false;
+
+        _shown = BatchSize;
+        Reload();
+    }
+
+    private string FilterLabel(HashSet<string> ticked, string allKey) => ticked.Count switch
+    {
+        0 => _localizer[allKey],
+        1 => ticked.First(),
+        _ => _localizer.Format("Sales_FilterSelected", ticked.Count.ToString("N0", _localizer.Culture)),
+    };
 
     private SalesFilter BuildFilter() => new(
         _period,
         CustomFromDate is { } from ? DateOnly.FromDateTime(from.Date) : null,
         CustomToDate is { } to ? DateOnly.FromDateTime(to.Date) : null,
         SearchText,
-        Enum.TryParse<PaymentMethod>(SelectedMethod?.Key, out var method) ? method : null,
-        SelectedStaff?.Key,
-        Enum.TryParse<SaleStatus>(SelectedStatus?.Key, out var status) ? status : null);
+        PaymentMethods.All.Where(method => _methods.Contains(MethodWord(method))).ToList(),
+        _staff.ToList());
 
     /// <summary>Applies the filters, then rebuilds the KPIs, the page of rows, the pager and the detail panel.</summary>
     private void Reload()
     {
         var culture = _localizer.Culture;
         var filter = BuildFilter();
-        _filtered = SalesHistory.Apply(_sales.GetSales(), filter, _session.Role, _session.UserName ?? string.Empty, Today);
+        _filtered = SalesHistory.Sort(
+            SalesHistory.Apply(_sales.GetSales(), filter, _session.Role, _session.UserName ?? string.Empty, Today),
+            _sort,
+            _sortDescending);
+
+        MethodLabel = FilterLabel(_methods, "Sales_AllMethods");
+        StaffLabel = FilterLabel(_staff, "Sales_AllStaff");
+        SortLabel = SortOptions.First(option => option.Value == _sort.ToString()).Label;
+        SortDirectionGlyph = _sortDescending ? "" : "";
+        SortDirectionToolTip = _localizer[_sortDescending ? "Sales_SortDescending" : "Sales_SortAscending"];
+        HasActiveFilters = _methods.Count > 0 || _staff.Count > 0
+            || SearchText.Trim().Length > 0 || _period != SalesPeriod.All;
 
         // Figures describe everything the filters match, not only the page on screen.
         var summary = SalesSummary.Of(_filtered);

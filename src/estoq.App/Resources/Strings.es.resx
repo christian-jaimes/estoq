@@ -385,9 +385,20 @@
   <data name="Sales_TabMonth" xml:space="preserve"><value>Este mes</value></data>
   <data name="Sales_TabCustom" xml:space="preserve"><value>Personalizado</value></data>
   <data name="Sales_SearchPlaceholder" xml:space="preserve"><value>Buscar en ventas...</value></data>
+  <data name="Sales_SortBy" xml:space="preserve"><value>Ordenar por</value></data>
+  <data name="Sales_SortDate" xml:space="preserve"><value>Fecha y hora</value></data>
+  <data name="Sales_SortReceipt" xml:space="preserve"><value>Número de recibo</value></data>
+  <data name="Sales_SortStaff" xml:space="preserve"><value>Personal</value></data>
+  <data name="Sales_SortTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Sales_SortItems" xml:space="preserve"><value>Artículos</value></data>
+  <data name="Sales_SortTax" xml:space="preserve"><value>Impuesto</value></data>
+  <data name="Sales_SortStatus" xml:space="preserve"><value>Estado</value></data>
+  <data name="Sales_SortAscending" xml:space="preserve"><value>Orden ascendente</value></data>
+  <data name="Sales_SortDescending" xml:space="preserve"><value>Orden descendente</value></data>
+  <data name="Sales_FilterSelected" xml:space="preserve"><value>{0} seleccionados</value></data>
+  <data name="Sales_ClearAll" xml:space="preserve"><value>Borrar todo</value></data>
   <data name="Sales_AllMethods" xml:space="preserve"><value>Todos los métodos de pago</value></data>
   <data name="Sales_AllStaff" xml:space="preserve"><value>Todo el personal</value></data>
-  <data name="Sales_AllStatus" xml:space="preserve"><value>Todos los estados</value></data>
   <data name="Sales_ColReceipt" xml:space="preserve"><value>Recibo n.º</value></data>
   <data name="Sales_ColDate" xml:space="preserve"><value>Fecha y hora</value></data>
   <data name="Sales_ColItems" xml:space="preserve"><value>Artículos</value></data>

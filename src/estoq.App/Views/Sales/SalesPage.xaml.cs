@@ -84,6 +84,15 @@ public sealed partial class SalesPage : Page
         }
     }
 
+    private void OnSortClick(object sender, RoutedEventArgs e) =>
+        FilterFlyouts.ShowOptions((FrameworkElement)sender, ViewModel.SortOptions, ViewModel.SelectedSort, ViewModel.SelectSort);
+
+    private void OnMethodClick(object sender, RoutedEventArgs e) =>
+        FilterFlyouts.ShowMultiSelect((FrameworkElement)sender, ViewModel.MethodValues, ViewModel.SelectedMethods, ViewModel.FiltersChanged);
+
+    private void OnStaffClick(object sender, RoutedEventArgs e) =>
+        FilterFlyouts.ShowMultiSelect((FrameworkElement)sender, ViewModel.StaffValues, ViewModel.SelectedStaff, ViewModel.FiltersChanged);
+
     private void OnRowPointerEntered(object sender, PointerRoutedEventArgs e) => TableRowHover.Set(sender, 1);
 
     private void OnRowPointerExited(object sender, PointerRoutedEventArgs e) => TableRowHover.Set(sender, 0);

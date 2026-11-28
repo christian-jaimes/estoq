@@ -74,16 +74,16 @@ public sealed partial class InventoryPage : Page
     }
 
     private void OnTypeClick(object sender, RoutedEventArgs e) =>
-        ShowMultiSelect((FrameworkElement)sender, ViewModel.TypeValues, ViewModel.SelectedTypes);
+        FilterFlyouts.ShowMultiSelect((FrameworkElement)sender, ViewModel.TypeValues, ViewModel.SelectedTypes, ViewModel.FiltersChanged);
 
     private void OnCategoryClick(object sender, RoutedEventArgs e) =>
-        ShowMultiSelect((FrameworkElement)sender, ViewModel.CategoryValues, ViewModel.SelectedCategories);
+        FilterFlyouts.ShowMultiSelect((FrameworkElement)sender, ViewModel.CategoryValues, ViewModel.SelectedCategories, ViewModel.FiltersChanged);
 
     private void OnBrandClick(object sender, RoutedEventArgs e) =>
-        ShowMultiSelect((FrameworkElement)sender, ViewModel.BrandValues, ViewModel.SelectedBrands);
+        FilterFlyouts.ShowMultiSelect((FrameworkElement)sender, ViewModel.BrandValues, ViewModel.SelectedBrands, ViewModel.FiltersChanged);
 
     private void OnSortClick(object sender, RoutedEventArgs e) =>
-        ShowOptions((FrameworkElement)sender, ViewModel.SortOptions, ViewModel.SelectedSort, ViewModel.SelectSort);
+        FilterFlyouts.ShowOptions((FrameworkElement)sender, ViewModel.SortOptions, ViewModel.SelectedSort, ViewModel.SelectSort);
 
     private void OnRowDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
@@ -109,35 +109,4 @@ public sealed partial class InventoryPage : Page
 
     /// <summary>Lazy load: adds the next batch of rows while the end of the table is near, or the rows do not fill the view yet.</summary>
     private void LoadMoreIfNeeded() => TableLazyLoad.LoadMoreIfNeeded(TableScroll, () => ViewModel.HasMore, ViewModel.LoadMore);
-
-    /// <summary>Shows a menu of choices under <paramref name="anchor"/>, with the current one ticked.</summary>
-    /// <summary>Opens a multi-select dropdown right below <paramref name="anchor"/>, as wide as the anchor, with a search field and a scrolling checkbox list.</summary>
-    private void ShowMultiSelect(FrameworkElement anchor, IReadOnlyList<string> values, ISet<string> selected)
-    {
-        var flyout = new Flyout
-        {
-            Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.BottomEdgeAlignedLeft,
-            FlyoutPresenterStyle = (Style)Application.Current.Resources["EqDropdownFlyoutPresenterStyle"],
-            Content = new Controls.MultiSelectList(values, selected, ViewModel.FiltersChanged) { Width = Math.Max(anchor.ActualWidth, 220) - 16 },
-        };
-        flyout.ShowAt(anchor);
-    }
-
-    private static void ShowOptions(FrameworkElement anchor, IReadOnlyList<FilterOption> options, string? selected, Action<string?> choose)
-    {
-        var menu = new MenuFlyout
-        {
-            Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.BottomEdgeAlignedLeft,
-            MenuFlyoutPresenterStyle = (Style)Application.Current.Resources["EqMenuFlyoutPresenterStyle"],
-        };
-        foreach (var option in options)
-        {
-            var item = new ToggleMenuFlyoutItem { Text = option.Label, IsChecked = option.Value == selected };
-            var value = option.Value;
-            item.Click += (_, _) => choose(value);
-            menu.Items.Add(item);
-        }
-
-        menu.ShowAt(anchor);
-    }
 }

@@ -170,6 +170,18 @@ F1 to F4 and [[settings]] share one frame so staff learn one pattern.
 - Recalculate viewport-bound dimensions when the popup resizes. Put scrolling on the content that can grow (such as a long list), not on fixed headers, footers, or compact sections.
 - Preserve the intended sizing of sibling sections when changing one section. A change to a card's content should not make another card overflow or acquire unnecessary blank space.
 
+## Filter bar
+
+The toolbar card above a list table (Inventory is the reference; Sales follows it). One order on every list page: sort | date filter (if the data has dates) and filters | search | Clear all.
+
+- Card: `EqCardStyle`, 12 x 10 padding, 8 px column spacing; thin 1 px dividers (24 px high) separate the groups.
+- Sort: `EqFilterButtonStyle` button (172 px, icon, current option, chevron) that opens a single-choice menu, plus a 40 px direction toggle. `Controls/FilterFlyouts.ShowOptions`.
+- Filters: `EqFilterButtonStyle` buttons (176 px) showing "All ...", the single ticked value, or "N selected". They open the checkbox dropdown with search (`Controls/FilterFlyouts.ShowMultiSelect`). Filters are sets: empty means no restriction, several ticks match any.
+- Date filter: same button style, showing the range; its flyout holds the From and To pickers.
+- Search: bordered box (`EqBgBrush`, 36 px, `EqRadiusMd`) taking the remaining width.
+- Clear all: `EqLinkButtonStyle`, visible only when something is filtered or searched; it keeps the sort.
+- Sorting runs over the whole filtered list before rows load on scroll.
+
 ## Detail pop-up pattern
 
 The standard way to show the details of one table row. Used by [[inventory]] (product) and [[sales]] (sale). Not the F1 to F4 pop-ups: those are framed, dimmed and modal (see Pop-up pattern above).

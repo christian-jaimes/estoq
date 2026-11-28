@@ -163,6 +163,14 @@
     </Setter>
   </Style>
 
+  <!-- Filter and sort buttons: secondary button, left text that trims, chevron at the end. -->
+  <Style x:Key="EqFilterButtonStyle" TargetType="Button" BasedOn="{StaticResource EqSecondaryButtonStyle}">
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
+  </Style>
+
   <!-- Table standard (design system, Table): every table in the app shares this look. Only the cells differ.
        Header: 44 px rounded bar on the elevated surface, semibold 13 px titles. Rows: hairline divider, every second
        row banded. Set ColumnDefinitions on the header and the row content so the columns line up; the header and row

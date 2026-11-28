@@ -38,8 +38,6 @@ public static class StatusKinds
     public const string Neutral = "neutral";
 }
 
-/// <summary>One entry of a filter or sort menu. A null value means "all".</summary>
-public sealed record FilterOption(string? Value, string Label);
 
 /// <summary>One row of the product table.</summary>
 public sealed partial class InventoryRowViewModel : ObservableObject

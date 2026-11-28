@@ -91,15 +91,12 @@ public class SalesHistoryTests
     }
 
     [Fact]
-    public void MethodStaffAndStatusFiltersCombine()
+    public void MethodAndStaffFiltersCombine()
     {
-        var card = SalesHistory.Apply(Sample(), new SalesFilter(Method: PaymentMethod.Card), UserRole.Owner, "x", Today);
+        var card = SalesHistory.Apply(Sample(), new SalesFilter(Methods: [PaymentMethod.Card]), UserRole.Owner, "x", Today);
         Assert.Equal("S-000002", Receipts(card));
 
-        var voided = SalesHistory.Apply(Sample(), new SalesFilter(Status: SaleStatus.Voided), UserRole.Owner, "x", Today);
-        Assert.Equal("S-000001", Receipts(voided));
-
-        var none = SalesHistory.Apply(Sample(), new SalesFilter(Staff: "Maria P.", Status: SaleStatus.Voided), UserRole.Owner, "x", Today);
+        var none = SalesHistory.Apply(Sample(), new SalesFilter(Methods: [PaymentMethod.Card], StaffNames: ["Maria P."]), UserRole.Owner, "x", Today);
         Assert.Empty(none);
     }
 
@@ -119,6 +116,38 @@ public class SalesHistoryTests
         var summary = SalesSummary.Of([]);
         Assert.Equal(0, summary.Transactions);
         Assert.Equal(0m, summary.AverageSale);
+    }
+
+    [Fact]
+    public void MultiSelectFiltersMatchAnyTickedValue()
+    {
+        var staff = SalesHistory.Apply(Sample(), new SalesFilter(StaffNames: ["maria p.", "Luis R."]), UserRole.Owner, "x", Today);
+        Assert.Equal("S-000003,S-000001", Receipts(staff));
+
+        var methods = SalesHistory.Apply(Sample(), new SalesFilter(Methods: [PaymentMethod.Card, PaymentMethod.Cash]), UserRole.Owner, "x", Today);
+        Assert.Equal(3, methods.Count);
+
+        Assert.Equal(3, SalesHistory.Apply(Sample(), new SalesFilter(Methods: [], StaffNames: []), UserRole.Owner, "x", Today).Count);
+    }
+
+    [Fact]
+    public void SortOrdersByTheChosenColumnAndFallsBackToNewestFirst()
+    {
+        var sales = new[]
+        {
+            Sale("S-000001", new DateTime(2026, 11, 20, 9, 0, 0), "Zoe", quantity: 3, unitPrice: 5m),
+            Sale("S-000002", new DateTime(2026, 11, 22, 9, 0, 0), "Ana", quantity: 1, unitPrice: 50m),
+            Sale("S-000003", new DateTime(2026, 11, 21, 9, 0, 0), "Ana", SaleStatus.Voided, quantity: 2, unitPrice: 10m),
+        };
+
+        Assert.Equal("S-000002,S-000003,S-000001", Receipts(SalesHistory.Sort(sales, SalesSort.Date, descending: true)));
+        Assert.Equal("S-000001,S-000003,S-000002", Receipts(SalesHistory.Sort(sales, SalesSort.Date, descending: false)));
+        Assert.Equal("S-000001,S-000002,S-000003", Receipts(SalesHistory.Sort(sales, SalesSort.Receipt, descending: false)));
+        Assert.Equal("S-000002,S-000003,S-000001", Receipts(SalesHistory.Sort(sales, SalesSort.Staff, descending: false)));
+        Assert.Equal("S-000002,S-000003,S-000001", Receipts(SalesHistory.Sort(sales, SalesSort.Total, descending: true)));
+        Assert.Equal("S-000001,S-000003,S-000002", Receipts(SalesHistory.Sort(sales, SalesSort.Items, descending: true)));
+        Assert.Equal("S-000002,S-000003,S-000001", Receipts(SalesHistory.Sort(sales, SalesSort.Tax, descending: true)));
+        Assert.Equal("S-000003,S-000002,S-000001", Receipts(SalesHistory.Sort(sales, SalesSort.Status, descending: true)));
     }
 
     [Fact]
