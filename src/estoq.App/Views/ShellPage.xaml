@@ -303,7 +303,7 @@
         </Button>
       </Grid>
 
-      <Frame x:Name="ContentFrame" Grid.Row="2" Padding="0,24,0,0" />
+      <Frame x:Name="ContentFrame" Grid.Row="2" Padding="0,24,0,24" />
     </Grid>
     <!-- Pop-up host for F1 to F4: dimmed scrim over the whole window with the shared pop-up shell centred.
          Clicking the scrim, Esc or Close dismisses it. -->

@@ -366,6 +366,76 @@
   <data name="Add_DoneColTotal" xml:space="preserve"><value>Total price</value></data>
   <data name="Error_NoStock" xml:space="preserve"><value>Enter opening stock for at least one variant.</value></data>
 
+  <data name="Sales_Title" xml:space="preserve"><value>Sales</value></data>
+  <data name="Sales_Subtitle" xml:space="preserve"><value>View, search and manage your sales transactions.</value></data>
+  <data name="Sales_Export" xml:space="preserve"><value>Export</value></data>
+  <data name="Sales_PrintReport" xml:space="preserve"><value>Print report</value></data>
+  <data name="Sales_NewSale" xml:space="preserve"><value>New sale</value></data>
+  <data name="Sales_DateRange" xml:space="preserve"><value>Date range</value></data>
+  <data name="Sales_From" xml:space="preserve"><value>From</value></data>
+  <data name="Sales_To" xml:space="preserve"><value>To</value></data>
+  <data name="Sales_QuickSelect" xml:space="preserve"><value>Quick select</value></data>
+  <data name="Sales_QuickToday" xml:space="preserve"><value>Today</value></data>
+  <data name="Sales_QuickWeek" xml:space="preserve"><value>This week</value></data>
+  <data name="Sales_QuickMonth" xml:space="preserve"><value>This month</value></data>
+  <data name="Sales_QuickYear" xml:space="preserve"><value>This year</value></data>
+  <data name="Sales_Apply" xml:space="preserve"><value>Apply</value></data>
+  <data name="Sales_DateLabel" xml:space="preserve"><value>Date: {0} – {1}</value></data>
+  <data name="Sales_PreviousMonth" xml:space="preserve"><value>Previous month</value></data>
+  <data name="Sales_NextMonth" xml:space="preserve"><value>Next month</value></data>
+  <data name="Sales_AllDates" xml:space="preserve"><value>All dates</value></data>
+  <data name="Sales_KpiTotal" xml:space="preserve"><value>Total sales</value></data>
+  <data name="Sales_KpiTransactions" xml:space="preserve"><value>Transactions</value></data>
+  <data name="Sales_KpiItems" xml:space="preserve"><value>Items sold</value></data>
+  <data name="Sales_KpiAverage" xml:space="preserve"><value>Average sale</value></data>
+  <data name="Sales_SearchPlaceholder" xml:space="preserve"><value>Search in sales...</value></data>
+  <data name="Sales_SortBy" xml:space="preserve"><value>Sort by</value></data>
+  <data name="Sales_SortDate" xml:space="preserve"><value>Date &amp; time</value></data>
+  <data name="Sales_SortReceipt" xml:space="preserve"><value>Receipt number</value></data>
+  <data name="Sales_SortStaff" xml:space="preserve"><value>Staff</value></data>
+  <data name="Sales_SortTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Sales_SortItems" xml:space="preserve"><value>Items</value></data>
+  <data name="Sales_SortTax" xml:space="preserve"><value>Tax</value></data>
+  <data name="Sales_SortStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Sales_SortAscending" xml:space="preserve"><value>Ascending order</value></data>
+  <data name="Sales_SortDescending" xml:space="preserve"><value>Descending order</value></data>
+  <data name="Sales_FilterSelected" xml:space="preserve"><value>{0} selected</value></data>
+  <data name="Sales_ClearAll" xml:space="preserve"><value>Clear all</value></data>
+  <data name="Sales_AllMethods" xml:space="preserve"><value>All payment methods</value></data>
+  <data name="Sales_AllStaff" xml:space="preserve"><value>All staff</value></data>
+  <data name="Sales_ColReceipt" xml:space="preserve"><value>Receipt #</value></data>
+  <data name="Sales_ColDate" xml:space="preserve"><value>Date &amp; time</value></data>
+  <data name="Sales_ColItems" xml:space="preserve"><value>Items</value></data>
+  <data name="Sales_ColTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Sales_ColTax" xml:space="preserve"><value>Tax</value></data>
+  <data name="Sales_ColMethod" xml:space="preserve"><value>Payment method</value></data>
+  <data name="Sales_ColStaff" xml:space="preserve"><value>Staff</value></data>
+  <data name="Sales_ColStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Sales_Status_Completed" xml:space="preserve"><value>Completed</value></data>
+  <data name="Sales_Status_Returned" xml:space="preserve"><value>Returned</value></data>
+  <data name="Sales_Status_Voided" xml:space="preserve"><value>Voided</value></data>
+  <data name="Sales_RowActions" xml:space="preserve"><value>Sale actions</value></data>
+  <data name="Sales_MenuView" xml:space="preserve"><value>View</value></data>
+  <data name="Sales_MenuPrint" xml:space="preserve"><value>Print receipt</value></data>
+  <data name="Sales_MenuReturn" xml:space="preserve"><value>Return items</value></data>
+  <data name="Sales_Showing" xml:space="preserve"><value>Showing {0} of {1} sales</value></data>
+  <data name="Sales_ShowingNone" xml:space="preserve"><value>No sales to show</value></data>
+  <data name="Sales_Empty" xml:space="preserve"><value>No sales match these filters.</value></data>
+  <data name="Sales_StaffLine" xml:space="preserve"><value>Staff: {0}</value></data>
+  <data name="Sales_ItemsHeader" xml:space="preserve"><value>Items ({0})</value></data>
+  <data name="Sales_Subtotal" xml:space="preserve"><value>Subtotal</value></data>
+  <data name="Sales_Discount" xml:space="preserve"><value>Discount</value></data>
+  <data name="Sales_TaxLabel" xml:space="preserve"><value>Tax ({0}%)</value></data>
+  <data name="Sales_Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Sales_Payments" xml:space="preserve"><value>Payments</value></data>
+  <data name="Sales_PaymentRate" xml:space="preserve"><value>Rate: 1 {0} = {1} {2}</value></data>
+  <data name="Sales_PrintReceiptF8" xml:space="preserve"><value>Print receipt (F8)</value></data>
+  <data name="Sales_MoreActions" xml:space="preserve"><value>More actions</value></data>
+  <data name="Sales_ReceiptTitle" xml:space="preserve"><value>Receipt {0}</value></data>
+  <data name="Sales_ReportTitle" xml:space="preserve"><value>Sales report</value></data>
+  <data name="Sales_ExportFileName" xml:space="preserve"><value>sales</value></data>
+  <data name="Sales_Exported" xml:space="preserve"><value>Exported {0} sales to {1}.</value></data>
+  <data name="Sales_PrintUnavailable" xml:space="preserve"><value>Printing is not available on this computer.</value></data>
   <!-- Inventory page -->
   <data name="Inventory_Subtitle" xml:space="preserve"><value>Manage your products, variants and stock levels.</value></data>
   <data name="Inventory_Export" xml:space="preserve"><value>Export</value></data>

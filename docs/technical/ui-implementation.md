@@ -4,6 +4,7 @@ The visual spec is `Design system/` (brand book, `tokens.json`, `tokens.css`, co
 
 ## Rules for every screen
 
+- Page spacing belongs to the shell, not the pages: `ShellPage` `ContentFrame` pads 24 px top and bottom, and its column ends 24 px from the right edge, so every page ends level with the sidebar. Pages never add their own outer bottom or right margin.
 - Components read tokens only; no hard-coded colours. The scrim and white-on-danger are the only fixed colours.
 - Gold for one or two moments per screen; one gold primary button per view.
 - Status is never colour alone: badges carry text.
@@ -86,6 +87,7 @@ Every table uses the shared styles in `Themes/Styles.xaml`, so tables look and f
 
 - Header: `EqTableHeaderStyle` on a `Grid` (44 px, rounded `EqRadiusMd`, elevated surface, 12 px start and 8 px end padding) with `EqTableHeaderTextStyle` titles (semibold 13 px). Numeric columns right-align, short count columns may centre.
 - Rows: a `Grid` with `EqTableRowStyle` (1 px divider) holding an `EqTableBandStyle` border first, visible on every second row (`IsAlternateRow` on the row view model), then the cell grid with the same column widths and 12 px start and 8 px end padding as the header.
+- Header and footer bars share the same height (44 px): `EqTableHeaderStyle` and `EqTableFooterStyle` in `Themes/Styles.xaml`. Footer content (the standard 36 px Export button included) is vertically centred inside it.
 - Cell text: `EqTableCellStyle`, and `EqTableCellStrongStyle` for right-aligned values. No outer border around the table.
 - Used by: POS cart and payments, Add product variants, Product added.
 
@@ -98,7 +100,8 @@ A page table that sits in a card (Inventory is the reference, `Views/InventoryPa
 - Header: `EqTableHeaderStyle` with `Padding="20,0,20,0"` and `CornerRadius="12,12,0,0"` (top corners match the card, bottom square), so the band spans the full card width.
 - Rows: `EqTableRowStyle` / `EqTableBandStyle` as above, but the cell grid uses `Padding="20,8,20,8"`, so text keeps a 20 px inset at both ends while banding, hover and selection tints reach both card edges. Use the same column widths as the header.
 - Row hover: a `HoverFill` border (`EqHoverFillBrush`, `Opacity` 0, `OpacityTransition` 100 ms) placed after the band and before the selection tint; pointer enter and exit set its opacity to 1 and 0. The selected row uses `EqGoldTintBrush` on top.
-- Footer: a `Grid` with `Padding="20,12"` and a 1 px top border (`EqBorderBrush`), holding the row count on the left and page-level actions (Export) on the right. No pagination: rows load in batches when the user scrolls near the end, and the footer says "Showing X of Y".
+- Footer: a `Grid` with `EqTableFooterStyle` (44 px high, the same as the header; 20 px side inset; 1 px top border), holding the row count on the left and page-level actions (Export) on the right. No pagination: rows load in batches when the user scrolls near the end, and the footer says "Showing X of Y".
+- Shared code: `Controls/TableRowHover` (hover fill) and `Controls/TableLazyLoad` (load on scroll); tabs use `EqTabStyle`. Used by Inventory and Sales.
 - Scrolling: only the rows scroll (`ScrollViewer` between header and footer); the header and footer stay put.
 - Tables inside narrow pop-ups or side panels (the Inventory detail panel) keep the inset layout above, not full bleed.
 
@@ -166,6 +169,35 @@ F1 to F4 and [[settings]] share one frame so staff learn one pattern.
 - Each section fills only its assigned container. Use `VerticalAlignment="Stretch"` where it should occupy the row and constrained grid columns with `MinWidth="0"` to prevent child controls or long text from forcing overflow.
 - Recalculate viewport-bound dimensions when the popup resizes. Put scrolling on the content that can grow (such as a long list), not on fixed headers, footers, or compact sections.
 - Preserve the intended sizing of sibling sections when changing one section. A change to a card's content should not make another card overflow or acquire unnecessary blank space.
+
+## Filter bar
+
+The toolbar card above a list table (Inventory is the reference; Sales follows it). One order on every list page: sort | date filter (if the data has dates) and filters | search | Clear all.
+
+- Card: `EqCardStyle`, 12 x 10 padding, 8 px column spacing; thin 1 px dividers (24 px high) separate the groups.
+- Sort: `EqFilterButtonStyle` button (172 px, icon, current option, chevron) that opens a single-choice menu, plus a 40 px direction toggle. `Controls/FilterFlyouts.ShowOptions`.
+- Filters: `EqFilterButtonStyle` buttons (176 px) showing "All ...", the single ticked value, or "N selected". They open the checkbox dropdown with search (`Controls/FilterFlyouts.ShowMultiSelect`). Filters are sets: empty means no restriction, several ticks match any.
+- Date filter: the button shows "All dates" or "Date: first – last"; while a range is active it gets a gold outline and gold text. It opens `Controls/DateRangePicker` in a flyout (`EqDateRangeFlyoutStyle`): a "Quick select" list on the left (Today, This week, This month, This year; the one matching the draft range is tinted gold), then From and To fields (typed dates are validated, an invalid one restores the last valid value and shakes), two month calendars (Monday first, arrows at the outer top corners, neighbouring-month days dimmed) with the range as a `EqGoldTintBrush` band and solid `EqGoldBrush` start and end days, and a footer with Cancel and Apply. Clicking a day sets From, then To; a click before From restarts. A quick-select shortcut applies at once and closes the flyout; a range typed or picked on the calendars is applied only by Apply, and Cancel, Esc and a click outside discard it. The flyout uses `EqDateRangeFlyoutStyle` (radius-lg elevated surface, no padding, no width or height cap, scrolling disabled) and shows all its content at about 840 px wide; when the window leaves less than that from the button's left edge, the picker shows one month (with both arrows, about 580 px wide) instead of clipping. The range model and the shortcuts are `Estoq.Core.Sales.DateRange` / `QuickRange` (pure, tested); the control is reusable by any page with a date filter. There is no "all dates" shortcut: Clear all resets the date.
+- Search: bordered box (`EqBgBrush`, 36 px, `EqRadiusMd`) taking the remaining width.
+- Clear all: `EqLinkButtonStyle`, visible only when something is filtered or searched; it keeps the sort.
+- Sorting runs over the whole filtered list before rows load on scroll.
+
+## Detail pop-up pattern
+
+The standard way to show the details of one table row. Used by [[inventory]] (product) and [[sales]] (sale). Not the F1 to F4 pop-ups: those are framed, dimmed and modal (see Pop-up pattern above).
+
+- Use it when a list page needs a read-only look at one row without leaving the page. Use a framed pop-up when the user has to fill in or complete something.
+- Card: `EqDetailPanelStyle` (a Border on `EqCardStyle`), 460 px wide, 20 px padding, right-aligned, above the page (`Canvas.ZIndex` 2), collapsed until used. It spans the full height of the page content area, from the title row to the bottom: place it in the page's root grid with `Grid.Row="0"` and `Grid.RowSpan` over every row. No scrim, no dimming; the table stays visible and usable beside it.
+- Motion: slides in from the right and out to the right in 100 ms, cubic ease in and out, fading with it. Changing rows while it is open does not move it.
+- Open and close: a single click on a row opens it. A click on another row switches it. A click on the open row, the close button (X, top right of the header) or anywhere outside the card closes it. Clicks on buttons never count as outside clicks. Row buttons (menu) never count as row clicks.
+- The open row is highlighted with `EqGoldTintBrush` and the highlight clears on close.
+- Tables inside a detail pop-up have no header row: this is the only exception to the table standard (Tables). Rows still use the shared row, band and cell styles with fixed column widths.
+- Content is the page's own: header with title and close, then scrolling body, optional footer actions. Keep it read-only apart from action buttons.
+- Adding one to a new page:
+  1. The row view model exposes `IsSelected`; the page view model exposes `HasDetail`, `ToggleRow(row)` and a `CloseDetailCommand` that clears the selection.
+  2. In the page root grid (`Background="Transparent"`, `Tapped="OnPageTapped"`) add the card: `<Border x:Name="DetailPanel" Grid.Row="0" Grid.RowSpan="N" Style="{StaticResource EqDetailPanelStyle}">` with `<CompositeTransform x:Name="DetailTransform" />` as its `RenderTransform`.
+  3. Rows: `Tapped="OnRowTapped"` on the row grid, a gold tint border bound to `IsSelected`.
+  4. Code-behind: create `new DetailPanelController(DetailPanel, DetailTransform)` after `InitializeComponent`, call `Set(show, animate)` when `HasDetail` changes (`animate: false` on first show), and in `OnPageTapped` close when `IsClosingTap(source, this)` is true. `Controls/DetailPanelController` owns the slide and the tap rules; never copy them.
 
 ## Localisation
 
