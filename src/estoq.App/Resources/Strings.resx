@@ -195,11 +195,46 @@
   <data name="Colour_Purple" xml:space="preserve"><value>Purple</value></data>
   <data name="Colour_Brown" xml:space="preserve"><value>Brown</value></data>
   <data name="Popup_Adjust_Title" xml:space="preserve"><value>Stock adjustments</value></data>
-  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Count an item and record a reason</value></data>
+  <data name="Popup_Adjust_Subtitle" xml:space="preserve"><value>Correct stock differences and record the reason</value></data>
   <data name="Popup_Adjust_Message" xml:space="preserve"><value>Counting items and recording a reason for each change is built next (see roadmap).</value></data>
-  <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Save adjustment</value></data>
+  <data name="Popup_Adjust_Primary" xml:space="preserve"><value>Apply adjustment</value></data>
+  <data name="Adjust_Items" xml:space="preserve"><value>Stock Adjustment</value></data>
+  <data name="Adjust_ScanPlaceholder" xml:space="preserve"><value>Scan a barcode or search by name or SKU</value></data>
+  <data name="Adjust_ColProduct" xml:space="preserve"><value>Product</value></data>
+  <data name="Adjust_ColCurrent" xml:space="preserve"><value>Current stock</value></data>
+  <data name="Adjust_ColNew" xml:space="preserve"><value>New stock</value></data>
+  <data name="Adjust_ColAdjustment" xml:space="preserve"><value>Adjustment</value></data>
+  <data name="Adjust_EmptyTitle" xml:space="preserve"><value>No items yet</value></data>
+  <data name="Adjust_EmptyBody" xml:space="preserve"><value>Scan an item or search for it to start the adjustment.</value></data>
+  <data name="Adjust_Remove" xml:space="preserve"><value>Remove item</value></data>
+  <data name="Adjust_Details" xml:space="preserve"><value>Adjustment details</value></data>
+  <data name="Adjust_TypeLabel" xml:space="preserve"><value>Adjustment type</value></data>
+  <data name="Adjust_Reference" xml:space="preserve"><value>Reference</value></data>
+  <data name="Adjust_Notes" xml:space="preserve"><value>Notes</value></data>
+  <data name="Adjust_NotesPlaceholder" xml:space="preserve"><value>For example, adjusted after the physical count</value></data>
+  <data name="Adjust_Summary" xml:space="preserve"><value>Adjustment summary</value></data>
+  <data name="Adjust_Increases" xml:space="preserve"><value>Increases</value></data>
+  <data name="Adjust_Decreases" xml:space="preserve"><value>Decreases</value></data>
+  <data name="Adjust_Net" xml:space="preserve"><value>Net change</value></data>
+  <data name="Adjust_NoMatch" xml:space="preserve"><value>No item matches "{0}".</value></data>
+  <data name="Adjust_AlreadyAdded" xml:space="preserve"><value>{0} is already in the list.</value></data>
+  <data name="Adjust_NoAccessTitle" xml:space="preserve"><value>Managers and owners adjust stock</value></data>
+  <data name="Adjust_NoAccessBody" xml:space="preserve"><value>Ask a manager or the owner to correct stock for you.</value></data>
+  <data name="Adjust_Type_Recount" xml:space="preserve"><value>Recount</value></data>
+  <data name="Adjust_Type_SoldWithoutStock" xml:space="preserve"><value>Sold without stock</value></data>
+  <data name="Adjust_Type_Damaged" xml:space="preserve"><value>Damaged</value></data>
+  <data name="Adjust_Type_Lost" xml:space="preserve"><value>Lost</value></data>
+  <data name="Adjust_Reason_StockCountDifference" xml:space="preserve"><value>Stock count difference</value></data>
+  <data name="Adjust_Reason_OutOfStockSaleCorrection" xml:space="preserve"><value>Correction after an out-of-stock sale</value></data>
+  <data name="Adjust_Reason_DamagedUnsellable" xml:space="preserve"><value>Damaged, unsellable</value></data>
+  <data name="Adjust_Reason_LostOrStolen" xml:space="preserve"><value>Lost or stolen</value></data>
+  <data name="Adjust_DoneTitle" xml:space="preserve"><value>Adjustment applied</value></data>
+  <data name="Adjust_DoneColWas" xml:space="preserve"><value>Was</value></data>
+  <data name="Adjust_DoneColChange" xml:space="preserve"><value>Change</value></data>
+  <data name="Adjust_DoneColNow" xml:space="preserve"><value>Now</value></data>
+  <data name="Adjust_DoneNew" xml:space="preserve"><value>New adjustment</value></data>
   <data name="Popup_Returns_Title" xml:space="preserve"><value>Returns</value></data>
-  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Return or exchange an item</value></data>
+  <data name="Popup_Returns_Subtitle" xml:space="preserve"><value>Process a product return for a refund or an exchange.</value></data>
   <data name="Popup_Returns_Message" xml:space="preserve"><value>Customer returns is built next (see roadmap).</value></data>
   <data name="Popup_Returns_Primary" xml:space="preserve"><value>Save return</value></data>
   <data name="Popup_Settings_Title" xml:space="preserve"><value>Settings</value></data>
@@ -392,4 +427,158 @@
   <data name="Sales_CsvFileType" xml:space="preserve"><value>CSV file</value></data>
   <data name="Sales_Exported" xml:space="preserve"><value>Exported {0} sales to {1}.</value></data>
   <data name="Sales_PrintUnavailable" xml:space="preserve"><value>Printing is not available on this computer.</value></data>
+  <!-- Inventory page -->
+  <data name="Inventory_Subtitle" xml:space="preserve"><value>Manage your products, variants and stock levels.</value></data>
+  <data name="Inventory_Export" xml:space="preserve"><value>Export</value></data>
+  <data name="Inventory_AddProduct" xml:space="preserve"><value>Add product</value></data>
+  <data name="Inventory_KpiProducts" xml:space="preserve"><value>Total products</value></data>
+  <data name="Inventory_KpiVariants" xml:space="preserve"><value>Total variants</value></data>
+  <data name="Inventory_KpiInStock" xml:space="preserve"><value>In stock</value></data>
+  <data name="Inventory_KpiLow" xml:space="preserve"><value>Low stock</value></data>
+  <data name="Inventory_KpiOut" xml:space="preserve"><value>No stock</value></data>
+  <data name="Inventory_FilterCategory" xml:space="preserve"><value>Category</value></data>
+  <data name="Inventory_FilterBrand" xml:space="preserve"><value>Brand</value></data>
+  <data name="Inventory_FilterStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Inventory_SortBy" xml:space="preserve"><value>Sort by</value></data>
+  <data name="Inventory_AllCategories" xml:space="preserve"><value>All categories</value></data>
+  <data name="Inventory_AllBrands" xml:space="preserve"><value>All brands</value></data>
+  <data name="Inventory_SortName" xml:space="preserve"><value>Name</value></data>
+  <data name="Inventory_SortQuantity" xml:space="preserve"><value>Quantity</value></data>
+  <data name="Inventory_SortPrice" xml:space="preserve"><value>Price</value></data>
+  <data name="Inventory_SortUpdated" xml:space="preserve"><value>Recently updated</value></data>
+  <data name="Inventory_SortAscending" xml:space="preserve"><value>Ascending order</value></data>
+  <data name="Inventory_SortDescending" xml:space="preserve"><value>Descending order</value></data>
+  <data name="Inventory_ColProduct" xml:space="preserve"><value>Product</value></data>
+  <data name="Inventory_ColCode" xml:space="preserve"><value>Code</value></data>
+  <data name="Inventory_ColCategory" xml:space="preserve"><value>Category</value></data>
+  <data name="Inventory_ColBrand" xml:space="preserve"><value>Brand</value></data>
+  <data name="Inventory_ColVariants" xml:space="preserve"><value>Variants</value></data>
+  <data name="Inventory_ColStock" xml:space="preserve"><value>Total stock</value></data>
+  <data name="Inventory_ColStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Inventory_ColVariant" xml:space="preserve"><value>Variant</value></data>
+  <data name="Inventory_ColQty" xml:space="preserve"><value>Qty</value></data>
+  <data name="Inventory_ColPrice" xml:space="preserve"><value>Price</value></data>
+  <data name="Inventory_ColMovement" xml:space="preserve"><value>Movement</value></data>
+  <data name="Inventory_ClearFilters" xml:space="preserve"><value>Clear filters</value></data>
+  <data name="Inventory_Empty" xml:space="preserve"><value>No products in stock yet. Add one to get started.</value></data>
+  <data name="Inventory_EmptyFiltered" xml:space="preserve"><value>No products match your search or filters.</value></data>
+  <data name="Inventory_Showing" xml:space="preserve"><value>Showing {0} of {1} products</value></data>
+  <data name="Inventory_ShowingNone" xml:space="preserve"><value>No products to show</value></data>
+  <data name="Inventory_SelectProduct" xml:space="preserve"><value>Select a product to see its details.</value></data>
+  <data name="Inventory_DetailOverview" xml:space="preserve"><value>Overview</value></data>
+  <data name="Inventory_DetailStock" xml:space="preserve"><value>Stock</value></data>
+  <data name="Inventory_DetailVariants" xml:space="preserve"><value>Variants</value></data>
+  <data name="Inventory_NoColour" xml:space="preserve"><value>No colour</value></data>
+  <data name="Inventory_DetailHistory" xml:space="preserve"><value>History</value></data>
+  <data name="Inventory_DetailType" xml:space="preserve"><value>Product type</value></data>
+  <data name="Inventory_DetailSupplier" xml:space="preserve"><value>Supplier</value></data>
+  <data name="Inventory_DetailModel" xml:space="preserve"><value>Model</value></data>
+  <data name="Inventory_DetailSellingPrice" xml:space="preserve"><value>Selling price</value></data>
+  <data name="Inventory_DetailCostPrice" xml:space="preserve"><value>Cost price</value></data>
+  <data name="Inventory_DetailMargin" xml:space="preserve"><value>Estimated margin</value></data>
+  <data name="Inventory_DetailSizes" xml:space="preserve"><value>Sizes</value></data>
+  <data name="Inventory_DetailColours" xml:space="preserve"><value>Colours</value></data>
+  <data name="Inventory_DetailThreshold" xml:space="preserve"><value>Low stock threshold</value></data>
+  <data name="Inventory_Varies" xml:space="preserve"><value>Varies</value></data>
+  <data name="Inventory_OneSize" xml:space="preserve"><value>One size</value></data>
+  <data name="Inventory_StatusInStock" xml:space="preserve"><value>In stock</value></data>
+  <data name="Inventory_StatusLow" xml:space="preserve"><value>Low stock</value></data>
+  <data name="Inventory_StatusOut" xml:space="preserve"><value>No stock</value></data>
+  <data name="Inventory_Move_add" xml:space="preserve"><value>Stock added</value></data>
+  <data name="Inventory_Move_sale" xml:space="preserve"><value>Sale</value></data>
+  <data name="Inventory_Move_found" xml:space="preserve"><value>Stock found</value></data>
+  <data name="Inventory_Move_defect" xml:space="preserve"><value>Defective</value></data>
+  <data name="Inventory_Move_lost" xml:space="preserve"><value>Lost</value></data>
+  <data name="Inventory_Move_recount" xml:space="preserve"><value>Recount</value></data>
+  <data name="Inventory_Move_return" xml:space="preserve"><value>Return</value></data>
+  <data name="Inventory_ExportDone" xml:space="preserve"><value>Exported {0} products to {1}.</value></data>
+  <data name="Inventory_ExportFailed" xml:space="preserve"><value>The file could not be saved. Choose another location and try again.</value></data>
+  <data name="Ret_SaleTitle" xml:space="preserve"><value>Original sale</value></data>
+  <data name="Ret_ReceiptPlaceholder" xml:space="preserve"><value>Receipt number, for example 000120</value></data>
+  <data name="Ret_FindSale" xml:space="preserve"><value>Find sale</value></data>
+  <data name="Ret_ChangeSale" xml:space="preserve"><value>Change</value></data>
+  <data name="Ret_NoReceipt" xml:space="preserve"><value>Return without a receipt</value></data>
+  <data name="Ret_NoReceiptTitle" xml:space="preserve"><value>No receipt</value></data>
+  <data name="Ret_NoReceiptHint" xml:space="preserve"><value>Items come back at today's price and the owner is notified.</value></data>
+  <data name="Ret_UseReceipt" xml:space="preserve"><value>Use a receipt</value></data>
+  <data name="Ret_ErrNotFound" xml:space="preserve"><value>No sale found with that receipt number.</value></data>
+  <data name="Ret_ErrWindow" xml:space="preserve"><value>This sale is past the {0}-day return window.</value></data>
+  <data name="Ret_ErrNothingLeft" xml:space="preserve"><value>Everything on this sale was already returned.</value></data>
+  <data name="Ret_ErrNoItem" xml:space="preserve"><value>No item found for "{0}".</value></data>
+  <data name="Ret_ItemsTitle" xml:space="preserve"><value>Return items</value></data>
+  <data name="Ret_ItemsEmpty" xml:space="preserve"><value>Find a sale to choose the items to return.</value></data>
+  <data name="Ret_ScanPlaceholder" xml:space="preserve"><value>Scan barcode or search product...</value></data>
+  <data name="Ret_ColItem" xml:space="preserve"><value>Item</value></data>
+  <data name="Ret_ColPrice" xml:space="preserve"><value>Price</value></data>
+  <data name="Ret_ColQty" xml:space="preserve"><value>Qty</value></data>
+  <data name="Ret_ColSold" xml:space="preserve"><value>Sold</value></data>
+  <data name="Ret_QtyDecrease" xml:space="preserve"><value>Decrease quantity</value></data>
+  <data name="Ret_QtyIncrease" xml:space="preserve"><value>Increase quantity</value></data>
+  <data name="Ret_Remove" xml:space="preserve"><value>Remove</value></data>
+  <data name="Ret_ReasonTitle" xml:space="preserve"><value>Reason</value></data>
+  <data name="Ret_ReasonNone" xml:space="preserve"><value>No reason</value></data>
+  <data name="Ret_Reason_ChangeOfMind" xml:space="preserve"><value>Change of mind</value></data>
+  <data name="Ret_Reason_WrongSize" xml:space="preserve"><value>Wrong size</value></data>
+  <data name="Ret_Reason_Defective" xml:space="preserve"><value>Defective or damaged</value></data>
+  <data name="Ret_Reason_WrongItem" xml:space="preserve"><value>Wrong item</value></data>
+  <data name="Ret_Reason_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="Ret_NotePlaceholder" xml:space="preserve"><value>Add a note...</value></data>
+  <data name="Ret_TypeExchange" xml:space="preserve"><value>Exchange</value></data>
+  <data name="Ret_ExchangeTitle" xml:space="preserve"><value>Exchange items</value></data>
+  <data name="Ret_ExchangeEmpty" xml:space="preserve"><value>Scan or search the items the customer takes.</value></data>
+  <data name="Ret_RefundAmount" xml:space="preserve"><value>Refund amount</value></data>
+  <data name="Ret_BalancePays" xml:space="preserve"><value>Customer pays</value></data>
+  <data name="Ret_BalanceReceives" xml:space="preserve"><value>Customer receives</value></data>
+  <data name="Ret_BalanceEven" xml:space="preserve"><value>No difference</value></data>
+  <data name="Ret_Capped" xml:space="preserve"><value>Limited to what is left to refund on this sale.</value></data>
+  <data name="Ret_SettleIn" xml:space="preserve"><value>Settle in</value></data>
+  <data name="Ret_PrimaryRefund" xml:space="preserve"><value>Proceed with refund</value></data>
+  <data name="Ret_PrimaryExchange" xml:space="preserve"><value>Proceed with exchange</value></data>
+  <data name="Ret_DoneTitle" xml:space="preserve"><value>Return completed</value></data>
+  <data name="Ret_DoneNumber" xml:space="preserve"><value>Return {0}</value></data>
+  <data name="Ret_DoneSubtitleRefund" xml:space="preserve"><value>The items are back in stock and the refund is recorded.</value></data>
+  <data name="Ret_DoneSubtitleExchange" xml:space="preserve"><value>The items are back in stock and the exchange is recorded.</value></data>
+  <data name="Ret_DoneReturned" xml:space="preserve"><value>Returned items</value></data>
+  <data name="Ret_DoneTaken" xml:space="preserve"><value>New items</value></data>
+  <data name="Ret_DoneAnother" xml:space="preserve"><value>Process another return</value></data>
+  <data name="Ret_Returned" xml:space="preserve"><value>Returned</value></data>
+  <data name="Ret_ReturnedSome" xml:space="preserve"><value>{0} returned</value></data>
+  <data name="Ret_ItemsTitleExchange" xml:space="preserve"><value>Items to exchange</value></data>
+  <data name="Ret_ColTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Ret_Summary" xml:space="preserve"><value>Summary</value></data>
+  <data name="Ret_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Ret_ModeLabel" xml:space="preserve"><value>Mode</value></data>
+  <data name="Ret_ModeReturn" xml:space="preserve"><value>Return</value></data>
+  <data name="Ret_KpiItems" xml:space="preserve"><value>Items</value></data>
+  <data name="Ret_KpiSubtotal" xml:space="preserve"><value>Subtotal</value></data>
+  <data name="Ret_KpiCredit" xml:space="preserve"><value>Credit</value></data>
+  <data name="Ret_KpiNewItems" xml:space="preserve"><value>New items</value></data>
+  <data name="Notif_ReturnWithoutReceipt_Title" xml:space="preserve"><value>Return {0} had no receipt</value></data>
+  <data name="Notif_ReturnWithoutReceipt_Detail" xml:space="preserve"><value>Returned at today's price without a receipt. Review it.</value></data>
+  <data name="Inventory_KpiFilterHint" xml:space="preserve">
+    <value>Click to filter the table by this status. Click again to clear.</value>
+  </data>
+  <data name="Inventory_SearchPlaceholder" xml:space="preserve"><value>Search products…</value></data>
+  <data name="Inventory_ClearAll" xml:space="preserve"><value>Clear all</value></data>
+  <data name="Inventory_ExportTip" xml:space="preserve"><value>Exports the rows shown in the table to a CSV file</value></data>
+  <data name="Inventory_FilterType" xml:space="preserve"><value>Product type</value></data>
+  <data name="Inventory_AllTypes" xml:space="preserve"><value>All types</value></data>
+  <data name="Inventory_FilterSearch" xml:space="preserve"><value>Search…</value></data>
+  <data name="Inventory_FilterNoMatches" xml:space="preserve"><value>No matches</value></data>
+  <data name="Inventory_FilterSelected" xml:space="preserve"><value>{0} selected</value></data>
+  <data name="Inventory_EditProduct" xml:space="preserve"><value>Edit product</value></data>
+  <data name="Popup_Items_EditTitle" xml:space="preserve"><value>Edit product</value></data>
+  <data name="Popup_Items_EditSubtitle" xml:space="preserve"><value>Change the details and prices of this product. Variants and stock stay as they are</value></data>
+  <data name="Popup_Items_EditPrimary" xml:space="preserve"><value>Save changes</value></data>
+  <data name="Add_EditConfirmTitle" xml:space="preserve"><value>Confirm changes</value></data>
+  <data name="Add_EditConfirmSubtitle" xml:space="preserve"><value>Review what will change before it is saved</value></data>
+  <data name="Add_EditColField" xml:space="preserve"><value>Field</value></data>
+  <data name="Add_EditColBefore" xml:space="preserve"><value>Before</value></data>
+  <data name="Add_EditColAfter" xml:space="preserve"><value>After</value></data>
+  <data name="Add_EditNoChanges" xml:space="preserve"><value>Nothing has changed.</value></data>
+  <data name="Add_EditBack" xml:space="preserve"><value>Keep editing</value></data>
+  <data name="Add_EditConfirm" xml:space="preserve"><value>Confirm and save</value></data>
+  <data name="Add_EditColProduct" xml:space="preserve"><value>Product / variant</value></data>
+  <data name="Add_EditDiscard" xml:space="preserve"><value>Discard changes</value></data>
+  <data name="Add_EditDiscardTip" xml:space="preserve"><value>Throw away these changes and go back to Inventory</value></data>
 </root>

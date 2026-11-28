@@ -20,6 +20,20 @@ Entry: F2, the "Add Product" button on [[inventory]], or "Edit" on a product.
 
 Worked example: two Hugo Boss T-shirts, both black and size S, one with a blue graphic and one with a red graphic, are two products. Entering "Red graphic" again is flagged as existing.
 
+## Edit mode
+
+Opened from the Edit icon in the Inventory detail panel or by double-clicking a row there; managers and owners only. It is the same pop-up and form, loaded with the product (`AddProductViewModel.PrepareEdit`, then `IsEditing`).
+
+- Editable: product type, category, brand, model label, name, description, supplier barcode, and the cost and selling price, plus a different price for any single variant.
+- Locked: the variants. The size and colour picker is hidden, there are no stock steppers and no remove buttons; SKUs and barcodes stay. Stock changes are booked as stock adjustments ([[stock-adjustments]]); adding sizes or colours to an existing product is not part of edit mode yet.
+- The duplicate check ignores the product itself and still flags a clash with a different product.
+- The pop-up opens with every field filled in and all suggestion lists closed; they open only when the user clicks into a field or types.
+- Saving is two steps. "Save changes" opens a "Confirm changes" card over the pop-up with a table of every change: product / variant (the product name for a product field, the variant for a variant price), field, before, an arrow, after. A variant is listed only when its own price changed, not when it just follows the product price.
+- Three choices on the card: "Discard changes" (left) throws the changes away and closes the pop-up without saving; "Keep editing" closes only the card and the form stays as it was; "Confirm and save" saves, closes the pop-up and returns to Inventory with nothing open. With no changes the card says so and Confirm is disabled.
+- Inventory always starts with nothing selected (no detail panel), and the detail panel closes when the edit pop-up opens, so after saving, discarding or closing the user lands on a clean table.
+- Title "Edit product", primary button "Save changes". Saving updates the article rows (`ICatalogService.UpdateProductAsync`), closes the pop-up and the Inventory page refreshes. Not yet audit-logged (back end).
+- The Inventory table shows the product name built from brand, product type and model label, so editing the free-text name alone does not change what the table shows.
+
 ## Receiving stock
 
 Same pop-up. The duplicate check opens the existing product; added quantities are recorded as stock received movements. New products record opening balance movements.

@@ -16,6 +16,7 @@
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="*" />
           <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
           <StackPanel Orientation="Horizontal" Spacing="12">
@@ -28,7 +29,8 @@
           </StackPanel>
           <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextTrimming="CharacterEllipsis" />
         </StackPanel>
-        <Button x:Name="CloseButton" Grid.Column="1" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Top"
+        <ContentPresenter Grid.Column="1" Content="{x:Bind HeaderContent, Mode=OneWay}" VerticalAlignment="Center" />
+        <Button x:Name="CloseButton" Grid.Column="2" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Top"
                 Click="OnCloseClick" ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_CloseTip')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}">
           <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
           <Button.KeyboardAccelerators>

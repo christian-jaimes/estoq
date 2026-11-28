@@ -30,6 +30,9 @@ public sealed partial class PopupShell : UserControl
     public static readonly DependencyProperty IsPrimaryEnabledProperty =
         DependencyProperty.Register(nameof(IsPrimaryEnabled), typeof(bool), typeof(PopupShell), new PropertyMetadata(false));
 
+    public static readonly DependencyProperty HeaderContentProperty =
+        DependencyProperty.Register(nameof(HeaderContent), typeof(object), typeof(PopupShell), new PropertyMetadata(null));
+
     public static readonly DependencyProperty BodyProperty =
         DependencyProperty.Register(nameof(Body), typeof(object), typeof(PopupShell), new PropertyMetadata(null));
 
@@ -80,6 +83,13 @@ public sealed partial class PopupShell : UserControl
     }
 
     /// <summary>The flow content shown in the scrolling area.</summary>
+    /// <summary>Optional controls in the header, between the title and the close button (the Returns currency chips).</summary>
+    public object? HeaderContent
+    {
+        get => GetValue(HeaderContentProperty);
+        set => SetValue(HeaderContentProperty, value);
+    }
+
     public object? Body
     {
         get => GetValue(BodyProperty);

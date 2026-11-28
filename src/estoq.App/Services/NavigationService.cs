@@ -31,6 +31,7 @@ public sealed class NavigationService : INavigationService
         {
             AppRoute.Dashboard => typeof(DashboardPage),
             AppRoute.Sales => typeof(SalesPage),
+            AppRoute.Inventory => typeof(InventoryPage),
             _ => typeof(PlaceholderPage),
         };
 

@@ -52,3 +52,15 @@ Product-type CSV rows currently provide names and `requires_size`; sample size c
 Movement types: opening_balance, stock_received, sale, customer_return, adjustment, void_reversal. Adjustment types: recount, sold_without_stock, damaged, lost.
 
 On-hand quantity may go negative (sales are never blocked); a negative or oversold variant is flagged `needs_stock_correction` until an adjustment resolves it.
+
+## Product edits and history
+
+How the back end saves changes made in the Add product pop-up's edit mode ([[add-product]]). Decided 2026-11-28.
+
+- **Stock movements are append-only.** A movement is a fact (what, when, how many, at what cost and price). Never update or delete one. Stock changes only by adding movements (sales, returns, receiving, adjustments); editing a product never writes a movement.
+- **Product and variant edits are updates in place.** Changed details and prices are `UPDATE`s of the existing article rows of that product. Never delete and re-insert: the movements, sales lines and printed labels point at `article_id`, SKU and barcode, and those must not change. Descriptive attributes are overwritten (slowly changing dimension type 1).
+- **Prices keep their history.** The article holds the current selling and cost price. Every sales line and movement stores the price and cost at the time of the event, so past sales and reports stay correct after a price change. A price change also writes an old/new entry to the audit log (or an `article_price_history` table if a price history screen is wanted later).
+- **SKU and internal barcode never change after creation.** Editing brand, product type or model label changes the display name and grouping only; SKUs are not regenerated. Changing the product type does not change the variants' sizes.
+- **One transaction per save.** All variant updates and the audit entries of one save commit together or not at all. Use a row version (or `updated_at`) check so a stale edit cannot silently overwrite a newer one.
+- **Audit log.** One entry per changed field: product or variant, field, old value, new value, user, time. This is the same list the "Confirm changes" card shows. Edits are manager and owner only ([[roles-and-permissions]]).
+- **No deletes.** Products leave the catalogue by being archived or having their stock booked off (stock adjustment), never by deleting rows.
