@@ -21,7 +21,6 @@ public sealed record InventoryProduct(
     string Supplier,
     string ProductType,
     string ModelLabel,
-    int LowStockThreshold,
     DateTime UpdatedAt,
     IReadOnlyList<InventoryVariant> Variants,
     string Description = "",

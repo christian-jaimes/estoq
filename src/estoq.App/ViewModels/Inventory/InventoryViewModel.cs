@@ -7,6 +7,7 @@ using Estoq.App.ViewModels.AddProduct;
 using Estoq.Core.Inventory;
 using Estoq.Core.Products;
 using Estoq.Core.Roles;
+using Estoq.Core.Settings;
 
 namespace Estoq.App.ViewModels.Inventory;
 
@@ -27,6 +28,7 @@ public sealed partial class InventoryViewModel : ObservableObject
     private readonly ICsvExportService _export;
     private readonly ShellViewModel _shell;
     private readonly AddProductViewModel _addProduct;
+    private readonly IStockSettings _stockSettings;
 
     private List<InventoryProduct> _products = [];
     private List<InventoryProduct> _filtered = [];
@@ -48,7 +50,8 @@ public sealed partial class InventoryViewModel : ObservableObject
         IPopupService popups,
         ICsvExportService export,
         ShellViewModel shell,
-        AddProductViewModel addProduct)
+        AddProductViewModel addProduct,
+        IStockSettings stockSettings)
     {
         _inventory = inventory;
         _catalog = catalog;
@@ -58,6 +61,7 @@ public sealed partial class InventoryViewModel : ObservableObject
         _export = export;
         _shell = shell;
         _addProduct = addProduct;
+        _stockSettings = stockSettings;
 
         // The top bar search (Ctrl+K) filters this page while it is showing.
         _shell.PropertyChanged += (_, e) =>
@@ -513,11 +517,11 @@ public sealed partial class InventoryViewModel : ObservableObject
             // Same unit as the KPI counts: a product is listed when at least one of its variants has that status.
             var wanted = _tab switch
             {
-                InventoryTab.In => StockStatus.InStock,
-                InventoryTab.Low => StockStatus.Low,
-                _ => StockStatus.Out,
+                InventoryTab.In => StockLevel.InStock,
+                InventoryTab.Low => StockLevel.LowStock,
+                _ => StockLevel.NoStock,
             };
-            query = query.Where(p => p.Variants.Any(v => StockLevels.Classify(v.OnHand, p.LowStockThreshold) == wanted));
+            query = query.Where(p => p.Variants.Any(v => StockLevels.Classify(v.OnHand, _stockSettings.LowStockThreshold) == wanted));
         }
 
         if (search.Length > 0)
@@ -531,12 +535,12 @@ public sealed partial class InventoryViewModel : ObservableObject
     private void Apply()
     {
         var culture = _localizer.Culture;
-        var variants = _products.SelectMany(p => p.Variants.Select(v => StockLevels.Classify(v.OnHand, p.LowStockThreshold))).ToList();
+        var variants = _products.SelectMany(p => p.Variants.Select(v => StockLevels.Classify(v.OnHand, _stockSettings.LowStockThreshold))).ToList();
         TotalProductsText = _products.Count.ToString("N0", culture);
         TotalVariantsText = variants.Count.ToString("N0", culture);
-        InStockText = variants.Count(s => s == StockStatus.InStock).ToString("N0", culture);
-        LowStockText = variants.Count(s => s == StockStatus.Low).ToString("N0", culture);
-        OutOfStockText = variants.Count(s => s == StockStatus.Out).ToString("N0", culture);
+        InStockText = variants.Count(s => s == StockLevel.InStock).ToString("N0", culture);
+        LowStockText = variants.Count(s => s == StockLevel.LowStock).ToString("N0", culture);
+        OutOfStockText = variants.Count(s => s == StockLevel.NoStock).ToString("N0", culture);
 
         var search = _active ? ProductNaming.Key(_shell.SearchText) : string.Empty;
         var query = Filter(skipCategory: false, skipType: false, skipBrand: false);
@@ -669,7 +673,7 @@ public sealed partial class InventoryViewModel : ObservableObject
         }
 
         overview.Add(new DetailLine(_localizer["Inventory_ColStock"], total.ToString("N0", culture), false));
-        overview.Add(new DetailLine(_localizer["Inventory_DetailThreshold"], product.LowStockThreshold.ToString("N0", culture), false));
+        overview.Add(new DetailLine(_localizer["Inventory_DetailThreshold"], _stockSettings.LowStockThreshold.ToString("N0", culture), false));
 
         var variants = product.Variants
             .OrderBy(v => v.Size, StringComparer.CurrentCultureIgnoreCase)
@@ -734,11 +738,11 @@ public sealed partial class InventoryViewModel : ObservableObject
 
     private (string Kind, string Text) StatusOf(InventoryProduct product)
     {
-        return StockLevels.ClassifyProduct(product.Variants.Select(v => v.OnHand), product.LowStockThreshold) switch
+        return StockLevels.ClassifyProduct(product.Variants.Select(v => v.OnHand), _stockSettings.LowStockThreshold) switch
         {
-            StockStatus.Out => (StatusKinds.Danger, _localizer["Inventory_StatusOut"]),
-            StockStatus.Low => (StatusKinds.Warning, _localizer["Inventory_StatusLow"]),
-            _ => (StatusKinds.Success, _localizer["Inventory_StatusActive"]),
+            StockLevel.NoStock => (StatusKinds.Danger, _localizer["Inventory_StatusOut"]),
+            StockLevel.LowStock => (StatusKinds.Warning, _localizer["Inventory_StatusLow"]),
+            _ => (StatusKinds.Success, _localizer["Inventory_StatusInStock"]),
         };
     }
 

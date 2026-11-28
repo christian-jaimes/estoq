@@ -62,6 +62,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddSingleton<IReturnsService, SampleReturnsService>();
         services.AddSingleton<PointOfSaleViewModel>();
         services.AddSingleton<ShellViewModel>();
+        services.AddSingleton<IStockSettings, SampleStockSettings>();
         services.AddSingleton<IInventoryService, SampleInventoryService>();
         services.AddSingleton<ICsvExportService, CsvExportService>();
         services.AddSingleton<InventoryViewModel>();

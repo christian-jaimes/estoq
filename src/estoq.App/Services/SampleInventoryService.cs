@@ -82,7 +82,6 @@ public sealed class SampleInventoryService : IInventoryService
                 suppliers.GetValueOrDefault(brand) ?? string.Empty,
                 type,
                 model,
-                StockLevels.DefaultLowStockThreshold,
                 updated,
                 variants,
                 SampleCsv.Get(first, "article_description"),

@@ -5,8 +5,8 @@ Visual reference: `6 - inventory mock up.png`. Page. See what is in stock and op
 ## Layout
 
 - Title "Inventory", subtitle; actions: Import (hidden until a CSV import flow is specified, [[open-questions]] Q13), "Add Product F2" (Export lives in the table footer).
-- KPI cards: total products, total variants, in stock, low stock, out of stock.
-- No tabs above the table. The KPI cards filter it: In stock, Low stock and Out of stock list the products that have at least one variant with that status (same unit as the card counts); clicking the active card again, or Total products / Total variants, shows everything. The active card gets a gold outline.
+- KPI cards: total products, total variants, in stock, low stock, no stock.
+- No tabs above the table. The KPI cards filter it: In stock, Low stock and No stock list the products that have at least one variant with that status (same unit as the card counts); clicking the active card again, or Total products / Total variants, shows everything. The active card gets a gold outline.
 - One toolbar above the table, in this order: sort (name, quantity, price, recently updated) with a direction toggle, then the product type, category and supplier / brand filters (each a multi-select dropdown that lists only values still available after the other filters, the stock card and the search (ticked values always stay listed): checkboxes, a search field on top and a fixed-height scrolling list, opened right below the button; the button shows "All ...", the single choice, or "N selected"), then a search box (shares its text with the top bar search), then Clear all (shown only while a filter or search is active).
 - Table, one row per product, full bleed in its card, columns in this order: status badge, product (initial tile, name and SKU), category, brand, variant count, total stock, price (the selling price, or lowest – highest when variants differ). Rows highlight on hover; a click opens the detail panel.
 - No pagination: rows load in batches as the table is scrolled near its end. A footer shows "Showing 25 of 248 products". Rows highlight on hover.
@@ -16,8 +16,8 @@ Visual reference: `6 - inventory mock up.png`. Page. See what is in stock and op
 
 - Search (Ctrl+K) matches name, SKU, either barcode or supplier.
 - Low and out-of-stock show a badge with text, never colour alone.
-- Low-stock threshold per product, default from settings.
-- There is no archive. Stock that leaves the shop is booked off with a stock adjustment ([[stock-adjustments]]). The detail panel shows a status only for low or out of stock.
+- Stock status has three values: **In stock**, **Low stock** and **No stock**. Per variant: nothing (or less) on hand is no stock, at or below the low stock threshold is low stock, anything above is in stock. The threshold is one store-wide number the owner sets in the store settings ([[settings]], owner only, audited, default 5 until set); it is not per product. A product shows No stock only when every variant has none, Low stock when any variant is low or has none, otherwise In stock. Every row shows its status badge. The KPI cards count variants by the same rule, and the detail panel's Overview shows the current threshold.
+- There is no archive. Stock that leaves the shop is booked off with a stock adjustment ([[stock-adjustments]]). The status badge appears on every table row and is not repeated in the detail panel.
 - Double-clicking a row opens the same edit pop-up directly (managers and owners only; cashiers have no edit icon and double-click does nothing).
 - The detail panel opens when a row is clicked, floats over the table, updates when another row is clicked and closes on a second click on the same row, a click outside or the close button.
 - Cost price, margin and stock value hidden from cashiers; editing and export are manager and owner only ([[roles-and-permissions]]).

@@ -37,7 +37,7 @@ List of currencies (the base currency chosen in the [[setup-wizard]], USD unless
 
 ## Defaults and rules (proposed)
 
-Default currency, cashier discount cap (10 %), configurable POS discount presets (initial defaults: 5 %, 10 %, 15 %, 20 %, 25 %, 30 %), inactivity timeout (default 3 minutes, 1 to 60; owner only; see [[sign-in]]), return window (with no limit), receipt behaviour, default low-stock threshold.
+Low stock threshold (owner only, whole number of units, 0 or more, default 5; one value for every product, read through `IStockSettings`; changing it is audited and the Inventory statuses and counts follow it), Default currency, cashier discount cap (10 %), configurable POS discount presets (initial defaults: 5 %, 10 %, 15 %, 20 %, 25 %, 30 %), inactivity timeout (default 3 minutes, 1 to 60; owner only; see [[sign-in]]), return window (with no limit), receipt behaviour, default low-stock threshold.
 
 ## Data (with backup)
 

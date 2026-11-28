@@ -374,7 +374,7 @@
   <data name="Inventory_KpiVariants" xml:space="preserve"><value>Total variants</value></data>
   <data name="Inventory_KpiInStock" xml:space="preserve"><value>In stock</value></data>
   <data name="Inventory_KpiLow" xml:space="preserve"><value>Low stock</value></data>
-  <data name="Inventory_KpiOut" xml:space="preserve"><value>Out of stock</value></data>
+  <data name="Inventory_KpiOut" xml:space="preserve"><value>No stock</value></data>
   <data name="Inventory_FilterCategory" xml:space="preserve"><value>Category</value></data>
   <data name="Inventory_FilterBrand" xml:space="preserve"><value>Brand</value></data>
   <data name="Inventory_FilterStatus" xml:space="preserve"><value>Status</value></data>
@@ -420,9 +420,9 @@
   <data name="Inventory_DetailThreshold" xml:space="preserve"><value>Low stock threshold</value></data>
   <data name="Inventory_Varies" xml:space="preserve"><value>Varies</value></data>
   <data name="Inventory_OneSize" xml:space="preserve"><value>One size</value></data>
-  <data name="Inventory_StatusActive" xml:space="preserve"><value>Active</value></data>
+  <data name="Inventory_StatusInStock" xml:space="preserve"><value>In stock</value></data>
   <data name="Inventory_StatusLow" xml:space="preserve"><value>Low stock</value></data>
-  <data name="Inventory_StatusOut" xml:space="preserve"><value>Out of stock</value></data>
+  <data name="Inventory_StatusOut" xml:space="preserve"><value>No stock</value></data>
   <data name="Inventory_Move_add" xml:space="preserve"><value>Stock added</value></data>
   <data name="Inventory_Move_sale" xml:space="preserve"><value>Sale</value></data>
   <data name="Inventory_Move_found" xml:space="preserve"><value>Stock found</value></data>

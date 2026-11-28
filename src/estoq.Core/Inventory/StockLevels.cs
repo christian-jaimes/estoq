@@ -1,47 +1,30 @@
+using Estoq.Core.Settings;
+
 namespace Estoq.Core.Inventory;
 
-/// <summary>How much of a variant is on hand, as the inventory page words it. Always shown as text, never colour alone.</summary>
-public enum StockStatus
-{
-    InStock,
-    Low,
-    Out,
-}
-
-/// <summary>Stock status rules (docs/features/inventory.md).</summary>
+/// <summary>
+/// Product-level stock status for the inventory page (docs/features/inventory.md). The per-variant rule and the low stock
+/// threshold live in <see cref="LowStockPolicy"/>; the threshold is one store-wide value the owner sets in the store settings.
+/// </summary>
 public static class StockLevels
 {
-    /// <summary>Used until the store settings define a default (docs/features/inventory.md: "default from settings").</summary>
-    public const int DefaultLowStockThreshold = 5;
+    /// <summary>Variant status: no stock at 0 or less, low stock at or below the threshold, otherwise in stock.</summary>
+    public static StockLevel Classify(int onHand, int lowStockThreshold) => LowStockPolicy.Classify(onHand, lowStockThreshold);
 
     /// <summary>
-    /// Nothing or less on hand is out of stock; at or below the threshold is low stock; anything above is in stock.
-    /// A negative threshold counts as zero.
+    /// The status of a product from its variants' stock: no stock only when every variant has none, low stock
+    /// when any variant is low or has none, otherwise in stock. A product without variants has no stock.
     /// </summary>
-    public static StockStatus Classify(int onHand, int lowStockThreshold)
-    {
-        if (onHand <= 0)
-        {
-            return StockStatus.Out;
-        }
-
-        return onHand <= Math.Max(0, lowStockThreshold) ? StockStatus.Low : StockStatus.InStock;
-    }
-
-    /// <summary>
-    /// The status of a product from its variants' stock: out of stock only when every variant is out, low stock
-    /// when any variant is low or out, otherwise in stock. A product without variants is out of stock.
-    /// </summary>
-    public static StockStatus ClassifyProduct(IEnumerable<int> variantOnHand, int lowStockThreshold)
+    public static StockLevel ClassifyProduct(IEnumerable<int> variantOnHand, int lowStockThreshold)
     {
         ArgumentNullException.ThrowIfNull(variantOnHand);
 
         var statuses = variantOnHand.Select(onHand => Classify(onHand, lowStockThreshold)).ToList();
-        if (statuses.Count == 0 || statuses.All(status => status == StockStatus.Out))
+        if (statuses.Count == 0 || statuses.All(status => status == StockLevel.NoStock))
         {
-            return StockStatus.Out;
+            return StockLevel.NoStock;
         }
 
-        return statuses.Any(status => status != StockStatus.InStock) ? StockStatus.Low : StockStatus.InStock;
+        return statuses.Any(status => status != StockLevel.InStock) ? StockLevel.LowStock : StockLevel.InStock;
     }
 }
