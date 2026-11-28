@@ -231,7 +231,7 @@
                 <ColumnDefinition Width="116" />
                 <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="64" />
-                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="132" />
                 <ColumnDefinition Width="36" />
               </Grid.ColumnDefinitions>
               <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Inventory_ColProduct')}" Style="{StaticResource EqTableHeaderTextStyle}" />
@@ -259,7 +259,7 @@
                             <ColumnDefinition Width="116" />
                             <ColumnDefinition Width="80" />
                             <ColumnDefinition Width="64" />
-                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="132" />
                             <ColumnDefinition Width="36" />
                           </Grid.ColumnDefinitions>
 
@@ -454,7 +454,7 @@
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="*" />
                       <ColumnDefinition Width="48" />
-                      <ColumnDefinition Width="118" />
+                      <ColumnDefinition Width="132" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Inventory_ColVariant')}" Style="{StaticResource EqTableHeaderTextStyle}" />
                     <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Inventory_ColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
@@ -469,7 +469,7 @@
                             <Grid.ColumnDefinitions>
                               <ColumnDefinition Width="*" />
                               <ColumnDefinition Width="48" />
-                              <ColumnDefinition Width="118" />
+                              <ColumnDefinition Width="132" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="1">
                               <TextBlock Text="{x:Bind Title}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
