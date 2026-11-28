@@ -1,0 +1,164 @@
+<UserControl
+    x:Class="Estoq.App.Views.Settings.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Estoq.App.Controls"
+    xmlns:services="using:Estoq.App.Services"
+    xmlns:vm="using:Estoq.App.ViewModels.Settings"
+    xmlns:local="using:Estoq.App.Views.Settings">
+
+  <UserControl.Resources>
+    <!-- Section entry: transparent until hover; the selected one gets the gold tint behind it (mockups 9 to 11). -->
+    <Style x:Key="SettingsNavButtonStyle" TargetType="Button">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+      <Setter Property="Padding" Value="12,10" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="{StaticResource EqRadiusMd}" />
+      <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+      <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
+      <Setter Property="FocusVisualPrimaryThickness" Value="2" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Grid x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+              <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                  <VisualState x:Name="Normal" />
+                  <VisualState x:Name="PointerOver">
+                    <VisualState.Setters>
+                      <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                    </VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Pressed">
+                    <VisualState.Setters>
+                      <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                    </VisualState.Setters>
+                  </VisualState>
+                </VisualStateGroup>
+              </VisualStateManager.VisualStateGroups>
+              <ContentPresenter Padding="{TemplateBinding Padding}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="Center" />
+            </Grid>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+
+  <Grid x:Name="SettingsRoot" ColumnSpacing="16" Padding="0,0,0,2" Loaded="OnSettingsLoaded">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="300" />
+      <ColumnDefinition Width="*" MinWidth="0" />
+    </Grid.ColumnDefinitions>
+
+    <!-- Left: sections the signed-in role may open. -->
+    <Border Grid.Column="0" Style="{StaticResource EqCardStyle}" Padding="12" VerticalAlignment="Stretch">
+      <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ItemsRepeater ItemsSource="{x:Bind ViewModel.VisibleSections}">
+          <ItemsRepeater.Layout>
+            <StackLayout Spacing="4" />
+          </ItemsRepeater.Layout>
+          <ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="vm:SettingsSectionItemViewModel">
+              <Grid>
+                <Border Background="{ThemeResource EqGoldTintBrush}" BorderBrush="{ThemeResource EqGoldBrush}" BorderThickness="1"
+                        CornerRadius="{StaticResource EqRadiusMd}" Visibility="{x:Bind IsSelected, Mode=OneWay}" />
+                <Button Style="{StaticResource SettingsNavButtonStyle}" Tag="{x:Bind Section}" Click="OnSectionClick"
+                        AutomationProperties.Name="{x:Bind Title, Mode=OneWay}">
+                  <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="*" MinWidth="0" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Glyph="{x:Bind Glyph}" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}"
+                              Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                      <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontFamily="{StaticResource EqUiFontSemiBold}"
+                                 FontSize="{StaticResource EqFontMd}" Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" Style="{StaticResource EqCaptionStyle}" TextWrapping="Wrap" MaxLines="2" />
+                    </StackPanel>
+                  </Grid>
+                </Button>
+              </Grid>
+            </DataTemplate>
+          </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+      </ScrollViewer>
+    </Border>
+
+    <!-- Right: heading, the selected section, and the change history (owner and manager). -->
+    <Border Grid.Column="1" Style="{StaticResource EqCardStyle}" Padding="0">
+      <Grid RowDefinitions="Auto,*,Auto">
+        <StackPanel Grid.Row="0" Padding="24,20,24,12">
+          <TextBlock Text="{x:Bind ViewModel.SectionTitle, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" FontSize="{StaticResource EqFont2xl}" />
+          <TextBlock Text="{x:Bind ViewModel.SectionDescription, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="24,4,24,20">
+          <Grid>
+            <local:AccountSection Visibility="{x:Bind ViewModel.IsAccount, Mode=OneWay}" />
+            <local:StoreSection Visibility="{x:Bind ViewModel.IsStore, Mode=OneWay}" />
+            <local:StaffSection Visibility="{x:Bind ViewModel.IsStaff, Mode=OneWay}" />
+            <local:RatesSection Visibility="{x:Bind ViewModel.IsRates, Mode=OneWay}" />
+          </Grid>
+        </ScrollViewer>
+
+        <!-- History: every saved change with old value, new value, who and when. -->
+        <Grid Grid.Row="2" Visibility="{x:Bind ViewModel.CanShowHistory, Mode=OneWay}">
+          <Rectangle Height="1" VerticalAlignment="Top" Fill="{ThemeResource EqBorderBrush}" />
+          <StackPanel Padding="24,8,24,12" Spacing="8">
+            <HyperlinkButton Style="{StaticResource EqLinkButtonStyle}" Command="{x:Bind ViewModel.ToggleHistoryCommand}"
+                             Content="{x:Bind services:Loc.Get('Settings_History')}" />
+            <Grid Visibility="{x:Bind ViewModel.IsHistoryOpen, Mode=OneWay}" MaxHeight="220" RowDefinitions="Auto,*">
+              <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="140" />
+                  <ColumnDefinition Width="*" MinWidth="100" />
+                  <ColumnDefinition Width="*" MinWidth="80" />
+                  <ColumnDefinition Width="*" MinWidth="80" />
+                  <ColumnDefinition Width="120" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Settings_HistoryWhen')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Settings_HistoryField')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Settings_HistoryOld')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Settings_HistoryNew')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Settings_HistoryBy')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+              </Grid>
+              <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <Grid>
+                  <TextBlock Text="{x:Bind services:Loc.Get('Settings_HistoryEmpty')}" Style="{StaticResource EqSecondaryStyle}" Margin="12,12"
+                             Visibility="{x:Bind ViewModel.HasNoHistoryRows, Mode=OneWay}" />
+                  <ItemsRepeater ItemsSource="{x:Bind ViewModel.HistoryRows}">
+                    <ItemsRepeater.ItemTemplate>
+                      <DataTemplate x:DataType="vm:HistoryRowViewModel">
+                        <Grid Style="{StaticResource EqTableRowStyle}">
+                          <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind IsAlternateRow}" />
+                          <Grid MinHeight="40" Padding="12,6,8,6" ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="140" />
+                              <ColumnDefinition Width="*" MinWidth="100" />
+                              <ColumnDefinition Width="*" MinWidth="80" />
+                              <ColumnDefinition Width="*" MinWidth="80" />
+                              <ColumnDefinition Width="120" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Bind When}" Style="{StaticResource EqTableCellStyle}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind Field}" Style="{StaticResource EqTableCellStyle}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                            <TextBlock Grid.Column="2" Text="{x:Bind OldValue}" Style="{StaticResource EqTableCellStyle}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                            <TextBlock Grid.Column="3" Text="{x:Bind NewValue}" Style="{StaticResource EqTableCellStyle}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                            <TextBlock Grid.Column="4" Text="{x:Bind By}" Style="{StaticResource EqTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                          </Grid>
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                  </ItemsRepeater>
+                </Grid>
+              </ScrollViewer>
+            </Grid>
+          </StackPanel>
+        </Grid>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

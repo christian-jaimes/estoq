@@ -7,6 +7,7 @@
     xmlns:services="using:Estoq.App.Services"
     xmlns:addproduct="using:Estoq.App.Views.AddProduct"
     xmlns:returns="using:Estoq.App.Views.Returns"
+    xmlns:settings="using:Estoq.App.Views.Settings"
     xmlns:pos="using:Estoq.App.Views.PointOfSale"
     xmlns:addvm="using:Estoq.App.ViewModels.AddProduct"
     xmlns:adjust="using:Estoq.App.Views.StockAdjustments"
@@ -334,27 +335,8 @@
           <!-- F3: the Stock adjustments form. -->
           <adjust:StockAdjustmentView Visibility="{x:Bind PopupState.IsStockAdjustment, Mode=OneWay}" />
 
-          <!-- Account settings: end the session. Same action as F12. -->
-          <Border Style="{StaticResource EqCardStyle}" Visibility="{x:Bind PopupState.IsSettings, Mode=OneWay}">
-            <Grid ColumnSpacing="16">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
-                <TextBlock Text="{x:Bind services:Loc.Get('Account_SessionTitle')}" Style="{StaticResource EqLabelStyle}"
-                           Foreground="{ThemeResource EqTextBrush}" />
-                <TextBlock Text="{x:Bind services:Loc.Get('Account_LogOutHint')}" Style="{StaticResource EqSecondaryStyle}" />
-              </StackPanel>
-              <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" VerticalAlignment="Center"
-                      Command="{x:Bind PopupState.LogOutCommand}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                  <FontIcon Glyph="&#xE9BA;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
-                  <TextBlock Text="{x:Bind services:Loc.Get('Account_LogOut')}" />
-                </StackPanel>
-              </Button>
-            </Grid>
-          </Border>
+          <!-- Settings: Account, Store, Staff and Exchange rates. -->
+          <settings:SettingsView Visibility="{x:Bind PopupState.IsSettings, Mode=OneWay}" />
         </StackPanel>
       </controls:PopupShell>
 

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Estoq.App.Services;
 using Estoq.App.ViewModels.AddProduct;
 using Estoq.App.ViewModels.Returns;
+using Estoq.App.ViewModels.Settings;
 using Estoq.App.ViewModels.StockAdjustments;
 
 namespace Estoq.App.ViewModels;
@@ -19,10 +20,11 @@ public sealed partial class PopupViewModel : ObservableObject
     private readonly AddProductViewModel _addProduct;
     private readonly ReturnsViewModel _returns;
     private readonly StockAdjustmentViewModel _adjustment;
+    private readonly SettingsViewModel _settingsForm;
     private PopupKind? _shown;
     private Microsoft.UI.Dispatching.DispatcherQueueTimer? _hintTimer;
 
-    public PopupViewModel(IPopupService popups, ILocalizer localizer, ISessionService session, AddProductViewModel addProduct, ReturnsViewModel returns, StockAdjustmentViewModel adjustment)
+    public PopupViewModel(IPopupService popups, ILocalizer localizer, ISessionService session, AddProductViewModel addProduct, ReturnsViewModel returns, StockAdjustmentViewModel adjustment, SettingsViewModel settings)
     {
         _popups = popups;
         _localizer = localizer;
@@ -30,6 +32,7 @@ public sealed partial class PopupViewModel : ObservableObject
         _addProduct = addProduct;
         _returns = returns;
         _adjustment = adjustment;
+        _settingsForm = settings;
         _popups.Changed += (_, _) => Refresh();
         _localizer.LanguageChanged += (_, _) => Refresh();
 
@@ -78,6 +81,16 @@ public sealed partial class PopupViewModel : ObservableObject
             }
         };
         _adjustment.CloseRequested += (_, _) => _popups.Close();
+
+        // Settings: Save changes is on only while Account or Store has unsaved edits; a successful save closes the pop-up.
+        _settingsForm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(SettingsViewModel.CanSave) && _popups.Current == PopupKind.Settings)
+            {
+                IsPrimaryEnabled = _settingsForm.CanSave;
+            }
+        };
+        _settingsForm.CloseRequested += (_, _) => _popups.Close();
     }
 
     /// <summary>The Add product form; the shell binds its "Product added" confirmation over the whole pop-up.</summary>
@@ -124,7 +137,7 @@ public sealed partial class PopupViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsPrimaryEnabled { get; set; }
 
-    /// <summary>True for Settings: its body offers Log out.</summary>
+    /// <summary>True for Settings: the body shows the Settings sections.</summary>
     [ObservableProperty]
     public partial bool IsSettings { get; set; }
 
@@ -164,6 +177,10 @@ public sealed partial class PopupViewModel : ObservableObject
         else if (_popups.Current == PopupKind.StockAdjustments)
         {
             _adjustment.ApplyCommand.Execute(null);
+        }
+        else if (_popups.Current == PopupKind.Settings)
+        {
+            _settingsForm.SaveCommand.Execute(null);
         }
     }
 
@@ -269,7 +286,7 @@ public sealed partial class PopupViewModel : ObservableObject
         IsAddProduct = kind == PopupKind.AddItems;
         IsReturns = kind == PopupKind.Returns;
         IsStockAdjustment = kind == PopupKind.StockAdjustments;
-        ShowMessage = !IsAddProduct && !IsStockAdjustment && !IsReturns;
+        ShowMessage = !IsAddProduct && !IsStockAdjustment && !IsReturns && !IsSettings;
 
         // A language change refreshes the text only; a fresh open starts a fresh form.
         if (kind == PopupKind.AddItems && _shown != kind)
@@ -290,6 +307,19 @@ public sealed partial class PopupViewModel : ObservableObject
         if (kind == PopupKind.StockAdjustments && _shown != kind)
         {
             _adjustment.Reset();
+        }
+
+        // Settings starts fresh on every open; a language change only refreshes its text.
+        if (kind == PopupKind.Settings)
+        {
+            if (_shown != kind)
+            {
+                _settingsForm.Reset();
+            }
+            else
+            {
+                _settingsForm.RefreshStrings();
+            }
         }
 
         if (kind == PopupKind.AddItems)
@@ -317,6 +347,7 @@ public sealed partial class PopupViewModel : ObservableObject
             PopupKind.AddItems => _addProduct.CanSave,
             PopupKind.StockAdjustments => _adjustment.CanApply,
             PopupKind.Returns => _returns.CanSave && !_returns.IsCompleted,
+            PopupKind.Settings => _settingsForm.CanSave,
             _ => false,
         };
         IsPointOfSale = kind == PopupKind.PointOfSale;

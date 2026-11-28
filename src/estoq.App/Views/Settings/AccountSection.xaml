@@ -1,0 +1,181 @@
+<UserControl
+    x:Class="Estoq.App.Views.Settings.AccountSection"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Estoq.App.Controls"
+    xmlns:services="using:Estoq.App.Services"
+    xmlns:vm="using:Estoq.App.ViewModels.Settings">
+
+  <StackPanel Spacing="20">
+    <!-- Profile photo: initials on gold until a photo is chosen. -->
+    <Grid ColumnSpacing="20">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" MinWidth="0" />
+      </Grid.ColumnDefinitions>
+      <Grid Width="88" Height="88">
+        <Ellipse Fill="{ThemeResource EqGoldBrush}" Visibility="{x:Bind ViewModel.HasNoPhoto, Mode=OneWay}" />
+        <TextBlock Text="{x:Bind ViewModel.Initials, Mode=OneWay}" FontFamily="{StaticResource EqBrandFont}" FontSize="{StaticResource EqFont3xl}"
+                   Foreground="{ThemeResource EqOnGoldBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="{x:Bind ViewModel.HasNoPhoto, Mode=OneWay}" />
+        <Ellipse Visibility="{x:Bind ViewModel.HasPhoto, Mode=OneWay}">
+          <Ellipse.Fill>
+            <ImageBrush ImageSource="{x:Bind ViewModel.PhotoPreview, Mode=OneWay}" Stretch="UniformToFill" />
+          </Ellipse.Fill>
+        </Ellipse>
+      </Grid>
+      <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+        <TextBlock Text="{x:Bind services:Loc.Get('Settings_Photo')}" Style="{StaticResource EqLabelStyle}" Foreground="{ThemeResource EqTextBrush}" />
+        <TextBlock Text="{x:Bind services:Loc.Get('Settings_PhotoHint')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
+        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
+          <Button Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.ChangePhotoCommand}" Content="{x:Bind services:Loc.Get('Settings_PhotoChange')}" />
+          <Button Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.RemovePhotoCommand}" Content="{x:Bind services:Loc.Get('Store_RemoveLogo')}"
+                  Visibility="{x:Bind ViewModel.HasPhoto, Mode=OneWay}" />
+        </StackPanel>
+        <TextBlock Text="{x:Bind ViewModel.PhotoError, Mode=OneWay}" FontSize="{StaticResource EqFontXs}" TextWrapping="Wrap" Foreground="{ThemeResource EqDangerBrush}" />
+      </StackPanel>
+    </Grid>
+
+    <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
+
+    <!-- Role (read only) and the sign-in code, masked until revealed. -->
+    <Grid ColumnSpacing="16">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" MinWidth="0" />
+        <ColumnDefinition Width="*" MinWidth="0" />
+      </Grid.ColumnDefinitions>
+      <StackPanel Spacing="6">
+        <TextBlock Text="{x:Bind services:Loc.Get('Settings_Role')}" Style="{StaticResource EqLabelStyle}" />
+        <Border Style="{StaticResource EqInputContainerStyle}" Background="{ThemeResource EqSurfaceElevatedBrush}">
+          <TextBlock Text="{x:Bind ViewModel.RoleText, Mode=OneWay}" VerticalAlignment="Center" Foreground="{ThemeResource EqTextSecondaryBrush}"
+                     FontSize="{StaticResource EqFontMd}" />
+        </Border>
+      </StackPanel>
+      <StackPanel Grid.Column="1" Spacing="6">
+        <TextBlock Text="{x:Bind services:Loc.Get('Settings_Code')}" Style="{StaticResource EqLabelStyle}" />
+        <Border Style="{StaticResource EqInputContainerStyle}" Background="{ThemeResource EqSurfaceElevatedBrush}" Padding="12,0,4,0">
+          <Grid ColumnSpacing="4">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{x:Bind ViewModel.CodeDisplay, Mode=OneWay}" VerticalAlignment="Center" FontFamily="{StaticResource EqUiFontSemiBold}"
+                       FontSize="{StaticResource EqFontMd}" Foreground="{ThemeResource EqTextSecondaryBrush}" CharacterSpacing="80" />
+            <Button Grid.Column="1" Style="{StaticResource EqPlainIconButtonStyle}" Width="28" Height="28" Command="{x:Bind ViewModel.ToggleCodeCommand}"
+                    ToolTipService.ToolTip="{x:Bind services:Loc.Get('Settings_CodeReveal')}" AutomationProperties.Name="{x:Bind services:Loc.Get('Settings_CodeReveal')}">
+              <FontIcon Glyph="&#xE8F4;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
+            </Button>
+            <HyperlinkButton Grid.Column="2" Style="{StaticResource EqLinkButtonStyle}" Command="{x:Bind ViewModel.CopyCodeCommand}"
+                             Content="{x:Bind services:Loc.Get('Settings_CodeCopy')}" />
+          </Grid>
+        </Border>
+      </StackPanel>
+    </Grid>
+
+    <!-- Name and email. The owner's email is required. -->
+    <Grid ColumnSpacing="16" MinHeight="84">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" MinWidth="0" />
+        <ColumnDefinition Width="*" MinWidth="0" />
+      </Grid.ColumnDefinitions>
+      <controls:EqField Label="{x:Bind services:Loc.Get('Settings_FullName')}" IsRequired="True" Text="{x:Bind ViewModel.Name, Mode=TwoWay}"
+                        ErrorText="{x:Bind ViewModel.NameError, Mode=OneWay}" />
+      <controls:EqField Grid.Column="1" Label="{x:Bind services:Loc.Get('Store_Email')}" IsRequired="True" Text="{x:Bind ViewModel.Email, Mode=TwoWay}"
+                        ErrorText="{x:Bind ViewModel.EmailError, Mode=OneWay}" Visibility="{x:Bind ViewModel.IsEmailRequired, Mode=OneWay}" />
+      <controls:EqField Grid.Column="1" Label="{x:Bind services:Loc.Get('Store_Email')}" IsOptional="True" Text="{x:Bind ViewModel.Email, Mode=TwoWay}"
+                        ErrorText="{x:Bind ViewModel.EmailError, Mode=OneWay}" Visibility="{x:Bind ViewModel.IsEmailOptional, Mode=OneWay}" />
+    </Grid>
+
+    <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
+
+    <!-- Password: opens a small form that applies at once. -->
+    <StackPanel Spacing="12">
+      <Grid ColumnSpacing="16">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" MinWidth="0" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Border Width="48" Height="48" CornerRadius="{StaticResource EqRadiusMd}" Background="{ThemeResource EqGoldTintBrush}">
+          <FontIcon Glyph="&#xE899;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+        </Border>
+        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+          <TextBlock Text="{x:Bind services:Loc.Get('Settings_Password')}" Style="{StaticResource EqLabelStyle}" Foreground="{ThemeResource EqTextBrush}" />
+          <TextBlock Text="{x:Bind services:Loc.Get('Settings_PasswordHint')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
+          <TextBlock Text="{x:Bind ViewModel.PasswordNotice, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqSuccessBrush}" TextWrapping="Wrap" />
+        </StackPanel>
+        <Button Grid.Column="2" Style="{StaticResource EqSecondaryButtonStyle}" VerticalAlignment="Center" Command="{x:Bind ViewModel.TogglePasswordCommand}"
+                Content="{x:Bind services:Loc.Get('Settings_PasswordChange')}" />
+      </Grid>
+      <Border Style="{StaticResource EqCardStyle}" Padding="16" Background="{ThemeResource EqSurfaceElevatedBrush}" Visibility="{x:Bind ViewModel.IsChangingPassword, Mode=OneWay}">
+        <StackPanel Spacing="12">
+          <Grid ColumnSpacing="16" MinHeight="84">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" MinWidth="0" />
+              <ColumnDefinition Width="*" MinWidth="0" />
+            </Grid.ColumnDefinitions>
+            <controls:EqField Label="{x:Bind services:Loc.Get('Settings_PasswordNew')}" IsPassword="True" Text="{x:Bind ViewModel.NewPassword, Mode=TwoWay}" />
+            <controls:EqField Grid.Column="1" Label="{x:Bind services:Loc.Get('Settings_PasswordConfirm')}" IsPassword="True" Text="{x:Bind ViewModel.ConfirmPassword, Mode=TwoWay}"
+                              ErrorText="{x:Bind ViewModel.PasswordError, Mode=OneWay}" />
+          </Grid>
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+            <Button Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.TogglePasswordCommand}" Content="{x:Bind services:Loc.Get('Settings_Cancel')}" />
+            <Button Style="{StaticResource EqPrimaryButtonStyle}" Command="{x:Bind ViewModel.SavePasswordCommand}" Content="{x:Bind services:Loc.Get('Settings_PasswordSave')}" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+
+    <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
+
+    <!-- App language and theme apply when Save changes is pressed. -->
+    <Grid ColumnSpacing="16">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" MinWidth="0" />
+        <ColumnDefinition Width="*" MinWidth="0" />
+      </Grid.ColumnDefinitions>
+      <StackPanel Spacing="6">
+        <TextBlock Text="{x:Bind services:Loc.Get('Settings_AppLanguage')}" Style="{StaticResource EqLabelStyle}" />
+        <Border Style="{StaticResource EqInputContainerStyle}" Padding="4,0">
+          <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
+                    SelectedIndex="{x:Bind ViewModel.LanguageIndex, Mode=TwoWay}" AutomationProperties.Name="{x:Bind services:Loc.Get('Settings_AppLanguage')}">
+            <ComboBoxItem Content="{x:Bind services:Loc.Get('Language_English')}" />
+            <ComboBoxItem Content="{x:Bind services:Loc.Get('Language_Spanish')}" />
+          </ComboBox>
+        </Border>
+      </StackPanel>
+      <StackPanel Grid.Column="1" Spacing="6">
+        <TextBlock Text="{x:Bind services:Loc.Get('Settings_Theme')}" Style="{StaticResource EqLabelStyle}" />
+        <Border Style="{StaticResource EqInputContainerStyle}" Padding="4,0">
+          <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
+                    SelectedIndex="{x:Bind ViewModel.ThemeIndex, Mode=TwoWay}" AutomationProperties.Name="{x:Bind services:Loc.Get('Settings_Theme')}">
+            <ComboBoxItem Content="{x:Bind services:Loc.Get('Settings_ThemeSystem')}" />
+            <ComboBoxItem Content="{x:Bind services:Loc.Get('Settings_ThemeLight')}" />
+            <ComboBoxItem Content="{x:Bind services:Loc.Get('Settings_ThemeDark')}" />
+          </ComboBox>
+        </Border>
+      </StackPanel>
+    </Grid>
+
+    <!-- Session: same action as F12. -->
+    <Border Style="{StaticResource EqCardStyle}" Padding="16" Background="{ThemeResource EqSurfaceElevatedBrush}">
+      <Grid ColumnSpacing="16">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" MinWidth="0" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel VerticalAlignment="Center" Spacing="2">
+          <TextBlock Text="{x:Bind services:Loc.Get('Account_SessionTitle')}" Style="{StaticResource EqLabelStyle}" Foreground="{ThemeResource EqTextBrush}" />
+          <TextBlock Text="{x:Bind services:Loc.Get('Account_LogOutHint')}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" />
+        </StackPanel>
+        <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" VerticalAlignment="Center" Command="{x:Bind ViewModel.LogOutCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <FontIcon Glyph="&#xE9BA;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
+            <TextBlock Text="{x:Bind services:Loc.Get('Account_LogOut')}" />
+          </StackPanel>
+        </Button>
+      </Grid>
+    </Border>
+  </StackPanel>
+</UserControl>

@@ -31,6 +31,7 @@ public sealed class SampleAccountService : IAccountService
 {
     private readonly List<Account> _accounts =
     [
+        new("Carlos Mendoza", "100200", "carlos@estoq.example", null, UserRole.Owner, AccountStatus.Active),
         new("Marta Rojas", "482913", null, null, UserRole.Manager, AccountStatus.Active),
         new("Luis Pérez", "570146", null, null, UserRole.Cashier, AccountStatus.Active),
         new("Sofía Díaz", "315208", null, null, UserRole.Cashier, AccountStatus.Inactive),

@@ -42,3 +42,14 @@ Default currency, cashier discount cap (10 %), configurable POS discount presets
 ## Data (with backup)
 
 Backup schedule and Google Drive connection, back up now, last successful backup with a stale warning, restore, app version and diagnostics. See [[backup]].
+
+## Build status (CPT13, sample data)
+
+Built: the pop-up with the section list (only the sections the role may open), Account, Store, Staff and Exchange rates, plus the History list (owner and manager, Store and Staff). Rules are in `estoq.Core/Settings` with unit tests (`SettingsTests`): section access, audit diff, store validation, staff directory (one owner, manager cannot touch the owner, unique codes), append-only exchange rate book. `ISettingsService` (sample, in memory) writes an audit entry for every saved change.
+
+- Account and Store edits wait for "Save changes"; the app language and theme apply on save. Staff and Exchange rates apply as they are made and are audited at once.
+- Store holds the owner-only automatic log out time (1 to 60 minutes, `ISecuritySettings`); it is audited as a Store change.
+- New and regenerated staff codes are shown once in a notice; the audit log stores them masked.
+- Exchange rates: a new rate starts "now" (no effective time picker yet); a currency has no rate until one is set.
+- Not built: Defaults and rules, Data (backup), real photo and logo storage, password storage, effective time picker. The sample staff list is not yet the list sign-in checks; the sample sign-in gains an owner (code 100200) so the owner view can be tested.
+- Icons reuse glyphs already in the font subset (no pencil, store or group icon yet); add them with the font instancing steps in [[ui-implementation]] if wanted.

@@ -427,4 +427,131 @@
   <data name="Ret_KpiNewItems" xml:space="preserve"><value>Artículos nuevos</value></data>
   <data name="Notif_ReturnWithoutReceipt_Title" xml:space="preserve"><value>La devolución {0} no tuvo recibo</value></data>
   <data name="Notif_ReturnWithoutReceipt_Detail" xml:space="preserve"><value>Devuelta al precio de hoy sin recibo. Revísala.</value></data>
+  <data name="Settings_Account_Title" xml:space="preserve"><value>Cuenta</value></data>
+  <data name="Settings_Account_Subtitle" xml:space="preserve"><value>Tus datos y preferencias</value></data>
+  <data name="Settings_Store_Title" xml:space="preserve"><value>Tienda</value></data>
+  <data name="Settings_Store_Subtitle" xml:space="preserve"><value>Datos, monedas e impuesto</value></data>
+  <data name="Settings_Staff_Title" xml:space="preserve"><value>Personal</value></data>
+  <data name="Settings_Staff_Subtitle" xml:space="preserve"><value>Cuentas del personal y accesos</value></data>
+  <data name="Settings_ExchangeRates_Title" xml:space="preserve"><value>Tasas de cambio</value></data>
+  <data name="Settings_ExchangeRates_Subtitle" xml:space="preserve"><value>Tasas frente a la moneda base</value></data>
+  <data name="Settings_Account_Heading" xml:space="preserve"><value>Ajustes de la cuenta</value></data>
+  <data name="Settings_Account_Description" xml:space="preserve"><value>Actualiza tus datos personales y preferencias.</value></data>
+  <data name="Settings_Store_Heading" xml:space="preserve"><value>Ajustes de la tienda</value></data>
+  <data name="Settings_Store_Description" xml:space="preserve"><value>Actualiza los datos de la tienda, las monedas y el impuesto.</value></data>
+  <data name="Settings_Staff_Heading" xml:space="preserve"><value>Personal</value></data>
+  <data name="Settings_Staff_Description" xml:space="preserve"><value>Gestiona las cuentas del personal y su acceso al sistema.</value></data>
+  <data name="Settings_ExchangeRates_Heading" xml:space="preserve"><value>Tasas de cambio</value></data>
+  <data name="Settings_ExchangeRates_Description" xml:space="preserve"><value>Mantén al día las tasas de la caja. Todos pueden actualizarlas.</value></data>
+  <data name="Settings_Photo" xml:space="preserve"><value>Foto de perfil</value></data>
+  <data name="Settings_PhotoHint" xml:space="preserve"><value>Agrega o cambia tu foto de perfil. PNG o JPG, hasta 2 MB.</value></data>
+  <data name="Settings_PhotoChange" xml:space="preserve"><value>Cambiar foto</value></data>
+  <data name="Settings_Logo" xml:space="preserve"><value>Logo de la tienda</value></data>
+  <data name="Settings_Role" xml:space="preserve"><value>Rol</value></data>
+  <data name="Settings_Code" xml:space="preserve"><value>Código de acceso</value></data>
+  <data name="Settings_CodeReveal" xml:space="preserve"><value>Mostrar u ocultar el código</value></data>
+  <data name="Settings_CodeCopy" xml:space="preserve"><value>Copiar</value></data>
+  <data name="Settings_FullName" xml:space="preserve"><value>Nombre completo</value></data>
+  <data name="Settings_Password" xml:space="preserve"><value>Contraseña</value></data>
+  <data name="Settings_PasswordHint" xml:space="preserve"><value>Cambia la contraseña de tu cuenta.</value></data>
+  <data name="Settings_PasswordChange" xml:space="preserve"><value>Cambiar contraseña</value></data>
+  <data name="Settings_PasswordNew" xml:space="preserve"><value>Nueva contraseña</value></data>
+  <data name="Settings_PasswordConfirm" xml:space="preserve"><value>Confirmar contraseña</value></data>
+  <data name="Settings_PasswordSave" xml:space="preserve"><value>Actualizar contraseña</value></data>
+  <data name="Settings_PasswordChanged" xml:space="preserve"><value>Contraseña actualizada.</value></data>
+  <data name="Settings_Cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Settings_AppLanguage" xml:space="preserve"><value>Idioma de la app</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Tema</value></data>
+  <data name="Settings_ThemeSystem" xml:space="preserve"><value>Seguir Windows</value></data>
+  <data name="Settings_ThemeLight" xml:space="preserve"><value>Claro</value></data>
+  <data name="Settings_ThemeDark" xml:space="preserve"><value>Oscuro</value></data>
+  <data name="Settings_StoreLanguageHelp" xml:space="preserve"><value>Se usa en recibos y etiquetas.</value></data>
+  <data name="Settings_BaseCurrencyHelp" xml:space="preserve"><value>Los precios se guardan en esta moneda. Cambiarla después no convierte los precios existentes.</value></data>
+  <data name="Settings_AcceptedRatesHint" xml:space="preserve"><value>Define cada tasa en Tasas de cambio. Una moneda no tiene tasa hasta que lo hagas.</value></data>
+  <data name="Settings_Timeout" xml:space="preserve"><value>Cierre de sesión automático</value></data>
+  <data name="Settings_TimeoutUnit" xml:space="preserve"><value>min</value></data>
+  <data name="Settings_TimeoutHelp" xml:space="preserve"><value>Se cierra la sesión tras estos minutos sin actividad. Solo el propietario puede cambiarlo.</value></data>
+  <data name="Settings_TimeoutInvalid" xml:space="preserve"><value>Escribe un número entero de minutos de {0} a {1}.</value></data>
+  <data name="Settings_History" xml:space="preserve"><value>Historial</value></data>
+  <data name="Settings_HistoryWhen" xml:space="preserve"><value>Cuándo</value></data>
+  <data name="Settings_HistoryField" xml:space="preserve"><value>Ajuste</value></data>
+  <data name="Settings_HistoryOld" xml:space="preserve"><value>Valor anterior</value></data>
+  <data name="Settings_HistoryNew" xml:space="preserve"><value>Valor nuevo</value></data>
+  <data name="Settings_HistoryBy" xml:space="preserve"><value>Por</value></data>
+  <data name="Settings_HistoryEmpty" xml:space="preserve"><value>Aún no hay cambios registrados.</value></data>
+  <data name="Settings_StaffSearch" xml:space="preserve"><value>Buscar personal por nombre o correo</value></data>
+  <data name="Settings_StaffStatusFilter" xml:space="preserve"><value>Filtrar por estado</value></data>
+  <data name="Settings_StaffAllStatuses" xml:space="preserve"><value>Todos los estados</value></data>
+  <data name="Settings_StaffAdd" xml:space="preserve"><value>Agregar personal</value></data>
+  <data name="Settings_StaffMember" xml:space="preserve"><value>Miembro del personal</value></data>
+  <data name="Settings_StaffStatus" xml:space="preserve"><value>Estado</value></data>
+  <data name="Settings_StaffActions" xml:space="preserve"><value>Acciones</value></data>
+  <data name="Settings_StaffEdit" xml:space="preserve"><value>Editar</value></data>
+  <data name="Settings_StaffMore" xml:space="preserve"><value>Más acciones</value></data>
+  <data name="Settings_StaffRegenerate" xml:space="preserve"><value>Regenerar código</value></data>
+  <data name="Settings_StaffDeactivate" xml:space="preserve"><value>Desactivar</value></data>
+  <data name="Settings_StaffActivate" xml:space="preserve"><value>Activar</value></data>
+  <data name="Settings_StaffEmpty" xml:space="preserve"><value>Ningún miembro coincide con tu búsqueda.</value></data>
+  <data name="Settings_StaffAddTitle" xml:space="preserve"><value>Agregar personal</value></data>
+  <data name="Settings_StaffEditTitle" xml:space="preserve"><value>Editar a {0}</value></data>
+  <data name="Settings_StaffSave" xml:space="preserve"><value>Guardar</value></data>
+  <data name="Settings_StaffCodeHintNew" xml:space="preserve"><value>Al guardar se crea un código de acceso de seis dígitos.</value></data>
+  <data name="Settings_StaffAddedNotice" xml:space="preserve"><value>Se agregó a {0}. Código de acceso: {1}. Entrégaselo ahora; no se vuelve a mostrar.</value></data>
+  <data name="Settings_StaffCodeNotice" xml:space="preserve"><value>Nuevo código de acceso de {0}: {1}. Entrégaselo ahora; no se vuelve a mostrar.</value></data>
+  <data name="Settings_StaffError_NotAllowed" xml:space="preserve"><value>No puedes cambiar esta cuenta.</value></data>
+  <data name="Settings_StaffError_OwnerIsUnique" xml:space="preserve"><value>Hay un solo propietario. Su rol no puede cambiar y nadie más puede serlo.</value></data>
+  <data name="Settings_StaffError_NameRequired" xml:space="preserve"><value>Escribe el nombre completo.</value></data>
+  <data name="Settings_StaffError_EmailInvalid" xml:space="preserve"><value>Escribe un correo válido.</value></data>
+  <data name="Settings_StaffError_CodeInUse" xml:space="preserve"><value>Ese código ya está en uso.</value></data>
+  <data name="Settings_StaffError_NotFound" xml:space="preserve"><value>Esa cuenta ya no existe.</value></data>
+  <data name="Settings_RatesUpdateTitle" xml:space="preserve"><value>Actualizar una tasa</value></data>
+  <data name="Settings_RatesNever" xml:space="preserve"><value>Una tasa nueva se agrega con la hora desde la que rige. Las anteriores quedan en el historial y nunca se sobrescriben.</value></data>
+  <data name="Settings_RatesCurrency" xml:space="preserve"><value>Moneda</value></data>
+  <data name="Settings_RatesRate" xml:space="preserve"><value>Tasa</value></data>
+  <data name="Settings_RatesUpdated" xml:space="preserve"><value>Última actualización</value></data>
+  <data name="Settings_RatesBy" xml:space="preserve"><value>Por</value></data>
+  <data name="Settings_RatesUpdate" xml:space="preserve"><value>Actualizar tasa</value></data>
+  <data name="Settings_RatesHistory" xml:space="preserve"><value>Historial</value></data>
+  <data name="Settings_RatesEffective" xml:space="preserve"><value>Vigente desde</value></data>
+  <data name="Settings_RatesNotSet" xml:space="preserve"><value>Sin definir</value></data>
+  <data name="Settings_RatesNewRate" xml:space="preserve"><value>Tasa nueva</value></data>
+  <data name="Settings_RatesNewRateFor" xml:space="preserve"><value>Tasa nueva: {0} por 1 {1}</value></data>
+  <data name="Settings_RatesPickCurrency" xml:space="preserve"><value>Elige una moneda.</value></data>
+  <data name="Settings_RatesInvalid" xml:space="preserve"><value>Escribe una tasa mayor que 0, con hasta seis decimales.</value></data>
+  <data name="Settings_RatesSaved" xml:space="preserve"><value>Guardado: 1 {2} = {1} {0}.</value></data>
+  <data name="Settings_RatesHistoryTitle" xml:space="preserve"><value>Historial de {0} por 1 {1}</value></data>
+  <data name="Status_Active" xml:space="preserve"><value>Activo</value></data>
+  <data name="Status_Inactive" xml:space="preserve"><value>Inactivo</value></data>
+  <data name="SettingsField_Name" xml:space="preserve"><value>Nombre</value></data>
+  <data name="SettingsField_Email" xml:space="preserve"><value>Correo</value></data>
+  <data name="SettingsField_Photo" xml:space="preserve"><value>Foto de perfil</value></data>
+  <data name="SettingsField_Password" xml:space="preserve"><value>Contraseña</value></data>
+  <data name="SettingsField_TaxId" xml:space="preserve"><value>Número de registro / NIF</value></data>
+  <data name="SettingsField_Address" xml:space="preserve"><value>Dirección</value></data>
+  <data name="SettingsField_City" xml:space="preserve"><value>Ciudad</value></data>
+  <data name="SettingsField_PostalCode" xml:space="preserve"><value>Código postal</value></data>
+  <data name="SettingsField_Country" xml:space="preserve"><value>País</value></data>
+  <data name="SettingsField_Phone" xml:space="preserve"><value>Teléfono</value></data>
+  <data name="SettingsField_BaseCurrency" xml:space="preserve"><value>Moneda base</value></data>
+  <data name="SettingsField_AcceptedCurrencies" xml:space="preserve"><value>Monedas que también se aceptan</value></data>
+  <data name="SettingsField_TaxRate" xml:space="preserve"><value>Tasa de impuesto (%)</value></data>
+  <data name="SettingsField_TaxMode" xml:space="preserve"><value>Precios e impuesto</value></data>
+  <data name="SettingsField_StoreLanguage" xml:space="preserve"><value>Idioma de la tienda</value></data>
+  <data name="SettingsField_Logo" xml:space="preserve"><value>Logo de la tienda</value></data>
+  <data name="SettingsField_InactivityTimeout" xml:space="preserve"><value>Cierre de sesión automático (min)</value></data>
+  <data name="SettingsField_Added" xml:space="preserve"><value>Personal agregado</value></data>
+  <data name="SettingsField_StaffName" xml:space="preserve"><value>Nombre de {0}</value></data>
+  <data name="SettingsField_StaffEmail" xml:space="preserve"><value>Correo de {0}</value></data>
+  <data name="SettingsField_StaffRole" xml:space="preserve"><value>Rol de {0}</value></data>
+  <data name="SettingsField_StaffStatus" xml:space="preserve"><value>Estado de {0}</value></data>
+  <data name="SettingsField_StaffCode" xml:space="preserve"><value>Código de acceso de {0}</value></data>
+  <data name="SettingsValue_Included" xml:space="preserve"><value>Precios con impuesto incluido</value></data>
+  <data name="SettingsValue_Excluded" xml:space="preserve"><value>Impuesto sumado al precio</value></data>
+  <data name="SettingsValue_English" xml:space="preserve"><value>Inglés</value></data>
+  <data name="SettingsValue_Spanish" xml:space="preserve"><value>Español</value></data>
+  <data name="SettingsValue_Owner" xml:space="preserve"><value>Propietario</value></data>
+  <data name="SettingsValue_Manager" xml:space="preserve"><value>Gerente</value></data>
+  <data name="SettingsValue_Cashier" xml:space="preserve"><value>Cajero</value></data>
+  <data name="SettingsValue_Active" xml:space="preserve"><value>Activo</value></data>
+  <data name="SettingsValue_Inactive" xml:space="preserve"><value>Inactivo</value></data>
 </root>
