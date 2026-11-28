@@ -29,7 +29,6 @@ public sealed partial class InventoryViewModel : ObservableObject
     private List<InventoryProduct> _filtered = [];
     private InventoryTab _tab = InventoryTab.All;
     private InventoryDetailTab _detailTab = InventoryDetailTab.Overview;
-    private InventoryStatusFilter _statusFilter = InventoryStatusFilter.Active;
     private InventorySort _sort = InventorySort.Name;
     private string? _category;
     private string? _brand;
@@ -122,10 +121,6 @@ public sealed partial class InventoryViewModel : ObservableObject
     [ObservableProperty]
     public partial bool HasDetail { get; set; }
 
-    /// <summary>Archiving and restoring are for managers and owners (docs/product/roles-and-permissions.md).</summary>
-    [ObservableProperty]
-    public partial bool CanArchive { get; set; }
-
     [ObservableProperty]
     public partial bool CanExport { get; set; }
 
@@ -140,9 +135,6 @@ public sealed partial class InventoryViewModel : ObservableObject
 
     [ObservableProperty]
     public partial string BrandLabel { get; set; } = string.Empty;
-
-    [ObservableProperty]
-    public partial string StatusLabel { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial string SortLabel { get; set; } = string.Empty;
@@ -217,13 +209,6 @@ public sealed partial class InventoryViewModel : ObservableObject
         [new FilterOption(null, _localizer["Inventory_AllBrands"]), .. _products.Select(p => p.Brand).Where(b => b.Length > 0)
             .Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(b => b, StringComparer.CurrentCultureIgnoreCase).Select(b => new FilterOption(b, b))];
 
-    public IReadOnlyList<FilterOption> StatusOptions =>
-    [
-        new FilterOption(nameof(InventoryStatusFilter.Active), _localizer["Inventory_FilterActive"]),
-        new FilterOption(nameof(InventoryStatusFilter.Archived), _localizer["Inventory_FilterArchived"]),
-        new FilterOption(nameof(InventoryStatusFilter.All), _localizer["Inventory_FilterAllStatuses"]),
-    ];
-
     public IReadOnlyList<FilterOption> SortOptions =>
     [
         new FilterOption(nameof(InventorySort.Name), _localizer["Inventory_SortName"]),
@@ -236,19 +221,9 @@ public sealed partial class InventoryViewModel : ObservableObject
 
     public string? SelectedBrand => _brand;
 
-    public string SelectedStatus => _statusFilter.ToString();
-
     public string SelectedSort => _sort.ToString();
 
     public bool SortDescending { get; private set; }
-
-    public string ArchiveText => _localizer[Detail?.IsArchived == true ? "Inventory_Restore" : "Inventory_Archive"];
-
-    public string MenuViewText => _localizer["Inventory_MenuView"];
-
-    public string MenuArchiveText => _localizer["Inventory_Archive"];
-
-    public string MenuRestoreText => _localizer["Inventory_Restore"];
 
     [RelayCommand]
     private void AddProduct() => _shell.OpenAddItemsCommand.Execute(null);
@@ -272,30 +247,11 @@ public sealed partial class InventoryViewModel : ObservableObject
     {
         _category = null;
         _brand = null;
-        _statusFilter = InventoryStatusFilter.Active;
         _tab = InventoryTab.All;
         _shell.SearchText = string.Empty;
         _page = 1;
         RaiseTabChanged();
         Apply();
-    }
-
-    [RelayCommand]
-    private void ToggleArchiveSelected()
-    {
-        if (_selectedId is null || !CanArchive)
-        {
-            return;
-        }
-
-        var product = _products.FirstOrDefault(p => p.Id == _selectedId);
-        if (product is null)
-        {
-            return;
-        }
-
-        _inventory.SetArchived(product.Id, !product.IsArchived);
-        Refresh();
     }
 
     /// <summary>Writes exactly the filtered table (every page) to a CSV file of the user's choice.</summary>
@@ -349,6 +305,31 @@ public sealed partial class InventoryViewModel : ObservableObject
         }
     }
 
+    /// <summary>Closes the floating detail panel and clears the row highlight.</summary>
+    [RelayCommand]
+    private void CloseDetail()
+    {
+        _selectedId = null;
+        foreach (var item in Rows)
+        {
+            item.IsSelected = false;
+        }
+
+        ShowDetail();
+    }
+
+    /// <summary>A click on a row: opens its panel, updates the panel from another row, or closes it when the row is already open.</summary>
+    public void ToggleRow(InventoryRowViewModel? row)
+    {
+        if (row is not null && HasDetail && _selectedId == row.Id)
+        {
+            CloseDetail();
+            return;
+        }
+
+        Select(row);
+    }
+
     public void Select(InventoryRowViewModel? row)
     {
         if (row is null)
@@ -375,13 +356,6 @@ public sealed partial class InventoryViewModel : ObservableObject
     public void SelectBrand(string? value)
     {
         _brand = value;
-        _page = 1;
-        Apply();
-    }
-
-    public void SelectStatus(string? value)
-    {
-        _statusFilter = Enum.TryParse<InventoryStatusFilter>(value, out var parsed) ? parsed : InventoryStatusFilter.Active;
         _page = 1;
         Apply();
     }
@@ -442,7 +416,6 @@ public sealed partial class InventoryViewModel : ObservableObject
 
     private void Refresh()
     {
-        CanArchive = RolePermissions.IsAllowed(_session.Role, Permission.ArchiveOrRestoreProducts);
         CanExport = RolePermissions.IsAllowed(_session.Role, Permission.ExportCsv);
         _products = _inventory.GetProducts().ToList();
         Apply();
@@ -452,21 +425,15 @@ public sealed partial class InventoryViewModel : ObservableObject
     private void Apply()
     {
         var culture = _localizer.Culture;
-        var live = _products.Where(p => !p.IsArchived).ToList();
-        var variants = live.SelectMany(p => p.Variants.Select(v => StockLevels.Classify(v.OnHand, p.LowStockThreshold))).ToList();
-        TotalProductsText = live.Count.ToString("N0", culture);
+        var variants = _products.SelectMany(p => p.Variants.Select(v => StockLevels.Classify(v.OnHand, p.LowStockThreshold))).ToList();
+        TotalProductsText = _products.Count.ToString("N0", culture);
         TotalVariantsText = variants.Count.ToString("N0", culture);
         InStockText = variants.Count(s => s == StockStatus.InStock).ToString("N0", culture);
         LowStockText = variants.Count(s => s == StockStatus.Low).ToString("N0", culture);
         OutOfStockText = variants.Count(s => s == StockStatus.Out).ToString("N0", culture);
 
         var search = _active ? ProductNaming.Key(_shell.SearchText) : string.Empty;
-        IEnumerable<InventoryProduct> query = _products.Where(p => _statusFilter switch
-        {
-            InventoryStatusFilter.Active => !p.IsArchived,
-            InventoryStatusFilter.Archived => p.IsArchived,
-            _ => true,
-        });
+        IEnumerable<InventoryProduct> query = _products;
 
         if (_category is not null)
         {
@@ -496,17 +463,16 @@ public sealed partial class InventoryViewModel : ObservableObject
 
         CategoryLabel = _category ?? _localizer["Inventory_AllCategories"];
         BrandLabel = _brand ?? _localizer["Inventory_AllBrands"];
-        StatusLabel = StatusOptions.First(o => o.Value == _statusFilter.ToString()).Label;
         SortLabel = SortOptions.First(o => o.Value == _sort.ToString()).Label;
         SortDirectionGlyph = SortDescending ? "" : "";
         SortDirectionToolTip = _localizer[SortDescending ? "Inventory_SortDescending" : "Inventory_SortAscending"];
-        HasActiveFilters = _category is not null || _brand is not null || _statusFilter != InventoryStatusFilter.Active
+        HasActiveFilters = _category is not null || _brand is not null
             || _tab != InventoryTab.All || search.Length > 0;
 
-        // Keep the selection while it is still listed; otherwise the first product is shown, like the mockup.
-        if (_selectedId is null || _filtered.All(p => p.Id != _selectedId))
+        // The panel opens only when a row is clicked. It stays while its product is still listed, and closes when not.
+        if (_selectedId is not null && _filtered.All(p => p.Id != _selectedId))
         {
-            _selectedId = _filtered.FirstOrDefault()?.Id;
+            _selectedId = null;
         }
 
         var selectedIndex = _filtered.FindIndex(p => p.Id == _selectedId);
@@ -542,7 +508,6 @@ public sealed partial class InventoryViewModel : ObservableObject
                 kind,
                 text,
                 index % 2 == 1,
-                product.IsArchived,
                 product.Id == _selectedId));
         }
 
@@ -583,16 +548,14 @@ public sealed partial class InventoryViewModel : ObservableObject
         var product = _selectedId is null ? null : _products.FirstOrDefault(p => p.Id == _selectedId);
         if (product is null)
         {
-            Detail = null;
+            // Detail keeps its last content so the panel still shows it while it slides out.
             HasDetail = false;
-            OnPropertyChanged(nameof(ArchiveText));
             return;
         }
 
         var culture = _localizer.Culture;
         var currency = _catalog.DefaultCurrencyCode;
         var showCost = RolePermissions.IsAllowed(_session.Role, Permission.SeeCostsAndMargins);
-        var (kind, statusText) = StatusOf(product);
         var total = product.Variants.Sum(v => v.OnHand);
         var sizes = product.Variants.Select(v => v.Size).Where(s => !string.IsNullOrEmpty(s)).Distinct(StringComparer.OrdinalIgnoreCase).Count();
         var colours = product.Variants.Select(v => v.Colour).Where(c => !string.IsNullOrEmpty(c)).Distinct(StringComparer.OrdinalIgnoreCase).Count();
@@ -646,7 +609,6 @@ public sealed partial class InventoryViewModel : ObservableObject
             .ThenBy(v => v.Colour, StringComparer.CurrentCultureIgnoreCase)
             .Select((v, index) =>
             {
-                var (variantKind, variantText) = StatusOfVariant(v.OnHand, product.LowStockThreshold);
                 return new VariantRowViewModel(
                     VariantTitle(v),
                     v.Sku,
@@ -654,8 +616,6 @@ public sealed partial class InventoryViewModel : ObservableObject
                     v.Barcode.Length > 0,
                     v.OnHand.ToString("N0", culture),
                     CurrencyFormat.Amount(v.SellingPrice, currency, culture),
-                    variantKind,
-                    variantText,
                     index % 2 == 1);
             })
             .ToList();
@@ -669,9 +629,8 @@ public sealed partial class InventoryViewModel : ObservableObject
                 index % 2 == 1))
             .ToList();
 
-        Detail = new ProductDetailViewModel(product.Name, product.Code, kind, statusText, product.IsArchived, overview, variants, history);
+        Detail = new ProductDetailViewModel(product.Name, product.Code, overview, Swatches(product), variants, history);
         HasDetail = true;
-        OnPropertyChanged(nameof(ArchiveText));
     }
 
     private IEnumerable<InventoryProduct> Sort(IEnumerable<InventoryProduct> products)
@@ -708,11 +667,6 @@ public sealed partial class InventoryViewModel : ObservableObject
 
     private (string Kind, string Text) StatusOf(InventoryProduct product)
     {
-        if (product.IsArchived)
-        {
-            return (StatusKinds.Neutral, _localizer["Inventory_StatusArchived"]);
-        }
-
         return StockLevels.ClassifyProduct(product.Variants.Select(v => v.OnHand), product.LowStockThreshold) switch
         {
             StockStatus.Out => (StatusKinds.Danger, _localizer["Inventory_StatusOut"]),
@@ -721,12 +675,38 @@ public sealed partial class InventoryViewModel : ObservableObject
         };
     }
 
-    private (string Kind, string Text) StatusOfVariant(int onHand, int threshold) => StockLevels.Classify(onHand, threshold) switch
+
+    /// <summary>A colour circle with the size inside for every variant, grouped by colour in size order.</summary>
+    private List<VariantSwatchViewModel> Swatches(InventoryProduct product)
     {
-        StockStatus.Out => (StatusKinds.Danger, _localizer["Inventory_StatusOut"]),
-        StockStatus.Low => (StatusKinds.Warning, _localizer["Inventory_StatusLow"]),
-        _ => (StatusKinds.Success, _localizer["Inventory_StatusInStock"]),
-    };
+        var sizeOrder = _catalog.Sizes.Select(size => size.Name).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        return product.Variants
+            .OrderBy(v => v.Colour ?? string.Empty, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(v => v.Size is null ? -1 : sizeOrder.FindIndex(name => string.Equals(name, v.Size, StringComparison.OrdinalIgnoreCase)) is var index and >= 0 ? index : int.MaxValue)
+            .ThenBy(v => v.Size, StringComparer.CurrentCultureIgnoreCase)
+            .Select(v =>
+            {
+                var hex = _catalog.Colours.FirstOrDefault(c => string.Equals(c.Key, v.Colour, StringComparison.OrdinalIgnoreCase))?.Hex ?? string.Empty;
+                var colour = v.Colour ?? _localizer["Inventory_NoColour"];
+                var size = v.Size ?? _localizer["Inventory_OneSize"];
+                return new VariantSwatchViewModel(hex, ShortSize(v.Size), SwatchInk.UseDarkText(hex), $"{colour} · {size}");
+            })
+            .ToList();
+    }
+
+    /// <summary>The size as written inside a circle: short sizes as they are, long ones such as "One Size" as initials ("OS").</summary>
+    private static string ShortSize(string? size)
+    {
+        if (string.IsNullOrWhiteSpace(size))
+        {
+            return string.Empty;
+        }
+
+        var text = size.Trim();
+        return text.Length <= 5
+            ? text
+            : string.Concat(text.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(word => char.ToUpperInvariant(word[0])));
+    }
 
     private string VariantTitle(InventoryVariant variant)
     {

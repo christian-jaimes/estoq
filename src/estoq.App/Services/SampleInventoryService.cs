@@ -6,15 +6,13 @@ namespace Estoq.App.Services;
 
 /// <summary>
 /// Inventory read from the development CSV fixtures: <c>dummy_article.csv</c> is the dimension, <c>dummy_stock_movements.csv</c>
-/// the facts. Stock on hand is the sum of a variant's movements. Archived products are remembered for the session only.
+/// the facts. Stock on hand is the sum of a variant's movements.
 /// </summary>
 public sealed class SampleInventoryService : IInventoryService
 {
     private const string ArticleFile = "dummy_article.csv";
     private const string MovementFile = "dummy_stock_movements.csv";
     private const string BrandFile = "dummy_brands.csv";
-
-    private readonly HashSet<string> _archived = new(StringComparer.Ordinal);
 
     public IReadOnlyList<InventoryProduct> GetProducts()
     {
@@ -85,7 +83,6 @@ public sealed class SampleInventoryService : IInventoryService
                 type,
                 model,
                 StockLevels.DefaultLowStockThreshold,
-                _archived.Contains(key),
                 updated,
                 variants));
         }
@@ -107,18 +104,6 @@ public sealed class SampleInventoryService : IInventoryService
             .OrderByDescending(movement => movement.CreatedAt)
             .ThenByDescending(movement => movement.MovementId, StringComparer.Ordinal)
             .ToList();
-    }
-
-    public void SetArchived(string productId, bool archived)
-    {
-        if (archived)
-        {
-            _archived.Add(productId);
-        }
-        else
-        {
-            _archived.Remove(productId);
-        }
     }
 
     private static InventoryVariant ToVariant(Dictionary<string, string> row, Dictionary<string, int> onHand)

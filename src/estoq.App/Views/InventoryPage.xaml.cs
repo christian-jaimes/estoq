@@ -1,9 +1,11 @@
+using System.ComponentModel;
 using Estoq.App.ViewModels.Inventory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace Estoq.App.Views;
@@ -19,16 +21,80 @@ public sealed partial class InventoryPage : Page
 
     public InventoryViewModel ViewModel { get; }
 
+    private Storyboard? _panelStoryboard;
+    private bool _panelShown;
+
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
+        ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        SetPanel(ViewModel.HasDetail, animate: false);
         ViewModel.Activate();
     }
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
         base.OnNavigatedFrom(e);
+        ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
         ViewModel.Deactivate();
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(InventoryViewModel.HasDetail))
+        {
+            SetPanel(ViewModel.HasDetail, animate: true);
+        }
+    }
+
+    /// <summary>Slides the detail panel in from the right, or out to the right. Changing rows while it is open does not move it.</summary>
+    private void SetPanel(bool show, bool animate)
+    {
+        if (show == _panelShown)
+        {
+            return;
+        }
+
+        _panelShown = show;
+        _panelStoryboard?.Stop();
+        var distance = DetailPanel.Width + 40;
+
+        if (!animate)
+        {
+            DetailPanel.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+            DetailTransform.TranslateX = 0;
+            DetailPanel.Opacity = 1;
+            return;
+        }
+
+        if (show)
+        {
+            DetailPanel.Visibility = Visibility.Visible;
+            DetailTransform.TranslateX = distance;
+            DetailPanel.Opacity = 0;
+        }
+
+        var duration = new Duration(TimeSpan.FromMilliseconds(100));
+        var move = new DoubleAnimation { To = show ? 0 : distance, Duration = duration, EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut } };
+        Storyboard.SetTarget(move, DetailTransform);
+        Storyboard.SetTargetProperty(move, "TranslateX");
+        var fade = new DoubleAnimation { To = show ? 1 : 0, Duration = duration, EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut } };
+        Storyboard.SetTarget(fade, DetailPanel);
+        Storyboard.SetTargetProperty(fade, "Opacity");
+
+        var storyboard = new Storyboard();
+        storyboard.Children.Add(move);
+        storyboard.Children.Add(fade);
+        storyboard.Completed += (_, _) =>
+        {
+            // Collapse only once it has left the view, so the exit is seen.
+            if (!_panelShown)
+            {
+                DetailPanel.Visibility = Visibility.Collapsed;
+            }
+        };
+        _panelStoryboard = storyboard;
+        storyboard.Begin();
     }
 
     private void OnRowTapped(object sender, TappedRoutedEventArgs e)
@@ -41,34 +107,38 @@ public sealed partial class InventoryPage : Page
 
         if (sender is FrameworkElement { DataContext: InventoryRowViewModel row })
         {
-            ViewModel.Select(row);
+            ViewModel.ToggleRow(row);
+            e.Handled = true;
         }
     }
 
-    private void OnRowMenuClick(object sender, RoutedEventArgs e)
+    /// <summary>A click anywhere that is not a row, a button or the detail panel closes the panel.</summary>
+    private void OnPageTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (sender is not FrameworkElement { DataContext: InventoryRowViewModel row } button)
+        if (!ViewModel.HasDetail || e.OriginalSource is not DependencyObject source)
         {
             return;
         }
 
-        var menu = new MenuFlyout { Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.BottomEdgeAlignedRight };
-        var view = new MenuFlyoutItem { Text = ViewModel.MenuViewText };
-        view.Click += (_, _) => ViewModel.Select(row);
-        menu.Items.Add(view);
-
-        if (ViewModel.CanArchive)
+        if (IsInside(source, DetailPanel) || IsInsideButton(source, this))
         {
-            var archive = new MenuFlyoutItem { Text = row.IsArchived ? ViewModel.MenuRestoreText : ViewModel.MenuArchiveText };
-            archive.Click += (_, _) =>
-            {
-                ViewModel.Select(row);
-                ViewModel.ToggleArchiveSelectedCommand.Execute(null);
-            };
-            menu.Items.Add(archive);
+            return;
         }
 
-        menu.ShowAt(button);
+        ViewModel.CloseDetailCommand.Execute(null);
+    }
+
+    private static bool IsInside(DependencyObject source, DependencyObject container)
+    {
+        for (var current = source; current is not null; current = VisualTreeHelper.GetParent(current))
+        {
+            if (current == container)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void OnCategoryClick(object sender, RoutedEventArgs e) =>
@@ -76,9 +146,6 @@ public sealed partial class InventoryPage : Page
 
     private void OnBrandClick(object sender, RoutedEventArgs e) =>
         ShowOptions((FrameworkElement)sender, ViewModel.BrandOptions, ViewModel.SelectedBrand, ViewModel.SelectBrand);
-
-    private void OnStatusClick(object sender, RoutedEventArgs e) =>
-        ShowOptions((FrameworkElement)sender, ViewModel.StatusOptions, ViewModel.SelectedStatus, ViewModel.SelectStatus);
 
     private void OnSortClick(object sender, RoutedEventArgs e) =>
         ShowOptions((FrameworkElement)sender, ViewModel.SortOptions, ViewModel.SelectedSort, ViewModel.SelectSort);

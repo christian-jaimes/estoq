@@ -384,9 +384,6 @@
   <data name="Inventory_SortBy" xml:space="preserve"><value>Ordenar por</value></data>
   <data name="Inventory_AllCategories" xml:space="preserve"><value>Todas las categorías</value></data>
   <data name="Inventory_AllBrands" xml:space="preserve"><value>Todas las marcas</value></data>
-  <data name="Inventory_FilterActive" xml:space="preserve"><value>Productos activos</value></data>
-  <data name="Inventory_FilterArchived" xml:space="preserve"><value>Productos archivados</value></data>
-  <data name="Inventory_FilterAllStatuses" xml:space="preserve"><value>Todos los estados</value></data>
   <data name="Inventory_SortName" xml:space="preserve"><value>Nombre</value></data>
   <data name="Inventory_SortQuantity" xml:space="preserve"><value>Cantidad</value></data>
   <data name="Inventory_SortPrice" xml:space="preserve"><value>Precio</value></data>
@@ -404,10 +401,6 @@
   <data name="Inventory_ColQty" xml:space="preserve"><value>Cant.</value></data>
   <data name="Inventory_ColPrice" xml:space="preserve"><value>Precio</value></data>
   <data name="Inventory_ColMovement" xml:space="preserve"><value>Movimiento</value></data>
-  <data name="Inventory_RowMenu" xml:space="preserve"><value>Más acciones</value></data>
-  <data name="Inventory_MenuView" xml:space="preserve"><value>Ver detalles</value></data>
-  <data name="Inventory_Archive" xml:space="preserve"><value>Archivar</value></data>
-  <data name="Inventory_Restore" xml:space="preserve"><value>Restaurar</value></data>
   <data name="Inventory_ClearFilters" xml:space="preserve"><value>Quitar filtros</value></data>
   <data name="Inventory_Empty" xml:space="preserve"><value>Aún no hay productos en stock. Añade uno para empezar.</value></data>
   <data name="Inventory_EmptyFiltered" xml:space="preserve"><value>Ningún producto coincide con tu búsqueda o filtros.</value></data>
@@ -417,8 +410,9 @@
   <data name="Inventory_NextPage" xml:space="preserve"><value>Página siguiente</value></data>
   <data name="Inventory_SelectProduct" xml:space="preserve"><value>Selecciona un producto para ver sus detalles.</value></data>
   <data name="Inventory_DetailOverview" xml:space="preserve"><value>Resumen</value></data>
-  <data name="Inventory_DetailVariants" xml:space="preserve"><value>Variantes</value></data>
   <data name="Inventory_DetailStock" xml:space="preserve"><value>Stock</value></data>
+  <data name="Inventory_DetailVariants" xml:space="preserve"><value>Variantes</value></data>
+  <data name="Inventory_NoColour" xml:space="preserve"><value>Sin color</value></data>
   <data name="Inventory_DetailHistory" xml:space="preserve"><value>Historial</value></data>
   <data name="Inventory_DetailType" xml:space="preserve"><value>Tipo de producto</value></data>
   <data name="Inventory_DetailSupplier" xml:space="preserve"><value>Proveedor</value></data>
@@ -432,14 +426,15 @@
   <data name="Inventory_Varies" xml:space="preserve"><value>Varía</value></data>
   <data name="Inventory_OneSize" xml:space="preserve"><value>Talla única</value></data>
   <data name="Inventory_StatusActive" xml:space="preserve"><value>Activo</value></data>
-  <data name="Inventory_StatusArchived" xml:space="preserve"><value>Archivado</value></data>
   <data name="Inventory_StatusLow" xml:space="preserve"><value>Stock bajo</value></data>
   <data name="Inventory_StatusOut" xml:space="preserve"><value>Agotado</value></data>
-  <data name="Inventory_StatusInStock" xml:space="preserve"><value>En stock</value></data>
   <data name="Inventory_Move_add" xml:space="preserve"><value>Stock añadido</value></data>
   <data name="Inventory_Move_sale" xml:space="preserve"><value>Venta</value></data>
   <data name="Inventory_Move_found" xml:space="preserve"><value>Stock encontrado</value></data>
   <data name="Inventory_Move_defect" xml:space="preserve"><value>Defectuoso</value></data>
+  <data name="Inventory_Move_lost" xml:space="preserve"><value>Pérdida</value></data>
+  <data name="Inventory_Move_recount" xml:space="preserve"><value>Recuento</value></data>
+  <data name="Inventory_Move_return" xml:space="preserve"><value>Devolución</value></data>
   <data name="Inventory_ExportDone" xml:space="preserve"><value>Se exportaron {0} productos a {1}.</value></data>
   <data name="Inventory_ExportFailed" xml:space="preserve"><value>No se pudo guardar el archivo. Elige otra ubicación e inténtalo de nuevo.</value></data>
   <data name="Ret_SaleTitle" xml:space="preserve"><value>Venta original</value></data>

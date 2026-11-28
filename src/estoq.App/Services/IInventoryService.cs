@@ -22,7 +22,6 @@ public sealed record InventoryProduct(
     string ProductType,
     string ModelLabel,
     int LowStockThreshold,
-    bool IsArchived,
     DateTime UpdatedAt,
     IReadOnlyList<InventoryVariant> Variants);
 
@@ -36,7 +35,7 @@ public sealed record InventoryMovement(string MovementId, string ArticleId, stri
 public interface IInventoryService
 {
     /// <summary>
-    /// Every product, archived ones included, read fresh so products added from the F2 pop-up appear. Variants that
+    /// Every product, read fresh so products added from the F2 pop-up appear. Variants that
     /// never had stock are not listed, and a product without a listed variant is left out.
     /// </summary>
     IReadOnlyList<InventoryProduct> GetProducts();
@@ -44,6 +43,4 @@ public interface IInventoryService
     /// <summary>The stock movements of every variant of a product, newest first.</summary>
     IReadOnlyList<InventoryMovement> GetMovements(string productId);
 
-    /// <summary>Archives or restores a product. Products are archived, never deleted.</summary>
-    void SetArchived(string productId, bool archived);
 }

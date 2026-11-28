@@ -11,14 +11,6 @@ public enum InventoryTab
     Out,
 }
 
-/// <summary>Which products the status filter lets through. Archived products are hidden until asked for.</summary>
-public enum InventoryStatusFilter
-{
-    Active,
-    Archived,
-    All,
-}
-
 public enum InventorySort
 {
     Name,
@@ -62,7 +54,6 @@ public sealed partial class InventoryRowViewModel : ObservableObject
         string statusKind,
         string statusText,
         bool isAlternateRow,
-        bool isArchived,
         bool isSelected)
     {
         Id = id;
@@ -76,7 +67,6 @@ public sealed partial class InventoryRowViewModel : ObservableObject
         StatusKind = statusKind;
         StatusText = statusText;
         IsAlternateRow = isAlternateRow;
-        IsArchived = isArchived;
         IsSelected = isSelected;
     }
 
@@ -103,8 +93,6 @@ public sealed partial class InventoryRowViewModel : ObservableObject
 
     public bool IsAlternateRow { get; }
 
-    public bool IsArchived { get; }
-
     [ObservableProperty]
     public partial bool IsSelected { get; set; }
 }
@@ -112,7 +100,10 @@ public sealed partial class InventoryRowViewModel : ObservableObject
 /// <summary>A label and its value in the Overview tab.</summary>
 public sealed record DetailLine(string Label, string Value, bool ShowDivider);
 
-/// <summary>One variant in the Variants and Stock tabs.</summary>
+/// <summary>One colour circle of the Variants tab: the colour with the size written in it. No stock or product details.</summary>
+public sealed record VariantSwatchViewModel(string Hex, string SizeText, bool UseDarkText, string ToolTip);
+
+/// <summary>One variant in the Stock tab.</summary>
 public sealed record VariantRowViewModel(
     string Title,
     string Sku,
@@ -120,8 +111,6 @@ public sealed record VariantRowViewModel(
     bool HasBarcode,
     string QuantityText,
     string PriceText,
-    string StatusKind,
-    string StatusText,
     bool IsAlternateRow);
 
 /// <summary>One stock movement in the History tab.</summary>
@@ -133,20 +122,16 @@ public sealed class ProductDetailViewModel
     public ProductDetailViewModel(
         string name,
         string code,
-        string statusKind,
-        string statusText,
-        bool isArchived,
         IReadOnlyList<DetailLine> overview,
+        IReadOnlyList<VariantSwatchViewModel> swatches,
         IReadOnlyList<VariantRowViewModel> variants,
         IReadOnlyList<MovementRowViewModel> history)
     {
         Name = name;
         Code = code;
         Initial = name.Length > 0 ? name[..1].ToUpperInvariant() : string.Empty;
-        StatusKind = statusKind;
-        StatusText = statusText;
-        IsArchived = isArchived;
         Overview = overview;
+        Swatches = swatches;
         Variants = variants;
         History = history;
         HasHistory = history.Count > 0;
@@ -158,13 +143,9 @@ public sealed class ProductDetailViewModel
 
     public string Initial { get; }
 
-    public string StatusKind { get; }
-
-    public string StatusText { get; }
-
-    public bool IsArchived { get; }
-
     public IReadOnlyList<DetailLine> Overview { get; }
+
+    public IReadOnlyList<VariantSwatchViewModel> Swatches { get; }
 
     public IReadOnlyList<VariantRowViewModel> Variants { get; }
 

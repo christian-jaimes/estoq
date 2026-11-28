@@ -74,7 +74,7 @@
     </Style>
   </Page.Resources>
 
-  <Grid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="16" Margin="0,0,0,24">
+  <Grid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="16" Margin="0,0,0,24" Background="Transparent" Tapped="OnPageTapped">
 
     <!-- Title and actions -->
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="16">
@@ -162,11 +162,11 @@
       </Border>
     </Grid>
 
-    <!-- Table column and the detail panel -->
-    <Grid Grid.Row="3" ColumnDefinitions="*,380" ColumnSpacing="16">
+    <!-- Table column; the detail panel floats over it -->
+    <Grid Grid.Row="3">
 
       <!-- Tabs, filters, table, pages -->
-      <Grid Grid.Column="0" RowDefinitions="Auto,Auto,*" RowSpacing="12" MinWidth="0">
+      <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12" MinWidth="0">
 
         <Border Grid.Row="0" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">
           <StackPanel Orientation="Horizontal" Spacing="4">
@@ -179,7 +179,7 @@
           </StackPanel>
         </Border>
 
-        <Grid Grid.Row="1" ColumnDefinitions="*,*,*,1.2*,Auto" ColumnSpacing="8">
+        <Grid Grid.Row="1" ColumnDefinitions="*,*,1.2*,Auto" ColumnSpacing="8">
           <Button Grid.Column="0" Style="{StaticResource InvFilterButtonStyle}"
                   Click="OnCategoryClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_FilterCategory')}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_FilterCategory')}">
@@ -197,14 +197,6 @@
             </Grid>
           </Button>
           <Button Grid.Column="2" Style="{StaticResource InvFilterButtonStyle}"
-                  Click="OnStatusClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_FilterStatus')}"
-                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_FilterStatus')}">
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-              <TextBlock Text="{x:Bind ViewModel.StatusLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-              <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
-            </Grid>
-          </Button>
-          <Button Grid.Column="3" Style="{StaticResource InvFilterButtonStyle}"
                   Click="OnSortClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_SortBy')}"
                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_SortBy')}">
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
@@ -212,7 +204,7 @@
               <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
             </Grid>
           </Button>
-          <Button Grid.Column="4" Style="{StaticResource EqSecondaryButtonStyle}" Width="40" MinWidth="0" Padding="0"
+          <Button Grid.Column="3" Style="{StaticResource EqSecondaryButtonStyle}" Width="40" MinWidth="0" Padding="0"
                   Command="{x:Bind ViewModel.ToggleSortDirectionCommand}"
                   ToolTipService.ToolTip="{x:Bind ViewModel.SortDirectionToolTip, Mode=OneWay}"
                   AutomationProperties.Name="{x:Bind ViewModel.SortDirectionToolTip, Mode=OneWay}">
@@ -224,7 +216,7 @@
         <Border Grid.Row="2" Style="{StaticResource EqCardStyle}" Padding="16">
           <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
 
-            <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}">
+            <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,20,0">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="140" />
                 <ColumnDefinition Width="116" />
@@ -232,7 +224,6 @@
                 <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="64" />
                 <ColumnDefinition Width="132" />
-                <ColumnDefinition Width="36" />
               </Grid.ColumnDefinitions>
               <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Inventory_ColProduct')}" Style="{StaticResource EqTableHeaderTextStyle}" />
               <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Inventory_ColCategory')}" Style="{StaticResource EqTableHeaderTextStyle}" />
@@ -242,7 +233,7 @@
               <TextBlock Grid.Column="5" Text="{x:Bind services:Loc.Get('Inventory_ColStatus')}" Style="{StaticResource EqTableHeaderTextStyle}" />
             </Grid>
 
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0">
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
               <Grid>
                 <ItemsControl ItemsSource="{x:Bind ViewModel.Rows, Mode=OneWay}">
                   <ItemsControl.ItemTemplate>
@@ -252,7 +243,7 @@
                                 Visibility="{x:Bind local:InventoryBindings.Visible(IsAlternateRow)}" />
                         <Border Background="{ThemeResource EqGoldTintBrush}" IsHitTestVisible="False"
                                 Visibility="{x:Bind local:InventoryBindings.Visible(IsSelected), Mode=OneWay}" />
-                        <Grid Padding="12,8,8,8" ColumnSpacing="8">
+                        <Grid Padding="12,8,20,8" ColumnSpacing="8">
                           <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" MinWidth="140" />
                             <ColumnDefinition Width="116" />
@@ -260,8 +251,7 @@
                             <ColumnDefinition Width="80" />
                             <ColumnDefinition Width="64" />
                             <ColumnDefinition Width="132" />
-                            <ColumnDefinition Width="36" />
-                          </Grid.ColumnDefinitions>
+                                      </Grid.ColumnDefinitions>
 
                           <Grid Grid.Column="0" ColumnDefinitions="Auto,*" ColumnSpacing="12">
                             <!-- First-letter placeholder until products have pictures. -->
@@ -281,11 +271,6 @@
                           <TextBlock Grid.Column="3" Text="{x:Bind VariantsText}" Style="{StaticResource EqTableCellStyle}" HorizontalAlignment="Right" />
                           <TextBlock Grid.Column="4" Text="{x:Bind StockText}" Style="{StaticResource EqTableCellStrongStyle}" />
                           <controls:StatusBadge Grid.Column="5" Kind="{x:Bind StatusKind}" Text="{x:Bind StatusText}" VerticalAlignment="Center" />
-                          <Button Grid.Column="6" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Center" Click="OnRowMenuClick"
-                                  AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_RowMenu')}"
-                                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_RowMenu')}">
-                            <FontIcon Glyph="&#xE5D4;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
-                          </Button>
                         </Grid>
                       </Grid>
                     </DataTemplate>
@@ -348,17 +333,17 @@
         </Border>
       </Grid>
 
-      <!-- Detail panel of the selected product -->
-      <Border Grid.Column="1" Style="{StaticResource EqCardStyle}" Padding="20">
+      <!-- Detail panel: only after a row is clicked, floating over the table. A click on another row updates it; a click outside closes it. -->
+      <Border x:Name="DetailPanel" Style="{StaticResource EqCardStyle}" Padding="20" Width="380" HorizontalAlignment="Right"
+              Canvas.ZIndex="2" Visibility="Collapsed">
+        <!-- Slides in from the right and back out; see SetPanel in the code-behind. -->
+        <Border.RenderTransform>
+          <CompositeTransform x:Name="DetailTransform" />
+        </Border.RenderTransform>
         <Grid>
-          <TextBlock Text="{x:Bind services:Loc.Get('Inventory_SelectProduct')}" Style="{StaticResource EqSecondaryStyle}"
-                     HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"
-                     Visibility="{x:Bind local:InventoryBindings.Hidden(ViewModel.HasDetail), Mode=OneWay}" />
+          <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12">
 
-          <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12"
-                Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.HasDetail), Mode=OneWay}">
-
-            <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="16">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
               <Border Width="84" Height="84" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqGoldTintBrush}" VerticalAlignment="Top">
                 <TextBlock Text="{x:Bind ViewModel.Detail.Initial, Mode=OneWay}" FontFamily="{StaticResource EqBrandFont}" FontSize="32"
                            Foreground="{ThemeResource EqGoldInkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -366,28 +351,29 @@
               <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
                 <TextBlock Text="{x:Bind ViewModel.Detail.Name, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis" />
                 <TextBlock Text="{x:Bind ViewModel.Detail.Code, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                <controls:StatusBadge Kind="{x:Bind ViewModel.Detail.StatusKind, Mode=OneWay}" Text="{x:Bind ViewModel.Detail.StatusText, Mode=OneWay}" />
-                <Button Style="{StaticResource EqSecondaryButtonStyle}" HorizontalAlignment="Left" Margin="0,4,0,0"
-                        Content="{x:Bind ViewModel.ArchiveText, Mode=OneWay}"
-                        Command="{x:Bind ViewModel.ToggleArchiveSelectedCommand}"
-                        Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.CanArchive), Mode=OneWay}" />
               </StackPanel>
+              <Button Grid.Column="2" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Top"
+                      Command="{x:Bind ViewModel.CloseDetailCommand}"
+                      AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}"
+                      ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_Close')}">
+                <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
+              </Button>
             </Grid>
 
             <Border Grid.Row="1" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">
-              <StackPanel Orientation="Horizontal" Spacing="0">
-                <RadioButton GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+              <Grid ColumnDefinitions="*,*,*,*">
+                <RadioButton Grid.Column="0" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
                              Content="{x:Bind services:Loc.Get('Inventory_DetailOverview')}" IsChecked="{x:Bind ViewModel.IsOverviewTab, Mode=TwoWay}" />
-                <RadioButton GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+                <RadioButton Grid.Column="1" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
                              Content="{x:Bind services:Loc.Get('Inventory_DetailVariants')}" IsChecked="{x:Bind ViewModel.IsVariantsTab, Mode=TwoWay}" />
-                <RadioButton GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+                <RadioButton Grid.Column="2" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
                              Content="{x:Bind services:Loc.Get('Inventory_DetailStock')}" IsChecked="{x:Bind ViewModel.IsStockTab, Mode=TwoWay}" />
-                <RadioButton GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+                <RadioButton Grid.Column="3" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
                              Content="{x:Bind services:Loc.Get('Inventory_DetailHistory')}" IsChecked="{x:Bind ViewModel.IsHistoryTab, Mode=TwoWay}" />
-              </StackPanel>
+              </Grid>
             </Border>
 
-            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0">
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
               <Grid>
 
                 <!-- Overview -->
@@ -406,10 +392,28 @@
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <!-- Variants: size and colour, both barcodes, quantity, price -->
+                <!-- Variants: a visual map of colour and size only. Stock and details are in the Stock and History tabs. -->
+                <ItemsRepeater ItemsSource="{x:Bind ViewModel.Detail.Swatches, Mode=OneWay}"
+                               Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsVariantsTab), Mode=OneWay}">
+                  <ItemsRepeater.Layout>
+                    <UniformGridLayout MinItemWidth="52" MinItemHeight="52" MinRowSpacing="12" MinColumnSpacing="12" ItemsStretch="None" />
+                  </ItemsRepeater.Layout>
+                  <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="vm:VariantSwatchViewModel">
+                      <Grid Width="52" Height="52" ToolTipService.ToolTip="{x:Bind ToolTip}" AutomationProperties.Name="{x:Bind ToolTip}">
+                        <Ellipse Fill="{x:Bind local:InventoryBindings.SwatchFill(Hex)}" Stroke="{ThemeResource EqBorderBrush}" StrokeThickness="1" />
+                        <TextBlock Text="{x:Bind SizeText}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontSm}"
+                                   Foreground="{x:Bind local:InventoryBindings.SwatchInk(UseDarkText)}" TextTrimming="Clip" TextWrapping="NoWrap"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="40" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+
+                <!-- Stock: each variant with its SKU, barcode, quantity and price -->
                 <Grid RowDefinitions="Auto,*" RowSpacing="8"
-                      Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsVariantsTab), Mode=OneWay}">
-                  <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,8,0">
+                      Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsStockTab), Mode=OneWay}">
+                  <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,20,0">
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="*" />
                       <ColumnDefinition Width="48" />
@@ -424,7 +428,7 @@
                       <DataTemplate x:DataType="vm:VariantRowViewModel">
                         <Grid MinHeight="60" Style="{StaticResource EqTableRowStyle}">
                           <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind local:InventoryBindings.Visible(IsAlternateRow)}" />
-                          <Grid Padding="12,8,8,8" ColumnSpacing="8">
+                          <Grid Padding="12,8,20,8" ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
                               <ColumnDefinition Width="*" />
                               <ColumnDefinition Width="48" />
@@ -447,48 +451,10 @@
                   </ItemsControl>
                 </Grid>
 
-                <!-- Stock: level of each variant -->
-                <Grid RowDefinitions="Auto,*" RowSpacing="8"
-                      Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsStockTab), Mode=OneWay}">
-                  <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,8,0">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="*" />
-                      <ColumnDefinition Width="48" />
-                      <ColumnDefinition Width="132" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Inventory_ColVariant')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-                    <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Inventory_ColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
-                    <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Inventory_ColStatus')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-                  </Grid>
-                  <ItemsControl Grid.Row="1" ItemsSource="{x:Bind ViewModel.Detail.Variants, Mode=OneWay}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate x:DataType="vm:VariantRowViewModel">
-                        <Grid MinHeight="52" Style="{StaticResource EqTableRowStyle}">
-                          <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind local:InventoryBindings.Visible(IsAlternateRow)}" />
-                          <Grid Padding="12,8,8,8" ColumnSpacing="8">
-                            <Grid.ColumnDefinitions>
-                              <ColumnDefinition Width="*" />
-                              <ColumnDefinition Width="48" />
-                              <ColumnDefinition Width="132" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="1">
-                              <TextBlock Text="{x:Bind Title}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
-                                         Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
-                              <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
-                            </StackPanel>
-                            <TextBlock Grid.Column="1" Text="{x:Bind QuantityText}" Style="{StaticResource EqTableCellStrongStyle}" FontSize="{StaticResource EqFontMd}" />
-                            <controls:StatusBadge Grid.Column="2" Kind="{x:Bind StatusKind}" Text="{x:Bind StatusText}" VerticalAlignment="Center" />
-                          </Grid>
-                        </Grid>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                </Grid>
-
                 <!-- History: stock movements, newest first -->
                 <Grid RowDefinitions="Auto,*" RowSpacing="8"
                       Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsHistoryTab), Mode=OneWay}">
-                  <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,8,0">
+                  <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,20,0">
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="*" />
                       <ColumnDefinition Width="56" />
@@ -501,7 +467,7 @@
                       <DataTemplate x:DataType="vm:MovementRowViewModel">
                         <Grid MinHeight="56" Style="{StaticResource EqTableRowStyle}">
                           <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind local:InventoryBindings.Visible(IsAlternateRow)}" />
-                          <Grid Padding="12,8,8,8" ColumnSpacing="8">
+                          <Grid Padding="12,8,20,8" ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
                               <ColumnDefinition Width="*" />
                               <ColumnDefinition Width="56" />
