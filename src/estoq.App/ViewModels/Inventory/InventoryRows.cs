@@ -3,10 +3,11 @@ using Estoq.App.Services;
 
 namespace Estoq.App.ViewModels.Inventory;
 
-/// <summary>The tabs above the product table.</summary>
+/// <summary>The stock filter picked by clicking a KPI card above the product table.</summary>
 public enum InventoryTab
 {
     All,
+    In,
     Low,
     Out,
 }
@@ -51,6 +52,7 @@ public sealed partial class InventoryRowViewModel : ObservableObject
         string brand,
         string variantsText,
         string stockText,
+        string priceText,
         string statusKind,
         string statusText,
         bool isAlternateRow,
@@ -64,6 +66,7 @@ public sealed partial class InventoryRowViewModel : ObservableObject
         Brand = brand;
         VariantsText = variantsText;
         StockText = stockText;
+        PriceText = priceText;
         StatusKind = statusKind;
         StatusText = statusText;
         IsAlternateRow = isAlternateRow;
@@ -86,6 +89,9 @@ public sealed partial class InventoryRowViewModel : ObservableObject
     public string VariantsText { get; }
 
     public string StockText { get; }
+
+    /// <summary>Selling price, or the lowest to highest price when the variants differ.</summary>
+    public string PriceText { get; }
 
     public string StatusKind { get; }
 
@@ -152,10 +158,4 @@ public sealed class ProductDetailViewModel
     public IReadOnlyList<MovementRowViewModel> History { get; }
 
     public bool HasHistory { get; }
-}
-
-/// <summary>One button of the page selector: a page number or a gap.</summary>
-public sealed record PageItemViewModel(string Label, int Page, bool IsCurrent, bool IsGap)
-{
-    public bool IsOtherPage => !IsCurrent && !IsGap;
 }

@@ -15,7 +15,8 @@ namespace Estoq.App.ViewModels.Inventory;
 /// </summary>
 public sealed partial class InventoryViewModel : ObservableObject
 {
-    public const int PageSize = 10;
+    /// <summary>Rows added each time the table is scrolled near its end.</summary>
+    public const int PageSize = 25;
 
     private readonly IInventoryService _inventory;
     private readonly ICatalogService _catalog;
@@ -30,10 +31,11 @@ public sealed partial class InventoryViewModel : ObservableObject
     private InventoryTab _tab = InventoryTab.All;
     private InventoryDetailTab _detailTab = InventoryDetailTab.Overview;
     private InventorySort _sort = InventorySort.Name;
-    private string? _category;
-    private string? _brand;
+    private readonly HashSet<string> _categories = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _brands = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _types = new(StringComparer.OrdinalIgnoreCase);
     private string? _selectedId;
-    private int _page = 1;
+    private int _shown = PageSize;
     private bool _active;
 
     public InventoryViewModel(
@@ -56,9 +58,14 @@ public sealed partial class InventoryViewModel : ObservableObject
         // The top bar search (Ctrl+K) filters this page while it is showing.
         _shell.PropertyChanged += (_, e) =>
         {
+            if (e.PropertyName == nameof(ShellViewModel.SearchText))
+            {
+                OnPropertyChanged(nameof(SearchText));
+            }
+
             if (_active && e.PropertyName == nameof(ShellViewModel.SearchText))
             {
-                _page = 1;
+                _shown = PageSize;
                 Apply();
             }
         };
@@ -82,8 +89,6 @@ public sealed partial class InventoryViewModel : ObservableObject
     }
 
     public ObservableCollection<InventoryRowViewModel> Rows { get; } = [];
-
-    public ObservableCollection<PageItemViewModel> PageItems { get; } = [];
 
     [ObservableProperty]
     public partial string TotalProductsText { get; set; } = "0";
@@ -110,12 +115,6 @@ public sealed partial class InventoryViewModel : ObservableObject
     public partial bool IsEmpty { get; set; }
 
     [ObservableProperty]
-    public partial bool CanGoPrevious { get; set; }
-
-    [ObservableProperty]
-    public partial bool CanGoNext { get; set; }
-
-    [ObservableProperty]
     public partial ProductDetailViewModel? Detail { get; set; }
 
     [ObservableProperty]
@@ -137,6 +136,9 @@ public sealed partial class InventoryViewModel : ObservableObject
     public partial string BrandLabel { get; set; } = string.Empty;
 
     [ObservableProperty]
+    public partial string TypeLabel { get; set; } = string.Empty;
+
+    [ObservableProperty]
     public partial string SortLabel { get; set; } = string.Empty;
 
     [ObservableProperty]
@@ -148,23 +150,32 @@ public sealed partial class InventoryViewModel : ObservableObject
     [ObservableProperty]
     public partial bool HasActiveFilters { get; set; }
 
-    public bool IsAllTab
+    /// <summary>The search box on this page shares its text with the top bar search.</summary>
+    public string SearchText
     {
-        get => _tab == InventoryTab.All;
-        set { if (value) SelectTab(InventoryTab.All); }
+        get => _shell.SearchText;
+        set => _shell.SearchText = value ?? string.Empty;
     }
 
-    public bool IsLowTab
-    {
-        get => _tab == InventoryTab.Low;
-        set { if (value) SelectTab(InventoryTab.Low); }
-    }
+    public bool IsInStockFilter => _tab == InventoryTab.In;
 
-    public bool IsOutTab
-    {
-        get => _tab == InventoryTab.Out;
-        set { if (value) SelectTab(InventoryTab.Out); }
-    }
+    public bool IsLowFilter => _tab == InventoryTab.Low;
+
+    public bool IsOutFilter => _tab == InventoryTab.Out;
+
+    /// <summary>Total products / total variants cards: clear the stock filter.</summary>
+    [RelayCommand]
+    private void ShowAll() => SelectTab(InventoryTab.All);
+
+    /// <summary>The stock cards filter the table; clicking the active card again goes back to all.</summary>
+    [RelayCommand]
+    private void FilterInStock() => SelectTab(_tab == InventoryTab.In ? InventoryTab.All : InventoryTab.In);
+
+    [RelayCommand]
+    private void FilterLow() => SelectTab(_tab == InventoryTab.Low ? InventoryTab.All : InventoryTab.Low);
+
+    [RelayCommand]
+    private void FilterOut() => SelectTab(_tab == InventoryTab.Out ? InventoryTab.All : InventoryTab.Out);
 
     public bool IsOverviewTab
     {
@@ -201,13 +212,16 @@ public sealed partial class InventoryViewModel : ObservableObject
 
     // Menu contents. The page builds its flyouts from these when they open.
 
-    public IReadOnlyList<FilterOption> CategoryOptions =>
-        [new FilterOption(null, _localizer["Inventory_AllCategories"]), .. _products.Select(p => p.Category).Where(c => c.Length > 0)
-            .Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(c => c, StringComparer.CurrentCultureIgnoreCase).Select(c => new FilterOption(c, c))];
+    // Each list is limited to what the other filters leave, plus anything already ticked so it can be unticked.
+    public IReadOnlyList<string> CategoryValues => Distinct(Filter(true, false, false).Select(p => p.Category).Concat(_categories));
 
-    public IReadOnlyList<FilterOption> BrandOptions =>
-        [new FilterOption(null, _localizer["Inventory_AllBrands"]), .. _products.Select(p => p.Brand).Where(b => b.Length > 0)
-            .Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(b => b, StringComparer.CurrentCultureIgnoreCase).Select(b => new FilterOption(b, b))];
+    public IReadOnlyList<string> TypeValues => Distinct(Filter(false, true, false).Select(p => p.ProductType).Concat(_types));
+
+    public IReadOnlyList<string> BrandValues => Distinct(Filter(false, false, true).Select(p => p.Brand).Concat(_brands));
+
+    private static List<string> Distinct(IEnumerable<string> values) =>
+        values.Where(v => v.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(v => v, StringComparer.CurrentCultureIgnoreCase).ToList();
 
     public IReadOnlyList<FilterOption> SortOptions =>
     [
@@ -217,9 +231,12 @@ public sealed partial class InventoryViewModel : ObservableObject
         new FilterOption(nameof(InventorySort.Updated), _localizer["Inventory_SortUpdated"]),
     ];
 
-    public string? SelectedCategory => _category;
+    /// <summary>The checked values of each multi-select filter. The dropdowns edit these sets and then call <see cref="FiltersChanged"/>.</summary>
+    public ISet<string> SelectedCategories => _categories;
 
-    public string? SelectedBrand => _brand;
+    public ISet<string> SelectedBrands => _brands;
+
+    public ISet<string> SelectedTypes => _types;
 
     public string SelectedSort => _sort.ToString();
 
@@ -229,27 +246,22 @@ public sealed partial class InventoryViewModel : ObservableObject
     private void AddProduct() => _shell.OpenAddItemsCommand.Execute(null);
 
     [RelayCommand]
-    private void PreviousPage() => GoToPage(_page - 1);
-
-    [RelayCommand]
-    private void NextPage() => GoToPage(_page + 1);
-
-    [RelayCommand]
     private void ToggleSortDirection()
     {
         SortDescending = !SortDescending;
-        _page = 1;
+        _shown = PageSize;
         Apply();
     }
 
     [RelayCommand]
     private void ClearFilters()
     {
-        _category = null;
-        _brand = null;
+        _categories.Clear();
+        _brands.Clear();
+        _types.Clear();
         _tab = InventoryTab.All;
         _shell.SearchText = string.Empty;
-        _page = 1;
+        _shown = PageSize;
         RaiseTabChanged();
         Apply();
     }
@@ -274,7 +286,8 @@ public sealed partial class InventoryViewModel : ObservableObject
             _localizer["Inventory_ColStock"],
             _localizer["Inventory_ColStatus"],
         ];
-        var rows = _filtered.Select(product => (IReadOnlyList<string>)
+        // Exactly what the table shows: the filtered list up to the rows loaded so far.
+        var rows = _filtered.Take(Rows.Count).Select(product => (IReadOnlyList<string>)
         [
             product.Name,
             product.Code,
@@ -346,39 +359,44 @@ public sealed partial class InventoryViewModel : ObservableObject
         ShowDetail();
     }
 
-    public void SelectCategory(string? value)
+    /// <summary>Called by a multi-select dropdown after it ticked or unticked a value.</summary>
+    public void FiltersChanged()
     {
-        _category = value;
-        _page = 1;
-        Apply();
-    }
-
-    public void SelectBrand(string? value)
-    {
-        _brand = value;
-        _page = 1;
+        _shown = PageSize;
         Apply();
     }
 
     public void SelectSort(string? value)
     {
         _sort = Enum.TryParse<InventorySort>(value, out var parsed) ? parsed : InventorySort.Name;
-        _page = 1;
+        _shown = PageSize;
         Apply();
     }
 
-    public void GoToPage(int page)
+    /// <summary>True while more products match than the table lists so far.</summary>
+    public bool HasMore => _shown < _filtered.Count;
+
+    /// <summary>Lazy load: called when the table is scrolled near its end; appends the next batch of rows.</summary>
+    public void LoadMore()
     {
-        var last = Math.Max(1, (int)Math.Ceiling(_filtered.Count / (double)PageSize));
-        var target = Math.Clamp(page, 1, last);
-        if (target == _page)
+        if (!HasMore)
         {
             return;
         }
 
-        _page = target;
-        BuildPage();
+        var from = Math.Min(_shown, _filtered.Count);
+        _shown += PageSize;
+        AddRows(from, Math.Min(_shown, _filtered.Count));
+        UpdateShowing();
     }
+
+    /// <summary>Nothing ticked: "All ..."; one: its name; several: how many.</summary>
+    private string FilterLabel(HashSet<string> selected, string allKey) => selected.Count switch
+    {
+        0 => _localizer[allKey],
+        1 => selected.First(),
+        _ => _localizer.Format("Inventory_FilterSelected", selected.Count.ToString("N0", _localizer.Culture)),
+    };
 
     private void SelectTab(InventoryTab tab)
     {
@@ -388,7 +406,7 @@ public sealed partial class InventoryViewModel : ObservableObject
         }
 
         _tab = tab;
-        _page = 1;
+        _shown = PageSize;
         RaiseTabChanged();
         Apply();
     }
@@ -409,9 +427,9 @@ public sealed partial class InventoryViewModel : ObservableObject
 
     private void RaiseTabChanged()
     {
-        OnPropertyChanged(nameof(IsAllTab));
-        OnPropertyChanged(nameof(IsLowTab));
-        OnPropertyChanged(nameof(IsOutTab));
+        OnPropertyChanged(nameof(IsInStockFilter));
+        OnPropertyChanged(nameof(IsLowFilter));
+        OnPropertyChanged(nameof(IsOutFilter));
     }
 
     private void Refresh()
@@ -422,6 +440,50 @@ public sealed partial class InventoryViewModel : ObservableObject
     }
 
     /// <summary>Applies the tab, filters, search and sort, then shows the current page.</summary>
+    /// <summary>
+    /// The products that pass the active filters, the KPI card and the search. A dropdown asks for the list without its own
+    /// filter, so it offers only values that still exist among what the other filters leave.
+    /// </summary>
+    private IEnumerable<InventoryProduct> Filter(bool skipCategory, bool skipType, bool skipBrand)
+    {
+        var search = _active ? ProductNaming.Key(_shell.SearchText) : string.Empty;
+        IEnumerable<InventoryProduct> query = _products;
+
+        if (!skipCategory && _categories.Count > 0)
+        {
+            query = query.Where(p => _categories.Contains(p.Category));
+        }
+
+        if (!skipType && _types.Count > 0)
+        {
+            query = query.Where(p => _types.Contains(p.ProductType));
+        }
+
+        if (!skipBrand && _brands.Count > 0)
+        {
+            query = query.Where(p => _brands.Contains(p.Brand));
+        }
+
+        if (_tab != InventoryTab.All)
+        {
+            // Same unit as the KPI counts: a product is listed when at least one of its variants has that status.
+            var wanted = _tab switch
+            {
+                InventoryTab.In => StockStatus.InStock,
+                InventoryTab.Low => StockStatus.Low,
+                _ => StockStatus.Out,
+            };
+            query = query.Where(p => p.Variants.Any(v => StockLevels.Classify(v.OnHand, p.LowStockThreshold) == wanted));
+        }
+
+        if (search.Length > 0)
+        {
+            query = query.Where(p => Matches(p, search));
+        }
+
+        return query;
+    }
+
     private void Apply()
     {
         var culture = _localizer.Culture;
@@ -433,40 +495,17 @@ public sealed partial class InventoryViewModel : ObservableObject
         OutOfStockText = variants.Count(s => s == StockStatus.Out).ToString("N0", culture);
 
         var search = _active ? ProductNaming.Key(_shell.SearchText) : string.Empty;
-        IEnumerable<InventoryProduct> query = _products;
-
-        if (_category is not null)
-        {
-            query = query.Where(p => string.Equals(p.Category, _category, StringComparison.OrdinalIgnoreCase));
-        }
-
-        if (_brand is not null)
-        {
-            query = query.Where(p => string.Equals(p.Brand, _brand, StringComparison.OrdinalIgnoreCase));
-        }
-
-        if (_tab != InventoryTab.All)
-        {
-            query = query.Where(p =>
-            {
-                var status = StockLevels.ClassifyProduct(p.Variants.Select(v => v.OnHand), p.LowStockThreshold);
-                return _tab == InventoryTab.Low ? status == StockStatus.Low : status == StockStatus.Out;
-            });
-        }
-
-        if (search.Length > 0)
-        {
-            query = query.Where(p => Matches(p, search));
-        }
+        var query = Filter(skipCategory: false, skipType: false, skipBrand: false);
 
         _filtered = Sort(query).ToList();
 
-        CategoryLabel = _category ?? _localizer["Inventory_AllCategories"];
-        BrandLabel = _brand ?? _localizer["Inventory_AllBrands"];
+        CategoryLabel = FilterLabel(_categories, "Inventory_AllCategories");
+        TypeLabel = FilterLabel(_types, "Inventory_AllTypes");
+        BrandLabel = FilterLabel(_brands, "Inventory_AllBrands");
         SortLabel = SortOptions.First(o => o.Value == _sort.ToString()).Label;
         SortDirectionGlyph = SortDescending ? "" : "";
         SortDirectionToolTip = _localizer[SortDescending ? "Inventory_SortDescending" : "Inventory_SortAscending"];
-        HasActiveFilters = _category is not null || _brand is not null
+        HasActiveFilters = _categories.Count > 0 || _brands.Count > 0 || _types.Count > 0
             || _tab != InventoryTab.All || search.Length > 0;
 
         // The panel opens only when a row is clicked. It stays while its product is still listed, and closes when not.
@@ -476,26 +515,32 @@ public sealed partial class InventoryViewModel : ObservableObject
         }
 
         var selectedIndex = _filtered.FindIndex(p => p.Id == _selectedId);
-        var last = Math.Max(1, (int)Math.Ceiling(_filtered.Count / (double)PageSize));
-        _page = Math.Clamp(_page, 1, last);
-        if (selectedIndex >= 0 && _page == 1 && selectedIndex >= PageSize)
+        if (selectedIndex >= _shown)
         {
-            // A selection that survived a filter change stays visible on the page it is on.
-            _page = (selectedIndex / PageSize) + 1;
+            // A selection that survived a filter change stays in the list.
+            _shown = ((selectedIndex / PageSize) + 1) * PageSize;
         }
 
-        BuildPage();
+        BuildRows();
     }
 
-    private void BuildPage()
+    private void BuildRows()
+    {
+        Rows.Clear();
+        AddRows(0, Math.Min(_shown, _filtered.Count));
+        IsEmpty = Rows.Count == 0;
+        EmptyText = _localizer[HasActiveFilters ? "Inventory_EmptyFiltered" : "Inventory_Empty"];
+        UpdateShowing();
+        ShowDetail();
+    }
+
+    private void AddRows(int from, int to)
     {
         var culture = _localizer.Culture;
-        var pageProducts = _filtered.Skip((_page - 1) * PageSize).Take(PageSize).ToList();
-
-        Rows.Clear();
-        for (var index = 0; index < pageProducts.Count; index++)
+        var currency = _catalog.DefaultCurrencyCode;
+        for (var index = from; index < to; index++)
         {
-            var product = pageProducts[index];
+            var product = _filtered[index];
             var (kind, text) = StatusOf(product);
             Rows.Add(new InventoryRowViewModel(
                 product.Id,
@@ -505,42 +550,20 @@ public sealed partial class InventoryViewModel : ObservableObject
                 product.Brand,
                 product.Variants.Count.ToString("N0", culture),
                 product.Variants.Sum(v => v.OnHand).ToString("N0", culture),
+                PriceRange(product.Variants.Select(v => v.SellingPrice).Distinct().ToList(), currency, culture),
                 kind,
                 text,
                 index % 2 == 1,
                 product.Id == _selectedId));
         }
-
-        IsEmpty = Rows.Count == 0;
-        EmptyText = _localizer[HasActiveFilters ? "Inventory_EmptyFiltered" : "Inventory_Empty"];
-        var first = _filtered.Count == 0 ? 0 : ((_page - 1) * PageSize) + 1;
-        var lastShown = first == 0 ? 0 : first + pageProducts.Count - 1;
-        ShowingText = _filtered.Count == 0
-            ? _localizer["Inventory_ShowingNone"]
-            : _localizer.Format("Inventory_Showing", first.ToString("N0", culture), lastShown.ToString("N0", culture), _filtered.Count.ToString("N0", culture));
-
-        var pages = Math.Max(1, (int)Math.Ceiling(_filtered.Count / (double)PageSize));
-        CanGoPrevious = _page > 1;
-        CanGoNext = _page < pages;
-        BuildPageItems(pages);
-        ShowDetail();
     }
 
-    private void BuildPageItems(int pages)
+    private void UpdateShowing()
     {
-        PageItems.Clear();
-        var shown = new SortedSet<int> { 1, pages, _page - 1, _page, _page + 1 };
-        var previous = 0;
-        foreach (var page in shown.Where(p => p >= 1 && p <= pages))
-        {
-            if (previous != 0 && page - previous > 1)
-            {
-                PageItems.Add(new PageItemViewModel("…", 0, false, true));
-            }
-
-            PageItems.Add(new PageItemViewModel(page.ToString("N0", _localizer.Culture), page, page == _page, false));
-            previous = page;
-        }
+        var culture = _localizer.Culture;
+        ShowingText = _filtered.Count == 0
+            ? _localizer["Inventory_ShowingNone"]
+            : _localizer.Format("Inventory_Showing", Rows.Count.ToString("N0", culture), _filtered.Count.ToString("N0", culture));
     }
 
     private void ShowDetail()

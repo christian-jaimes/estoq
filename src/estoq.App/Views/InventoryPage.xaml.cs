@@ -141,27 +141,80 @@ public sealed partial class InventoryPage : Page
         return false;
     }
 
+    private void OnTypeClick(object sender, RoutedEventArgs e) =>
+        ShowMultiSelect((FrameworkElement)sender, ViewModel.TypeValues, ViewModel.SelectedTypes);
+
     private void OnCategoryClick(object sender, RoutedEventArgs e) =>
-        ShowOptions((FrameworkElement)sender, ViewModel.CategoryOptions, ViewModel.SelectedCategory, ViewModel.SelectCategory);
+        ShowMultiSelect((FrameworkElement)sender, ViewModel.CategoryValues, ViewModel.SelectedCategories);
 
     private void OnBrandClick(object sender, RoutedEventArgs e) =>
-        ShowOptions((FrameworkElement)sender, ViewModel.BrandOptions, ViewModel.SelectedBrand, ViewModel.SelectBrand);
+        ShowMultiSelect((FrameworkElement)sender, ViewModel.BrandValues, ViewModel.SelectedBrands);
 
     private void OnSortClick(object sender, RoutedEventArgs e) =>
         ShowOptions((FrameworkElement)sender, ViewModel.SortOptions, ViewModel.SelectedSort, ViewModel.SelectSort);
 
-    private void OnPageClick(object sender, RoutedEventArgs e)
+    private void OnRowPointerEntered(object sender, PointerRoutedEventArgs e) => SetHover(sender, 1);
+
+    private void OnRowPointerExited(object sender, PointerRoutedEventArgs e) => SetHover(sender, 0);
+
+    private static void SetHover(object row, double opacity)
     {
-        if (sender is FrameworkElement { Tag: int page })
+        if (row is Grid grid)
         {
-            ViewModel.GoToPage(page);
+            foreach (var child in grid.Children)
+            {
+                if (child is Border { Name: "HoverFill" } fill)
+                {
+                    fill.Opacity = opacity;
+                    return;
+                }
+            }
         }
     }
 
+    private void OnTableViewChanged(object? sender, ScrollViewerViewChangedEventArgs e) => LoadMoreIfNeeded();
+
+    private void OnTableSizeChanged(object sender, SizeChangedEventArgs e) => LoadMoreIfNeeded();
+
+    /// <summary>Lazy load: adds the next batch of rows while the end of the table is near, or the rows do not fill the view yet.</summary>
+    private void LoadMoreIfNeeded()
+    {
+        if (!ViewModel.HasMore)
+        {
+            return;
+        }
+
+        if (TableScroll.ScrollableHeight - TableScroll.VerticalOffset > 240)
+        {
+            return;
+        }
+
+        ViewModel.LoadMore();
+
+        // Once the new rows are laid out, check again: a tall window may need more than one batch.
+        DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, LoadMoreIfNeeded);
+    }
+
     /// <summary>Shows a menu of choices under <paramref name="anchor"/>, with the current one ticked.</summary>
+    /// <summary>Opens a multi-select dropdown right below <paramref name="anchor"/>, as wide as the anchor, with a search field and a scrolling checkbox list.</summary>
+    private void ShowMultiSelect(FrameworkElement anchor, IReadOnlyList<string> values, ISet<string> selected)
+    {
+        var flyout = new Flyout
+        {
+            Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.BottomEdgeAlignedLeft,
+            FlyoutPresenterStyle = (Style)Application.Current.Resources["EqDropdownFlyoutPresenterStyle"],
+            Content = new Controls.MultiSelectList(values, selected, ViewModel.FiltersChanged) { Width = Math.Max(anchor.ActualWidth, 220) - 16 },
+        };
+        flyout.ShowAt(anchor);
+    }
+
     private static void ShowOptions(FrameworkElement anchor, IReadOnlyList<FilterOption> options, string? selected, Action<string?> choose)
     {
-        var menu = new MenuFlyout { Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.BottomEdgeAlignedLeft };
+        var menu = new MenuFlyout
+        {
+            Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.BottomEdgeAlignedLeft,
+            MenuFlyoutPresenterStyle = (Style)Application.Current.Resources["EqMenuFlyoutPresenterStyle"],
+        };
         foreach (var option in options)
         {
             var item = new ToggleMenuFlyoutItem { Text = option.Label, IsChecked = option.Value == selected };

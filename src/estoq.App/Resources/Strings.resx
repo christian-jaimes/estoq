@@ -375,9 +375,6 @@
   <data name="Inventory_KpiInStock" xml:space="preserve"><value>In stock</value></data>
   <data name="Inventory_KpiLow" xml:space="preserve"><value>Low stock</value></data>
   <data name="Inventory_KpiOut" xml:space="preserve"><value>Out of stock</value></data>
-  <data name="Inventory_TabAll" xml:space="preserve"><value>All products</value></data>
-  <data name="Inventory_TabLow" xml:space="preserve"><value>Low stock</value></data>
-  <data name="Inventory_TabOut" xml:space="preserve"><value>Out of stock</value></data>
   <data name="Inventory_FilterCategory" xml:space="preserve"><value>Category</value></data>
   <data name="Inventory_FilterBrand" xml:space="preserve"><value>Brand</value></data>
   <data name="Inventory_FilterStatus" xml:space="preserve"><value>Status</value></data>
@@ -404,10 +401,8 @@
   <data name="Inventory_ClearFilters" xml:space="preserve"><value>Clear filters</value></data>
   <data name="Inventory_Empty" xml:space="preserve"><value>No products in stock yet. Add one to get started.</value></data>
   <data name="Inventory_EmptyFiltered" xml:space="preserve"><value>No products match your search or filters.</value></data>
-  <data name="Inventory_Showing" xml:space="preserve"><value>Showing {0}–{1} of {2} products</value></data>
+  <data name="Inventory_Showing" xml:space="preserve"><value>Showing {0} of {1} products</value></data>
   <data name="Inventory_ShowingNone" xml:space="preserve"><value>No products to show</value></data>
-  <data name="Inventory_PreviousPage" xml:space="preserve"><value>Previous page</value></data>
-  <data name="Inventory_NextPage" xml:space="preserve"><value>Next page</value></data>
   <data name="Inventory_SelectProduct" xml:space="preserve"><value>Select a product to see its details.</value></data>
   <data name="Inventory_DetailOverview" xml:space="preserve"><value>Overview</value></data>
   <data name="Inventory_DetailStock" xml:space="preserve"><value>Stock</value></data>
@@ -499,4 +494,15 @@
   <data name="Ret_KpiNewItems" xml:space="preserve"><value>New items</value></data>
   <data name="Notif_ReturnWithoutReceipt_Title" xml:space="preserve"><value>Return {0} had no receipt</value></data>
   <data name="Notif_ReturnWithoutReceipt_Detail" xml:space="preserve"><value>Returned at today's price without a receipt. Review it.</value></data>
+  <data name="Inventory_KpiFilterHint" xml:space="preserve">
+    <value>Click to filter the table by this status. Click again to clear.</value>
+  </data>
+  <data name="Inventory_SearchPlaceholder" xml:space="preserve"><value>Search products…</value></data>
+  <data name="Inventory_ClearAll" xml:space="preserve"><value>Clear all</value></data>
+  <data name="Inventory_ExportTip" xml:space="preserve"><value>Exports the rows shown in the table to a CSV file</value></data>
+  <data name="Inventory_FilterType" xml:space="preserve"><value>Product type</value></data>
+  <data name="Inventory_AllTypes" xml:space="preserve"><value>All types</value></data>
+  <data name="Inventory_FilterSearch" xml:space="preserve"><value>Search…</value></data>
+  <data name="Inventory_FilterNoMatches" xml:space="preserve"><value>No matches</value></data>
+  <data name="Inventory_FilterSelected" xml:space="preserve"><value>{0} selected</value></data>
 </root>

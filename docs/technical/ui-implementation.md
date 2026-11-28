@@ -33,6 +33,53 @@ Use the `EqAutoSuggestBoxStyle` in `Themes/Styles.xaml` as the default app dropd
 
 The popup corner treatment is set directly in the shared template because the WinUI `AutoSuggestBox` popup is a separate popup surface; a local `OverlayCornerRadius` resource did not affect it. Preserve the template part names `TextBox`, `SuggestionsPopup`, `SuggestionsContainer` and `SuggestionsList` when changing the template so WinUI's control logic can continue to connect the input and suggestions.
 
+## Menus and dropdown lists
+
+Every open list, whatever the control (`MenuFlyout`, `ComboBox`, the AutoSuggestBox popup, a custom flyout), uses the same colours so dropdowns look identical in light and dark themes. Never leave the stock grey WinUI list.
+
+- Background `EqSurfaceElevatedBrush`, border `EqBorderBrush` (1 px), item hover `EqHoverFillBrush`, selected item `EqGoldTintBrush`. Text uses the normal theme text brushes.
+- The app-wide dictionary in `Themes/Styles.xaml` overrides the WinUI keys (`MenuFlyoutPresenter*`, `MenuFlyoutItem*`, `ToggleMenuFlyoutItem*`, `ComboBoxDropDown*`, `ComboBoxItem*`), so a plain `ComboBox` or `MenuFlyout` is already correct. Do not add per-page overrides.
+- A `MenuFlyout` also gets `EqMenuFlyoutPresenterStyle` (rounded `EqRadiusLg`, 1 px border, 4 px padding). Set `MenuFlyoutPresenterStyle` to it, in XAML or in code: `menu.MenuFlyoutPresenterStyle = (Style)Application.Current.Resources["EqMenuFlyoutPresenterStyle"]`. The Inventory sort, category, product type and brand menus are the reference.
+- Tick the current choice with a `ToggleMenuFlyoutItem`. Open and close with the 100 ms motion budget; do not add custom animations.
+- Multi-select filters follow the "Checkbox dropdown with search" component below.
+- Check every new dropdown in both themes before calling it done.
+
+## Checkbox dropdown with search (multi-select filter)
+
+Use this whenever a filter lets the user pick several values from a list (Inventory: product type, category, brand). Reference implementation: `Controls/MultiSelectList` and the three filter buttons in `Views/InventoryPage.xaml` with `ShowMultiSelect` in its code-behind. Do not build a second variant; extend the control if something is missing.
+
+**Parts**
+
+| Part | What it is |
+|---|---|
+| Trigger button | `InvFilterButtonStyle` (secondary button look) holding the label and a chevron-down glyph (`E313`). Fixed width (176 px in the toolbar) so a long label trims with an ellipsis instead of resizing the bar. |
+| Flyout | A `Flyout` using `EqDropdownFlyoutPresenterStyle` (elevated surface, 1 px border, `EqRadiusLg` corners, 8 px padding). `Placement = BottomEdgeAlignedLeft`, so it opens directly below the button, left edges aligned. |
+| Content | `Controls/MultiSelectList(values, selected, changed)`: a search field on top, then the checkbox list. |
+| Search field | 36 px tall, `EqBgBrush` fill, 1 px `EqBorderBrush`, `EqRadiusMd`, search glyph (`EF7A`) at the start, borderless transparent `TextBox` inside. Placeholder "Search..." (`Inventory_FilterSearch`; reuse the key or add a page-neutral one). Filters the list as the user types, case-insensitive, contains-match. |
+| List | One `CheckBox` per value, 34 px high, label centred vertically with the box (`VerticalContentAlignment = Center`, top padding 0, because the stock template pads the label 5 px from the top). Sorted alphabetically with the current culture. |
+| Scrolling | The list sits in a `ScrollViewer` with `MaxHeight = 264` (about 7 rows) and an auto vertical scrollbar. The flyout never grows with the number of values. |
+| Empty state | "No matches" (`Inventory_FilterNoMatches`) when the search hides every value or there are no values. |
+
+**Behaviour**
+
+- Width: the content is as wide as the trigger button, never narrower than 220 px (minus the flyout padding).
+- Ticking or unticking applies at once and keeps the flyout open; the owner updates its view (the control calls the `changed` callback after each tick). There is no Apply button.
+- The control edits the `ISet<string>` it is given in place. Keep the selection in the view model as a case-insensitive `HashSet<string>`; an empty set means "no restriction".
+- Several values in one filter combine as "any of"; different filters combine as "and".
+- Trigger label: nothing ticked shows the "All ..." text (`Inventory_AllTypes` style), exactly one value shows that value, several show "N selected" (`Inventory_FilterSelected`). A "Clear all" action next to the filters resets every set.
+- Cascading lists (used on Inventory): each dropdown offers only values that still exist among the items the other filters, any stock filter and the search leave, plus values already ticked so they can always be unticked. Build the list when the dropdown opens (`ViewModel.TypeValues` and siblings call `Filter(...)` without their own filter).
+- Light dismiss closes the flyout; Esc closes it too (standard flyout behaviour).
+
+**Colours and motion**: only theme tokens (see "Menus and dropdown lists"): `EqSurfaceElevatedBrush`, `EqBorderBrush`, `EqBgBrush` for the search field, `EqHoverFillBrush` on hover, gold for checked boxes. No custom animation; the flyout uses the platform open and close, inside the 100 ms motion budget.
+
+**Localisation**: every string comes from the resource files in English and Spanish (`Inventory_FilterSearch`, `Inventory_FilterNoMatches`, `Inventory_FilterSelected`, the "All ..." labels). Do not put literal text in the control. Check that long Spanish values trim cleanly in the 176 px trigger.
+
+**Adding a new multi-select filter**
+
+1. In the view model add a `HashSet<string>` (case-insensitive), an `ISet<string>` property for it, a values property that returns the distinct sorted values (cascading, if the screen has other filters), a label property built with the "All / one / N selected" rule, and make `Filter` and the "has active filters" check use the set.
+2. In the page add the trigger button (same style, fixed width, chevron) with a `Click` handler that calls `ShowMultiSelect(anchor, values, selectedSet)`; on selection change call the view model so it re-applies the filters.
+3. Add the English and Spanish strings, include the new set in "Clear all", and document the filter on the feature page.
+
 ## Tables
 
 Every table uses the shared styles in `Themes/Styles.xaml`, so tables look and feel the same; only the cell content differs (colour chips, stock steppers, article pictures, delete buttons).
@@ -41,6 +88,19 @@ Every table uses the shared styles in `Themes/Styles.xaml`, so tables look and f
 - Rows: a `Grid` with `EqTableRowStyle` (1 px divider) holding an `EqTableBandStyle` border first, visible on every second row (`IsAlternateRow` on the row view model), then the cell grid with the same column widths and 12 px start and 8 px end padding as the header.
 - Cell text: `EqTableCellStyle`, and `EqTableCellStrongStyle` for right-aligned values. No outer border around the table.
 - Used by: POS cart and payments, Add product variants, Product added.
+
+### Full-bleed table in a card (standard for list pages)
+
+A page table that sits in a card (Inventory is the reference, `Views/InventoryPage.xaml`, "Table card") runs edge to edge inside it. Use this layout for every list or table page from now on.
+
+- Card: `EqCardStyle` with `Padding="0"`. The table is never inset from the card edge.
+- Layout: one `Grid` with `RowDefinitions="Auto,*,Auto"` and `RowSpacing="0"`: header, scrolling rows, footer.
+- Header: `EqTableHeaderStyle` with `Padding="20,0,20,0"` and `CornerRadius="12,12,0,0"` (top corners match the card, bottom square), so the band spans the full card width.
+- Rows: `EqTableRowStyle` / `EqTableBandStyle` as above, but the cell grid uses `Padding="20,8,20,8"`, so text keeps a 20 px inset at both ends while banding, hover and selection tints reach both card edges. Use the same column widths as the header.
+- Row hover: a `HoverFill` border (`EqHoverFillBrush`, `Opacity` 0, `OpacityTransition` 100 ms) placed after the band and before the selection tint; pointer enter and exit set its opacity to 1 and 0. The selected row uses `EqGoldTintBrush` on top.
+- Footer: a `Grid` with `Padding="20,12"` and a 1 px top border (`EqBorderBrush`), holding the row count on the left and page-level actions (Export) on the right. No pagination: rows load in batches when the user scrolls near the end, and the footer says "Showing X of Y".
+- Scrolling: only the rows scroll (`ScrollViewer` between header and footer); the header and footer stay put.
+- Tables inside narrow pop-ups or side panels (the Inventory detail panel) keep the inset layout above, not full bleed.
 
 ## Form field sizing
 

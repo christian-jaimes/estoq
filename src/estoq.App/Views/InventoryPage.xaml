@@ -9,6 +9,38 @@
     Foreground="{ThemeResource EqTextBrush}">
 
   <Page.Resources>
+    <!-- KPI card hit area: transparent button laid over the card, gold border on hover and keyboard focus. -->
+    <Style x:Key="InvKpiButtonStyle" TargetType="Button">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
+      <Setter Property="FocusVisualPrimaryThickness" Value="2" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="Root" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="{StaticResource EqRadiusLg}">
+              <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                  <VisualState x:Name="Normal" />
+                  <VisualState x:Name="PointerOver">
+                    <VisualState.Setters>
+                      <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldBrush}" />
+                    </VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Pressed">
+                    <VisualState.Setters>
+                      <Setter Target="Root.BorderBrush" Value="{ThemeResource EqGoldHoverBrush}" />
+                    </VisualState.Setters>
+                  </VisualState>
+                </VisualStateGroup>
+              </VisualStateManager.VisualStateGroups>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
     <!-- Tab: text with a gold underline on the selected one. Promote to Themes/Styles.xaml when a second page needs it. -->
     <Style x:Key="InvTabStyle" TargetType="RadioButton">
       <Setter Property="MinWidth" Value="0" />
@@ -74,7 +106,7 @@
     </Style>
   </Page.Resources>
 
-  <Grid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="16" Margin="0,0,0,24" Background="Transparent" Tapped="OnPageTapped">
+  <Grid RowDefinitions="Auto,Auto,*" RowSpacing="16" Margin="0,0,0,24" Background="Transparent" Tapped="OnPageTapped">
 
     <!-- Title and actions -->
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="16">
@@ -84,9 +116,6 @@
       </StackPanel>
       <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
         <!-- Import is hidden until a CSV import flow is specified (docs/open-questions.md, Q13). -->
-        <Button Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Inventory_Export')}"
-                Command="{x:Bind ViewModel.ExportCommand}"
-                Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.CanExport), Mode=OneWay}" />
         <Button Style="{StaticResource EqPrimaryButtonStyle}" Command="{x:Bind ViewModel.AddProductCommand}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <FontIcon Glyph="&#xE145;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
@@ -99,161 +128,250 @@
       </StackPanel>
     </Grid>
 
-    <!-- Result of the last export -->
-    <TextBlock Grid.Row="1" Text="{x:Bind ViewModel.ExportMessage, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}"
-               Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.HasExportMessage), Mode=OneWay}" />
-
     <!-- KPI cards -->
-    <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*,*" ColumnSpacing="12">
-      <Border Grid.Column="0" Style="{StaticResource EqCardStyle}" Padding="16,14">
-        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-          <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqSurfaceElevatedBrush}" VerticalAlignment="Center">
-            <FontIcon Glyph="&#xE1A1;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqTextSecondaryBrush}" />
-          </Border>
-          <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock Text="{x:Bind services:Loc.Get('Inventory_KpiProducts')}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
-            <TextBlock Text="{x:Bind ViewModel.TotalProductsText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="26" />
-          </StackPanel>
-        </Grid>
-      </Border>
-      <Border Grid.Column="1" Style="{StaticResource EqCardStyle}" Padding="16,14">
-        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-          <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqSurfaceElevatedBrush}" VerticalAlignment="Center">
-            <FontIcon Glyph="&#xE53B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
-          </Border>
-          <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock Text="{x:Bind services:Loc.Get('Inventory_KpiVariants')}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
-            <TextBlock Text="{x:Bind ViewModel.TotalVariantsText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="26" />
-          </StackPanel>
-        </Grid>
-      </Border>
-      <Border Grid.Column="2" Style="{StaticResource EqCardStyle}" Padding="16,14">
-        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-          <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqSurfaceElevatedBrush}" VerticalAlignment="Center">
-            <FontIcon Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqSuccessBrush}" />
-          </Border>
-          <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock Text="{x:Bind services:Loc.Get('Inventory_KpiInStock')}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
-            <TextBlock Text="{x:Bind ViewModel.InStockText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="26" />
-          </StackPanel>
-        </Grid>
-      </Border>
-      <Border Grid.Column="3" Style="{StaticResource EqCardStyle}" Padding="16,14">
-        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-          <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqSurfaceElevatedBrush}" VerticalAlignment="Center">
-            <FontIcon Glyph="&#xF083;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqWarningBrush}" />
-          </Border>
-          <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock Text="{x:Bind services:Loc.Get('Inventory_KpiLow')}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
-            <TextBlock Text="{x:Bind ViewModel.LowStockText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="26" />
-          </StackPanel>
-        </Grid>
-      </Border>
-      <Border Grid.Column="4" Style="{StaticResource EqCardStyle}" Padding="16,14">
-        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-          <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqSurfaceElevatedBrush}" VerticalAlignment="Center">
-            <FontIcon Glyph="&#xF8B6;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqDangerBrush}" />
-          </Border>
-          <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock Text="{x:Bind services:Loc.Get('Inventory_KpiOut')}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
-            <TextBlock Text="{x:Bind ViewModel.OutOfStockText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="26" />
-          </StackPanel>
-        </Grid>
-      </Border>
+    <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*,*" ColumnSpacing="12">
+      <Grid Grid.Column="0">
+        <Border Style="{StaticResource EqCardStyle}" Padding="16,14">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqSurfaceElevatedBrush}" VerticalAlignment="Center">
+              <FontIcon Glyph="&#xE1A1;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqTextSecondaryBrush}" />
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+              <TextBlock Text="{x:Bind services:Loc.Get('Inventory_KpiProducts')}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="{x:Bind ViewModel.TotalProductsText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="26" />
+            </StackPanel>
+          </Grid>
+        </Border>
+        <Button Style="{StaticResource InvKpiButtonStyle}" Command="{x:Bind ViewModel.ShowAllCommand}"
+                AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_KpiProducts')}"
+                ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_KpiFilterHint')}" />
+      </Grid>
+      <Grid Grid.Column="1">
+        <Border Style="{StaticResource EqCardStyle}" Padding="16,14">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqSurfaceElevatedBrush}" VerticalAlignment="Center">
+              <FontIcon Glyph="&#xE53B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+              <TextBlock Text="{x:Bind services:Loc.Get('Inventory_KpiVariants')}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="{x:Bind ViewModel.TotalVariantsText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="26" />
+            </StackPanel>
+          </Grid>
+        </Border>
+        <Button Style="{StaticResource InvKpiButtonStyle}" Command="{x:Bind ViewModel.ShowAllCommand}"
+                AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_KpiVariants')}"
+                ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_KpiFilterHint')}" />
+      </Grid>
+      <Grid Grid.Column="2">
+        <Border Style="{StaticResource EqCardStyle}" Padding="16,14">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqSurfaceElevatedBrush}" VerticalAlignment="Center">
+              <FontIcon Glyph="&#xF720;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqSuccessBrush}" />
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+              <TextBlock Text="{x:Bind services:Loc.Get('Inventory_KpiInStock')}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="{x:Bind ViewModel.InStockText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="26" />
+            </StackPanel>
+          </Grid>
+        </Border>
+        <Button Style="{StaticResource InvKpiButtonStyle}" Command="{x:Bind ViewModel.FilterInStockCommand}"
+                AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_KpiInStock')}"
+                ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_KpiFilterHint')}" />
+        <Border Style="{StaticResource EqCardStyle}" Padding="0" BorderBrush="{ThemeResource EqGoldBrush}" BorderThickness="2" Background="Transparent" IsHitTestVisible="False"
+                Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsInStockFilter), Mode=OneWay}" />
+      </Grid>
+      <Grid Grid.Column="3">
+        <Border Style="{StaticResource EqCardStyle}" Padding="16,14">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqSurfaceElevatedBrush}" VerticalAlignment="Center">
+              <FontIcon Glyph="&#xF083;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqWarningBrush}" />
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+              <TextBlock Text="{x:Bind services:Loc.Get('Inventory_KpiLow')}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="{x:Bind ViewModel.LowStockText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="26" />
+            </StackPanel>
+          </Grid>
+        </Border>
+        <Button Style="{StaticResource InvKpiButtonStyle}" Command="{x:Bind ViewModel.FilterLowCommand}"
+                AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_KpiLow')}"
+                ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_KpiFilterHint')}" />
+        <Border Style="{StaticResource EqCardStyle}" Padding="0" BorderBrush="{ThemeResource EqGoldBrush}" BorderThickness="2" Background="Transparent" IsHitTestVisible="False"
+                Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsLowFilter), Mode=OneWay}" />
+      </Grid>
+      <Grid Grid.Column="4">
+        <Border Style="{StaticResource EqCardStyle}" Padding="16,14">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqSurfaceElevatedBrush}" VerticalAlignment="Center">
+              <FontIcon Glyph="&#xF8B6;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" Foreground="{ThemeResource EqDangerBrush}" />
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+              <TextBlock Text="{x:Bind services:Loc.Get('Inventory_KpiOut')}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="{x:Bind ViewModel.OutOfStockText, Mode=OneWay}" Style="{StaticResource EqKpiStyle}" FontSize="26" />
+            </StackPanel>
+          </Grid>
+        </Border>
+        <Button Style="{StaticResource InvKpiButtonStyle}" Command="{x:Bind ViewModel.FilterOutCommand}"
+                AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_KpiOut')}"
+                ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_KpiFilterHint')}" />
+        <Border Style="{StaticResource EqCardStyle}" Padding="0" BorderBrush="{ThemeResource EqGoldBrush}" BorderThickness="2" Background="Transparent" IsHitTestVisible="False"
+                Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsOutFilter), Mode=OneWay}" />
+      </Grid>
     </Grid>
 
     <!-- Table column; the detail panel floats over it -->
-    <Grid Grid.Row="3">
+    <Grid Grid.Row="2">
 
-      <!-- Tabs, filters, table, pages -->
-      <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12" MinWidth="0">
+      <!-- Filters, table, pages -->
+      <Grid RowDefinitions="Auto,*" RowSpacing="12" MinWidth="0">
 
-        <Border Grid.Row="0" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">
-          <StackPanel Orientation="Horizontal" Spacing="4">
-            <RadioButton GroupName="InventoryTabs" Style="{StaticResource InvTabStyle}" Content="{x:Bind services:Loc.Get('Inventory_TabAll')}"
-                         IsChecked="{x:Bind ViewModel.IsAllTab, Mode=TwoWay}" />
-            <RadioButton GroupName="InventoryTabs" Style="{StaticResource InvTabStyle}" Content="{x:Bind services:Loc.Get('Inventory_TabLow')}"
-                         IsChecked="{x:Bind ViewModel.IsLowTab, Mode=TwoWay}" />
-            <RadioButton GroupName="InventoryTabs" Style="{StaticResource InvTabStyle}" Content="{x:Bind services:Loc.Get('Inventory_TabOut')}"
-                         IsChecked="{x:Bind ViewModel.IsOutTab, Mode=TwoWay}" />
-          </StackPanel>
+        <!-- Toolbar: sort, filters, search, clear all -->
+        <Border Grid.Row="0" Style="{StaticResource EqCardStyle}" Padding="12,10">
+          <Grid ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Sort -->
+            <Button Grid.Column="0" Style="{StaticResource InvFilterButtonStyle}" Width="172"
+                    Click="OnSortClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_SortBy')}"
+                    ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_SortBy')}">
+              <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                <FontIcon Glyph="&#xE152;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SortLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                <FontIcon Grid.Column="2" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+              </Grid>
+            </Button>
+            <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Width="40" MinWidth="0" Padding="0"
+                    Command="{x:Bind ViewModel.ToggleSortDirectionCommand}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.SortDirectionToolTip, Mode=OneWay}"
+                    AutomationProperties.Name="{x:Bind ViewModel.SortDirectionToolTip, Mode=OneWay}">
+              <FontIcon Glyph="{x:Bind ViewModel.SortDirectionGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
+            </Button>
+
+            <Border Grid.Column="2" Width="1" Height="24" Background="{ThemeResource EqBorderBrush}" Margin="4,0" VerticalAlignment="Center" />
+
+            <!-- Filters -->
+            <Button Grid.Column="4" Style="{StaticResource InvFilterButtonStyle}" Width="176"
+                    Click="OnCategoryClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_FilterCategory')}"
+                    ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_FilterCategory')}">
+              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <TextBlock Text="{x:Bind ViewModel.CategoryLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+              </Grid>
+            </Button>
+            <Button Grid.Column="3" Style="{StaticResource InvFilterButtonStyle}" Width="176"
+                    Click="OnTypeClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_FilterType')}"
+                    ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_FilterType')}">
+              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <TextBlock Text="{x:Bind ViewModel.TypeLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+              </Grid>
+            </Button>
+            <Button Grid.Column="5" Style="{StaticResource InvFilterButtonStyle}" Width="176"
+                    Click="OnBrandClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_FilterBrand')}"
+                    ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_FilterBrand')}">
+              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <TextBlock Text="{x:Bind ViewModel.BrandLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+              </Grid>
+            </Button>
+
+            <Border Grid.Column="6" Width="1" Height="24" Background="{ThemeResource EqBorderBrush}" Margin="4,0" VerticalAlignment="Center" />
+
+            <!-- Search (same text as the top bar search) -->
+            <Border Grid.Column="7" MinWidth="140" Height="36" Background="{ThemeResource EqBgBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1"
+                    CornerRadius="{StaticResource EqRadiusMd}" Padding="12,0">
+              <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                <FontIcon Glyph="&#xEF7A;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}"
+                          Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
+                <TextBox Grid.Column="1" VerticalAlignment="Center"
+                         PlaceholderText="{x:Bind services:Loc.Get('Inventory_SearchPlaceholder')}"
+                         Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Background="Transparent" BorderThickness="0" MinHeight="0" Padding="0,6"
+                         FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontMd}"
+                         AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_SearchPlaceholder')}">
+                  <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
+                    <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
+                    <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                  </TextBox.Resources>
+                </TextBox>
+              </Grid>
+            </Border>
+
+            <!-- Clear all -->
+            <HyperlinkButton Grid.Column="8" Content="{x:Bind services:Loc.Get('Inventory_ClearAll')}" Style="{StaticResource EqLinkButtonStyle}" VerticalAlignment="Center"
+                             Command="{x:Bind ViewModel.ClearFiltersCommand}"
+                             Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.HasActiveFilters), Mode=OneWay}" />
+          </Grid>
         </Border>
 
-        <Grid Grid.Row="1" ColumnDefinitions="*,*,1.2*,Auto" ColumnSpacing="8">
-          <Button Grid.Column="0" Style="{StaticResource InvFilterButtonStyle}"
-                  Click="OnCategoryClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_FilterCategory')}"
-                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_FilterCategory')}">
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-              <TextBlock Text="{x:Bind ViewModel.CategoryLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-              <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
-            </Grid>
-          </Button>
-          <Button Grid.Column="1" Style="{StaticResource InvFilterButtonStyle}"
-                  Click="OnBrandClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_FilterBrand')}"
-                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_FilterBrand')}">
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-              <TextBlock Text="{x:Bind ViewModel.BrandLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-              <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
-            </Grid>
-          </Button>
-          <Button Grid.Column="2" Style="{StaticResource InvFilterButtonStyle}"
-                  Click="OnSortClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_SortBy')}"
-                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_SortBy')}">
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-              <TextBlock Text="{x:Bind ViewModel.SortLabel, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-              <FontIcon Grid.Column="1" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
-            </Grid>
-          </Button>
-          <Button Grid.Column="3" Style="{StaticResource EqSecondaryButtonStyle}" Width="40" MinWidth="0" Padding="0"
-                  Command="{x:Bind ViewModel.ToggleSortDirectionCommand}"
-                  ToolTipService.ToolTip="{x:Bind ViewModel.SortDirectionToolTip, Mode=OneWay}"
-                  AutomationProperties.Name="{x:Bind ViewModel.SortDirectionToolTip, Mode=OneWay}">
-            <FontIcon Glyph="{x:Bind ViewModel.SortDirectionGlyph, Mode=OneWay}" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" />
-          </Button>
-        </Grid>
-
         <!-- Table card -->
-        <Border Grid.Row="2" Style="{StaticResource EqCardStyle}" Padding="16">
-          <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
+        <Border Grid.Row="1" Style="{StaticResource EqCardStyle}" Padding="0">
+          <!-- Full bleed: the header, rows and footer run edge to edge inside the card. -->
+          <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
 
-            <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,20,0">
+            <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="20,0,20,0" CornerRadius="12,12,0,0">
               <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" MinWidth="140" />
-                <ColumnDefinition Width="116" />
+                <ColumnDefinition Width="132" />
+                <ColumnDefinition Width="*" MinWidth="200" />
+                <ColumnDefinition Width="128" />
                 <ColumnDefinition Width="116" />
                 <ColumnDefinition Width="80" />
-                <ColumnDefinition Width="64" />
-                <ColumnDefinition Width="132" />
+                <ColumnDefinition Width="96" />
+                <ColumnDefinition Width="170" />
               </Grid.ColumnDefinitions>
-              <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Inventory_ColProduct')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Inventory_ColCategory')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-              <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Inventory_ColBrand')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-              <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Inventory_ColVariants')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
-              <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Inventory_ColStock')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
-              <TextBlock Grid.Column="5" Text="{x:Bind services:Loc.Get('Inventory_ColStatus')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+              <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Inventory_ColStatus')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+              <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Inventory_ColProduct')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+              <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Inventory_ColCategory')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+              <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Inventory_ColBrand')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+              <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Inventory_ColVariants')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
+              <TextBlock Grid.Column="5" Text="{x:Bind services:Loc.Get('Inventory_ColStock')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
+              <TextBlock Grid.Column="6" Text="{x:Bind services:Loc.Get('Inventory_ColPrice')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
             </Grid>
 
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer x:Name="TableScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                          ViewChanged="OnTableViewChanged" SizeChanged="OnTableSizeChanged">
               <Grid>
                 <ItemsControl ItemsSource="{x:Bind ViewModel.Rows, Mode=OneWay}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:InventoryRowViewModel">
-                      <Grid MinHeight="64" Background="Transparent" Style="{StaticResource EqTableRowStyle}" Tapped="OnRowTapped">
+                      <Grid MinHeight="64" Background="Transparent" Style="{StaticResource EqTableRowStyle}" Tapped="OnRowTapped"
+                            PointerEntered="OnRowPointerEntered" PointerExited="OnRowPointerExited">
                         <Border Style="{StaticResource EqTableBandStyle}"
                                 Visibility="{x:Bind local:InventoryBindings.Visible(IsAlternateRow)}" />
+                        <Border x:Name="HoverFill" Background="{ThemeResource EqHoverFillBrush}" IsHitTestVisible="False" Opacity="0">
+                          <Border.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.1" />
+                          </Border.OpacityTransition>
+                        </Border>
                         <Border Background="{ThemeResource EqGoldTintBrush}" IsHitTestVisible="False"
                                 Visibility="{x:Bind local:InventoryBindings.Visible(IsSelected), Mode=OneWay}" />
-                        <Grid Padding="12,8,20,8" ColumnSpacing="8">
+                        <Grid Padding="20,8,20,8" ColumnSpacing="8">
                           <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" MinWidth="140" />
-                            <ColumnDefinition Width="116" />
+                            <ColumnDefinition Width="132" />
+                            <ColumnDefinition Width="*" MinWidth="200" />
+                            <ColumnDefinition Width="128" />
                             <ColumnDefinition Width="116" />
                             <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="64" />
-                            <ColumnDefinition Width="132" />
-                                      </Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96" />
+                            <ColumnDefinition Width="170" />
+                          </Grid.ColumnDefinitions>
 
-                          <Grid Grid.Column="0" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                          <Grid Grid.Column="1" ColumnDefinitions="Auto,*" ColumnSpacing="12">
                             <!-- First-letter placeholder until products have pictures. -->
                             <Border Width="40" Height="40" CornerRadius="{StaticResource EqRadiusMd}" Background="{ThemeResource EqGoldTintBrush}"
                                     VerticalAlignment="Center">
@@ -266,11 +384,12 @@
                               <TextBlock Text="{x:Bind Code}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
                           </Grid>
-                          <TextBlock Grid.Column="1" Text="{x:Bind Category}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
-                          <TextBlock Grid.Column="2" Text="{x:Bind Brand}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
-                          <TextBlock Grid.Column="3" Text="{x:Bind VariantsText}" Style="{StaticResource EqTableCellStyle}" HorizontalAlignment="Right" />
-                          <TextBlock Grid.Column="4" Text="{x:Bind StockText}" Style="{StaticResource EqTableCellStrongStyle}" />
-                          <controls:StatusBadge Grid.Column="5" Kind="{x:Bind StatusKind}" Text="{x:Bind StatusText}" VerticalAlignment="Center" />
+                          <TextBlock Grid.Column="2" Text="{x:Bind Category}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Grid.Column="3" Text="{x:Bind Brand}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Grid.Column="4" Text="{x:Bind VariantsText}" Style="{StaticResource EqTableCellStyle}" HorizontalAlignment="Right" />
+                          <TextBlock Grid.Column="5" Text="{x:Bind StockText}" Style="{StaticResource EqTableCellStrongStyle}" HorizontalAlignment="Right" />
+                          <TextBlock Grid.Column="6" Text="{x:Bind PriceText}" Style="{StaticResource EqTableCellStyle}" HorizontalAlignment="Right" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                          <controls:StatusBadge Grid.Column="0" Kind="{x:Bind StatusKind}" Text="{x:Bind StatusText}" VerticalAlignment="Center" />
                         </Grid>
                       </Grid>
                     </DataTemplate>
@@ -289,45 +408,18 @@
               </Grid>
             </ScrollViewer>
 
-            <!-- Pages -->
-            <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <!-- Footer: count of loaded rows, last export result, export of exactly those rows -->
+            <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16" Padding="20,12"
+                  BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,1,0,0">
               <TextBlock Text="{x:Bind ViewModel.ShowingText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center"
                          TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-              <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
-                <Button Style="{StaticResource EqPlainIconButtonStyle}" Command="{x:Bind ViewModel.PreviousPageCommand}"
-                        IsEnabled="{x:Bind ViewModel.CanGoPrevious, Mode=OneWay}"
-                        AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_PreviousPage')}"
-                        ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_PreviousPage')}">
-                  <FontIcon Glyph="&#xE5CB;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
-                </Button>
-                <ItemsControl ItemsSource="{x:Bind ViewModel.PageItems, Mode=OneWay}">
-                  <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                      <StackPanel Orientation="Horizontal" Spacing="4" />
-                    </ItemsPanelTemplate>
-                  </ItemsControl.ItemsPanel>
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:PageItemViewModel">
-                      <Grid>
-                        <Button Style="{StaticResource EqPrimaryButtonStyle}" Width="36" MinWidth="0" Padding="0" Content="{x:Bind Label}"
-                                Tag="{x:Bind Page}" Click="OnPageClick"
-                                Visibility="{x:Bind local:InventoryBindings.Visible(IsCurrent)}" />
-                        <Button Style="{StaticResource EqSecondaryButtonStyle}" Width="36" MinWidth="0" Padding="0" Content="{x:Bind Label}"
-                                Tag="{x:Bind Page}" Click="OnPageClick"
-                                Visibility="{x:Bind local:InventoryBindings.Visible(IsOtherPage)}" />
-                        <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="24" TextAlignment="Center"
-                                   Visibility="{x:Bind local:InventoryBindings.Visible(IsGap)}" />
-                      </Grid>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <Button Style="{StaticResource EqPlainIconButtonStyle}" Command="{x:Bind ViewModel.NextPageCommand}"
-                        IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}"
-                        AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_NextPage')}"
-                        ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_NextPage')}">
-                  <FontIcon Glyph="&#xE5CC;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
-                </Button>
-              </StackPanel>
+              <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.ExportMessage, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center"
+                         HorizontalAlignment="Right" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
+                         Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.HasExportMessage), Mode=OneWay}" />
+              <Button Grid.Column="2" Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Inventory_Export')}"
+                      Command="{x:Bind ViewModel.ExportCommand}"
+                      ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_ExportTip')}"
+                      Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.CanExport), Mode=OneWay}" />
             </Grid>
           </Grid>
         </Border>
