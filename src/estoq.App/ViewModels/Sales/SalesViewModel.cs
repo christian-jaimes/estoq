@@ -157,6 +157,9 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
     public partial SaleStatus DetailStatus { get; set; }
 
     [ObservableProperty]
+    public partial string DetailStatusKind { get; set; } = "neutral";
+
+    [ObservableProperty]
     public partial string DetailStatusText { get; set; } = string.Empty;
 
     [ObservableProperty]
@@ -395,6 +398,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         var culture = _localizer.Culture;
         DetailReceipt = sale.ReceiptNumber;
         DetailStatus = sale.Status;
+        DetailStatusKind = row.StatusKind;
         DetailStatusText = row.StatusText;
         DetailDateText = row.DateText;
         DetailStaffText = _localizer.Format("Sales_StaffLine", sale.Staff);

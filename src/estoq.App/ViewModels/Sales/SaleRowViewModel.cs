@@ -20,6 +20,7 @@ public sealed class SaleRowViewModel
         TotalText = CurrencyFormat.Amount(sale.Totals.Total, currency, culture);
         StaffText = sale.Staff;
         Status = sale.Status;
+        StatusKind = KindOf(sale.Status);
         StatusText = localizer["Sales_Status_" + sale.Status];
         MethodText = localizer["Pos_Method_" + sale.PrimaryMethod];
         (MethodGlyph, MethodBrandLetter, MethodBrandBrush) = PaymentMethodViewModel.Describe(sale.PrimaryMethod);
@@ -44,7 +45,17 @@ public sealed class SaleRowViewModel
 
     public SaleStatus Status { get; }
 
+    /// <summary>The StatusBadge kind: "success", "warning" or "danger".</summary>
+    public string StatusKind { get; }
+
     public string StatusText { get; }
+
+    public static string KindOf(SaleStatus status) => status switch
+    {
+        SaleStatus.Completed => "success",
+        SaleStatus.Returned => "warning",
+        _ => "danger",
+    };
 
     public string MethodText { get; }
 
