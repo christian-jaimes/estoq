@@ -74,13 +74,15 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddSingleton<ILogoPickerService, LogoPickerService>();
         services.AddSingleton<IRecoveryKeyPrinter, RecoveryKeyPrinter>();
         services.AddSingleton<IReceiptPrinter, ReceiptPrinter>();
+        services.AddSingleton<IDashboardService, SampleDashboardService>();
+        services.AddSingleton<IReportExportService, ReportExportService>();
         services.AddSingleton<WelcomeStepViewModel>();
         services.AddSingleton<OwnerStepViewModel>();
         services.AddSingleton<StoreStepViewModel>();
         services.AddSingleton<PreferencesStepViewModel>();
         services.AddSingleton<RecoveryStepViewModel>();
         services.AddSingleton<SetupWizardViewModel>();
-        services.AddTransient<DashboardViewModel>();
+        services.AddSingleton<DashboardViewModel>();
         services.AddTransient<PlaceholderViewModel>();
         return services.BuildServiceProvider();
     }

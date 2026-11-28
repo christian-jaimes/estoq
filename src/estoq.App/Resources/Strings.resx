@@ -427,4 +427,51 @@
   <data name="Ret_KpiNewItems" xml:space="preserve"><value>New items</value></data>
   <data name="Notif_ReturnWithoutReceipt_Title" xml:space="preserve"><value>Return {0} had no receipt</value></data>
   <data name="Notif_ReturnWithoutReceipt_Detail" xml:space="preserve"><value>Returned at today's price without a receipt. Review it.</value></data>
+  <data name="Dash_SubtitleRange" xml:space="preserve"><value>{0} to {1}</value></data>
+  <data name="Dash_Range_Today" xml:space="preserve"><value>Today</value></data>
+  <data name="Dash_Range_Last7Days" xml:space="preserve"><value>Last 7 days</value></data>
+  <data name="Dash_Range_Last30Days" xml:space="preserve"><value>Last 30 days</value></data>
+  <data name="Dash_Range_ThisMonth" xml:space="preserve"><value>This month</value></data>
+  <data name="Dash_Range_LastMonth" xml:space="preserve"><value>Last month</value></data>
+  <data name="Dash_Granularity_Daily" xml:space="preserve"><value>Daily</value></data>
+  <data name="Dash_Granularity_Weekly" xml:space="preserve"><value>Weekly</value></data>
+  <data name="Dash_NoPrevious" xml:space="preserve"><value>No earlier data</value></data>
+  <data name="Dash_ChangeVsPrevious" xml:space="preserve"><value>{0} vs previous period</value></data>
+  <data name="Dash_KpiSales" xml:space="preserve"><value>Total sales</value></data>
+  <data name="Dash_KpiTransactions" xml:space="preserve"><value>Transactions</value></data>
+  <data name="Dash_KpiItems" xml:space="preserve"><value>Items sold</value></data>
+  <data name="Dash_KpiAverage" xml:space="preserve"><value>Average sale</value></data>
+  <data name="Dash_KpiRefunds" xml:space="preserve"><value>Refunds</value></data>
+  <data name="Dash_KpiProfit" xml:space="preserve"><value>Gross profit</value></data>
+  <data name="Dash_PaymentOther" xml:space="preserve"><value>Other methods</value></data>
+  <data name="Dash_LowStockCount" xml:space="preserve"><value>{0} items running low</value></data>
+  <data name="Dash_Left" xml:space="preserve"><value>{0} left</value></data>
+  <data name="Dash_LowStockTitle" xml:space="preserve"><value>Low-stock items</value></data>
+  <data name="Dash_ReportSection_Period" xml:space="preserve"><value>Period</value></data>
+  <data name="Dash_ReportSection_Totals" xml:space="preserve"><value>Totals</value></data>
+  <data name="Dash_ReportSection_Series" xml:space="preserve"><value>Sales by day</value></data>
+  <data name="Dash_ReportSection_Payments" xml:space="preserve"><value>Sales by payment method</value></data>
+  <data name="Dash_ReportSection_Top" xml:space="preserve"><value>Top selling products (units)</value></data>
+  <data name="Dash_ReportSection_Categories" xml:space="preserve"><value>Sales by category</value></data>
+  <data name="Dash_ReportSection_Stock" xml:space="preserve"><value>Stock</value></data>
+  <data name="Dash_ReportLabel_From" xml:space="preserve"><value>From</value></data>
+  <data name="Dash_ReportLabel_To" xml:space="preserve"><value>To</value></data>
+  <data name="Dash_ReportFileName" xml:space="preserve"><value>estoq-dashboard-{0}</value></data>
+  <data name="Dash_ReportSaved" xml:space="preserve"><value>Report saved</value></data>
+  <data name="Dash_Export" xml:space="preserve"><value>Export report</value></data>
+  <data name="Dash_SalesOverTime" xml:space="preserve"><value>Sales over time</value></data>
+  <data name="Dash_EmptySales" xml:space="preserve"><value>Not enough sales in this period to draw a chart.</value></data>
+  <data name="Dash_SalesByPayment" xml:space="preserve"><value>Sales by payment method</value></data>
+  <data name="Dash_Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Dash_EmptyPayments" xml:space="preserve"><value>No sales in this period.</value></data>
+  <data name="Dash_TopProducts" xml:space="preserve"><value>Top selling products</value></data>
+  <data name="Dash_ColProduct" xml:space="preserve"><value>Product</value></data>
+  <data name="Dash_ColUnits" xml:space="preserve"><value>Units</value></data>
+  <data name="Dash_ColSales" xml:space="preserve"><value>Sales</value></data>
+  <data name="Dash_ColStock" xml:space="preserve"><value>Stock</value></data>
+  <data name="Dash_EmptyTop" xml:space="preserve"><value>No sales in this period.</value></data>
+  <data name="Dash_SalesByCategory" xml:space="preserve"><value>Sales by category</value></data>
+  <data name="Dash_EmptyCategories" xml:space="preserve"><value>No sales in this period.</value></data>
+  <data name="Dash_ViewAll" xml:space="preserve"><value>View all</value></data>
+  <data name="Dash_EmptyLowStock" xml:space="preserve"><value>Nothing is running low.</value></data>
 </root>
