@@ -84,6 +84,29 @@ public sealed partial class SalesPage : Page
         }
     }
 
+    private void OnDateClick(object sender, RoutedEventArgs e)
+    {
+        var flyout = new Flyout
+        {
+            Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.BottomEdgeAlignedLeft,
+            FlyoutPresenterStyle = (Style)Application.Current.Resources["EqDateRangeFlyoutStyle"],
+        };
+
+        // Two months need about 840 px from the button's left edge; in a narrower window show one month instead of clipping.
+        var anchor = (FrameworkElement)sender;
+        var left = anchor.TransformToVisual(null).TransformPoint(new Windows.Foundation.Point(0, 0)).X;
+        var compact = left + 840 + 24 > anchor.XamlRoot.Size.Width;
+
+        flyout.Content = new DateRangePicker(
+            ViewModel.Dates,
+            DateOnly.FromDateTime(DateTime.Today),
+            ViewModel.Culture,
+            ViewModel.ApplyDates,
+            compact,
+            flyout.Hide);
+        flyout.ShowAt(anchor);
+    }
+
     private void OnSortClick(object sender, RoutedEventArgs e) =>
         FilterFlyouts.ShowOptions((FrameworkElement)sender, ViewModel.SortOptions, ViewModel.SelectedSort, ViewModel.SelectSort);
 

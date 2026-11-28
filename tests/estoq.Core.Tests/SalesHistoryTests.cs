@@ -33,44 +33,65 @@ public class SalesHistoryTests
 
     private static string Receipts(IEnumerable<SaleRecord> sales) => string.Join(",", sales.Select(sale => sale.ReceiptNumber));
 
-    // Page numbers joined by commas; 0 is the ellipsis.
     [Fact]
     public void WeekStartsOnMondayAndRunsSevenDays()
     {
-        var (from, to) = SalesHistory.RangeOf(SalesPeriod.ThisWeek, Today, null, null);
-        Assert.Equal(new DateOnly(2026, 11, 23), from);
-        Assert.Equal(new DateOnly(2026, 11, 29), to);
+        var week = DateRange.Of(QuickRange.ThisWeek, Today);
+        Assert.Equal(new DateOnly(2026, 11, 23), week.From);
+        Assert.Equal(new DateOnly(2026, 11, 29), week.To);
 
-        var (sundayFrom, _) = SalesHistory.RangeOf(SalesPeriod.ThisWeek, new DateOnly(2026, 11, 29), null, null);
-        Assert.Equal(new DateOnly(2026, 11, 23), sundayFrom);
+        Assert.Equal(new DateOnly(2026, 11, 23), DateRange.Of(QuickRange.ThisWeek, new DateOnly(2026, 11, 29)).From);
     }
 
     [Fact]
-    public void MonthCoversFirstToLastDay()
+    public void MonthAndYearCoverFirstToLastDay()
     {
-        var (from, to) = SalesHistory.RangeOf(SalesPeriod.ThisMonth, Today, null, null);
-        Assert.Equal(new DateOnly(2026, 11, 1), from);
-        Assert.Equal(new DateOnly(2026, 11, 30), to);
+        var month = DateRange.Of(QuickRange.ThisMonth, Today);
+        Assert.Equal(new DateOnly(2026, 11, 1), month.From);
+        Assert.Equal(new DateOnly(2026, 11, 30), month.To);
+
+        var year = DateRange.Of(QuickRange.ThisYear, Today);
+        Assert.Equal(new DateOnly(2026, 1, 1), year.From);
+        Assert.Equal(new DateOnly(2026, 12, 31), year.To);
+
+        var february = DateRange.Of(QuickRange.ThisMonth, new DateOnly(2028, 2, 10));
+        Assert.Equal(new DateOnly(2028, 2, 29), february.To);
     }
 
     [Fact]
-    public void CustomRangeIsOrderedWhenEnteredBackwards()
+    public void TodayIsASingleDay() =>
+        Assert.Equal(new DateRange(Today, Today), DateRange.Of(QuickRange.Today, Today));
+
+    [Fact]
+    public void RangeIsOrderedWhenEnteredBackwards()
     {
-        var (from, to) = SalesHistory.RangeOf(SalesPeriod.Custom, Today, new DateOnly(2026, 11, 20), new DateOnly(2026, 11, 10));
-        Assert.Equal(new DateOnly(2026, 11, 10), from);
-        Assert.Equal(new DateOnly(2026, 11, 20), to);
+        var range = DateRange.Create(new DateOnly(2026, 11, 20), new DateOnly(2026, 11, 10));
+        Assert.Equal(new DateOnly(2026, 11, 10), range.From);
+        Assert.Equal(new DateOnly(2026, 11, 20), range.To);
+        Assert.True(range.Contains(new DateOnly(2026, 11, 20)));
+        Assert.False(range.Contains(new DateOnly(2026, 11, 21)));
     }
 
     [Fact]
-    public void ListIsNewestFirstAndPeriodFiltersByDay()
+    public void ShortcutMatchesOnlyItsOwnRange()
+    {
+        Assert.Equal(QuickRange.ThisMonth, DateRange.Match(DateRange.Of(QuickRange.ThisMonth, Today), Today));
+        Assert.Equal(QuickRange.Today, DateRange.Match(new DateRange(Today, Today), Today));
+        Assert.Equal(QuickRange.ThisYear, DateRange.Match(DateRange.Of(QuickRange.ThisYear, Today), Today));
+        Assert.Null(DateRange.Match(new DateRange(new DateOnly(2026, 11, 2), Today), Today));
+        Assert.Null(DateRange.Match(null, Today));
+    }
+
+    [Fact]
+    public void ListIsNewestFirstAndDateRangeFiltersByDay()
     {
         var all = SalesHistory.Apply(Sample(), new SalesFilter(), UserRole.Owner, "Owner", Today);
         Assert.Equal("S-000003,S-000002,S-000001", Receipts(all));
 
-        var today = SalesHistory.Apply(Sample(), new SalesFilter(SalesPeriod.Today), UserRole.Owner, "Owner", Today);
+        var today = SalesHistory.Apply(Sample(), new SalesFilter(DateRange.Of(QuickRange.Today, Today)), UserRole.Owner, "Owner", Today);
         Assert.Equal("S-000003", Receipts(today));
 
-        var week = SalesHistory.Apply(Sample(), new SalesFilter(SalesPeriod.ThisWeek), UserRole.Manager, "Owner", Today);
+        var week = SalesHistory.Apply(Sample(), new SalesFilter(DateRange.Of(QuickRange.ThisWeek, Today)), UserRole.Manager, "Owner", Today);
         Assert.Equal(2, week.Count);
     }
 

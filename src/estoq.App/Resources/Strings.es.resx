@@ -374,16 +374,20 @@
   <data name="Sales_DateRange" xml:space="preserve"><value>Rango de fechas</value></data>
   <data name="Sales_From" xml:space="preserve"><value>Desde</value></data>
   <data name="Sales_To" xml:space="preserve"><value>Hasta</value></data>
+  <data name="Sales_QuickSelect" xml:space="preserve"><value>Selección rápida</value></data>
+  <data name="Sales_QuickToday" xml:space="preserve"><value>Hoy</value></data>
+  <data name="Sales_QuickWeek" xml:space="preserve"><value>Esta semana</value></data>
+  <data name="Sales_QuickMonth" xml:space="preserve"><value>Este mes</value></data>
+  <data name="Sales_QuickYear" xml:space="preserve"><value>Este año</value></data>
+  <data name="Sales_Apply" xml:space="preserve"><value>Aplicar</value></data>
+  <data name="Sales_DateLabel" xml:space="preserve"><value>Fecha: {0} – {1}</value></data>
+  <data name="Sales_PreviousMonth" xml:space="preserve"><value>Mes anterior</value></data>
+  <data name="Sales_NextMonth" xml:space="preserve"><value>Mes siguiente</value></data>
   <data name="Sales_AllDates" xml:space="preserve"><value>Todas las fechas</value></data>
   <data name="Sales_KpiTotal" xml:space="preserve"><value>Ventas totales</value></data>
   <data name="Sales_KpiTransactions" xml:space="preserve"><value>Transacciones</value></data>
   <data name="Sales_KpiItems" xml:space="preserve"><value>Artículos vendidos</value></data>
   <data name="Sales_KpiAverage" xml:space="preserve"><value>Venta promedio</value></data>
-  <data name="Sales_TabAll" xml:space="preserve"><value>Todas las ventas</value></data>
-  <data name="Sales_TabToday" xml:space="preserve"><value>Hoy</value></data>
-  <data name="Sales_TabWeek" xml:space="preserve"><value>Esta semana</value></data>
-  <data name="Sales_TabMonth" xml:space="preserve"><value>Este mes</value></data>
-  <data name="Sales_TabCustom" xml:space="preserve"><value>Personalizado</value></data>
   <data name="Sales_SearchPlaceholder" xml:space="preserve"><value>Buscar en ventas...</value></data>
   <data name="Sales_SortBy" xml:space="preserve"><value>Ordenar por</value></data>
   <data name="Sales_SortDate" xml:space="preserve"><value>Fecha y hora</value></data>

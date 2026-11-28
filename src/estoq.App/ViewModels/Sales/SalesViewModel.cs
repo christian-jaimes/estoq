@@ -27,7 +27,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
     private readonly ICsvExportService _exporter;
 
     private IReadOnlyList<SaleRecord> _filtered = [];
-    private SalesPeriod _period = SalesPeriod.All;
+    private DateRange? _dates;
     private int _shown = BatchSize;
 
     // The ticked values of the multi-select filters (the dropdowns edit these sets), and the sort.
@@ -57,19 +57,10 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         _printer = printer;
         _exporter = exporter;
 
-        var today = Today;
-        _building = true;
-        CustomToDate = new DateTimeOffset(today.ToDateTime(TimeOnly.MinValue));
-        CustomFromDate = new DateTimeOffset(today.AddDays(-29).ToDateTime(TimeOnly.MinValue));
-        _building = false;
-
         CanExport = RolePermissions.IsAllowed(_session.Role, Permission.ExportCsv);
-        BuildChoices();
         Reload();
         _localizer.LanguageChanged += OnLanguageChanged;
     }
-
-    public ObservableCollection<PeriodTabViewModel> Tabs { get; } = [];
 
     public ObservableCollection<SaleRowViewModel> Rows { get; } = [];
 
@@ -108,11 +99,13 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     public partial bool HasActiveFilters { get; set; }
 
+    /// <summary>The date filter button's text: "All dates", or "Date: first – last".</summary>
     [ObservableProperty]
-    public partial DateTimeOffset? CustomFromDate { get; set; }
+    public partial string DateButtonText { get; set; } = string.Empty;
 
+    /// <summary>True while a date range filters the table: the button takes the active (gold) look.</summary>
     [ObservableProperty]
-    public partial DateTimeOffset? CustomToDate { get; set; }
+    public partial bool HasDateFilter { get; set; }
 
     [ObservableProperty]
     public partial string DateRangeText { get; set; } = string.Empty;
@@ -192,11 +185,6 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
 
     partial void OnSearchTextChanged(string value) => OnFilterChanged();
 
-    // Choosing a date in the range picker means the period is now a custom one.
-    partial void OnCustomFromDateChanged(DateTimeOffset? value) => OnCustomDateChanged();
-
-    partial void OnCustomToDateChanged(DateTimeOffset? value) => OnCustomDateChanged();
-
     partial void OnNoticeTextChanged(string value) => OnPropertyChanged(nameof(HasNotice));
 
     partial void OnSelectedChanged(SaleRowViewModel? oldValue, SaleRowViewModel? newValue)
@@ -221,7 +209,6 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
     {
         // Method ticks are held as words of the old language; staff names are the same in every language.
         _methods.Clear();
-        BuildChoices();
         Reload();
     }
 
@@ -236,56 +223,18 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         Reload();
     }
 
-    private void OnCustomDateChanged()
+    /// <summary>The language of the dates shown.</summary>
+    public CultureInfo Culture => _localizer.Culture;
+
+    /// <summary>The date range the table is limited to, or null for all dates.</summary>
+    public DateRange? Dates => _dates;
+
+    /// <summary>Applies the range chosen in the date picker (null = all dates).</summary>
+    public void ApplyDates(DateRange? range)
     {
-        if (_building || CustomFromDate is null || CustomToDate is null)
-        {
-            return;
-        }
-
-        _period = SalesPeriod.Custom;
-        _building = true;
-        foreach (var tab in Tabs)
-        {
-            tab.IsSelected = tab.Period == SalesPeriod.Custom;
-        }
-
-        _building = false;
+        _dates = range;
         _shown = BatchSize;
         Reload();
-    }
-
-    private void OnTabSelected(SalesPeriod period)
-    {
-        if (_building || period == _period)
-        {
-            return;
-        }
-
-        _period = period;
-        _shown = BatchSize;
-        Reload();
-    }
-
-    /// <summary>Builds the period tabs in the current language.</summary>
-    private void BuildChoices()
-    {
-        _building = true;
-
-        Tabs.Clear();
-        foreach (var (period, key) in new[]
-        {
-            (SalesPeriod.All, "Sales_TabAll"),
-            (SalesPeriod.Today, "Sales_TabToday"),
-            (SalesPeriod.ThisWeek, "Sales_TabWeek"),
-            (SalesPeriod.ThisMonth, "Sales_TabMonth"),
-            (SalesPeriod.Custom, "Sales_TabCustom"),
-        })
-        {
-            Tabs.Add(new PeriodTabViewModel(period, _localizer[key], period == _period, OnTabSelected));
-        }
-
-        _building = false;
     }
 
     // Dropdown contents. The page builds its flyouts from these when they open.
@@ -344,17 +293,9 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         _methods.Clear();
         _staff.Clear();
         SearchText = string.Empty;
-        _period = SalesPeriod.All;
-        foreach (var tab in Tabs)
-        {
-            tab.IsSelected = tab.Period == SalesPeriod.All;
-        }
-
-        var today = Today;
-        CustomToDate = new DateTimeOffset(today.ToDateTime(TimeOnly.MinValue));
-        CustomFromDate = new DateTimeOffset(today.AddDays(-29).ToDateTime(TimeOnly.MinValue));
         _building = false;
 
+        _dates = null;
         _shown = BatchSize;
         Reload();
     }
@@ -367,9 +308,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
     };
 
     private SalesFilter BuildFilter() => new(
-        _period,
-        CustomFromDate is { } from ? DateOnly.FromDateTime(from.Date) : null,
-        CustomToDate is { } to ? DateOnly.FromDateTime(to.Date) : null,
+        _dates,
         SearchText,
         PaymentMethods.All.Where(method => _methods.Contains(MethodWord(method))).ToList(),
         _staff.ToList());
@@ -390,7 +329,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         SortDirectionGlyph = _sortDescending ? "" : "";
         SortDirectionToolTip = _localizer[_sortDescending ? "Sales_SortDescending" : "Sales_SortAscending"];
         HasActiveFilters = _methods.Count > 0 || _staff.Count > 0
-            || SearchText.Trim().Length > 0 || _period != SalesPeriod.All;
+            || SearchText.Trim().Length > 0 || _dates is not null;
 
         // Figures describe everything the filters match, not only the page on screen.
         var summary = SalesSummary.Of(_filtered);
@@ -398,7 +337,11 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         TransactionsText = summary.Transactions.ToString("N0", culture);
         ItemsSoldText = summary.ItemsSold.ToString("N0", culture);
         AverageSaleText = CurrencyFormat.Amount(summary.AverageSale, Currency, culture);
-        DateRangeText = BuildRangeText(filter, culture);
+        DateRangeText = BuildRangeText(culture);
+        HasDateFilter = _dates is not null;
+        DateButtonText = _dates is { } dates
+            ? _localizer.Format("Sales_DateLabel", dates.From.ToString("d", culture), dates.To.ToString("d", culture))
+            : _localizer["Sales_AllDates"];
 
         var previouslySelected = Selected?.ReceiptNumber;
         _building = true;
@@ -448,13 +391,10 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         UpdateFooter();
     }
 
-    private string BuildRangeText(SalesFilter filter, CultureInfo culture)
-    {
-        var (from, to) = SalesHistory.RangeOf(filter.Period, Today, filter.CustomFrom, filter.CustomTo);
-        return from is { } start && to is { } end
-            ? $"{start.ToString("d", culture)} – {end.ToString("d", culture)}"
+    private string BuildRangeText(CultureInfo culture) =>
+        _dates is { } dates
+            ? $"{dates.From.ToString("d", culture)} – {dates.To.ToString("d", culture)}"
             : _localizer["Sales_AllDates"];
-    }
 
     private void ShowDetail(SaleRowViewModel? row)
     {

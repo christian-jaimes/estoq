@@ -24,7 +24,7 @@
   </Page.Resources>
 
   <!-- Header, KPIs, tabs, filters, table; the sale detail floats over them. A click outside the detail closes it. -->
-  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" Background="Transparent" Tapped="OnPageTapped">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" Background="Transparent" Tapped="OnPageTapped">
 
       <!-- Title and actions. -->
       <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="16" Margin="0,0,0,20">
@@ -122,25 +122,8 @@
         </Border>
       </Grid>
 
-      <!-- Period tabs. -->
-      <Border Grid.Row="3" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,16">
-        <ItemsControl ItemsSource="{x:Bind ViewModel.Tabs, Mode=OneWay}">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <StackPanel Orientation="Horizontal" Spacing="4" />
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
-          <ItemsControl.ItemTemplate>
-            <DataTemplate x:DataType="vm:PeriodTabViewModel">
-              <RadioButton GroupName="SalesPeriod" Style="{StaticResource EqTabStyle}" Content="{x:Bind Label}"
-                           IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </Border>
-
       <!-- Toolbar (same as Inventory): sort | date filter, filters | search | clear all. -->
-      <Border Grid.Row="4" Style="{StaticResource EqCardStyle}" Padding="12,10" Margin="0,0,0,16">
+      <Border Grid.Row="3" Style="{StaticResource EqCardStyle}" Padding="12,10" Margin="0,0,0,16">
         <Grid ColumnSpacing="8">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -173,26 +156,29 @@
 
           <Border Grid.Column="2" Width="1" Height="24" Background="{ThemeResource EqBorderBrush}" Margin="4,0" VerticalAlignment="Center" />
 
-          <!-- Date filter: editing either date switches the period to Custom. -->
-          <Button Grid.Column="3" Style="{StaticResource EqFilterButtonStyle}" Width="190"
-                  AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_DateRange')}"
-                  ToolTipService.ToolTip="{x:Bind services:Loc.Get('Sales_DateRange')}">
-            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
-              <FontIcon Glyph="&#xE935;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.DateRangeText, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-              <FontIcon Grid.Column="2" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
-            </Grid>
-            <Button.Flyout>
-              <Flyout>
-                <StackPanel Spacing="12" MinWidth="240">
-                  <CalendarDatePicker Header="{x:Bind services:Loc.Get('Sales_From')}" HorizontalAlignment="Stretch"
-                                      Date="{x:Bind ViewModel.CustomFromDate, Mode=TwoWay}" />
-                  <CalendarDatePicker Header="{x:Bind services:Loc.Get('Sales_To')}" HorizontalAlignment="Stretch"
-                                      Date="{x:Bind ViewModel.CustomToDate, Mode=TwoWay}" />
-                </StackPanel>
-              </Flyout>
-            </Button.Flyout>
-          </Button>
+          <!-- Date filter: opens the date range picker. Gold outline and gold text while a range is active. -->
+          <Grid Grid.Column="3" Width="226">
+            <Button Style="{StaticResource EqFilterButtonStyle}" Click="OnDateClick"
+                    AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_DateRange')}"
+                    ToolTipService.ToolTip="{x:Bind services:Loc.Get('Sales_DateRange')}">
+              <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                <FontIcon Glyph="&#xE935;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center"
+                          Foreground="{ThemeResource EqTextSecondaryBrush}"
+                          Visibility="{x:Bind local:SalesBindings.Hidden(ViewModel.HasDateFilter), Mode=OneWay}" />
+                <FontIcon Glyph="&#xE935;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center"
+                          Foreground="{ThemeResource EqGoldInkBrush}"
+                          Visibility="{x:Bind local:SalesBindings.Visible(ViewModel.HasDateFilter), Mode=OneWay}" />
+                <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.DateButtonText, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                           Visibility="{x:Bind local:SalesBindings.Hidden(ViewModel.HasDateFilter), Mode=OneWay}" />
+                <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.DateButtonText, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                           Foreground="{ThemeResource EqGoldInkBrush}"
+                           Visibility="{x:Bind local:SalesBindings.Visible(ViewModel.HasDateFilter), Mode=OneWay}" />
+                <FontIcon Grid.Column="2" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+              </Grid>
+            </Button>
+            <Border BorderBrush="{ThemeResource EqGoldBrush}" BorderThickness="1" CornerRadius="{StaticResource EqRadiusMd}" IsHitTestVisible="False"
+                    Visibility="{x:Bind local:SalesBindings.Visible(ViewModel.HasDateFilter), Mode=OneWay}" />
+          </Grid>
 
           <!-- Filters -->
           <Button Grid.Column="4" Style="{StaticResource EqFilterButtonStyle}" Width="176"
@@ -235,7 +221,7 @@
       </Border>
 
       <!-- Table card (docs/technical/ui-implementation.md, "Full-bleed table in a card"): header, scrolling rows loaded on scroll, footer. -->
-      <Border Grid.Row="5" Style="{StaticResource EqCardStyle}" Padding="0">
+      <Border Grid.Row="4" Style="{StaticResource EqCardStyle}" Padding="0">
         <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
 
           <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="20,0,20,0" CornerRadius="12,12,0,0">
@@ -350,7 +336,7 @@
       </Border>
 
     <!-- Sale detail: only after a row is clicked, floating over the table (same behaviour as the Inventory detail). A click on another row updates it; a click outside closes it. -->
-    <Border x:Name="DetailPanel" Grid.Row="0" Grid.RowSpan="6" Style="{StaticResource EqDetailPanelStyle}">
+    <Border x:Name="DetailPanel" Grid.Row="0" Grid.RowSpan="5" Style="{StaticResource EqDetailPanelStyle}">
       <!-- Slides in from the right and back out; see SetPanel in the code-behind. -->
       <Border.RenderTransform>
         <CompositeTransform x:Name="DetailTransform" />

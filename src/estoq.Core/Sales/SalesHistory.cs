@@ -2,21 +2,9 @@ using Estoq.Core.Roles;
 
 namespace Estoq.Core.Sales;
 
-/// <summary>The period tabs of the Sales page.</summary>
-public enum SalesPeriod
-{
-    All,
-    Today,
-    ThisWeek,
-    ThisMonth,
-    Custom,
-}
-
-/// <summary>What the filter bar and period tabs ask for. Null or empty means "no restriction"; the multi-select filters match any ticked value.</summary>
+/// <summary>What the filter bar and period tabs ask for. Null or empty means "no restriction" (null dates = all dates); the multi-select filters match any ticked value.</summary>
 public sealed record SalesFilter(
-    SalesPeriod Period = SalesPeriod.All,
-    DateOnly? CustomFrom = null,
-    DateOnly? CustomTo = null,
+    DateRange? Dates = null,
     string? Text = null,
     IReadOnlyCollection<PaymentMethod>? Methods = null,
     IReadOnlyCollection<string>? StaffNames = null);
@@ -45,35 +33,9 @@ public readonly record struct SalesSummary(decimal TotalSales, int Transactions,
     }
 }
 
-/// <summary>Period ranges, filtering and role visibility for the sales list.</summary>
+/// <summary>Filtering, sorting and role visibility for the sales list.</summary>
 public static class SalesHistory
 {
-    /// <summary>The first and last day (inclusive) a period covers; null for an open end. Weeks start on Monday.</summary>
-    public static (DateOnly? From, DateOnly? To) RangeOf(SalesPeriod period, DateOnly today, DateOnly? customFrom, DateOnly? customTo)
-    {
-        switch (period)
-        {
-            case SalesPeriod.Today:
-                return (today, today);
-            case SalesPeriod.ThisWeek:
-                var offset = ((int)today.DayOfWeek + 6) % 7;
-                var monday = today.AddDays(-offset);
-                return (monday, monday.AddDays(6));
-            case SalesPeriod.ThisMonth:
-                var first = new DateOnly(today.Year, today.Month, 1);
-                return (first, first.AddMonths(1).AddDays(-1));
-            case SalesPeriod.Custom:
-                if (customFrom is { } from && customTo is { } to && from > to)
-                {
-                    return (to, from);
-                }
-
-                return (customFrom, customTo);
-            default:
-                return (null, null);
-        }
-    }
-
     /// <summary>
     /// The sales a user may see, filtered, newest first. Cashiers see only their own sales; managers and owners see the shop
     /// (docs/features/sales.md). A role with no access to the sales history sees nothing.
@@ -91,13 +53,11 @@ public static class SalesHistory
             return [];
         }
 
-        var (from, to) = RangeOf(filter.Period, today, filter.CustomFrom, filter.CustomTo);
         var text = filter.Text?.Trim();
 
         return sales
             .Where(sale => access != Access.Own || string.Equals(sale.Staff, currentStaff, StringComparison.OrdinalIgnoreCase))
-            .Where(sale => from is null || DateOnly.FromDateTime(sale.SoldAt) >= from)
-            .Where(sale => to is null || DateOnly.FromDateTime(sale.SoldAt) <= to)
+            .Where(sale => filter.Dates is not { } dates || dates.Contains(DateOnly.FromDateTime(sale.SoldAt)))
             .Where(sale => filter.Methods is not { Count: > 0 } || sale.Payments.Any(payment => filter.Methods.Contains(payment.Method)))
             .Where(sale => filter.StaffNames is not { Count: > 0 } || filter.StaffNames.Contains(sale.Staff, StringComparer.OrdinalIgnoreCase))
             .Where(sale => string.IsNullOrEmpty(text) || Matches(sale, text))

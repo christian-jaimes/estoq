@@ -1,0 +1,134 @@
+<UserControl
+    x:Class="Estoq.App.Controls.DateRangePicker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:services="using:Estoq.App.Services">
+
+  <UserControl.Resources>
+    <!-- Shared cell of the picker (quick-select items, day numbers, month arrows): background and foreground are set per cell in code,
+         hover is a tint laid over whatever the cell shows. -->
+    <Style x:Key="PickerCellStyle" TargetType="Button">
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="MinWidth" Value="0" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{ThemeResource EqTextBrush}" />
+      <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
+      <Setter Property="FontSize" Value="{StaticResource EqFontMd}" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
+      <Setter Property="FocusVisualPrimaryThickness" Value="2" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Grid x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+              <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                  <VisualState x:Name="Normal" />
+                  <VisualState x:Name="PointerOver">
+                    <VisualState.Setters>
+                      <Setter Target="Hover.Opacity" Value="1" />
+                    </VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Pressed">
+                    <VisualState.Setters>
+                      <Setter Target="Hover.Opacity" Value="1" />
+                    </VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Disabled" />
+                </VisualStateGroup>
+              </VisualStateManager.VisualStateGroups>
+              <Border x:Name="Hover" Background="{ThemeResource EqHoverFillBrush}" CornerRadius="{TemplateBinding CornerRadius}"
+                      Opacity="0" IsHitTestVisible="False" />
+              <ContentPresenter Padding="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Grid>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+
+  <Grid x:Name="Root" Padding="12" Width="840" ColumnDefinitions="200,Auto,*" RowDefinitions="Auto,Auto,Auto">
+
+    <!-- Quick select -->
+    <StackPanel Grid.Row="0" Grid.Column="0" Spacing="12" Padding="8,8,12,0">
+      <TextBlock Text="{x:Bind services:Loc.Get('Sales_QuickSelect')}" Style="{StaticResource EqCardTitleStyle}" FontSize="16" />
+      <StackPanel x:Name="QuickList" Spacing="4" />
+    </StackPanel>
+
+    <Rectangle Grid.Row="0" Grid.Column="1" Width="1" Fill="{ThemeResource EqBorderBrush}" Margin="0,8,0,0" />
+
+    <Grid Grid.Row="0" Grid.Column="2" Padding="24,8,12,0" RowDefinitions="Auto,Auto" RowSpacing="16">
+
+      <!-- From and To: type a date, or pick days below. -->
+      <Grid Grid.Row="0" ColumnDefinitions="*,*" ColumnSpacing="16">
+        <StackPanel Grid.Column="0" Spacing="6">
+          <TextBlock Text="{x:Bind services:Loc.Get('Sales_From')}" Style="{StaticResource EqSecondaryStyle}" />
+          <Border x:Name="FromBox" Height="40" Background="{ThemeResource EqBgBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1"
+                  CornerRadius="{StaticResource EqRadiusMd}" Padding="12,0">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+              <FontIcon Glyph="&#xE935;" Style="{StaticResource EqIconStyle}" FontSize="18" Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
+              <TextBox x:Name="FromInput" Grid.Column="1" VerticalAlignment="Center" MinHeight="0" Padding="0,6"
+                       Background="Transparent" BorderThickness="0"
+                       FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontMd}"
+                       AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_From')}"
+                       LostFocus="OnFieldCommit" KeyDown="OnFieldKeyDown">
+                <TextBox.Resources>
+                  <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
+                  <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
+                  <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                </TextBox.Resources>
+              </TextBox>
+            </Grid>
+          </Border>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="6">
+          <TextBlock Text="{x:Bind services:Loc.Get('Sales_To')}" Style="{StaticResource EqSecondaryStyle}" />
+          <Border x:Name="ToBox" Height="40" Background="{ThemeResource EqBgBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1"
+                  CornerRadius="{StaticResource EqRadiusMd}" Padding="12,0">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+              <FontIcon Glyph="&#xE935;" Style="{StaticResource EqIconStyle}" FontSize="18" Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
+              <TextBox x:Name="ToInput" Grid.Column="1" VerticalAlignment="Center" MinHeight="0" Padding="0,6"
+                       Background="Transparent" BorderThickness="0"
+                       FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontMd}"
+                       AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_To')}"
+                       LostFocus="OnFieldCommit" KeyDown="OnFieldKeyDown">
+                <TextBox.Resources>
+                  <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
+                  <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
+                  <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
+                  <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                </TextBox.Resources>
+              </TextBox>
+            </Grid>
+          </Border>
+        </StackPanel>
+      </Grid>
+
+      <!-- Two months side by side; the arrows sit at the outer top corners. -->
+      <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto" ColumnSpacing="24">
+        <StackPanel x:Name="LeftMonth" Grid.Column="0" Spacing="8" />
+        <StackPanel x:Name="RightMonth" Grid.Column="1" Spacing="8" />
+      </Grid>
+    </Grid>
+
+    <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Height="1" Fill="{ThemeResource EqBorderBrush}" Margin="8,12,8,0" />
+
+    <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Padding="0,12,8,4">
+      <Button Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Common_Cancel')}" Click="OnCancelClick" />
+      <Button Style="{StaticResource EqPrimaryButtonStyle}" Content="{x:Bind services:Loc.Get('Sales_Apply')}" Click="OnApplyClick" />
+    </StackPanel>
+  </Grid>
+</UserControl>

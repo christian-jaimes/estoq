@@ -610,6 +610,23 @@
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
   </Style>
 
+  <!-- Date range picker flyout: the app's flyout surface (as EqNotificationFlyoutStyle, radius-lg), no padding, no width or height cap
+       and no scrolling, so the picker always shows all of its content at its natural size. -->
+  <Style x:Key="EqDateRangeFlyoutStyle" TargetType="FlyoutPresenter">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MaxWidth" Value="1100" />
+    <Setter Property="MaxHeight" Value="900" />
+    <Setter Property="CornerRadius" Value="{StaticResource EqRadiusLg}" />
+    <Setter Property="Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+    <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+  </Style>
+
   <Style x:Key="EqMenuFlyoutPresenterStyle" TargetType="MenuFlyoutPresenter">
     <Setter Property="Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
     <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
