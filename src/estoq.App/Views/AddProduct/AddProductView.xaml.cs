@@ -43,7 +43,19 @@ public sealed partial class AddProductView : UserControl
             }
         }
 
+        if (ViewModel.IsEditing)
+        {
+            CloseSuggestionLists();
+        }
+
         UpdateFormHeight();
+    }
+
+    private void CloseSuggestionLists()
+    {
+        TypeBox.IsSuggestionListOpen = false;
+        CategoryBox.IsSuggestionListOpen = false;
+        BrandBox.IsSuggestionListOpen = false;
     }
 
     private void OnPopupBodySizeChanged(object sender, SizeChangedEventArgs e) => UpdateFormHeight();
@@ -66,6 +78,15 @@ public sealed partial class AddProductView : UserControl
     private void OnAddProductPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(AddProductViewModel.PricingDisclaimer)) UpdatePricingHeader();
+        if (e.PropertyName == nameof(AddProductViewModel.IsEditing) && ViewModel.IsEditing)
+        {
+            // Edit mode opens with every field filled in and every suggestion list closed.
+            CloseSuggestionLists();
+
+            // The field values arrive through bindings a moment later; close again once they have.
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, CloseSuggestionLists);
+        }
+
         if (e.PropertyName is nameof(AddProductViewModel.MainImage) or nameof(AddProductViewModel.ImagePosition))
         {
             DispatcherQueue.TryEnqueue(CenterSelectedThumbnail);
@@ -98,12 +119,12 @@ public sealed partial class AddProductView : UserControl
         if (ReferenceEquals(sender, TypeBox)) Replace(ViewModel.FilteredProductTypes, suggestions);
         else if (ReferenceEquals(sender, CategoryBox)) Replace(ViewModel.FilteredCategories, suggestions);
         else Replace(ViewModel.FilteredBrands, suggestions);
-        if (suggestions.Count > 0 && !sender.IsSuggestionListOpen) sender.IsSuggestionListOpen = true;
+        if (suggestions.Count > 0 && !sender.IsSuggestionListOpen && sender.FocusState != FocusState.Unfocused) sender.IsSuggestionListOpen = true;
     }
 
     private void OnMasterDataGotFocus(object sender, RoutedEventArgs e)
     {
-        if (sender is AutoSuggestBox box && string.IsNullOrWhiteSpace(box.Text) && !box.IsSuggestionListOpen) box.IsSuggestionListOpen = true;
+        if (sender is AutoSuggestBox box && !ViewModel.IsEditing && string.IsNullOrWhiteSpace(box.Text) && !box.IsSuggestionListOpen) box.IsSuggestionListOpen = true;
     }
 
     private void OnAddProductTapped(object sender, TappedRoutedEventArgs e)

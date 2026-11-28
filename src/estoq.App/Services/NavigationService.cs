@@ -1,4 +1,5 @@
 using Estoq.App.Views;
+using Estoq.App.Views.Sales;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 
@@ -29,6 +30,8 @@ public sealed class NavigationService : INavigationService
         var page = route switch
         {
             AppRoute.Dashboard => typeof(DashboardPage),
+            AppRoute.Sales => typeof(SalesPage),
+            AppRoute.Inventory => typeof(InventoryPage),
             _ => typeof(PlaceholderPage),
         };
 

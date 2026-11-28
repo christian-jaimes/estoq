@@ -303,7 +303,7 @@
         </Button>
       </Grid>
 
-      <Frame x:Name="ContentFrame" Grid.Row="2" Padding="0,24,0,0" />
+      <Frame x:Name="ContentFrame" Grid.Row="2" Padding="0,24,0,24" />
     </Grid>
     <!-- Pop-up host for F1 to F4: dimmed scrim over the whole window with the shared pop-up shell centred.
          Clicking the scrim, Esc or Close dismisses it. -->
@@ -424,6 +424,72 @@
             <Button Style="{StaticResource EqPrimaryButtonStyle}" Command="{x:Bind PopupState.AddProduct.AddAnotherCommand}"
                     Content="{x:Bind services:Loc.Get('Add_DoneAnother')}" />
           </StackPanel>
+        </Grid>
+      </Border>
+    </Border>
+    <!-- Confirm product changes (edit mode): card over the whole pop-up listing what will change before it is saved. -->
+    <Border Background="{ThemeResource EqScrimBrush}" Tapped="OnPopupTapped" CornerRadius="{StaticResource EqRadiusXl}"
+            Visibility="{x:Bind PopupState.AddProduct.IsConfirmingEdit, Mode=OneWay}">
+      <Border Width="760" MaxHeight="600" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource EqCardStyle}" Padding="24"
+              Background="{ThemeResource EqSurfaceBrush}">
+        <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="12">
+          <StackPanel Grid.Row="0" Spacing="4">
+            <TextBlock Text="{x:Bind services:Loc.Get('Add_EditConfirmTitle')}" Style="{StaticResource EqCardTitleStyle}" />
+            <TextBlock Text="{x:Bind services:Loc.Get('Add_EditConfirmSubtitle')}" Style="{StaticResource EqSecondaryStyle}" />
+          </StackPanel>
+          <Grid Grid.Row="1" Style="{StaticResource EqTableHeaderStyle}" Visibility="{x:Bind PopupState.AddProduct.HasEditChanges, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="1.3*" />
+              <ColumnDefinition Width="1*" />
+              <ColumnDefinition Width="1.1*" />
+              <ColumnDefinition Width="24" />
+              <ColumnDefinition Width="1.1*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Add_EditColProduct')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+            <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Add_EditColField')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+            <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Add_EditColBefore')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+            <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Add_EditColAfter')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+          </Grid>
+          <ScrollViewer Grid.Row="2" MaxHeight="340" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0">
+            <Grid>
+              <ItemsControl ItemsSource="{x:Bind PopupState.AddProduct.EditChanges, Mode=OneWay}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="addvm:EditChangeViewModel">
+                    <Grid MinHeight="52" Style="{StaticResource EqTableRowStyle}">
+                      <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind IsAlternateRow}" />
+                      <Grid Padding="12,8,8,8" ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="1.3*" />
+                          <ColumnDefinition Width="1*" />
+                          <ColumnDefinition Width="1.1*" />
+                          <ColumnDefinition Width="24" />
+                          <ColumnDefinition Width="1.1*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{x:Bind Subject}" Style="{StaticResource EqTableCellStrongStyle}" TextWrapping="Wrap" TextAlignment="Left" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{x:Bind Field}" Style="{StaticResource EqTableCellStyle}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="2" Text="{x:Bind Before}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                        <FontIcon Grid.Column="3" Glyph="&#xE5CC;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}"
+                                  Foreground="{ThemeResource EqGoldInkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="4" Text="{x:Bind After}" Style="{StaticResource EqTableCellStrongStyle}" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                      </Grid>
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <TextBlock Text="{x:Bind services:Loc.Get('Add_EditNoChanges')}" Style="{StaticResource EqSecondaryStyle}" Margin="0,8"
+                         Visibility="{x:Bind PopupState.AddProduct.HasNoEditChanges, Mode=OneWay}" />
+            </Grid>
+          </ScrollViewer>
+          <Grid Grid.Row="3" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8" Padding="0,8,0,0">
+            <Button Grid.Column="0" Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Add_EditDiscard')}"
+                    Command="{x:Bind PopupState.AddProduct.DiscardEditCommand}"
+                    ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_EditDiscardTip')}" />
+            <Button Grid.Column="2" Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Add_EditBack')}"
+                    Click="OnKeepEditingClick" />
+            <Button Grid.Column="3" Style="{StaticResource EqPrimaryButtonStyle}" Content="{x:Bind services:Loc.Get('Add_EditConfirm')}"
+                    Command="{x:Bind PopupState.AddProduct.ConfirmEditCommand}"
+                    IsEnabled="{x:Bind PopupState.AddProduct.HasEditChanges, Mode=OneWay}" />
+          </Grid>
         </Grid>
       </Border>
     </Border>

@@ -2,6 +2,51 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+  <!-- Dropdown standard (menus and combo lists): every open list uses the elevated surface, the standard border,
+       the hover fill and a gold tint for the selected item, never the stock grey. See docs/technical/ui-implementation.md. -->
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Default">
+      <StaticResource x:Key="MenuFlyoutPresenterBackground" ResourceKey="EqSurfaceElevatedBrush" />
+      <StaticResource x:Key="MenuFlyoutPresenterBorderBrush" ResourceKey="EqBorderBrush" />
+      <StaticResource x:Key="MenuFlyoutItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="MenuFlyoutItemBackgroundPressed" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ToggleMenuFlyoutItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ToggleMenuFlyoutItemBackgroundPressed" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="EqSurfaceElevatedBrush" />
+      <StaticResource x:Key="ComboBoxDropDownBorderBrush" ResourceKey="EqBorderBrush" />
+      <StaticResource x:Key="ComboBoxItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ComboBoxItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
+      <StaticResource x:Key="ComboBoxItemBackgroundSelectedPointerOver" ResourceKey="EqHoverFillBrush" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Light">
+      <StaticResource x:Key="MenuFlyoutPresenterBackground" ResourceKey="EqSurfaceElevatedBrush" />
+      <StaticResource x:Key="MenuFlyoutPresenterBorderBrush" ResourceKey="EqBorderBrush" />
+      <StaticResource x:Key="MenuFlyoutItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="MenuFlyoutItemBackgroundPressed" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ToggleMenuFlyoutItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ToggleMenuFlyoutItemBackgroundPressed" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="EqSurfaceElevatedBrush" />
+      <StaticResource x:Key="ComboBoxDropDownBorderBrush" ResourceKey="EqBorderBrush" />
+      <StaticResource x:Key="ComboBoxItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ComboBoxItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
+      <StaticResource x:Key="ComboBoxItemBackgroundSelectedPointerOver" ResourceKey="EqHoverFillBrush" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <StaticResource x:Key="MenuFlyoutPresenterBackground" ResourceKey="EqSurfaceElevatedBrush" />
+      <StaticResource x:Key="MenuFlyoutPresenterBorderBrush" ResourceKey="EqBorderBrush" />
+      <StaticResource x:Key="MenuFlyoutItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="MenuFlyoutItemBackgroundPressed" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ToggleMenuFlyoutItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ToggleMenuFlyoutItemBackgroundPressed" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="EqSurfaceElevatedBrush" />
+      <StaticResource x:Key="ComboBoxDropDownBorderBrush" ResourceKey="EqBorderBrush" />
+      <StaticResource x:Key="ComboBoxItemBackgroundPointerOver" ResourceKey="EqHoverFillBrush" />
+      <StaticResource x:Key="ComboBoxItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
+      <StaticResource x:Key="ComboBoxItemBackgroundSelectedPointerOver" ResourceKey="EqHoverFillBrush" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+
   <!-- Default text: Manrope, primary text colour. -->
   <Style TargetType="TextBlock">
     <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
@@ -53,6 +98,79 @@
     <Setter Property="Padding" Value="24" />
   </Style>
 
+  <!-- Row detail pop-up card (docs/technical/ui-implementation.md, "Detail pop-up pattern"): 460 px, right edge, above the page, hidden until a row is clicked. -->
+  <Style x:Key="EqDetailPanelStyle" TargetType="Border" BasedOn="{StaticResource EqCardStyle}">
+    <Setter Property="Padding" Value="20" />
+    <Setter Property="Width" Value="460" />
+    <Setter Property="HorizontalAlignment" Value="Right" />
+    <Setter Property="Visibility" Value="Collapsed" />
+    <Setter Property="Canvas.ZIndex" Value="2" />
+  </Style>
+
+  <!-- Tab (Inventory detail tabs, Sales period tabs): text with a gold underline on the selected one. -->
+  <Style x:Key="EqTabStyle" TargetType="RadioButton">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="16,10" />
+    <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
+    <Setter Property="FontSize" Value="{StaticResource EqFontMd}" />
+    <Setter Property="Foreground" Value="{ThemeResource EqTextSecondaryBrush}" />
+    <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
+    <Setter Property="FocusVisualPrimaryThickness" Value="2" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <Grid x:Name="Root" Background="Transparent" CornerRadius="{StaticResource EqRadiusSm}">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                    <Setter Target="Presenter.Foreground" Value="{ThemeResource EqTextBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Pressed">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Disabled">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Opacity" Value="0.4" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+              <VisualStateGroup x:Name="CheckStates">
+                <VisualState x:Name="Unchecked" />
+                <VisualState x:Name="Indeterminate" />
+                <VisualState x:Name="Checked">
+                  <VisualState.Setters>
+                    <Setter Target="Presenter.Foreground" Value="{ThemeResource EqGoldInkBrush}" />
+                    <Setter Target="Underline.Visibility" Value="Visible" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <ContentPresenter x:Name="Presenter" Padding="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                              Foreground="{TemplateBinding Foreground}" FontFamily="{TemplateBinding FontFamily}"
+                              FontSize="{TemplateBinding FontSize}" />
+            <Rectangle x:Name="Underline" Visibility="Collapsed" Height="2" VerticalAlignment="Bottom" RadiusX="1" RadiusY="1"
+                       Margin="8,0" Fill="{ThemeResource EqGoldBrush}" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- Filter and sort buttons: secondary button, left text that trims, chevron at the end. -->
+  <Style x:Key="EqFilterButtonStyle" TargetType="Button" BasedOn="{StaticResource EqSecondaryButtonStyle}">
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="FontFamily" Value="{StaticResource EqUiFont}" />
+  </Style>
+
   <!-- Table standard (design system, Table): every table in the app shares this look. Only the cells differ.
        Header: 44 px rounded bar on the elevated surface, semibold 13 px titles. Rows: hairline divider, every second
        row banded. Set ColumnDefinitions on the header and the row content so the columns line up; the header and row
@@ -77,6 +195,15 @@
   <Style x:Key="EqTableRowStyle" TargetType="Grid">
     <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
     <Setter Property="BorderThickness" Value="0,0,0,1" />
+  </Style>
+
+  <!-- Footer bar of a full-bleed table card: same 44 px height as the header, 20 px side inset, 1 px top divider. -->
+  <Style x:Key="EqTableFooterStyle" TargetType="Grid">
+    <Setter Property="Height" Value="44" />
+    <Setter Property="Padding" Value="20,0" />
+    <Setter Property="ColumnSpacing" Value="16" />
+    <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
+    <Setter Property="BorderThickness" Value="0,1,0,0" />
   </Style>
 
   <Style x:Key="EqTableBandStyle" TargetType="Border">
@@ -470,5 +597,41 @@
     <Setter Property="Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
     <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
     <Setter Property="BorderThickness" Value="1" />
+  </Style>
+
+  <!-- Flyout that holds custom dropdown content (search + checkbox list): same surface as the menus. -->
+  <Style x:Key="EqDropdownFlyoutPresenterStyle" TargetType="FlyoutPresenter">
+    <Setter Property="Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{StaticResource EqRadiusLg}" />
+    <Setter Property="Padding" Value="8" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+  </Style>
+
+  <!-- Date range picker flyout: the app's flyout surface (as EqNotificationFlyoutStyle, radius-lg), no padding, no width or height cap
+       and no scrolling, so the picker always shows all of its content at its natural size. -->
+  <Style x:Key="EqDateRangeFlyoutStyle" TargetType="FlyoutPresenter">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MaxWidth" Value="1100" />
+    <Setter Property="MaxHeight" Value="900" />
+    <Setter Property="CornerRadius" Value="{StaticResource EqRadiusLg}" />
+    <Setter Property="Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+    <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+  </Style>
+
+  <Style x:Key="EqMenuFlyoutPresenterStyle" TargetType="MenuFlyoutPresenter">
+    <Setter Property="Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{StaticResource EqRadiusLg}" />
+    <Setter Property="Padding" Value="4" />
   </Style>
 </ResourceDictionary>

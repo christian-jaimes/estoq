@@ -61,7 +61,7 @@
   </Page.Resources>
 
   <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-    <Grid RowSpacing="16" Padding="0,0,12,24">
+    <Grid RowSpacing="16" Padding="0,0,12,0">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />

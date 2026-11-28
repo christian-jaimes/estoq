@@ -365,6 +365,143 @@
   <data name="Add_DoneColQty" xml:space="preserve"><value>Cant.</value></data>
   <data name="Add_DoneColTotal" xml:space="preserve"><value>Precio total</value></data>
   <data name="Error_NoStock" xml:space="preserve"><value>Indica las existencias iniciales de al menos una variante.</value></data>
+
+  <data name="Sales_Title" xml:space="preserve"><value>Ventas</value></data>
+  <data name="Sales_Subtitle" xml:space="preserve"><value>Consulta, busca y gestiona tus ventas.</value></data>
+  <data name="Sales_Export" xml:space="preserve"><value>Exportar</value></data>
+  <data name="Sales_PrintReport" xml:space="preserve"><value>Imprimir informe</value></data>
+  <data name="Sales_NewSale" xml:space="preserve"><value>Nueva venta</value></data>
+  <data name="Sales_DateRange" xml:space="preserve"><value>Rango de fechas</value></data>
+  <data name="Sales_From" xml:space="preserve"><value>Desde</value></data>
+  <data name="Sales_To" xml:space="preserve"><value>Hasta</value></data>
+  <data name="Sales_QuickSelect" xml:space="preserve"><value>Selección rápida</value></data>
+  <data name="Sales_QuickToday" xml:space="preserve"><value>Hoy</value></data>
+  <data name="Sales_QuickWeek" xml:space="preserve"><value>Esta semana</value></data>
+  <data name="Sales_QuickMonth" xml:space="preserve"><value>Este mes</value></data>
+  <data name="Sales_QuickYear" xml:space="preserve"><value>Este año</value></data>
+  <data name="Sales_Apply" xml:space="preserve"><value>Aplicar</value></data>
+  <data name="Sales_DateLabel" xml:space="preserve"><value>Fecha: {0} – {1}</value></data>
+  <data name="Sales_PreviousMonth" xml:space="preserve"><value>Mes anterior</value></data>
+  <data name="Sales_NextMonth" xml:space="preserve"><value>Mes siguiente</value></data>
+  <data name="Sales_AllDates" xml:space="preserve"><value>Todas las fechas</value></data>
+  <data name="Sales_KpiTotal" xml:space="preserve"><value>Ventas totales</value></data>
+  <data name="Sales_KpiTransactions" xml:space="preserve"><value>Transacciones</value></data>
+  <data name="Sales_KpiItems" xml:space="preserve"><value>Artículos vendidos</value></data>
+  <data name="Sales_KpiAverage" xml:space="preserve"><value>Venta promedio</value></data>
+  <data name="Sales_SearchPlaceholder" xml:space="preserve"><value>Buscar en ventas...</value></data>
+  <data name="Sales_SortBy" xml:space="preserve"><value>Ordenar por</value></data>
+  <data name="Sales_SortDate" xml:space="preserve"><value>Fecha y hora</value></data>
+  <data name="Sales_SortReceipt" xml:space="preserve"><value>Número de recibo</value></data>
+  <data name="Sales_SortStaff" xml:space="preserve"><value>Personal</value></data>
+  <data name="Sales_SortTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Sales_SortItems" xml:space="preserve"><value>Artículos</value></data>
+  <data name="Sales_SortTax" xml:space="preserve"><value>Impuesto</value></data>
+  <data name="Sales_SortStatus" xml:space="preserve"><value>Estado</value></data>
+  <data name="Sales_SortAscending" xml:space="preserve"><value>Orden ascendente</value></data>
+  <data name="Sales_SortDescending" xml:space="preserve"><value>Orden descendente</value></data>
+  <data name="Sales_FilterSelected" xml:space="preserve"><value>{0} seleccionados</value></data>
+  <data name="Sales_ClearAll" xml:space="preserve"><value>Borrar todo</value></data>
+  <data name="Sales_AllMethods" xml:space="preserve"><value>Todos los métodos de pago</value></data>
+  <data name="Sales_AllStaff" xml:space="preserve"><value>Todo el personal</value></data>
+  <data name="Sales_ColReceipt" xml:space="preserve"><value>Recibo n.º</value></data>
+  <data name="Sales_ColDate" xml:space="preserve"><value>Fecha y hora</value></data>
+  <data name="Sales_ColItems" xml:space="preserve"><value>Artículos</value></data>
+  <data name="Sales_ColTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Sales_ColTax" xml:space="preserve"><value>Impuesto</value></data>
+  <data name="Sales_ColMethod" xml:space="preserve"><value>Método de pago</value></data>
+  <data name="Sales_ColStaff" xml:space="preserve"><value>Personal</value></data>
+  <data name="Sales_ColStatus" xml:space="preserve"><value>Estado</value></data>
+  <data name="Sales_Status_Completed" xml:space="preserve"><value>Completada</value></data>
+  <data name="Sales_Status_Returned" xml:space="preserve"><value>Devuelta</value></data>
+  <data name="Sales_Status_Voided" xml:space="preserve"><value>Anulada</value></data>
+  <data name="Sales_RowActions" xml:space="preserve"><value>Acciones de la venta</value></data>
+  <data name="Sales_MenuView" xml:space="preserve"><value>Ver</value></data>
+  <data name="Sales_MenuPrint" xml:space="preserve"><value>Imprimir recibo</value></data>
+  <data name="Sales_MenuReturn" xml:space="preserve"><value>Devolver artículos</value></data>
+  <data name="Sales_Showing" xml:space="preserve"><value>Mostrando {0} de {1} ventas</value></data>
+  <data name="Sales_ShowingNone" xml:space="preserve"><value>No hay ventas que mostrar</value></data>
+  <data name="Sales_Empty" xml:space="preserve"><value>Ninguna venta coincide con estos filtros.</value></data>
+  <data name="Sales_StaffLine" xml:space="preserve"><value>Personal: {0}</value></data>
+  <data name="Sales_ItemsHeader" xml:space="preserve"><value>Artículos ({0})</value></data>
+  <data name="Sales_Subtotal" xml:space="preserve"><value>Subtotal</value></data>
+  <data name="Sales_Discount" xml:space="preserve"><value>Descuento</value></data>
+  <data name="Sales_TaxLabel" xml:space="preserve"><value>Impuesto ({0} %)</value></data>
+  <data name="Sales_Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Sales_Payments" xml:space="preserve"><value>Pagos</value></data>
+  <data name="Sales_PaymentRate" xml:space="preserve"><value>Tasa: 1 {0} = {1} {2}</value></data>
+  <data name="Sales_PrintReceiptF8" xml:space="preserve"><value>Imprimir recibo (F8)</value></data>
+  <data name="Sales_MoreActions" xml:space="preserve"><value>Más acciones</value></data>
+  <data name="Sales_ReceiptTitle" xml:space="preserve"><value>Recibo {0}</value></data>
+  <data name="Sales_ReportTitle" xml:space="preserve"><value>Informe de ventas</value></data>
+  <data name="Sales_ExportFileName" xml:space="preserve"><value>ventas</value></data>
+  <data name="Sales_Exported" xml:space="preserve"><value>Se exportaron {0} ventas a {1}.</value></data>
+  <data name="Sales_PrintUnavailable" xml:space="preserve"><value>La impresión no está disponible en este equipo.</value></data>
+  <!-- Inventory page -->
+  <data name="Inventory_Subtitle" xml:space="preserve"><value>Gestiona tus productos, variantes y niveles de stock.</value></data>
+  <data name="Inventory_Export" xml:space="preserve"><value>Exportar</value></data>
+  <data name="Inventory_AddProduct" xml:space="preserve"><value>Añadir producto</value></data>
+  <data name="Inventory_KpiProducts" xml:space="preserve"><value>Productos totales</value></data>
+  <data name="Inventory_KpiVariants" xml:space="preserve"><value>Variantes totales</value></data>
+  <data name="Inventory_KpiInStock" xml:space="preserve"><value>En stock</value></data>
+  <data name="Inventory_KpiLow" xml:space="preserve"><value>Stock bajo</value></data>
+  <data name="Inventory_KpiOut" xml:space="preserve"><value>Sin stock</value></data>
+  <data name="Inventory_FilterCategory" xml:space="preserve"><value>Categoría</value></data>
+  <data name="Inventory_FilterBrand" xml:space="preserve"><value>Marca</value></data>
+  <data name="Inventory_FilterStatus" xml:space="preserve"><value>Estado</value></data>
+  <data name="Inventory_SortBy" xml:space="preserve"><value>Ordenar por</value></data>
+  <data name="Inventory_AllCategories" xml:space="preserve"><value>Todas las categorías</value></data>
+  <data name="Inventory_AllBrands" xml:space="preserve"><value>Todas las marcas</value></data>
+  <data name="Inventory_SortName" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Inventory_SortQuantity" xml:space="preserve"><value>Cantidad</value></data>
+  <data name="Inventory_SortPrice" xml:space="preserve"><value>Precio</value></data>
+  <data name="Inventory_SortUpdated" xml:space="preserve"><value>Actualizado recientemente</value></data>
+  <data name="Inventory_SortAscending" xml:space="preserve"><value>Orden ascendente</value></data>
+  <data name="Inventory_SortDescending" xml:space="preserve"><value>Orden descendente</value></data>
+  <data name="Inventory_ColProduct" xml:space="preserve"><value>Producto</value></data>
+  <data name="Inventory_ColCode" xml:space="preserve"><value>Código</value></data>
+  <data name="Inventory_ColCategory" xml:space="preserve"><value>Categoría</value></data>
+  <data name="Inventory_ColBrand" xml:space="preserve"><value>Marca</value></data>
+  <data name="Inventory_ColVariants" xml:space="preserve"><value>Variantes</value></data>
+  <data name="Inventory_ColStock" xml:space="preserve"><value>Stock total</value></data>
+  <data name="Inventory_ColStatus" xml:space="preserve"><value>Estado</value></data>
+  <data name="Inventory_ColVariant" xml:space="preserve"><value>Variante</value></data>
+  <data name="Inventory_ColQty" xml:space="preserve"><value>Cant.</value></data>
+  <data name="Inventory_ColPrice" xml:space="preserve"><value>Precio</value></data>
+  <data name="Inventory_ColMovement" xml:space="preserve"><value>Movimiento</value></data>
+  <data name="Inventory_ClearFilters" xml:space="preserve"><value>Quitar filtros</value></data>
+  <data name="Inventory_Empty" xml:space="preserve"><value>Aún no hay productos en stock. Añade uno para empezar.</value></data>
+  <data name="Inventory_EmptyFiltered" xml:space="preserve"><value>Ningún producto coincide con tu búsqueda o filtros.</value></data>
+  <data name="Inventory_Showing" xml:space="preserve"><value>Mostrando {0} de {1} productos</value></data>
+  <data name="Inventory_ShowingNone" xml:space="preserve"><value>No hay productos que mostrar</value></data>
+  <data name="Inventory_SelectProduct" xml:space="preserve"><value>Selecciona un producto para ver sus detalles.</value></data>
+  <data name="Inventory_DetailOverview" xml:space="preserve"><value>Resumen</value></data>
+  <data name="Inventory_DetailStock" xml:space="preserve"><value>Stock</value></data>
+  <data name="Inventory_DetailVariants" xml:space="preserve"><value>Variantes</value></data>
+  <data name="Inventory_NoColour" xml:space="preserve"><value>Sin color</value></data>
+  <data name="Inventory_DetailHistory" xml:space="preserve"><value>Historial</value></data>
+  <data name="Inventory_DetailType" xml:space="preserve"><value>Tipo de producto</value></data>
+  <data name="Inventory_DetailSupplier" xml:space="preserve"><value>Proveedor</value></data>
+  <data name="Inventory_DetailModel" xml:space="preserve"><value>Modelo</value></data>
+  <data name="Inventory_DetailSellingPrice" xml:space="preserve"><value>Precio de venta</value></data>
+  <data name="Inventory_DetailCostPrice" xml:space="preserve"><value>Precio de costo</value></data>
+  <data name="Inventory_DetailMargin" xml:space="preserve"><value>Margen estimado</value></data>
+  <data name="Inventory_DetailSizes" xml:space="preserve"><value>Tallas</value></data>
+  <data name="Inventory_DetailColours" xml:space="preserve"><value>Colores</value></data>
+  <data name="Inventory_DetailThreshold" xml:space="preserve"><value>Umbral de stock bajo</value></data>
+  <data name="Inventory_Varies" xml:space="preserve"><value>Varía</value></data>
+  <data name="Inventory_OneSize" xml:space="preserve"><value>Talla única</value></data>
+  <data name="Inventory_StatusInStock" xml:space="preserve"><value>En stock</value></data>
+  <data name="Inventory_StatusLow" xml:space="preserve"><value>Stock bajo</value></data>
+  <data name="Inventory_StatusOut" xml:space="preserve"><value>Sin stock</value></data>
+  <data name="Inventory_Move_add" xml:space="preserve"><value>Stock añadido</value></data>
+  <data name="Inventory_Move_sale" xml:space="preserve"><value>Venta</value></data>
+  <data name="Inventory_Move_found" xml:space="preserve"><value>Stock encontrado</value></data>
+  <data name="Inventory_Move_defect" xml:space="preserve"><value>Defectuoso</value></data>
+  <data name="Inventory_Move_lost" xml:space="preserve"><value>Pérdida</value></data>
+  <data name="Inventory_Move_recount" xml:space="preserve"><value>Recuento</value></data>
+  <data name="Inventory_Move_return" xml:space="preserve"><value>Devolución</value></data>
+  <data name="Inventory_ExportDone" xml:space="preserve"><value>Se exportaron {0} productos a {1}.</value></data>
+  <data name="Inventory_ExportFailed" xml:space="preserve"><value>No se pudo guardar el archivo. Elige otra ubicación e inténtalo de nuevo.</value></data>
   <data name="Ret_SaleTitle" xml:space="preserve"><value>Venta original</value></data>
   <data name="Ret_ReceiptPlaceholder" xml:space="preserve"><value>Número de recibo, por ejemplo 000120</value></data>
   <data name="Ret_FindSale" xml:space="preserve"><value>Buscar venta</value></data>
@@ -474,4 +611,30 @@
   <data name="Dash_EmptyCategories" xml:space="preserve"><value>No hay ventas en este período.</value></data>
   <data name="Dash_ViewAll" xml:space="preserve"><value>Ver todo</value></data>
   <data name="Dash_EmptyLowStock" xml:space="preserve"><value>No hay artículos con poco stock.</value></data>
+  <data name="Inventory_KpiFilterHint" xml:space="preserve">
+    <value>Haz clic para filtrar la tabla por este estado. Vuelve a hacer clic para quitar el filtro.</value>
+  </data>
+  <data name="Inventory_SearchPlaceholder" xml:space="preserve"><value>Buscar productos…</value></data>
+  <data name="Inventory_ClearAll" xml:space="preserve"><value>Borrar todo</value></data>
+  <data name="Inventory_ExportTip" xml:space="preserve"><value>Exporta a un archivo CSV las filas que muestra la tabla</value></data>
+  <data name="Inventory_FilterType" xml:space="preserve"><value>Tipo de producto</value></data>
+  <data name="Inventory_AllTypes" xml:space="preserve"><value>Todos los tipos</value></data>
+  <data name="Inventory_FilterSearch" xml:space="preserve"><value>Buscar…</value></data>
+  <data name="Inventory_FilterNoMatches" xml:space="preserve"><value>Sin resultados</value></data>
+  <data name="Inventory_FilterSelected" xml:space="preserve"><value>{0} seleccionados</value></data>
+  <data name="Inventory_EditProduct" xml:space="preserve"><value>Editar producto</value></data>
+  <data name="Popup_Items_EditTitle" xml:space="preserve"><value>Editar producto</value></data>
+  <data name="Popup_Items_EditSubtitle" xml:space="preserve"><value>Cambia los datos y los precios de este producto. Las variantes y el stock no cambian</value></data>
+  <data name="Popup_Items_EditPrimary" xml:space="preserve"><value>Guardar cambios</value></data>
+  <data name="Add_EditConfirmTitle" xml:space="preserve"><value>Confirmar cambios</value></data>
+  <data name="Add_EditConfirmSubtitle" xml:space="preserve"><value>Revisa lo que cambiará antes de guardarlo</value></data>
+  <data name="Add_EditColField" xml:space="preserve"><value>Campo</value></data>
+  <data name="Add_EditColBefore" xml:space="preserve"><value>Antes</value></data>
+  <data name="Add_EditColAfter" xml:space="preserve"><value>Después</value></data>
+  <data name="Add_EditNoChanges" xml:space="preserve"><value>No ha cambiado nada.</value></data>
+  <data name="Add_EditBack" xml:space="preserve"><value>Seguir editando</value></data>
+  <data name="Add_EditConfirm" xml:space="preserve"><value>Confirmar y guardar</value></data>
+  <data name="Add_EditColProduct" xml:space="preserve"><value>Producto / variante</value></data>
+  <data name="Add_EditDiscard" xml:space="preserve"><value>Descartar cambios</value></data>
+  <data name="Add_EditDiscardTip" xml:space="preserve"><value>Descartar estos cambios y volver a Inventario</value></data>
 </root>

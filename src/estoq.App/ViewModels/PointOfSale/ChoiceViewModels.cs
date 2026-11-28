@@ -42,7 +42,7 @@ public sealed partial class PaymentMethodViewModel : ObservableObject
         HasBrand = BrandLetter.Length > 0;
     }
 
-    private static (string Glyph, string Letter, Brush? Brush) Describe(PaymentMethod method) =>
+    internal static (string Glyph, string Letter, Brush? Brush) Describe(PaymentMethod method) =>
         method switch
         {
             PaymentMethod.Cash => ("\uEF63", string.Empty, (Brush?)null),

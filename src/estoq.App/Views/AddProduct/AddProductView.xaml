@@ -407,7 +407,8 @@
             </StackPanel>
           </Border>
 
-        <Border Grid.Column="1" Style="{StaticResource EqCardStyle}" Padding="10" Height="240" VerticalAlignment="Top">
+        <Border Grid.Column="1" Style="{StaticResource EqCardStyle}" Padding="10" Height="240" VerticalAlignment="Top"
+                Visibility="{x:Bind ViewModel.IsNotEditing, Mode=OneWay}">
             <StackPanel Spacing="4">
               <StackPanel Orientation="Horizontal" Spacing="10" Margin="0">
                 <FontIcon Glyph="&#xE53B;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont3xl}" Foreground="{ThemeResource EqGoldInkBrush}" />
@@ -552,7 +553,7 @@
                              Visibility="{x:Bind ViewModel.ShowCost, Mode=OneWay}" />
                   <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Add_ColSellingPrice')}" Style="{StaticResource EqTableHeaderTextStyle}" />
                   <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Add_ColStock')}" Style="{StaticResource EqTableHeaderTextStyle}"
-                             TextAlignment="Center" AutomationProperties.Name="{x:Bind services:Loc.Get('Add_ColStock')}" />
+                             Visibility="{x:Bind ViewModel.IsNotEditing, Mode=OneWay}" TextAlignment="Center" AutomationProperties.Name="{x:Bind services:Loc.Get('Add_ColStock')}" />
                 </Grid>
                 <ScrollViewer Grid.Row="1" MaxHeight="300" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                   <ItemsRepeater ItemsSource="{x:Bind ViewModel.Variants}">
@@ -594,7 +595,7 @@
                                             IsNumeric="True" NumericErrorText="{x:Bind services:Loc.Get('Error_PriceInvalid')}"
                                             ShowErrorText="False" Suffix="{x:Bind CurrencyCode}"
                                             Text="{x:Bind SellingPriceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                          <Grid Grid.Column="4" ColumnSpacing="1" VerticalAlignment="Center" Height="{StaticResource EqControlHeight}">
+                          <Grid Grid.Column="4" ColumnSpacing="1" VerticalAlignment="Center" Height="{StaticResource EqControlHeight}" Visibility="{x:Bind IsEditable}">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition Width="*"/><ColumnDefinition Width="32"/></Grid.ColumnDefinitions>
                             <Button Style="{StaticResource EqSecondaryButtonStyle}" Grid.Column="0" MinWidth="0" Width="32" Height="34" Padding="0"
                                     Command="{x:Bind DecreaseOpeningStockCommand}" AutomationProperties.Name="{x:Bind services:Loc.Get('Pos_QtyDecrease')}">
@@ -613,7 +614,7 @@
                             </Button>
                           </Grid>
                           <Button Grid.Column="5" Style="{StaticResource EqSecondaryButtonStyle}" Width="36" MinWidth="0" Height="{StaticResource EqControlHeight}" Padding="0"
-                                  Command="{x:Bind RemoveCommand}" VerticalAlignment="Center"
+                                  Visibility="{x:Bind IsEditable}" Command="{x:Bind RemoveCommand}" VerticalAlignment="Center"
                                   ToolTipService.ToolTip="{x:Bind services:Loc.Get('Add_RemoveVariant')}"
                                   AutomationProperties.Name="{x:Bind services:Loc.Get('Add_RemoveVariant')}">
                             <FontIcon Glyph="&#xE872;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" Foreground="{ThemeResource EqDangerBrush}" />

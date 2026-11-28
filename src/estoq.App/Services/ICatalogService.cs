@@ -29,6 +29,27 @@ public sealed record NewProduct(
     IReadOnlyList<string> ImagePaths,
     IReadOnlyList<NewVariant> Variants);
 
+/// <summary>The new prices of one existing variant, by article id. A null cost leaves the cost unchanged.</summary>
+public sealed record EditedVariant(string ArticleId, decimal SellingPrice, decimal? CostPrice);
+
+/// <summary>
+/// Everything the Add product pop-up hands over when it saves an existing product in edit mode. The original identity
+/// (brand, product type, model label) says which product it is; variants, sizes, colours and stock never change here.
+/// </summary>
+public sealed record ProductEdit(
+    string OriginalBrand,
+    string OriginalProductType,
+    string OriginalModelLabel,
+    string ProductType,
+    string Category,
+    string Brand,
+    string ModelLabel,
+    string Name,
+    string Description,
+    string SupplierBarcode,
+    bool UpdateCost,
+    IReadOnlyList<EditedVariant> Variants);
+
 /// <summary>One article (variant) created by a save: a row of the article dimension table and its opening stock.</summary>
 public sealed record AddedArticle(string ArticleId, string Name, string? Size, string? Colour, string Sku, int OpeningStock, decimal? CostPrice, decimal SellingPrice);
 
@@ -67,4 +88,7 @@ public interface ICatalogService
     /// stock above zero are created; returns one <see cref="AddedArticle"/> for each.
     /// </summary>
     Task<IReadOnlyList<AddedArticle>> SaveAsync(NewProduct product);
+
+    /// <summary>Updates the details and prices of an existing product and its variants. Manager and owner only.</summary>
+    Task UpdateProductAsync(ProductEdit edit);
 }

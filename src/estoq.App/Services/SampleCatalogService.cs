@@ -97,6 +97,70 @@ public sealed class SampleCatalogService : ICatalogService
         return Task.FromResult(AppendArticlesAndMovements(product));
     }
 
+    public Task UpdateProductAsync(ProductEdit edit)
+    {
+        ArgumentNullException.ThrowIfNull(edit);
+
+        var category = ProductNaming.Clean(edit.Category);
+        var brand = ProductNaming.Clean(edit.Brand);
+        var type = ProductNaming.Clean(edit.ProductType);
+        AddCategoryIfNew(category);
+        AddBrandIfNew(brand);
+        AddTypeIfNew(type);
+
+        var path = ResolveCsvPath(ArticleFile);
+        if (File.Exists(path))
+        {
+            var lines = File.ReadAllLines(path);
+            var headers = ParseCsvRow(lines[0]).Select(h => h.Trim()).ToArray();
+            var changes = edit.Variants.ToDictionary(v => v.ArticleId, StringComparer.OrdinalIgnoreCase);
+            var output = new List<string> { lines[0] };
+            foreach (var line in lines.Skip(1).Where(l => !string.IsNullOrWhiteSpace(l)))
+            {
+                var values = ParseCsvRow(line);
+                var row = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                for (var i = 0; i < headers.Length; i++)
+                {
+                    row[headers[i]] = i < values.Length ? values[i].Trim() : string.Empty;
+                }
+
+                if (changes.TryGetValue(Get(row, "article_id"), out var change))
+                {
+                    row["article_name"] = ProductNaming.Clean(edit.Name);
+                    row["article_description"] = edit.Description;
+                    row["brand_name"] = brand;
+                    row["category_name"] = category;
+                    row["product_type"] = type;
+                    row["model_label"] = ProductNaming.Clean(edit.ModelLabel);
+                    row["supplier_barcode"] = edit.SupplierBarcode;
+                    row["retail_selling_price"] = Price(change.SellingPrice, "0.00");
+                    if (edit.UpdateCost)
+                    {
+                        row["standard_cost_price"] = Price(change.CostPrice, "0.00");
+                    }
+                }
+
+                output.Add(string.Join(',', headers.Select(h => EscapeCsv(Get(row, h)))));
+            }
+
+            File.WriteAllLines(path, output, new System.Text.UTF8Encoding(false));
+        }
+
+        // Keep the duplicate check in step with the new brand, product type and model label.
+        var original = new ProductIdentity(edit.OriginalBrand, edit.OriginalProductType, edit.OriginalModelLabel);
+        var index = _products.FindIndex(existing => existing.Identity == original);
+        if (index >= 0)
+        {
+            _products[index] = _products[index] with
+            {
+                Identity = new ProductIdentity(brand, type, ProductNaming.Clean(edit.ModelLabel)),
+                Name = ProductNaming.Clean(edit.Name),
+            };
+        }
+
+        return Task.CompletedTask;
+    }
+
     /// <summary>
     /// Appends one article row per variant to <c>dummy_article.csv</c> and one "add" movement per variant to <c>dummy_stock_movements.csv</c>. Stock on hand is the sum of an article's movements.
     /// </summary>
