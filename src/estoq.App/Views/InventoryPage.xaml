@@ -350,7 +350,7 @@
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:InventoryRowViewModel">
                       <Grid MinHeight="64" Background="Transparent" Style="{StaticResource EqTableRowStyle}" Tapped="OnRowTapped"
-                            PointerEntered="OnRowPointerEntered" PointerExited="OnRowPointerExited">
+                            PointerEntered="OnRowPointerEntered" PointerExited="OnRowPointerExited" DoubleTapped="OnRowDoubleTapped">
                         <Border Style="{StaticResource EqTableBandStyle}"
                                 Visibility="{x:Bind local:InventoryBindings.Visible(IsAlternateRow)}" />
                         <Border x:Name="HoverFill" Background="{ThemeResource EqHoverFillBrush}" IsHitTestVisible="False" Opacity="0">
@@ -426,7 +426,7 @@
       </Grid>
 
       <!-- Detail panel: only after a row is clicked, floating over the table. A click on another row updates it; a click outside closes it. -->
-      <Border x:Name="DetailPanel" Style="{StaticResource EqCardStyle}" Padding="20" Width="380" HorizontalAlignment="Right"
+      <Border x:Name="DetailPanel" Style="{StaticResource EqCardStyle}" Padding="20" Width="460" HorizontalAlignment="Right"
               Canvas.ZIndex="2" Visibility="Collapsed">
         <!-- Slides in from the right and back out; see SetPanel in the code-behind. -->
         <Border.RenderTransform>
@@ -444,12 +444,26 @@
                 <TextBlock Text="{x:Bind ViewModel.Detail.Name, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis" />
                 <TextBlock Text="{x:Bind ViewModel.Detail.Code, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
               </StackPanel>
-              <Button Grid.Column="2" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Top"
-                      Command="{x:Bind ViewModel.CloseDetailCommand}"
-                      AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}"
-                      ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_Close')}">
-                <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
-              </Button>
+              <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Top">
+                <!-- The icon font has no pencil, so the glyph is a vector path (Material "edit"). Opens the Add product pop-up in edit mode (managers and owners). -->
+                <Button Style="{StaticResource EqPlainIconButtonStyle}"
+                        Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.CanEdit), Mode=OneWay}"
+                        Command="{x:Bind ViewModel.EditProductCommand}"
+                        AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_EditProduct')}"
+                        ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_EditProduct')}">
+                  <!-- PathIcon draws its path at natural size (a 24-unit grid) and clips it, so a Viewbox scales it to 18 px. -->
+                  <Viewbox Width="18" Height="18">
+                    <PathIcon Width="24" Height="24"
+                              Data="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                  </Viewbox>
+                </Button>
+                <Button Style="{StaticResource EqPlainIconButtonStyle}"
+                        Command="{x:Bind ViewModel.CloseDetailCommand}"
+                        AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}"
+                        ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_Close')}">
+                  <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
+                </Button>
+              </StackPanel>
             </Grid>
 
             <Border Grid.Row="1" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">

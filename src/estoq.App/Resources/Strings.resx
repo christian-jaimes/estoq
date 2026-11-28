@@ -505,4 +505,19 @@
   <data name="Inventory_FilterSearch" xml:space="preserve"><value>Search…</value></data>
   <data name="Inventory_FilterNoMatches" xml:space="preserve"><value>No matches</value></data>
   <data name="Inventory_FilterSelected" xml:space="preserve"><value>{0} selected</value></data>
+  <data name="Inventory_EditProduct" xml:space="preserve"><value>Edit product</value></data>
+  <data name="Popup_Items_EditTitle" xml:space="preserve"><value>Edit product</value></data>
+  <data name="Popup_Items_EditSubtitle" xml:space="preserve"><value>Change the details and prices of this product. Variants and stock stay as they are</value></data>
+  <data name="Popup_Items_EditPrimary" xml:space="preserve"><value>Save changes</value></data>
+  <data name="Add_EditConfirmTitle" xml:space="preserve"><value>Confirm changes</value></data>
+  <data name="Add_EditConfirmSubtitle" xml:space="preserve"><value>Review what will change before it is saved</value></data>
+  <data name="Add_EditColField" xml:space="preserve"><value>Field</value></data>
+  <data name="Add_EditColBefore" xml:space="preserve"><value>Before</value></data>
+  <data name="Add_EditColAfter" xml:space="preserve"><value>After</value></data>
+  <data name="Add_EditNoChanges" xml:space="preserve"><value>Nothing has changed.</value></data>
+  <data name="Add_EditBack" xml:space="preserve"><value>Keep editing</value></data>
+  <data name="Add_EditConfirm" xml:space="preserve"><value>Confirm and save</value></data>
+  <data name="Add_EditColProduct" xml:space="preserve"><value>Product / variant</value></data>
+  <data name="Add_EditDiscard" xml:space="preserve"><value>Discard changes</value></data>
+  <data name="Add_EditDiscardTip" xml:space="preserve"><value>Throw away these changes and go back to Inventory</value></data>
 </root>

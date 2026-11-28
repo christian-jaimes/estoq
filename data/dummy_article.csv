@@ -5,7 +5,7 @@ ART-1003,Chinos Hugo Boss Emerald Green Alpha Slim,Smart-casual stretch cotton t
 ART-1004,Coat Uniqlo Beige Double-Breasted Wool,Tailored mid-calf wool-blend overcoat with wide peak lapels.,Uniqlo,Outerwear,Coat,Double-Breasted Wool,S,Beige,5417825844140,UNQ-COT-BEI-S-004,93.50,237.15,True
 ART-1005,Cardigan Tommy Hilfiger Charcoal Merino Button,Lightweight fine-knit merino wool cardigan with tonal buttons.,Tommy Hilfiger,Knitwear,Cardigan,Merino Button,XXL,Charcoal,5416756332150,TMH-CRD-CHA-XXL-005,46.00,120.00,True
 ART-1006,Jacket Uniqlo White Harrington Zip,Lightweight cotton-twill Harrington jacket with tartan lining.,Uniqlo,Outerwear,Jacket,Harrington Zip,XS,White,5412631775357,UNQ-JCK-WHI-XS-006,44.20,118.15,True
-ART-1007,Hoodie Adidas Camel Zip French Terry,Loopback organic cotton zip-up hoodie with metal hardware.,Adidas,Streetwear,Hoodie,Zip French Terry,XS,Camel,5419256195745,ADI-HOD-CAM-XS-007,34.00,89.00,True
+ART-1007,"Adidas Hoodie, Zip French Terry",Loopback organic cotton zip-up hoodie with metal hardware.,Adidas,Streetwear,Hoodie,Zip French Terry,XS,Camel,5419256195745,ADI-HOD-CAM-XS-007,34.00,40.00,True
 ART-1008,Sneakers Vans Grey Court Classic,Minimalist full-grain leather court sneakers with rubber cupsole.,Vans,Footwear,Sneakers,Court Classic,42,Grey,5411298737106,VNS-SNK-GRE-42-008,48.00,125.00,True
 ART-1009,Backpack The North Face Black Commuter 20L,Water-resistant ballistic nylon backpack with padded 16-inch laptop sleeve.,The North Face,Bags & Luggage,Backpack,Commuter 20L,One Size,Black,5414721519026,TNF-BPK-BLA-ONES-009,42.00,110.00,True
 ART-1010,Watch Michael Kors Silver Minimalist Mesh,Ultra-thin case watch paired with a quick-release Milanese mesh strap.,Michael Kors,Watches & Jewelry,Watch,Minimalist Mesh,One Size,Silver,5416884882440,MCK-WTC-SIL-ONES-010,65.00,173.75,True
@@ -25,7 +25,7 @@ ART-1023,Coat Hugo Boss Grey Ultra Light Down,Packable ultra-light down coat wit
 ART-1024,Dress COS Black Wrap Linen,Breathable linen-blend wrap dress with tie waist and flutter sleeves.,COS,Womenswear,Dress,Wrap Linen,S,Black,5411338258951,COS-DRS-BLA-S-024,28.00,79.00,True
 ART-1025,Cap New Balance Navy 6-Panel Twill,Brushed cotton twill dad cap with curved brim and strapback closure.,New Balance,Headwear,Cap,6-Panel Twill,One Size,Navy,5418128575500,NWB-CAP-NAV-ONES-025,12.00,35.00,True
 ART-1026,Coat Uniqlo Burgundy Double-Breasted Wool,Tailored mid-calf wool-blend overcoat with wide peak lapels.,Uniqlo,Outerwear,Coat,Double-Breasted Wool,XL,Burgundy,5416633778586,UNQ-COT-BUR-XL-026,93.50,237.15,True
-ART-1027,Backpack Carhartt WIP Tan Commuter 20L,Water-resistant ballistic nylon backpack with padded 16-inch laptop sleeve.,Carhartt WIP,Bags & Luggage,Backpack,Commuter 20L,One Size,Tan,5412064746525,CWP-BPK-TAN-ONES-027,42.00,110.00,True
+ART-1027,"Carhartt WIP Backpack, Commuter 20L",Water-resistant ballistic nylon backpack with padded 16-inch laptop sleeve.,Carhartt WIP,Bags & Luggage,Backpack,Commuter 20L,One Size,Tan,5412064746525,CWP-BPK-TAN-ONES-027,42.00,110.00,True
 ART-1028,Sneakers Dr. Martens Core Black Air Cushion,Low-top leather sneakers equipped with visible heel air cushioning.,Dr. Martens,Footwear,Sneakers,Air Cushion,45,Core Black,5413527331058,DRM-SNK-COR-45-028,55.00,139.99,True
 ART-1029,T-Shirt Hugo Boss Black Graphic Back Print,Relaxed fit jersey tee with seasonal archive graphic on the back.,Hugo Boss,Menswear,T-Shirt,Graphic Back Print,XXL,Black,5411983297492,BOSS-TSH-BLA-XXL-029,23.12,61.25,True
 ART-1030,Jeans Tommy Hilfiger Black Slim Tapered,Stretch denim slim tapered jeans with classic five-pocket styling.,Tommy Hilfiger,Denim,Jeans,Slim Tapered,34/32,Black,5413084839399,TMH-JNS-BLA-3432-030,45.00,119.00,True
@@ -135,9 +135,9 @@ ART-1133,"Hugo Boss T-Shirt, red logo",,Hugo Boss,Menswear,T-Shirt,red logo,S,Wh
 ART-1134,"Nike Jeans, hdhdhdh",,Nike,Menswear,Jeans,hdhdhdh,28/30,Black,,JNS-BLC-2830,10.00,15.00,True
 ART-1135,"Nike Jeans, hdhdhdh",,Nike,Menswear,Jeans,hdhdhdh,30/30,White,,JNS-WHT-3030,10.00,15.00,True
 ART-1136,"Nike Jeans, hdhdhdh",,Nike,Menswear,Jeans,hdhdhdh,30/30,Navy,,JNS-NVY-3030,10.00,15.00,True
-ART-1137,"Levi's Jeans, jgjjgud",,Levi's,Menswear,Jeans,jgjjgud,28/30,Emerald Green,,JNS-EG-2830,10.00,12.00,True
-ART-1138,"Levi's Jeans, jgjjgud",,Levi's,Menswear,Jeans,jgjjgud,30/30,Emerald Green,,JNS-EG-3030,10.00,12.00,True
+ART-1137,"Levi's Jeans, jgjjgud",,Levi's,Menswear,Jeans,jgjjgud,28/30,Emerald Green,,JNS-EG-2830,10.00,15.00,True
+ART-1138,"Levi's Jeans, jgjjgud",,Levi's,Menswear,Jeans,jgjjgud,30/30,Emerald Green,,JNS-EG-3030,10.00,16.00,True
 ART-1139,"Levi's Jeans, jgjjgud",,Levi's,Menswear,Jeans,jgjjgud,30/32,Emerald Green,,JNS-EG-3032,10.00,12.00,True
-ART-1140,"Levi's Jeans, jgjjgud",,Levi's,Menswear,Jeans,jgjjgud,28/30,Beige,,JNS-BG-2830,10.00,12.00,True
+ART-1140,"Levi's Jeans, jgjjgud",,Levi's,Menswear,Jeans,jgjjgud,28/30,Beige,,JNS-BG-2830,10.00,17.00,True
 ART-1141,"Levi's Jeans, jgjjgud",,Levi's,Menswear,Jeans,jgjjgud,30/30,Beige,,JNS-BG-3030,10.00,12.00,True
-ART-1142,"Levi's Jeans, jgjjgud",,Levi's,Menswear,Jeans,jgjjgud,30/32,Beige,,JNS-BG-3032,10.00,12.00,True
+ART-1142,"Levi's Jeans, jgjjgud",,Levi's,Menswear,Jeans,jgjjgud,30/32,Beige,,JNS-BG-3032,10.00,20.00,True

@@ -3,6 +3,7 @@ using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Estoq.App.Services;
+using Estoq.App.ViewModels.AddProduct;
 using Estoq.Core.Inventory;
 using Estoq.Core.Products;
 using Estoq.Core.Roles;
@@ -25,6 +26,7 @@ public sealed partial class InventoryViewModel : ObservableObject
     private readonly IPopupService _popups;
     private readonly ICsvExportService _export;
     private readonly ShellViewModel _shell;
+    private readonly AddProductViewModel _addProduct;
 
     private List<InventoryProduct> _products = [];
     private List<InventoryProduct> _filtered = [];
@@ -45,7 +47,8 @@ public sealed partial class InventoryViewModel : ObservableObject
         ISessionService session,
         IPopupService popups,
         ICsvExportService export,
-        ShellViewModel shell)
+        ShellViewModel shell,
+        AddProductViewModel addProduct)
     {
         _inventory = inventory;
         _catalog = catalog;
@@ -54,6 +57,7 @@ public sealed partial class InventoryViewModel : ObservableObject
         _popups = popups;
         _export = export;
         _shell = shell;
+        _addProduct = addProduct;
 
         // The top bar search (Ctrl+K) filters this page while it is showing.
         _shell.PropertyChanged += (_, e) =>
@@ -122,6 +126,10 @@ public sealed partial class InventoryViewModel : ObservableObject
 
     [ObservableProperty]
     public partial bool CanExport { get; set; }
+
+    /// <summary>Managers and owners can edit a product's details and prices.</summary>
+    [ObservableProperty]
+    public partial bool CanEdit { get; set; }
 
     [ObservableProperty]
     public partial string ExportMessage { get; set; } = string.Empty;
@@ -205,6 +213,9 @@ public sealed partial class InventoryViewModel : ObservableObject
     public void Activate()
     {
         _active = true;
+
+        // Entering the page starts with nothing selected, so no detail panel is open.
+        _selectedId = null;
         Refresh();
     }
 
@@ -331,6 +342,38 @@ public sealed partial class InventoryViewModel : ObservableObject
         ShowDetail();
     }
 
+    /// <summary>Edit button of the detail panel: opens the Add product pop-up in edit mode for the selected product.</summary>
+    [RelayCommand]
+    private void EditProduct() => OpenEditor(_selectedId);
+
+    /// <summary>Double-click on a row: opens the editor for that product.</summary>
+    public void EditRow(InventoryRowViewModel? row)
+    {
+        if (row is not null)
+        {
+            OpenEditor(row.Id);
+        }
+    }
+
+    private void OpenEditor(string? productId)
+    {
+        if (!CanEdit || productId is null)
+        {
+            return;
+        }
+
+        var product = _products.FirstOrDefault(p => p.Id == productId);
+        if (product is null)
+        {
+            return;
+        }
+
+        // The detail panel closes while the editor is open, so the page is clean when the editor closes.
+        CloseDetail();
+        _addProduct.PrepareEdit(product);
+        _popups.Show(PopupKind.AddItems);
+    }
+
     /// <summary>A click on a row: opens its panel, updates the panel from another row, or closes it when the row is already open.</summary>
     public void ToggleRow(InventoryRowViewModel? row)
     {
@@ -435,6 +478,7 @@ public sealed partial class InventoryViewModel : ObservableObject
     private void Refresh()
     {
         CanExport = RolePermissions.IsAllowed(_session.Role, Permission.ExportCsv);
+        CanEdit = RolePermissions.IsAllowed(_session.Role, Permission.EditProductDetailsAndPrices);
         _products = _inventory.GetProducts().ToList();
         Apply();
     }

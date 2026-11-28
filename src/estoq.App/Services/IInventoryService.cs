@@ -23,7 +23,9 @@ public sealed record InventoryProduct(
     string ModelLabel,
     int LowStockThreshold,
     DateTime UpdatedAt,
-    IReadOnlyList<InventoryVariant> Variants);
+    IReadOnlyList<InventoryVariant> Variants,
+    string Description = "",
+    string SupplierBarcode = "");
 
 /// <summary>One stock movement. Sales and defects are negative; additions and found stock are positive.</summary>
 public sealed record InventoryMovement(string MovementId, string ArticleId, string Type, int Quantity, string Location, DateTime CreatedAt);

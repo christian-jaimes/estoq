@@ -28,8 +28,8 @@ public sealed partial class InventoryPage : Page
     {
         base.OnNavigatedTo(e);
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-        SetPanel(ViewModel.HasDetail, animate: false);
         ViewModel.Activate();
+        SetPanel(ViewModel.HasDetail, animate: false);
     }
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -67,12 +67,11 @@ public sealed partial class InventoryPage : Page
             return;
         }
 
-        if (show)
-        {
-            DetailPanel.Visibility = Visibility.Visible;
-            DetailTransform.TranslateX = distance;
-            DetailPanel.Opacity = 0;
-        }
+        // Stop() hands control back to the plain property values, which still hold the last end state. Set the start
+        // state explicitly, otherwise closing starts from "hidden" and the panel vanishes with no animation.
+        DetailPanel.Visibility = Visibility.Visible;
+        DetailTransform.TranslateX = show ? distance : 0;
+        DetailPanel.Opacity = show ? 0 : 1;
 
         var duration = new Duration(TimeSpan.FromMilliseconds(100));
         var move = new DoubleAnimation { To = show ? 0 : distance, Duration = duration, EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut } };
@@ -87,7 +86,15 @@ public sealed partial class InventoryPage : Page
         storyboard.Children.Add(fade);
         storyboard.Completed += (_, _) =>
         {
-            // Collapse only once it has left the view, so the exit is seen.
+            if (_panelStoryboard != storyboard)
+            {
+                return;
+            }
+
+            // Keep the end state as plain values, and collapse only once it has left the view so the exit is seen.
+            storyboard.Stop();
+            DetailTransform.TranslateX = _panelShown ? 0 : distance;
+            DetailPanel.Opacity = _panelShown ? 1 : 0;
             if (!_panelShown)
             {
                 DetailPanel.Visibility = Visibility.Collapsed;
@@ -152,6 +159,20 @@ public sealed partial class InventoryPage : Page
 
     private void OnSortClick(object sender, RoutedEventArgs e) =>
         ShowOptions((FrameworkElement)sender, ViewModel.SortOptions, ViewModel.SelectedSort, ViewModel.SelectSort);
+
+    private void OnRowDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+    {
+        if (e.OriginalSource is DependencyObject source && IsInsideButton(source, (DependencyObject)sender))
+        {
+            return;
+        }
+
+        if (sender is FrameworkElement { DataContext: InventoryRowViewModel row })
+        {
+            ViewModel.EditRow(row);
+            e.Handled = true;
+        }
+    }
 
     private void OnRowPointerEntered(object sender, PointerRoutedEventArgs e) => SetHover(sender, 1);
 

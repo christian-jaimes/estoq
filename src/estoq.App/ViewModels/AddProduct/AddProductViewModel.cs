@@ -29,6 +29,14 @@ public sealed partial class AddProductViewModel : ObservableObject
     private bool _touched;
     private string _sizesFor = string.Empty;
     private long _nextBarcode;
+    private InventoryProduct? _pendingEdit;
+    private string _editBrand = string.Empty;
+    private string _editType = string.Empty;
+    private string _editModel = string.Empty;
+    private InventoryProduct? _editOriginal;
+    private decimal _editSelling;
+    private decimal _editCost;
+    private readonly Dictionary<string, string> _editArticleIds = new(StringComparer.OrdinalIgnoreCase);
 
     public AddProductViewModel(ICatalogService catalog, ILocalizer localizer, ISessionService session, ILogoPickerService imagePicker)
     {
@@ -48,6 +56,24 @@ public sealed partial class AddProductViewModel : ObservableObject
     /// <summary>True while the "Product added" confirmation is showing.</summary>
     [ObservableProperty]
     public partial bool IsCompleted { get; set; }
+
+    /// <summary>True when the pop-up edits an existing product (details and prices only); see <see cref="PrepareEdit"/>.</summary>
+    [ObservableProperty]
+    public partial bool IsEditing { get; set; }
+
+    public bool IsNotEditing => !IsEditing;
+
+    /// <summary>Edit mode, step 2: the list of changes is showing and waits for "Confirm and save".</summary>
+    [ObservableProperty]
+    public partial bool IsConfirmingEdit { get; set; }
+
+    public ObservableCollection<EditChangeViewModel> EditChanges { get; } = [];
+
+    public bool HasEditChanges => EditChanges.Count > 0;
+
+    public bool HasNoEditChanges => EditChanges.Count == 0;
+
+    partial void OnIsEditingChanged(bool value) => OnPropertyChanged(nameof(IsNotEditing));
 
     /// <summary>The articles created by the last save, one per variant.</summary>
     public ObservableCollection<AddedItemViewModel> CompletedItems { get; } = [];
@@ -221,9 +247,20 @@ public sealed partial class AddProductViewModel : ObservableObject
     public bool IsMarginNeutral => !IsMarginNegative && !IsMarginPositive;
 
     /// <summary>Starts a fresh form with the current master data and the signed-in role's permissions.</summary>
+    /// <summary>
+    /// Makes the next <see cref="Reset"/> (the pop-up opening) load this product in edit mode instead of an empty form.
+    /// Only details and prices can be edited; variants and stock are shown read-only because stock changes are booked as adjustments.
+    /// </summary>
+    public void PrepareEdit(InventoryProduct product) => _pendingEdit = product;
+
     public void Reset()
     {
         _loading = true;
+        IsEditing = false;
+        IsConfirmingEdit = false;
+        EditChanges.Clear();
+        _editOriginal = null;
+        _editArticleIds.Clear();
         _touched = false;
         _rows.Clear();
         _removed.Clear();
@@ -263,10 +300,226 @@ public sealed partial class AddProductViewModel : ObservableObject
         RefreshSizeLists();
         RefreshColourLists();
         RebuildVariants();
+        if (_pendingEdit is { } edit)
+        {
+            _pendingEdit = null;
+            ApplyEdit(edit);
+        }
+
         UpdateDuplicate();
         UpdateSummary();
         _loading = false;
         Validate();
+    }
+
+    private string FormatPrice(decimal value) => value.ToString("0.00", _localizer.Culture);
+
+    private void ApplyEdit(InventoryProduct edit)
+    {
+        IsEditing = true;
+        _editBrand = edit.Brand;
+        _editType = edit.ProductType;
+        _editModel = edit.ModelLabel;
+        _editOriginal = edit;
+        ProductType = edit.ProductType;
+        Category = edit.Category;
+        Brand = edit.Brand;
+        ModelLabel = edit.ModelLabel;
+        Name = edit.Name;
+        Description = edit.Description;
+        SupplierBarcode = edit.SupplierBarcode;
+
+        // The product-level price is the one most variants share; a variant that differs keeps its own price.
+        var selling = edit.Variants.GroupBy(v => v.SellingPrice).OrderByDescending(g => g.Count()).Select(g => g.Key).FirstOrDefault();
+        var cost = edit.Variants.GroupBy(v => v.CostPrice).OrderByDescending(g => g.Count()).Select(g => g.Key).FirstOrDefault();
+        _editSelling = selling;
+        _editCost = cost;
+        SellingText = FormatPrice(selling);
+        CostText = ShowCost ? FormatPrice(cost) : string.Empty;
+
+        Variants.Clear();
+        var index = 0;
+        foreach (var variant in edit.Variants)
+        {
+            var colour = variant.Colour is null
+                ? null
+                : _catalog.Colours.FirstOrDefault(c => string.Equals(c.Key, variant.Colour, StringComparison.OrdinalIgnoreCase));
+            var row = new VariantRowViewModel(
+                variant.Size,
+                variant.Colour,
+                VariantLabel(variant.Size, variant.Colour),
+                colour?.Hex,
+                variant.Sku,
+                variant.Barcode,
+                CurrencyCode,
+                ShowCost,
+                RemoveVariant)
+            {
+                IsLocked = true,
+            };
+            row.SetDefaultPrices(CostText, SellingText);
+            if (variant.SellingPrice != selling)
+            {
+                row.MarkPriceCustomized(isCost: false);
+                row.SellingPriceText = FormatPrice(variant.SellingPrice);
+            }
+
+            if (ShowCost && variant.CostPrice != cost)
+            {
+                row.MarkPriceCustomized(isCost: true);
+                row.CostPriceText = FormatPrice(variant.CostPrice);
+            }
+
+            row.IsAlternateRow = index++ % 2 == 1;
+            row.PropertyChanged += OnRowChanged;
+            _editArticleIds[variant.Sku] = variant.ArticleId;
+            Variants.Add(row);
+        }
+
+        OnVariantsChanged();
+    }
+
+    /// <summary>Edit mode, step 1: lists what changed and asks for confirmation. Nothing is saved yet.</summary>
+    private void ReviewEdit()
+    {
+        EditChanges.Clear();
+        foreach (var change in BuildEditChanges())
+        {
+            EditChanges.Add(change with { IsAlternateRow = EditChanges.Count % 2 == 1 });
+        }
+
+        OnPropertyChanged(nameof(HasEditChanges));
+        OnPropertyChanged(nameof(HasNoEditChanges));
+        IsConfirmingEdit = true;
+    }
+
+    private List<EditChangeViewModel> BuildEditChanges()
+    {
+        var list = new List<EditChangeViewModel>();
+        if (_editOriginal is not { } original)
+        {
+            return list;
+        }
+
+        static string Show(string value) => value.Length == 0 ? "—" : value;
+
+        void Compare(string labelKey, string before, string after)
+        {
+            before = before.Trim();
+            after = after.Trim();
+            if (!string.Equals(before, after, StringComparison.Ordinal))
+            {
+                list.Add(new EditChangeViewModel(original.Name, _localizer[labelKey], Show(before), Show(after), false));
+            }
+        }
+
+        Compare("Add_ProductType", _editType, ProductNaming.Clean(ProductType));
+        Compare("Add_Category", original.Category, ProductNaming.Clean(Category));
+        Compare("Add_Brand", _editBrand, ProductNaming.Clean(Brand));
+        Compare("Add_ModelLabel", _editModel, ProductNaming.Clean(ModelLabel));
+        Compare("Add_Name", original.Name, ProductNaming.Clean(Name));
+        Compare("Add_Description", original.Description, Description);
+        Compare("Add_SupplierBarcode", original.SupplierBarcode, SupplierBarcode);
+
+        var sellingDefault = ParsePrice(SellingText, out _) ?? 0m;
+        var costDefault = ShowCost ? ParsePrice(CostText, out _) : null;
+        if (sellingDefault != _editSelling)
+        {
+            list.Add(new EditChangeViewModel(original.Name, _localizer["Add_Selling"], Money(_editSelling), Money(sellingDefault), false));
+        }
+
+        if (ShowCost && costDefault is { } newCost && newCost != _editCost)
+        {
+            list.Add(new EditChangeViewModel(original.Name, _localizer["Add_Cost"], Money(_editCost), Money(newCost), false));
+        }
+
+        // A variant is listed only when its price changed by itself, not when it simply follows the product price.
+        foreach (var row in Variants)
+        {
+            var before = original.Variants.FirstOrDefault(v => string.Equals(v.Sku, row.Sku, StringComparison.OrdinalIgnoreCase));
+            if (before is null)
+            {
+                continue;
+            }
+
+            var sellingNow = ParsePrice(row.SellingPriceText, out _) ?? sellingDefault;
+            if (sellingNow != before.SellingPrice && !(before.SellingPrice == _editSelling && sellingNow == sellingDefault))
+            {
+                list.Add(new EditChangeViewModel(row.Label, _localizer["Add_Selling"], Money(before.SellingPrice), Money(sellingNow), false));
+            }
+
+            if (ShowCost)
+            {
+                var costNow = ParsePrice(row.CostPriceText, out _) ?? costDefault ?? 0m;
+                if (costNow != before.CostPrice && !(before.CostPrice == _editCost && costNow == (costDefault ?? 0m)))
+                {
+                    list.Add(new EditChangeViewModel(row.Label, _localizer["Add_Cost"], Money(before.CostPrice), Money(costNow), false));
+                }
+            }
+        }
+
+        return list;
+    }
+
+    /// <summary>Back from the confirmation to the form.</summary>
+    [RelayCommand]
+    private void CancelConfirm() => IsConfirmingEdit = false;
+
+    /// <summary>The user changed their mind: the changes are thrown away and the pop-up closes without saving.</summary>
+    [RelayCommand]
+    private void DiscardEdit()
+    {
+        IsConfirmingEdit = false;
+        CloseRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Edit mode, step 2: the user confirmed the listed changes.</summary>
+    [RelayCommand]
+    private async Task ConfirmEditAsync()
+    {
+        if (!IsEditing || !HasEditChanges || IsSaving)
+        {
+            return;
+        }
+
+        IsSaving = true;
+        try
+        {
+            await SaveEditAsync();
+        }
+        finally
+        {
+            IsSaving = false;
+            IsConfirmingEdit = false;
+        }
+    }
+
+    private async Task SaveEditAsync()
+    {
+        var sellingDefault = ParsePrice(SellingText, out _) ?? 0m;
+        var costDefault = ShowCost ? ParsePrice(CostText, out _) : null;
+        var edit = new ProductEdit(
+            _editBrand,
+            _editType,
+            _editModel,
+            ProductNaming.Clean(ProductType),
+            ProductNaming.Clean(Category),
+            ProductNaming.Clean(Brand),
+            ProductNaming.Clean(ModelLabel),
+            ProductNaming.Clean(Name),
+            Description.Trim(),
+            SupplierBarcode.Trim(),
+            ShowCost,
+            Variants
+                .Where(v => _editArticleIds.ContainsKey(v.Sku))
+                .Select(v => new EditedVariant(
+                    _editArticleIds[v.Sku],
+                    ParsePrice(v.SellingPriceText, out _) ?? sellingDefault,
+                    ShowCost ? ParsePrice(v.CostPriceText, out _) ?? costDefault : null))
+                .ToList());
+        await _catalog.UpdateProductAsync(edit);
+        Saved?.Invoke(this, EventArgs.Empty);
+        CloseRequested?.Invoke(this, EventArgs.Empty);
     }
 
     partial void OnProductTypeChanged(string value)
@@ -514,6 +767,13 @@ public sealed partial class AddProductViewModel : ObservableObject
         IsSaving = true;
         try
         {
+            if (IsEditing)
+            {
+                // Saving an edit is a two-step action: review the changes first, then confirm (ConfirmEditCommand).
+                ReviewEdit();
+                return;
+            }
+
             var cost = ShowCost ? ParsePrice(CostText, out _) : null;
             var product = new NewProduct(
                 ProductNaming.Clean(ProductType),
@@ -635,6 +895,14 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     private void UpdateDuplicate()
     {
+        // The product being edited is of course "found"; only a clash with a different product counts.
+        if (IsEditing && new ProductIdentity(Brand, ProductType, ModelLabel) == new ProductIdentity(_editBrand, _editType, _editModel))
+        {
+            DuplicateName = string.Empty;
+            DuplicateMessage = string.Empty;
+            return;
+        }
+
         var found = ProductDuplicateCheck.Find(_catalog.ExistingProducts, new ProductIdentity(Brand, ProductType, ModelLabel));
         DuplicateName = found?.Name ?? string.Empty;
         DuplicateMessage = found is null ? string.Empty : _localizer.Format("Add_Duplicate", found.Name);
@@ -751,6 +1019,12 @@ public sealed partial class AddProductViewModel : ObservableObject
 
     private void RebuildVariants()
     {
+        if (IsEditing)
+        {
+            // Edit mode shows the product's existing variants; they are never regenerated from sizes and colours.
+            return;
+        }
+
         var sizes = Sizes.Where(s => s.IsSelected).ToList();
         var colours = Colours.Where(c => c.IsSelected).ToList();
         IReadOnlyList<VariantSlot> slots = sizes.Count == 0 && colours.Count == 0
@@ -972,7 +1246,7 @@ public sealed partial class AddProductViewModel : ObservableObject
             message = _localizer["Error_NoVariants"];
             section = "variants";
         }
-        else if (Variants.All(v => v.OpeningStockUnits == 0))
+        else if (!IsEditing && Variants.All(v => v.OpeningStockUnits == 0))
         {
             message = _localizer["Error_NoStock"];
             section = "variants";
@@ -982,7 +1256,7 @@ public sealed partial class AddProductViewModel : ObservableObject
             message = _localizer["Error_PriceInvalid"];
             section = "variants";
         }
-        else if (Variants.Any(v => _catalog.TakenSkus.Contains(v.Sku.Trim())))
+        else if (!IsEditing && Variants.Any(v => _catalog.TakenSkus.Contains(v.Sku.Trim())))
         {
             message = _localizer[$"Error_{ProductValidationCode.SkuDuplicate}"];
             section = "variants";

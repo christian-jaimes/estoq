@@ -84,7 +84,9 @@ public sealed class SampleInventoryService : IInventoryService
                 model,
                 StockLevels.DefaultLowStockThreshold,
                 updated,
-                variants));
+                variants,
+                SampleCsv.Get(first, "article_description"),
+                SampleCsv.Get(first, "supplier_barcode")));
         }
 
         return result;

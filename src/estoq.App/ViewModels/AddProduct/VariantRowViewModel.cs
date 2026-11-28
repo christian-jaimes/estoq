@@ -40,6 +40,11 @@ public sealed partial class VariantRowViewModel : ObservableObject
 
     public bool IsAlternateRow { get; set; }
 
+    /// <summary>Edit mode: an existing variant. Its stock and presence cannot change here; only its prices can.</summary>
+    public bool IsLocked { get; init; }
+
+    public bool IsEditable => !IsLocked;
+
     public string InternalBarcode { get; }
 
     public string CurrencyCode { get; }
