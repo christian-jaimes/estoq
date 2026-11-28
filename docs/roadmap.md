@@ -48,7 +48,7 @@ Build each rule before or with the first screen that needs it.
 - [x] Roles and permissions matrix ([[roles-and-permissions]])
 - [x] Sign-in rules: code input, lockout, inactivity policy ([[sign-in]])
 - [x] Setup rules: owner email, password, store fields, six-digit user code, currency codes and accepted list, tax default 0 % and tax included or not ([[setup-wizard]])
-- [x] Dashboard figures: periods and previous-period change, totals, gross profit, series, payment and category shares, top products, low stock, role access, report CSV ([[dashboard]])
+- [x] Dashboard figures: periods and previous-period change, totals, series, payment and category shares, top products, low stock, role access, report CSV ([[dashboard]])
 - [ ] Audit events: what each action and settings change records ([[data-model]])
 
 ### Back end

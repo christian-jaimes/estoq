@@ -11,6 +11,8 @@ public class DashboardTests
     private static readonly TaxRate Sixteen = TaxRate.TryCreate(16m, out var rate) ? rate : default;
     private static readonly System.Globalization.CultureInfo Invariant = System.Globalization.CultureInfo.InvariantCulture;
     private static readonly DateOnly Today = new(2026, 11, 18); // a Wednesday
+    private static readonly DatePeriod Month = new(new DateOnly(2026, 11, 1), Today);
+    private static readonly DatePeriod Last7 = new(Today.AddDays(-6), Today);
 
     private static DashboardLine Sale(string transaction, string day, string article, int units, decimal price, decimal cost,
         string category = "Menswear", PaymentMethod payment = PaymentMethod.Cash, string seller = "") =>
@@ -20,30 +22,22 @@ public class DashboardTests
         new(transaction, DateTime.Parse(day + " 12:00", Invariant), article, "Name " + article, "SKU-" + article, "Menswear", "", PaymentMethod.Cash, units, price, cost, true);
 
     [Theory]
-    [InlineData(DashboardRange.Today, "2026-11-18", "2026-11-18")]
-    [InlineData(DashboardRange.Last7Days, "2026-11-12", "2026-11-18")]
-    [InlineData(DashboardRange.Last30Days, "2026-10-20", "2026-11-18")]
-    [InlineData(DashboardRange.ThisMonth, "2026-11-01", "2026-11-18")]
-    [InlineData(DashboardRange.LastMonth, "2026-10-01", "2026-10-31")]
-    public void RangesResolve(DashboardRange range, string start, string end)
+    [InlineData("2026-11-18", "2026-11-18", "2026-11-18", "2026-11-18")] // today
+    [InlineData("2026-11-16", "2026-11-22", "2026-11-16", "2026-11-18")] // this week: ends today, not Sunday
+    [InlineData("2026-11-01", "2026-11-30", "2026-11-01", "2026-11-18")] // this month
+    [InlineData("2026-10-01", "2026-10-31", "2026-10-01", "2026-10-31")] // a past range is kept whole
+    [InlineData("2026-11-25", "2026-11-30", "2026-11-25", "2026-11-25")] // starts after today: one day
+    public void PickedRangeEndsAtToday(string from, string to, string start, string end)
     {
-        var period = DatePeriod.Resolve(range, Today);
+        var period = DatePeriod.From(new DateRange(DateOnly.Parse(from, Invariant), DateOnly.Parse(to, Invariant)), Today);
         Assert.Equal(DateOnly.Parse(start, Invariant), period.Start);
         Assert.Equal(DateOnly.Parse(end, Invariant), period.End);
     }
 
     [Fact]
-    public void LastMonthAcrossNewYear()
-    {
-        var period = DatePeriod.Resolve(DashboardRange.LastMonth, new DateOnly(2027, 1, 9));
-        Assert.Equal(new DateOnly(2026, 12, 1), period.Start);
-        Assert.Equal(new DateOnly(2026, 12, 31), period.End);
-    }
-
-    [Fact]
     public void PreviousPeriodHasSameLengthAndEndsTheDayBefore()
     {
-        var period = DatePeriod.Resolve(DashboardRange.ThisMonth, Today);
+        var period = Month;
         var previous = period.Previous();
         Assert.Equal(period.Days, previous.Days);
         Assert.Equal(new DateOnly(2026, 10, 31), previous.End);
@@ -51,7 +45,7 @@ public class DashboardTests
     }
 
     [Fact]
-    public void TotalsCountSalesTransactionsItemsAndAverage()
+    public void TotalsCountTransactionsSalesItemsReturnsAndRefunds()
     {
         var lines = new[]
         {
@@ -59,28 +53,27 @@ public class DashboardTests
             Sale("000001", "2026-11-10", "B", 1, 116m, 50m),
             Sale("000002", "2026-11-11", "A", 1, 58m, 20m),
             Sale("000003", "2026-10-30", "A", 5, 58m, 20m), // outside the period
+            Return("000001", "2026-11-12", "A", 1, 58m, 20m),
+            Return("000001", "2026-11-12", "B", 1, 116m, 50m), // same return, second item
+            Return("000002", "2026-11-13", "A", 1, 58m, 20m),
+            Return("000009", "2026-10-20", "A", 1, 58m, 20m), // outside the period
         };
-        var totals = DashboardCalculator.Totals(lines, DatePeriod.Resolve(DashboardRange.ThisMonth, Today), Sixteen, TaxMode.Included);
-        Assert.Equal(290m, totals.Sales);
-        Assert.Equal(2, totals.Transactions);
-        Assert.Equal(4, totals.ItemsSold);
-        Assert.Equal(145m, totals.AverageSale);
+        var totals = DashboardCalculator.Totals(lines, Month, Sixteen, TaxMode.Included);
+        Assert.Equal(new DashboardTotals(Transactions: 2, Sales: 290m, Returns: 2, Refunds: 232m, ItemsSold: 4), totals);
     }
 
     [Fact]
-    public void GrossProfitIsBeforeTaxMinusCostAndReturnsComeOff()
+    public void TotalsFollowThePeriodChosen()
     {
-        // 116 including 16 % tax is 100 before tax; cost 40 leaves 60.
         var lines = new[]
         {
-            Sale("000001", "2026-11-10", "A", 1, 116m, 40m),
-            Return("000001", "2026-11-12", "A", 1, 116m, 40m),
-            Sale("000002", "2026-11-12", "B", 1, 116m, 40m),
+            Sale("1", "2026-11-18", "A", 1, 10m, 4m),
+            Sale("2", "2026-11-15", "A", 2, 10m, 4m),
+            Sale("3", "2026-11-02", "A", 3, 10m, 4m),
         };
-        var totals = DashboardCalculator.Totals(lines, DatePeriod.Resolve(DashboardRange.ThisMonth, Today), Sixteen, TaxMode.Included);
-        Assert.Equal(232m, totals.Sales);
-        Assert.Equal(116m, totals.Refunds);
-        Assert.Equal(60m, totals.GrossProfit);
+        Assert.Equal(1, DashboardCalculator.Totals(lines, new DatePeriod(Today, Today), Sixteen, TaxMode.Included).Transactions);
+        Assert.Equal(2, DashboardCalculator.Totals(lines, Last7, Sixteen, TaxMode.Included).Transactions);
+        Assert.Equal(60m, DashboardCalculator.Totals(lines, Month, Sixteen, TaxMode.Included).Sales);
     }
 
     [Fact]
@@ -88,14 +81,13 @@ public class DashboardTests
     {
         var line = Sale("000001", "2026-11-10", "A", 1, 100m, 40m);
         Assert.Equal(116m, DashboardCalculator.Gross(line, Sixteen, TaxMode.Excluded));
-        Assert.Equal(100m, DashboardCalculator.Net(line, Sixteen, TaxMode.Excluded));
         Assert.Equal(100m, DashboardCalculator.Gross(line, Sixteen, TaxMode.Included));
     }
 
     [Fact]
     public void NoLinesGiveEmptyTotals()
     {
-        var totals = DashboardCalculator.Totals([], DatePeriod.Resolve(DashboardRange.ThisMonth, Today), Sixteen, TaxMode.Included);
+        var totals = DashboardCalculator.Totals([], Month, Sixteen, TaxMode.Included);
         Assert.Equal(DashboardTotals.Empty, totals);
     }
 
@@ -114,7 +106,7 @@ public class DashboardTests
     public void DailySeriesHasAPointForEveryDayIncludingEmptyOnes()
     {
         var lines = new[] { Sale("1", "2026-11-12", "A", 1, 10m, 4m), Sale("2", "2026-11-14", "A", 2, 10m, 4m) };
-        var series = DashboardCalculator.SalesOverTime(lines, DatePeriod.Resolve(DashboardRange.Last7Days, Today), SeriesGranularity.Daily, Sixteen, TaxMode.Included);
+        var series = DashboardCalculator.SalesOverTime(lines, Last7, SeriesGranularity.Daily, Sixteen, TaxMode.Included);
         Assert.Equal(7, series.Count);
         Assert.Equal(10m, series[0].Amount);
         Assert.Equal(0m, series[1].Amount);
@@ -132,7 +124,7 @@ public class DashboardTests
             Sale("3", "2026-11-08", "A", 1, 5m, 4m),
             Sale("4", "2026-11-17", "A", 1, 7m, 4m),
         };
-        var series = DashboardCalculator.SalesOverTime(lines, DatePeriod.Resolve(DashboardRange.ThisMonth, Today), SeriesGranularity.Weekly, Sixteen, TaxMode.Included);
+        var series = DashboardCalculator.SalesOverTime(lines, Month, SeriesGranularity.Weekly, Sixteen, TaxMode.Included);
         Assert.Equal(4, series.Count);
         Assert.Equal((new DateOnly(2026, 11, 1), new DateOnly(2026, 11, 1)), (series[0].Start, series[0].End));
         Assert.Equal((new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 8)), (series[1].Start, series[1].End));
@@ -149,7 +141,7 @@ public class DashboardTests
             Sale("2", "2026-11-10", "B", 1, 70m, 10m, "Footwear", PaymentMethod.Card),
             Return("2", "2026-11-11", "B", 1, 70m, 10m), // returns never count as sales
         };
-        var period = DatePeriod.Resolve(DashboardRange.ThisMonth, Today);
+        var period = Month;
         var payments = DashboardCalculator.ByPayment(lines, period, Sixteen, TaxMode.Included);
         Assert.Equal([PaymentMethod.Card, PaymentMethod.Cash], payments.Select(share => share.Method));
         Assert.Equal(0.7m, payments[0].Share);
@@ -164,7 +156,7 @@ public class DashboardTests
     {
         var lines = Enumerable.Range(1, 7).Select(i => Sale("T" + i, "2026-11-10", "ART" + i, i, 10m, 4m)).ToList();
         lines.Add(Sale("X", "2026-11-11", "ART1", 1, 10m, 4m)); // ART1 now has 2 units, same as ART2 but fewer sales
-        var top = DashboardCalculator.TopProducts(lines, DatePeriod.Resolve(DashboardRange.ThisMonth, Today), Sixteen, TaxMode.Included);
+        var top = DashboardCalculator.TopProducts(lines, Month, Sixteen, TaxMode.Included);
         Assert.Equal(5, top.Count);
         Assert.Equal(["ART7", "ART6", "ART5", "ART4", "ART3"], top.Select(product => product.ArticleId));
         Assert.Equal([1, 2, 3, 4, 5], top.Select(product => product.Rank));
@@ -201,13 +193,13 @@ public class DashboardTests
     }
 
     [Theory]
-    [InlineData(UserRole.Cashier, true, false, false, false)]
-    [InlineData(UserRole.Manager, false, true, true, true)]
-    [InlineData(UserRole.Owner, false, true, true, true)]
-    public void AccessFollowsTheRoleTable(UserRole role, bool own, bool profit, bool charts, bool export)
+    [InlineData(UserRole.Cashier, true, false, false)]
+    [InlineData(UserRole.Manager, false, true, true)]
+    [InlineData(UserRole.Owner, false, true, true)]
+    public void AccessFollowsTheRoleTable(UserRole role, bool own, bool charts, bool export)
     {
         var access = DashboardAccess.For(role);
-        Assert.Equal((own, profit, charts, export), (access.OwnFiguresOnly, access.ShowGrossProfit, access.ShowCharts, access.CanExport));
+        Assert.Equal((own, charts, export), (access.OwnFiguresOnly, access.ShowCharts, access.CanExport));
     }
 
     [Fact]

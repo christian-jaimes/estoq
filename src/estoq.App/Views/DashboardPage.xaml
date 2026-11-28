@@ -69,7 +69,7 @@
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
 
-      <!-- Title, subtitle with the period, range chips and Export report. -->
+      <!-- Title, subtitle with the period, date filter and Export report. -->
       <StackPanel Grid.Row="0" Spacing="12">
         <Grid ColumnSpacing="16">
           <Grid.ColumnDefinitions>
@@ -87,11 +87,17 @@
                     Content="{x:Bind services:Loc.Get('Dash_Export')}" />
           </StackPanel>
         </Grid>
-        <ItemsRepeater ItemsSource="{x:Bind ViewModel.Ranges, Mode=OneWay}" ItemTemplate="{StaticResource ChipTemplate}">
-          <ItemsRepeater.Layout>
-            <StackLayout Orientation="Horizontal" Spacing="8" />
-          </ItemsRepeater.Layout>
-        </ItemsRepeater>
+        <!-- Date filter: the shared date range picker (shortcuts, From and To, calendars), the same one as on Sales. -->
+        <Button Style="{StaticResource EqFilterButtonStyle}" Click="OnDateClick" HorizontalAlignment="Left" Width="226"
+                AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_DateRange')}"
+                ToolTipService.ToolTip="{x:Bind services:Loc.Get('Sales_DateRange')}">
+          <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+            <FontIcon Glyph="&#xE935;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center"
+                      Foreground="{ThemeResource EqGoldInkBrush}" />
+            <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.DateButtonText, Mode=OneWay}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+            <FontIcon Grid.Column="2" Glyph="&#xE313;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFontXl}" VerticalAlignment="Center" />
+          </Grid>
+        </Button>
       </StackPanel>
 
       <!-- KPI cards: icon, label, value, change against the previous period. They wrap when the window is narrow. -->

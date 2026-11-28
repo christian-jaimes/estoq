@@ -384,7 +384,7 @@
   <data name="Sales_PreviousMonth" xml:space="preserve"><value>Previous month</value></data>
   <data name="Sales_NextMonth" xml:space="preserve"><value>Next month</value></data>
   <data name="Sales_AllDates" xml:space="preserve"><value>All dates</value></data>
-  <data name="Sales_KpiTotal" xml:space="preserve"><value>Total sales</value></data>
+  <data name="Sales_KpiTotal" xml:space="preserve"><value>Sales</value></data>
   <data name="Sales_KpiTransactions" xml:space="preserve"><value>Transactions</value></data>
   <data name="Sales_KpiItems" xml:space="preserve"><value>Items sold</value></data>
   <data name="Sales_KpiAverage" xml:space="preserve"><value>Average sale</value></data>
@@ -565,21 +565,15 @@
   <data name="Notif_ReturnWithoutReceipt_Title" xml:space="preserve"><value>Return {0} had no receipt</value></data>
   <data name="Notif_ReturnWithoutReceipt_Detail" xml:space="preserve"><value>Returned at today's price without a receipt. Review it.</value></data>
   <data name="Dash_SubtitleRange" xml:space="preserve"><value>{0} to {1}</value></data>
-  <data name="Dash_Range_Today" xml:space="preserve"><value>Today</value></data>
-  <data name="Dash_Range_Last7Days" xml:space="preserve"><value>Last 7 days</value></data>
-  <data name="Dash_Range_Last30Days" xml:space="preserve"><value>Last 30 days</value></data>
-  <data name="Dash_Range_ThisMonth" xml:space="preserve"><value>This month</value></data>
-  <data name="Dash_Range_LastMonth" xml:space="preserve"><value>Last month</value></data>
   <data name="Dash_Granularity_Daily" xml:space="preserve"><value>Daily</value></data>
   <data name="Dash_Granularity_Weekly" xml:space="preserve"><value>Weekly</value></data>
   <data name="Dash_NoPrevious" xml:space="preserve"><value>No earlier data</value></data>
   <data name="Dash_ChangeVsPrevious" xml:space="preserve"><value>{0} vs previous period</value></data>
-  <data name="Dash_KpiSales" xml:space="preserve"><value>Total sales</value></data>
+  <data name="Dash_KpiSales" xml:space="preserve"><value>Sales</value></data>
   <data name="Dash_KpiTransactions" xml:space="preserve"><value>Transactions</value></data>
   <data name="Dash_KpiItems" xml:space="preserve"><value>Items sold</value></data>
-  <data name="Dash_KpiAverage" xml:space="preserve"><value>Average sale</value></data>
+  <data name="Dash_KpiReturns" xml:space="preserve"><value>Returns</value></data>
   <data name="Dash_KpiRefunds" xml:space="preserve"><value>Refunds</value></data>
-  <data name="Dash_KpiProfit" xml:space="preserve"><value>Gross profit</value></data>
   <data name="Dash_PaymentOther" xml:space="preserve"><value>Other methods</value></data>
   <data name="Dash_LowStockCount" xml:space="preserve"><value>{0} items running low</value></data>
   <data name="Dash_Left" xml:space="preserve"><value>{0} left</value></data>

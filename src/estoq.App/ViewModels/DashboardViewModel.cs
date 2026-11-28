@@ -6,6 +6,7 @@ using Estoq.App.Controls;
 using Estoq.App.Services;
 using Estoq.App.ViewModels.PointOfSale;
 using Estoq.Core.Dashboard;
+using Estoq.Core.Sales;
 using Estoq.Core.Setup;
 
 namespace Estoq.App.ViewModels;
@@ -26,7 +27,7 @@ public sealed partial class DashboardViewModel : ObservableObject
     private readonly INavigationService _navigation;
     private readonly IReportExportService _export;
 
-    private DashboardRange _range = DashboardRange.ThisMonth;
+    private DateRange? _dates = DateRange.Of(QuickRange.ThisMonth, DateOnly.FromDateTime(DateTime.Today));
     private SeriesGranularity _granularity = SeriesGranularity.Daily;
     private DashboardAccess _access = DashboardAccess.For(Estoq.Core.Roles.UserRole.Cashier);
     private List<(string Section, string Label, string Value)> _report = [];
@@ -45,8 +46,6 @@ public sealed partial class DashboardViewModel : ObservableObject
         Refresh();
     }
 
-    public ObservableCollection<CurrencyChipViewModel> Ranges { get; } = [];
-
     public ObservableCollection<CurrencyChipViewModel> Granularities { get; } = [];
 
     public ObservableCollection<DashboardKpi> Kpis { get; } = [];
@@ -60,6 +59,23 @@ public sealed partial class DashboardViewModel : ObservableObject
     public ObservableCollection<LowStockRow> LowStockItems { get; } = [];
 
     public string Title => _localizer["Nav_Dashboard"];
+
+    /// <summary>The range the date picker shows as chosen; null means all dates.</summary>
+    public DateRange? Dates => _dates;
+
+    public CultureInfo Culture => _localizer.Culture;
+
+    /// <summary>Text of the date button: the chosen days, or "All dates".</summary>
+    [ObservableProperty]
+    public partial string DateButtonText { get; set; } = string.Empty;
+
+    /// <summary>Called by the date picker: a shortcut or an applied range. Every card follows it.</summary>
+    public void ApplyDates(DateRange? range)
+    {
+        _dates = range;
+        ExportStatus = string.Empty;
+        Refresh();
+    }
 
     [ObservableProperty]
     public partial string Subtitle { get; set; } = string.Empty;
@@ -117,18 +133,22 @@ public sealed partial class DashboardViewModel : ObservableObject
         var currency = _currency = _pointOfSale.GetSettings().Rates.BaseCurrency;
         var rate = SampleStoreTax.Rate;
         var mode = SampleStoreTax.Mode;
-        var period = DatePeriod.Resolve(_range, DateOnly.FromDateTime(DateTime.Now));
-        var previous = period.Previous();
-
         var lines = _data.LoadLines();
         if (_access.OwnFiguresOnly)
         {
             lines = DashboardCalculator.OwnedBy(lines, _session.UserName ?? string.Empty);
         }
 
-        Subtitle = _range == DashboardRange.Today
-            ? period.Start.ToString("D", culture)
-            : _localizer.Format("Dash_SubtitleRange", period.Start.ToString("d MMM yyyy", culture), period.End.ToString("d MMM yyyy", culture));
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var period = _dates is { } picked
+            ? DatePeriod.From(picked, today)
+            : new DatePeriod(lines.Count == 0 ? today : DateOnly.FromDateTime(lines.Min(line => line.At)), today);
+        var previous = period.Previous();
+
+        DateButtonText = _dates is { } chosen
+            ? _localizer.Format("Sales_DateLabel", chosen.From.ToString("d", culture), chosen.To.ToString("d", culture))
+            : _localizer["Sales_AllDates"];
+        Subtitle = _localizer.Format("Dash_SubtitleRange", period.Start.ToString("d MMM yyyy", culture), period.End.ToString("d MMM yyyy", culture));
 
         _report = [(_localizer["Dash_ReportSection_Period"], _localizer["Dash_ReportLabel_From"], period.Start.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)),
                    (_localizer["Dash_ReportSection_Period"], _localizer["Dash_ReportLabel_To"], period.End.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))];
@@ -155,12 +175,11 @@ public sealed partial class DashboardViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Builds the range and daily/weekly chips. While the language is unchanged the existing chips only move their selection, so the chip being
+    /// Builds the daily/weekly chips. While the language is unchanged the existing chips only move their selection, so the chip being
     /// clicked is not torn out from under the pointer.
     /// </summary>
     private void BuildChoices()
     {
-        Sync(Ranges, Enum.GetValues<DashboardRange>(), _range, range => _localizer["Dash_Range_" + range], SelectRange);
         Sync(Granularities, Enum.GetValues<SeriesGranularity>(), _granularity, granularity => _localizer["Dash_Granularity_" + granularity], SelectGranularity);
     }
 
@@ -181,16 +200,6 @@ public sealed partial class DashboardViewModel : ObservableObject
         foreach (var value in values)
         {
             chips.Add(new CurrencyChipViewModel(value.ToString(), label(value), EqualityComparer<T>.Default.Equals(value, selected), select));
-        }
-    }
-
-    private void SelectRange(string code)
-    {
-        if (Enum.TryParse<DashboardRange>(code, out var range) && range != _range)
-        {
-            _range = range;
-            ExportStatus = string.Empty;
-            Refresh();
         }
     }
 
@@ -224,15 +233,11 @@ public sealed partial class DashboardViewModel : ObservableObject
             Kpis.Add(new DashboardKpi(glyph, _localizer[labelKey], value, text, glyphOfChange, tone));
         }
 
-        Add("", "Dash_KpiSales", Money(now.Sales), now.Sales, before.Sales);
-        Add("", "Dash_KpiTransactions", now.Transactions.ToString("N0", culture), now.Transactions, before.Transactions);
-        Add("", "Dash_KpiItems", now.ItemsSold.ToString("N0", culture), now.ItemsSold, before.ItemsSold);
-        Add("", "Dash_KpiAverage", Money(now.AverageSale), now.AverageSale, before.AverageSale);
-        Add("", "Dash_KpiRefunds", Money(now.Refunds), now.Refunds, before.Refunds, risingIsBad: true);
-        if (_access.ShowGrossProfit)
-        {
-            Add("", "Dash_KpiProfit", Money(now.GrossProfit), now.GrossProfit, before.GrossProfit);
-        }
+        Add("\uEF6E", "Dash_KpiTransactions", now.Transactions.ToString("N0", culture), now.Transactions, before.Transactions);
+        Add("\uE8CC", "Dash_KpiSales", Money(now.Sales), now.Sales, before.Sales);
+        Add("\uE8D4", "Dash_KpiReturns", now.Returns.ToString("N0", culture), now.Returns, before.Returns, risingIsBad: true);
+        Add("\uEF63", "Dash_KpiRefunds", Money(now.Refunds), now.Refunds, before.Refunds, risingIsBad: true);
+        Add("\uE53B", "Dash_KpiItems", now.ItemsSold.ToString("N0", culture), now.ItemsSold, before.ItemsSold);
     }
 
     private void BuildCharts(IReadOnlyList<DashboardLine> lines, DatePeriod period, TaxRate rate, TaxMode mode, string currency, CultureInfo culture)
