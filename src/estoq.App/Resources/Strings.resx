@@ -392,6 +392,7 @@
   <data name="Sales_ColDate" xml:space="preserve"><value>Date &amp; time</value></data>
   <data name="Sales_ColItems" xml:space="preserve"><value>Items</value></data>
   <data name="Sales_ColTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Sales_ColTax" xml:space="preserve"><value>Tax</value></data>
   <data name="Sales_ColMethod" xml:space="preserve"><value>Payment method</value></data>
   <data name="Sales_ColStaff" xml:space="preserve"><value>Staff</value></data>
   <data name="Sales_ColStatus" xml:space="preserve"><value>Status</value></data>
@@ -402,11 +403,8 @@
   <data name="Sales_MenuView" xml:space="preserve"><value>View</value></data>
   <data name="Sales_MenuPrint" xml:space="preserve"><value>Print receipt</value></data>
   <data name="Sales_MenuReturn" xml:space="preserve"><value>Return items</value></data>
-  <data name="Sales_Showing" xml:space="preserve"><value>Showing {0}–{1} of {2} sales</value></data>
+  <data name="Sales_Showing" xml:space="preserve"><value>Showing {0} of {1} sales</value></data>
   <data name="Sales_ShowingNone" xml:space="preserve"><value>No sales to show</value></data>
-  <data name="Sales_PrevPage" xml:space="preserve"><value>Previous page</value></data>
-  <data name="Sales_NextPage" xml:space="preserve"><value>Next page</value></data>
-  <data name="Sales_PageN" xml:space="preserve"><value>Page {0}</value></data>
   <data name="Sales_Empty" xml:space="preserve"><value>No sales match these filters.</value></data>
   <data name="Sales_StaffLine" xml:space="preserve"><value>Staff: {0}</value></data>
   <data name="Sales_ItemsHeader" xml:space="preserve"><value>Items ({0})</value></data>

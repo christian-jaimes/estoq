@@ -99,47 +99,16 @@ public sealed partial class InventoryPage : Page
         }
     }
 
-    private void OnRowPointerEntered(object sender, PointerRoutedEventArgs e) => SetHover(sender, 1);
+    private void OnRowPointerEntered(object sender, PointerRoutedEventArgs e) => TableRowHover.Set(sender, 1);
 
-    private void OnRowPointerExited(object sender, PointerRoutedEventArgs e) => SetHover(sender, 0);
-
-    private static void SetHover(object row, double opacity)
-    {
-        if (row is Grid grid)
-        {
-            foreach (var child in grid.Children)
-            {
-                if (child is Border { Name: "HoverFill" } fill)
-                {
-                    fill.Opacity = opacity;
-                    return;
-                }
-            }
-        }
-    }
+    private void OnRowPointerExited(object sender, PointerRoutedEventArgs e) => TableRowHover.Set(sender, 0);
 
     private void OnTableViewChanged(object? sender, ScrollViewerViewChangedEventArgs e) => LoadMoreIfNeeded();
 
     private void OnTableSizeChanged(object sender, SizeChangedEventArgs e) => LoadMoreIfNeeded();
 
     /// <summary>Lazy load: adds the next batch of rows while the end of the table is near, or the rows do not fill the view yet.</summary>
-    private void LoadMoreIfNeeded()
-    {
-        if (!ViewModel.HasMore)
-        {
-            return;
-        }
-
-        if (TableScroll.ScrollableHeight - TableScroll.VerticalOffset > 240)
-        {
-            return;
-        }
-
-        ViewModel.LoadMore();
-
-        // Once the new rows are laid out, check again: a tall window may need more than one batch.
-        DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, LoadMoreIfNeeded);
-    }
+    private void LoadMoreIfNeeded() => TableLazyLoad.LoadMoreIfNeeded(TableScroll, () => ViewModel.HasMore, ViewModel.LoadMore);
 
     /// <summary>Shows a menu of choices under <paramref name="anchor"/>, with the current one ticked.</summary>
     /// <summary>Opens a multi-select dropdown right below <paramref name="anchor"/>, as wide as the anchor, with a search field and a scrolling checkbox list.</summary>

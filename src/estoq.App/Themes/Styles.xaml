@@ -107,6 +107,62 @@
     <Setter Property="Canvas.ZIndex" Value="2" />
   </Style>
 
+  <!-- Tab (Inventory detail tabs, Sales period tabs): text with a gold underline on the selected one. -->
+  <Style x:Key="EqTabStyle" TargetType="RadioButton">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="16,10" />
+    <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
+    <Setter Property="FontSize" Value="{StaticResource EqFontMd}" />
+    <Setter Property="Foreground" Value="{ThemeResource EqTextSecondaryBrush}" />
+    <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
+    <Setter Property="FocusVisualPrimaryThickness" Value="2" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <Grid x:Name="Root" Background="Transparent" CornerRadius="{StaticResource EqRadiusSm}">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                    <Setter Target="Presenter.Foreground" Value="{ThemeResource EqTextBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Pressed">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Disabled">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Opacity" Value="0.4" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+              <VisualStateGroup x:Name="CheckStates">
+                <VisualState x:Name="Unchecked" />
+                <VisualState x:Name="Indeterminate" />
+                <VisualState x:Name="Checked">
+                  <VisualState.Setters>
+                    <Setter Target="Presenter.Foreground" Value="{ThemeResource EqGoldInkBrush}" />
+                    <Setter Target="Underline.Visibility" Value="Visible" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <ContentPresenter x:Name="Presenter" Padding="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                              Foreground="{TemplateBinding Foreground}" FontFamily="{TemplateBinding FontFamily}"
+                              FontSize="{TemplateBinding FontSize}" />
+            <Rectangle x:Name="Underline" Visibility="Collapsed" Height="2" VerticalAlignment="Bottom" RadiusX="1" RadiusY="1"
+                       Margin="8,0" Fill="{ThemeResource EqGoldBrush}" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
   <!-- Table standard (design system, Table): every table in the app shares this look. Only the cells differ.
        Header: 44 px rounded bar on the elevated surface, semibold 13 px titles. Rows: hairline divider, every second
        row banded. Set ColumnDefinitions on the header and the row content so the columns line up; the header and row
@@ -131,6 +187,15 @@
   <Style x:Key="EqTableRowStyle" TargetType="Grid">
     <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
     <Setter Property="BorderThickness" Value="0,0,0,1" />
+  </Style>
+
+  <!-- Footer bar of a full-bleed table card: same 44 px height as the header, 20 px side inset, 1 px top divider. -->
+  <Style x:Key="EqTableFooterStyle" TargetType="Grid">
+    <Setter Property="Height" Value="44" />
+    <Setter Property="Padding" Value="20,0" />
+    <Setter Property="ColumnSpacing" Value="16" />
+    <Setter Property="BorderBrush" Value="{ThemeResource EqBorderBrush}" />
+    <Setter Property="BorderThickness" Value="0,1,0,0" />
   </Style>
 
   <Style x:Key="EqTableBandStyle" TargetType="Border">

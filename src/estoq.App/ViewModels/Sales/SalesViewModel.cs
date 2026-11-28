@@ -10,13 +10,13 @@ using Estoq.Core.Sales;
 namespace Estoq.App.ViewModels.Sales;
 
 /// <summary>
-/// State of the Sales page (docs/features/sales.md): KPI cards, period tabs, filters, the paged table and the floating sale detail.
+/// State of the Sales page (docs/features/sales.md): KPI cards, period tabs, filters, the table (rows load on scroll) and the floating sale detail.
 /// All filtering, ranges, paging and figures come from <c>Estoq.Core.Sales</c>; this class formats them and wires the buttons.
 /// </summary>
 public sealed partial class SalesViewModel : ObservableObject, IDisposable
 {
-    /// <summary>Rows per page; the table scrolls inside its card when the window is shorter.</summary>
-    public const int PageSize = 10;
+    /// <summary>Rows added each time the table is scrolled near its end (no pager).</summary>
+    public const int BatchSize = 25;
 
     private readonly ISalesService _sales;
     private readonly ISessionService _session;
@@ -28,7 +28,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
 
     private IReadOnlyList<SaleRecord> _filtered = [];
     private SalesPeriod _period = SalesPeriod.All;
-    private int _page = 1;
+    private int _shown = BatchSize;
 
     // True while the view model changes its own bound state (rebuilding lists, moving selections), so those changes
     // are not mistaken for something the user did.
@@ -72,8 +72,6 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
     public ObservableCollection<SalesFilterOption> StatusOptions { get; } = [];
 
     public ObservableCollection<SaleRowViewModel> Rows { get; } = [];
-
-    public ObservableCollection<PageButtonViewModel> PageButtons { get; } = [];
 
     public ObservableCollection<SaleDetailLineViewModel> DetailLines { get; } = [];
 
@@ -133,12 +131,6 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     public partial string FooterText { get; set; } = string.Empty;
-
-    [ObservableProperty]
-    public partial bool CanGoPrevious { get; set; }
-
-    [ObservableProperty]
-    public partial bool CanGoNext { get; set; }
 
     [ObservableProperty]
     public partial string NoticeText { get; set; } = string.Empty;
@@ -234,7 +226,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
             return;
         }
 
-        _page = 1;
+        _shown = BatchSize;
         Reload();
     }
 
@@ -253,7 +245,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         }
 
         _building = false;
-        _page = 1;
+        _shown = BatchSize;
         Reload();
     }
 
@@ -265,7 +257,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         }
 
         _period = period;
-        _page = 1;
+        _shown = BatchSize;
         Reload();
     }
 
@@ -344,35 +336,52 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         AverageSaleText = CurrencyFormat.Amount(summary.AverageSale, Currency, culture);
         DateRangeText = BuildRangeText(filter, culture);
 
-        var pageCount = SalesPaging.PageCount(_filtered.Count, PageSize);
-        _page = SalesPaging.Clamp(_page, pageCount);
-        var (first, last) = SalesPaging.RowRange(_page, PageSize, _filtered.Count);
-        FooterText = _filtered.Count == 0
-            ? _localizer["Sales_ShowingNone"]
-            : _localizer.Format("Sales_Showing", first.ToString("N0", culture), last.ToString("N0", culture), _filtered.Count.ToString("N0", culture));
-        CanGoPrevious = _page > 1;
-        CanGoNext = _page < pageCount;
-
         var previouslySelected = Selected?.ReceiptNumber;
         _building = true;
         Rows.Clear();
-        foreach (var sale in _filtered.Skip((_page - 1) * PageSize).Take(PageSize))
-        {
-            Rows.Add(new SaleRowViewModel(sale, Currency, _localizer, Rows.Count % 2 == 1));
-        }
-
-        PageButtons.Clear();
-        foreach (var number in SalesPaging.PageNumbers(pageCount, _page))
-        {
-            PageButtons.Add(new PageButtonViewModel(number, number == _page, _localizer.Format("Sales_PageN", number), GoToPage));
-        }
+        AddRows(0, Math.Min(_shown, _filtered.Count));
 
         IsEmpty = Rows.Count == 0;
         // The detail is open only after a click: it stays on the same sale when that sale is still listed, otherwise it closes.
         Selected = previouslySelected is null ? null : Rows.FirstOrDefault(row => row.ReceiptNumber == previouslySelected);
         _building = false;
+        UpdateFooter();
 
         ShowDetail(Selected);
+    }
+
+    private void AddRows(int from, int to)
+    {
+        for (var index = from; index < to; index++)
+        {
+            Rows.Add(new SaleRowViewModel(_filtered[index], Currency, _localizer, Rows.Count % 2 == 1));
+        }
+    }
+
+    private void UpdateFooter()
+    {
+        var culture = _localizer.Culture;
+        FooterText = _filtered.Count == 0
+            ? _localizer["Sales_ShowingNone"]
+            : _localizer.Format("Sales_Showing", Rows.Count.ToString("N0", culture), _filtered.Count.ToString("N0", culture));
+    }
+
+    /// <summary>Whether more sales match than the table shows so far.</summary>
+    public bool HasMore => Rows.Count < _filtered.Count;
+
+    /// <summary>Adds the next batch of rows (called when the table is scrolled near its end).</summary>
+    public void LoadMore()
+    {
+        if (!HasMore)
+        {
+            return;
+        }
+
+        var from = Rows.Count;
+        _shown = Math.Min(from + BatchSize, _filtered.Count);
+        AddRows(from, _shown);
+        IsEmpty = Rows.Count == 0;
+        UpdateFooter();
     }
 
     private string BuildRangeText(SalesFilter filter, CultureInfo culture)
@@ -382,18 +391,6 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
             ? $"{start.ToString("d", culture)} – {end.ToString("d", culture)}"
             : _localizer["Sales_AllDates"];
     }
-
-    private void GoToPage(int page)
-    {
-        _page = page;
-        Reload();
-    }
-
-    [RelayCommand]
-    private void PreviousPage() => GoToPage(_page - 1);
-
-    [RelayCommand]
-    private void NextPage() => GoToPage(_page + 1);
 
     private void ShowDetail(SaleRowViewModel? row)
     {
@@ -460,11 +457,12 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         {
             _localizer["Sales_ColReceipt"],
             _localizer["Sales_ColDate"],
+            _localizer["Sales_ColStaff"],
+            _localizer["Sales_ColMethod"],
+            _localizer["Sales_ColStatus"],
             _localizer["Sales_ColItems"],
             _localizer["Sales_ColTotal"],
-            _localizer["Sales_ColMethod"],
-            _localizer["Sales_ColStaff"],
-            _localizer["Sales_ColStatus"],
+            _localizer["Sales_ColTax"],
         };
         var csv = SalesCsv.Build(
             _filtered,

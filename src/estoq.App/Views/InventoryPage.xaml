@@ -41,62 +41,6 @@
       </Setter>
     </Style>
 
-    <!-- Tab: text with a gold underline on the selected one. Promote to Themes/Styles.xaml when a second page needs it. -->
-    <Style x:Key="InvTabStyle" TargetType="RadioButton">
-      <Setter Property="MinWidth" Value="0" />
-      <Setter Property="MinHeight" Value="0" />
-      <Setter Property="Padding" Value="16,10" />
-      <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
-      <Setter Property="FontSize" Value="{StaticResource EqFontMd}" />
-      <Setter Property="Foreground" Value="{ThemeResource EqTextSecondaryBrush}" />
-      <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
-      <Setter Property="FocusVisualPrimaryThickness" Value="2" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="RadioButton">
-            <Grid x:Name="Root" Background="Transparent" CornerRadius="{StaticResource EqRadiusSm}">
-              <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="CommonStates">
-                  <VisualState x:Name="Normal" />
-                  <VisualState x:Name="PointerOver">
-                    <VisualState.Setters>
-                      <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
-                      <Setter Target="Presenter.Foreground" Value="{ThemeResource EqTextBrush}" />
-                    </VisualState.Setters>
-                  </VisualState>
-                  <VisualState x:Name="Pressed">
-                    <VisualState.Setters>
-                      <Setter Target="Root.Background" Value="{ThemeResource EqHoverFillBrush}" />
-                    </VisualState.Setters>
-                  </VisualState>
-                  <VisualState x:Name="Disabled">
-                    <VisualState.Setters>
-                      <Setter Target="Root.Opacity" Value="0.4" />
-                    </VisualState.Setters>
-                  </VisualState>
-                </VisualStateGroup>
-                <VisualStateGroup x:Name="CheckStates">
-                  <VisualState x:Name="Unchecked" />
-                  <VisualState x:Name="Indeterminate" />
-                  <VisualState x:Name="Checked">
-                    <VisualState.Setters>
-                      <Setter Target="Presenter.Foreground" Value="{ThemeResource EqGoldInkBrush}" />
-                      <Setter Target="Underline.Visibility" Value="Visible" />
-                    </VisualState.Setters>
-                  </VisualState>
-                </VisualStateGroup>
-              </VisualStateManager.VisualStateGroups>
-              <ContentPresenter x:Name="Presenter" Padding="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Foreground="{TemplateBinding Foreground}" FontFamily="{TemplateBinding FontFamily}"
-                                FontSize="{TemplateBinding FontSize}" />
-              <Rectangle x:Name="Underline" Visibility="Collapsed" Height="2" VerticalAlignment="Bottom" RadiusX="1" RadiusY="1"
-                         Margin="8,0" Fill="{ThemeResource EqGoldBrush}" />
-            </Grid>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-
     <!-- Filter and sort buttons: secondary button, left text that trims, chevron at the end. -->
     <Style x:Key="InvFilterButtonStyle" TargetType="Button" BasedOn="{StaticResource EqSecondaryButtonStyle}">
       <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -106,7 +50,7 @@
     </Style>
   </Page.Resources>
 
-  <Grid RowDefinitions="Auto,Auto,*" RowSpacing="16" Margin="0,0,0,24" Background="Transparent" Tapped="OnPageTapped">
+  <Grid RowDefinitions="Auto,Auto,*" RowSpacing="16" Background="Transparent" Tapped="OnPageTapped">
 
     <!-- Title and actions -->
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="16">
@@ -409,8 +353,7 @@
             </ScrollViewer>
 
             <!-- Footer: count of loaded rows, last export result, export of exactly those rows -->
-            <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16" Padding="20,12"
-                  BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,1,0,0">
+            <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Style="{StaticResource EqTableFooterStyle}">
               <TextBlock Text="{x:Bind ViewModel.ShowingText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center"
                          TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
               <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.ExportMessage, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center"
@@ -468,13 +411,13 @@
 
           <Border Grid.Row="1" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">
             <Grid ColumnDefinitions="*,*,*,*">
-              <RadioButton Grid.Column="0" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+              <RadioButton Grid.Column="0" GroupName="InventoryDetailTabs" Style="{StaticResource EqTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
                            Content="{x:Bind services:Loc.Get('Inventory_DetailOverview')}" IsChecked="{x:Bind ViewModel.IsOverviewTab, Mode=TwoWay}" />
-              <RadioButton Grid.Column="1" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+              <RadioButton Grid.Column="1" GroupName="InventoryDetailTabs" Style="{StaticResource EqTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
                            Content="{x:Bind services:Loc.Get('Inventory_DetailVariants')}" IsChecked="{x:Bind ViewModel.IsVariantsTab, Mode=TwoWay}" />
-              <RadioButton Grid.Column="2" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+              <RadioButton Grid.Column="2" GroupName="InventoryDetailTabs" Style="{StaticResource EqTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
                            Content="{x:Bind services:Loc.Get('Inventory_DetailStock')}" IsChecked="{x:Bind ViewModel.IsStockTab, Mode=TwoWay}" />
-              <RadioButton Grid.Column="3" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+              <RadioButton Grid.Column="3" GroupName="InventoryDetailTabs" Style="{StaticResource EqTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
                            Content="{x:Bind services:Loc.Get('Inventory_DetailHistory')}" IsChecked="{x:Bind ViewModel.IsHistoryTab, Mode=TwoWay}" />
             </Grid>
           </Border>

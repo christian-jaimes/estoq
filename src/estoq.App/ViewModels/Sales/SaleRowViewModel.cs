@@ -19,6 +19,7 @@ public sealed partial class SaleRowViewModel : ObservableObject
         DateText = FormatDate(sale.SoldAt, culture);
         ItemsText = sale.ItemCount.ToString(culture);
         TotalText = CurrencyFormat.Amount(sale.Totals.Total, currency, culture);
+        TaxText = CurrencyFormat.Amount(sale.Totals.Tax, currency, culture);
         StaffText = sale.Staff;
         Status = sale.Status;
         StatusKind = KindOf(sale.Status);
@@ -45,6 +46,8 @@ public sealed partial class SaleRowViewModel : ObservableObject
     public string ItemsText { get; }
 
     public string TotalText { get; }
+
+    public string TaxText { get; }
 
     public string StaffText { get; }
 

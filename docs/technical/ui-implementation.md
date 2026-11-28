@@ -4,6 +4,7 @@ The visual spec is `Design system/` (brand book, `tokens.json`, `tokens.css`, co
 
 ## Rules for every screen
 
+- Page spacing belongs to the shell, not the pages: `ShellPage` `ContentFrame` pads 24 px top and bottom, and its column ends 24 px from the right edge, so every page ends level with the sidebar. Pages never add their own outer bottom or right margin.
 - Components read tokens only; no hard-coded colours. The scrim and white-on-danger are the only fixed colours.
 - Gold for one or two moments per screen; one gold primary button per view.
 - Status is never colour alone: badges carry text.
@@ -86,6 +87,7 @@ Every table uses the shared styles in `Themes/Styles.xaml`, so tables look and f
 
 - Header: `EqTableHeaderStyle` on a `Grid` (44 px, rounded `EqRadiusMd`, elevated surface, 12 px start and 8 px end padding) with `EqTableHeaderTextStyle` titles (semibold 13 px). Numeric columns right-align, short count columns may centre.
 - Rows: a `Grid` with `EqTableRowStyle` (1 px divider) holding an `EqTableBandStyle` border first, visible on every second row (`IsAlternateRow` on the row view model), then the cell grid with the same column widths and 12 px start and 8 px end padding as the header.
+- Header and footer bars share the same height (44 px): `EqTableHeaderStyle` and `EqTableFooterStyle` in `Themes/Styles.xaml`. Footer content (the standard 36 px Export button included) is vertically centred inside it.
 - Cell text: `EqTableCellStyle`, and `EqTableCellStrongStyle` for right-aligned values. No outer border around the table.
 - Used by: POS cart and payments, Add product variants, Product added.
 
@@ -98,7 +100,8 @@ A page table that sits in a card (Inventory is the reference, `Views/InventoryPa
 - Header: `EqTableHeaderStyle` with `Padding="20,0,20,0"` and `CornerRadius="12,12,0,0"` (top corners match the card, bottom square), so the band spans the full card width.
 - Rows: `EqTableRowStyle` / `EqTableBandStyle` as above, but the cell grid uses `Padding="20,8,20,8"`, so text keeps a 20 px inset at both ends while banding, hover and selection tints reach both card edges. Use the same column widths as the header.
 - Row hover: a `HoverFill` border (`EqHoverFillBrush`, `Opacity` 0, `OpacityTransition` 100 ms) placed after the band and before the selection tint; pointer enter and exit set its opacity to 1 and 0. The selected row uses `EqGoldTintBrush` on top.
-- Footer: a `Grid` with `Padding="20,12"` and a 1 px top border (`EqBorderBrush`), holding the row count on the left and page-level actions (Export) on the right. No pagination: rows load in batches when the user scrolls near the end, and the footer says "Showing X of Y".
+- Footer: a `Grid` with `EqTableFooterStyle` (44 px high, the same as the header; 20 px side inset; 1 px top border), holding the row count on the left and page-level actions (Export) on the right. No pagination: rows load in batches when the user scrolls near the end, and the footer says "Showing X of Y".
+- Shared code: `Controls/TableRowHover` (hover fill) and `Controls/TableLazyLoad` (load on scroll); tabs use `EqTabStyle`. Used by Inventory and Sales.
 - Scrolling: only the rows scroll (`ScrollViewer` between header and footer); the header and footer stay put.
 - Tables inside narrow pop-ups or side panels (the Inventory detail panel) keep the inset layout above, not full bleed.
 

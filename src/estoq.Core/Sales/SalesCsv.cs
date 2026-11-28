@@ -9,7 +9,7 @@ namespace Estoq.Core.Sales;
 /// </summary>
 public static class SalesCsv
 {
-    /// <param name="headers">Receipt, date and time, items, total, payment method, staff, status.</param>
+    /// <param name="headers">Receipt, date and time, staff, payment method, status, items, total, tax (the table order).</param>
     public static string Build(
         IEnumerable<SaleRecord> sales,
         IReadOnlyList<string> headers,
@@ -25,11 +25,12 @@ public static class SalesCsv
             {
                 Cell(sale.ReceiptNumber),
                 Cell(sale.SoldAt.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture)),
+                Cell(sale.Staff),
+                Cell(methodText(sale.PrimaryMethod)),
+                Cell(statusText(sale.Status)),
                 sale.ItemCount.ToString(CultureInfo.InvariantCulture),
                 sale.Totals.Total.ToString("0.00", CultureInfo.InvariantCulture),
-                Cell(methodText(sale.PrimaryMethod)),
-                Cell(sale.Staff),
-                Cell(statusText(sale.Status)),
+                sale.Totals.Tax.ToString("0.00", CultureInfo.InvariantCulture),
             };
             builder.Append(string.Join(',', cells)).Append("\r\n");
         }

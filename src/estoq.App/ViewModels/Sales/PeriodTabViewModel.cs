@@ -31,35 +31,3 @@ public sealed partial class PeriodTabViewModel : ObservableObject
         }
     }
 }
-
-/// <summary>A button of the pager: a page number or the ellipsis between distant pages.</summary>
-public sealed class PageButtonViewModel
-{
-    public PageButtonViewModel(int number, bool isCurrent, string automationName, Action<int> go)
-    {
-        Number = number;
-        IsGap = number == SalesPaging.Gap;
-        IsCurrent = isCurrent;
-        Text = IsGap ? "…" : number.ToString(System.Globalization.CultureInfo.CurrentUICulture);
-        AutomationName = automationName;
-        IsLink = !IsGap && !isCurrent;
-        _go = go;
-    }
-
-    private readonly Action<int> _go;
-
-    public int Number { get; }
-
-    public bool IsGap { get; }
-
-    public bool IsCurrent { get; }
-
-    /// <summary>A page that can be opened: not the current page and not the ellipsis.</summary>
-    public bool IsLink { get; }
-
-    public string Text { get; }
-
-    public string AutomationName { get; }
-
-    public void Go() => _go(Number);
-}

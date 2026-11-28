@@ -84,13 +84,16 @@ public sealed partial class SalesPage : Page
         }
     }
 
-    private void OnPageButtonClick(object sender, RoutedEventArgs e)
-    {
-        if (sender is FrameworkElement { DataContext: PageButtonViewModel page })
-        {
-            page.Go();
-        }
-    }
+    private void OnRowPointerEntered(object sender, PointerRoutedEventArgs e) => TableRowHover.Set(sender, 1);
+
+    private void OnRowPointerExited(object sender, PointerRoutedEventArgs e) => TableRowHover.Set(sender, 0);
+
+    private void OnTableViewChanged(object? sender, ScrollViewerViewChangedEventArgs e) => LoadMoreIfNeeded();
+
+    private void OnTableSizeChanged(object sender, SizeChangedEventArgs e) => LoadMoreIfNeeded();
+
+    /// <summary>Load on scroll: adds the next batch of sales while the end of the table is near, or the rows do not fill the view yet.</summary>
+    private void LoadMoreIfNeeded() => TableLazyLoad.LoadMoreIfNeeded(TableScroll, () => ViewModel.HasMore, ViewModel.LoadMore);
 
     /// <summary>The row menu: view, print receipt, return (docs/features/sales.md). Built here because menu items cannot bind to a row template.</summary>
     private void ShowMenu(FrameworkElement anchor, SaleRowViewModel row)

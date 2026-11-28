@@ -34,8 +34,6 @@ public class SalesHistoryTests
     private static string Receipts(IEnumerable<SaleRecord> sales) => string.Join(",", sales.Select(sale => sale.ReceiptNumber));
 
     // Page numbers joined by commas; 0 is the ellipsis.
-    private static string Pager(int pageCount, int current) => string.Join(",", SalesPaging.PageNumbers(pageCount, current));
-
     [Fact]
     public void WeekStartsOnMondayAndRunsSevenDays()
     {
@@ -137,46 +135,18 @@ public class SalesHistoryTests
         Assert.Equal(20m, sale.Payments[1].BaseValue);
     }
 
-    [Theory]
-    [InlineData(126, 7, 18)]
-    [InlineData(0, 10, 1)]
-    [InlineData(10, 10, 1)]
-    [InlineData(11, 10, 2)]
-    public void PageCountRoundsUpAndNeverDropsBelowOne(int total, int size, int expected) =>
-        Assert.Equal(expected, SalesPaging.PageCount(total, size));
-
-    [Fact]
-    public void RowRangeMatchesTheFooterText()
-    {
-        Assert.Equal((1, 7), SalesPaging.RowRange(1, 7, 126));
-        Assert.Equal((8, 14), SalesPaging.RowRange(2, 7, 126));
-        Assert.Equal((0, 0), SalesPaging.RowRange(1, 7, 0));
-        Assert.Equal((15, 16), SalesPaging.RowRange(3, 7, 16));
-    }
-
-    [Fact]
-    public void PagerShowsNeighboursAndGaps()
-    {
-        Assert.Equal("1,2,3,0,18", Pager(18, 1));
-        Assert.Equal("1,2,3,0,18", Pager(18, 2));
-        Assert.Equal("1,0,8,9,10,0,18", Pager(18, 9));
-        Assert.Equal("1,0,17,18", Pager(18, 18));
-        Assert.Equal("1", Pager(1, 1));
-        Assert.Equal("1,2,3,4", Pager(4, 2));
-    }
-
     [Fact]
     public void CsvHasTheTableColumnsFixedNumbersAndSafeCells()
     {
         var sales = new[] { Sale("S-000003", new DateTime(2026, 11, 27, 16, 5, 0), staff: "=cmd|x") };
         var csv = SalesCsv.Build(
             sales,
-            ["Receipt", "Date", "Items", "Total", "Method", "Staff", "Status"],
+            ["Receipt", "Date", "Staff", "Method", "Status", "Items", "Total", "Tax"],
             method => method.ToString(),
             status => status.ToString());
 
         var lines = csv.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
-        Assert.Equal("\"Receipt\",\"Date\",\"Items\",\"Total\",\"Method\",\"Staff\",\"Status\"", lines[0]);
-        Assert.Equal("\"S-000003\",\"2026-11-27 16:05\",2,23.20,\"Cash\",\"'=cmd|x\",\"Completed\"", lines[1]);
+        Assert.Equal("\"Receipt\",\"Date\",\"Staff\",\"Method\",\"Status\",\"Items\",\"Total\",\"Tax\"", lines[0]);
+        Assert.Equal("\"S-000003\",\"2026-11-27 16:05\",\"'=cmd|x\",\"Cash\",\"Completed\",2,23.20,3.20", lines[1]);
     }
 }

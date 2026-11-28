@@ -10,68 +10,6 @@
 
   <Page.Resources>
     <ResourceDictionary>
-    <!-- Period tab (docs/features/sales.md): text with a gold tint and 2 px gold underline when selected. -->
-    <Style x:Key="SalesTabStyle" TargetType="RadioButton">
-      <Setter Property="MinWidth" Value="0" />
-      <Setter Property="Padding" Value="16,0" />
-      <Setter Property="Foreground" Value="{ThemeResource EqTextSecondaryBrush}" />
-      <Setter Property="FontFamily" Value="{StaticResource EqUiFontSemiBold}" />
-      <Setter Property="FontSize" Value="14" />
-      <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource EqGoldInkBrush}" />
-      <Setter Property="FocusVisualPrimaryThickness" Value="2" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="RadioButton">
-            <Grid x:Name="Root" Height="40" Background="Transparent" CornerRadius="8,8,0,0">
-              <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="CommonStates">
-                  <VisualState x:Name="Normal" />
-                  <VisualState x:Name="PointerOver">
-                    <VisualState.Setters>
-                      <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
-                      <Setter Target="Presenter.Foreground" Value="{ThemeResource EqTextBrush}" />
-                    </VisualState.Setters>
-                  </VisualState>
-                  <VisualState x:Name="Pressed">
-                    <VisualState.Setters>
-                      <Setter Target="Root.Background" Value="{ThemeResource EqSurfaceElevatedBrush}" />
-                    </VisualState.Setters>
-                  </VisualState>
-                </VisualStateGroup>
-                <VisualStateGroup x:Name="CheckStates">
-                  <VisualState x:Name="Unchecked" />
-                  <VisualState x:Name="Indeterminate" />
-                  <VisualState x:Name="Checked">
-                    <VisualState.Setters>
-                      <Setter Target="Root.Background" Value="{ThemeResource EqGoldTintBrush}" />
-                      <Setter Target="Presenter.Foreground" Value="{ThemeResource EqGoldInkBrush}" />
-                      <Setter Target="Underline.Visibility" Value="Visible" />
-                    </VisualState.Setters>
-                  </VisualState>
-                </VisualStateGroup>
-              </VisualStateManager.VisualStateGroups>
-              <ContentPresenter x:Name="Presenter" Padding="{TemplateBinding Padding}" VerticalAlignment="Center"
-                                HorizontalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
-              <Rectangle x:Name="Underline" Visibility="Collapsed" Height="2" VerticalAlignment="Bottom"
-                         Fill="{ThemeResource EqGoldBrush}" />
-            </Grid>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-
-    <Style x:Key="SalesRowStyle" TargetType="ListViewItem">
-      <Setter Property="Padding" Value="0" />
-      <Setter Property="MinHeight" Value="52" />
-      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-      <Setter Property="VerticalContentAlignment" Value="Stretch" />
-      <Setter Property="Margin" Value="0" />
-      <Setter Property="CornerRadius" Value="0" />
-    </Style>
-
-    <!-- Selected and hovered rows take the gold tint and surface tokens instead of the system accent. -->
-    <x:Boolean x:Key="ListViewItemSelectionIndicatorVisualEnabled">False</x:Boolean>
-
     <!-- Borderless text box inside the search container (same overrides as EqField). -->
     <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
     <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
@@ -91,22 +29,6 @@
       <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
-    <ResourceDictionary.ThemeDictionaries>
-      <ResourceDictionary x:Key="Light">
-        <StaticResource x:Key="ListViewItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundSelectedPointerOver" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundSelectedPressed" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundPointerOver" ResourceKey="EqSurfaceElevatedBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundPressed" ResourceKey="EqSurfaceElevatedBrush" />
-      </ResourceDictionary>
-      <ResourceDictionary x:Key="Dark">
-        <StaticResource x:Key="ListViewItemBackgroundSelected" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundSelectedPointerOver" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundSelectedPressed" ResourceKey="EqGoldTintBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundPointerOver" ResourceKey="EqSurfaceElevatedBrush" />
-        <StaticResource x:Key="ListViewItemBackgroundPressed" ResourceKey="EqSurfaceElevatedBrush" />
-      </ResourceDictionary>
-    </ResourceDictionary.ThemeDictionaries>
     </ResourceDictionary>
   </Page.Resources>
 
@@ -139,14 +61,6 @@
                 </StackPanel>
               </Flyout>
             </Button.Flyout>
-          </Button>
-
-          <Button Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.ExportCommand}"
-                  Visibility="{x:Bind local:SalesBindings.Visible(ViewModel.CanExport)}">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-              <FontIcon Glyph="&#xE5D8;" Style="{StaticResource EqIconStyle}" FontSize="18" />
-              <TextBlock Text="{x:Bind services:Loc.Get('Sales_Export')}" VerticalAlignment="Center" />
-            </StackPanel>
           </Button>
 
           <Button Style="{StaticResource EqSecondaryButtonStyle}" Command="{x:Bind ViewModel.PrintReportCommand}">
@@ -246,151 +160,154 @@
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:PeriodTabViewModel">
-              <RadioButton GroupName="SalesPeriod" Style="{StaticResource SalesTabStyle}" Content="{x:Bind Label}"
+              <RadioButton GroupName="SalesPeriod" Style="{StaticResource EqTabStyle}" Content="{x:Bind Label}"
                            IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
       </Border>
 
-      <!-- Filters: search, payment method, staff, status. -->
-      <Grid Grid.Row="4" ColumnDefinitions="*,240,190,190" ColumnSpacing="12" Margin="0,0,0,16">
-        <Border Grid.Column="0" Style="{StaticResource EqInputContainerStyle}">
-          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
-            <FontIcon Glyph="&#xEF7A;" Style="{StaticResource EqIconStyle}" FontSize="18" Foreground="{ThemeResource EqTextSecondaryBrush}" />
-            <TextBox Grid.Column="1" VerticalAlignment="Center" Padding="0,8"
-                     PlaceholderText="{x:Bind services:Loc.Get('Sales_SearchPlaceholder')}"
-                     Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_SearchPlaceholder')}" />
-          </Grid>
-        </Border>
-        <ComboBox Grid.Column="1" Style="{StaticResource SalesComboStyle}" HorizontalAlignment="Stretch"
-                  ItemsSource="{x:Bind ViewModel.MethodOptions}" DisplayMemberPath="Label"
-                  SelectedItem="{x:Bind ViewModel.SelectedMethod, Mode=TwoWay}"
-                  AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColMethod')}" />
-        <ComboBox Grid.Column="2" Style="{StaticResource SalesComboStyle}" HorizontalAlignment="Stretch"
-                  ItemsSource="{x:Bind ViewModel.StaffOptions}" DisplayMemberPath="Label"
-                  SelectedItem="{x:Bind ViewModel.SelectedStaff, Mode=TwoWay}"
-                  AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColStaff')}" />
-        <ComboBox Grid.Column="3" Style="{StaticResource SalesComboStyle}" HorizontalAlignment="Stretch"
-                  ItemsSource="{x:Bind ViewModel.StatusOptions}" DisplayMemberPath="Label"
-                  SelectedItem="{x:Bind ViewModel.SelectedStatus, Mode=TwoWay}"
-                  AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColStatus')}" />
-      </Grid>
-
-      <!-- Table card: header, scrolling rows, pager. Narrow windows scroll sideways instead of clipping columns. -->
-      <Border Grid.Row="5" Style="{StaticResource EqCardStyle}" Padding="0">
-        <Grid RowDefinitions="*,Auto">
-          <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Auto"
-                        VerticalScrollBarVisibility="Disabled" VerticalScrollMode="Disabled">
-            <Grid MinWidth="900" RowDefinitions="Auto,*">
-              <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Margin="8,8,8,4" ColumnDefinitions="110,2*,80,110,170,*,140,44">
-                <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Sales_ColReceipt')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-                <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Sales_ColDate')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-                <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Sales_ColItems')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Center" />
-                <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Sales_ColTotal')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
-                <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Sales_ColMethod')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-                <TextBlock Grid.Column="5" Text="{x:Bind services:Loc.Get('Sales_ColStaff')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-                <TextBlock Grid.Column="6" Text="{x:Bind services:Loc.Get('Sales_ColStatus')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-              </Grid>
-
-              <ListView Grid.Row="1" Margin="8,0,8,0" ItemsSource="{x:Bind ViewModel.Rows}"
-                        SelectionMode="None" ItemContainerStyle="{StaticResource SalesRowStyle}">
-                <ListView.ItemTemplate>
-                  <DataTemplate x:DataType="vm:SaleRowViewModel">
-                    <Grid Style="{StaticResource EqTableRowStyle}" Padding="12,0,8,0" ColumnSpacing="8" MinHeight="52"
-                          ColumnDefinitions="110,2*,80,110,170,*,140,44" Background="Transparent" Tapped="OnRowTapped">
-                      <Border Grid.ColumnSpan="8" Margin="-12,0,-8,0" Style="{StaticResource EqTableBandStyle}"
-                              Visibility="{x:Bind local:SalesBindings.Visible(IsAlternateRow)}" />
-                      <Border Grid.ColumnSpan="8" Margin="-12,0,-8,0" Background="{ThemeResource EqGoldTintBrush}" IsHitTestVisible="False"
-                              Visibility="{x:Bind local:SalesBindings.Visible(IsSelected), Mode=OneWay}" />
-                      <TextBlock Grid.Column="0" Text="{x:Bind ReceiptNumber}" Style="{StaticResource EqTableCellStyle}"
-                                 FontFamily="{StaticResource EqUiFontSemiBold}" TextTrimming="CharacterEllipsis" />
-                      <TextBlock Grid.Column="1" Text="{x:Bind DateText}" Style="{StaticResource EqTableCellStyle}" FontSize="13"
-                                 TextTrimming="CharacterEllipsis" />
-                      <TextBlock Grid.Column="2" Text="{x:Bind ItemsText}" Style="{StaticResource EqTableCellStyle}" HorizontalAlignment="Center" />
-                      <TextBlock Grid.Column="3" Text="{x:Bind TotalText}" Style="{StaticResource EqTableCellStrongStyle}" TextTrimming="CharacterEllipsis" />
-
-                      <!-- Payment method badge: icon or brand letter, then the name. -->
-                      <Border Grid.Column="4" Height="28" CornerRadius="14" Padding="12,0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                              Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
-                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                          <FontIcon Glyph="{x:Bind MethodGlyph}" Style="{StaticResource EqIconStyle}" FontSize="16"
-                                    Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center"
-                                    Visibility="{x:Bind local:SalesBindings.Visible(HasMethodGlyph)}" />
-                          <Border Width="16" Height="16" CornerRadius="8" VerticalAlignment="Center" Background="{x:Bind MethodBrandBrush}"
-                                  Visibility="{x:Bind local:SalesBindings.Visible(HasMethodBrand)}">
-                            <TextBlock Text="{x:Bind MethodBrandLetter}" FontSize="10" Foreground="White"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
-                          </Border>
-                          <TextBlock Text="{x:Bind MethodText}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontSm}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                        </StackPanel>
-                      </Border>
-
-                      <TextBlock Grid.Column="5" Text="{x:Bind StaffText}" Style="{StaticResource EqTableCellStyle}" FontSize="14" TextTrimming="CharacterEllipsis" />
-
-                      <!-- Status: the shared StatusBadge (dot plus words). -->
-                      <controls:StatusBadge Grid.Column="6" Kind="{x:Bind StatusKind}" Text="{x:Bind StatusText}"
-                                            VerticalAlignment="Center" />
-
-                      <Button Grid.Column="7" Style="{StaticResource EqPlainIconButtonStyle}" Width="32" Height="32"
-                              HorizontalAlignment="Right" VerticalAlignment="Center" Click="OnRowMenuClick"
-                              AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_RowActions')}">
-                        <FontIcon Glyph="&#xE5D4;" Style="{StaticResource EqIconStyle}" FontSize="20" />
-                      </Button>
-                    </Grid>
-                  </DataTemplate>
-                </ListView.ItemTemplate>
-              </ListView>
-
-              <TextBlock Grid.Row="1" Text="{x:Bind services:Loc.Get('Sales_Empty')}" Style="{StaticResource EqSecondaryStyle}"
-                         HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"
-                         Visibility="{x:Bind local:SalesBindings.Visible(ViewModel.IsEmpty), Mode=OneWay}" />
+      <!-- Toolbar: search, payment method, staff, status (same card toolbar as Inventory). -->
+      <Border Grid.Row="4" Style="{StaticResource EqCardStyle}" Padding="12,10" Margin="0,0,0,16">
+        <Grid ColumnDefinitions="*,240,190,190" ColumnSpacing="8">
+          <Border Grid.Column="0" MinWidth="140" Height="36" Background="{ThemeResource EqBgBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1"
+                  CornerRadius="{StaticResource EqRadiusMd}" Padding="12,0">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+              <FontIcon Glyph="&#xEF7A;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont2xl}"
+                        Foreground="{ThemeResource EqTextSecondaryBrush}" VerticalAlignment="Center" />
+              <TextBox Grid.Column="1" VerticalAlignment="Center" MinHeight="0" Padding="0,6"
+                       FontFamily="{StaticResource EqUiFont}" FontSize="{StaticResource EqFontMd}"
+                       PlaceholderText="{x:Bind services:Loc.Get('Sales_SearchPlaceholder')}"
+                       Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_SearchPlaceholder')}" />
             </Grid>
-          </ScrollViewer>
+          </Border>
+          <ComboBox Grid.Column="1" Style="{StaticResource SalesComboStyle}" HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ViewModel.MethodOptions}" DisplayMemberPath="Label"
+                    SelectedItem="{x:Bind ViewModel.SelectedMethod, Mode=TwoWay}"
+                    AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColMethod')}" />
+          <ComboBox Grid.Column="2" Style="{StaticResource SalesComboStyle}" HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ViewModel.StaffOptions}" DisplayMemberPath="Label"
+                    SelectedItem="{x:Bind ViewModel.SelectedStaff, Mode=TwoWay}"
+                    AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColStaff')}" />
+          <ComboBox Grid.Column="3" Style="{StaticResource SalesComboStyle}" HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ViewModel.StatusOptions}" DisplayMemberPath="Label"
+                    SelectedItem="{x:Bind ViewModel.SelectedStatus, Mode=TwoWay}"
+                    AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_ColStatus')}" />
+        </Grid>
+      </Border>
 
-          <!-- Pager. -->
-          <Grid Grid.Row="1" Padding="16,12" ColumnDefinitions="*,Auto" ColumnSpacing="16"
-                BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,1,0,0">
-            <TextBlock Grid.Column="0" Text="{x:Bind ViewModel.FooterText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}"
-                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
-              <Button Style="{StaticResource EqPlainIconButtonStyle}" Width="32" Height="32"
-                      Command="{x:Bind ViewModel.PreviousPageCommand}" IsEnabled="{x:Bind ViewModel.CanGoPrevious, Mode=OneWay}"
-                      AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_PrevPage')}">
-                <FontIcon Glyph="&#xE5CB;" Style="{StaticResource EqIconStyle}" FontSize="20" />
-              </Button>
-              <ItemsControl ItemsSource="{x:Bind ViewModel.PageButtons, Mode=OneWay}">
-                <ItemsControl.ItemsPanel>
-                  <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" Spacing="4" />
-                  </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+      <!-- Table card (docs/technical/ui-implementation.md, "Full-bleed table in a card"): header, scrolling rows loaded on scroll, footer. -->
+      <Border Grid.Row="5" Style="{StaticResource EqCardStyle}" Padding="0">
+        <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
+
+          <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="20,0,20,0" CornerRadius="12,12,0,0">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="110" />
+              <ColumnDefinition Width="*" MinWidth="150" />
+              <ColumnDefinition Width="140" />
+              <ColumnDefinition Width="180" />
+              <ColumnDefinition Width="140" />
+              <ColumnDefinition Width="70" />
+              <ColumnDefinition Width="110" />
+              <ColumnDefinition Width="100" />
+              <ColumnDefinition Width="40" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Sales_ColReceipt')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+            <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Sales_ColDate')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+            <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Sales_ColStaff')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+            <TextBlock Grid.Column="3" Text="{x:Bind services:Loc.Get('Sales_ColMethod')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+            <TextBlock Grid.Column="4" Text="{x:Bind services:Loc.Get('Sales_ColStatus')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+            <TextBlock Grid.Column="5" Text="{x:Bind services:Loc.Get('Sales_ColItems')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
+            <TextBlock Grid.Column="6" Text="{x:Bind services:Loc.Get('Sales_ColTotal')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
+            <TextBlock Grid.Column="7" Text="{x:Bind services:Loc.Get('Sales_ColTax')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
+          </Grid>
+
+          <ScrollViewer x:Name="TableScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                        ViewChanged="OnTableViewChanged" SizeChanged="OnTableSizeChanged">
+            <Grid>
+              <ItemsControl ItemsSource="{x:Bind ViewModel.Rows}">
                 <ItemsControl.ItemTemplate>
-                  <DataTemplate x:DataType="vm:PageButtonViewModel">
-                    <Grid>
-                      <!-- Current page: gold. Other pages: plain buttons. Gap: ellipsis. -->
-                      <Border Width="32" Height="32" CornerRadius="{StaticResource EqRadiusMd}" Background="{ThemeResource EqGoldBrush}"
-                              Visibility="{x:Bind local:SalesBindings.Visible(IsCurrent)}">
-                        <TextBlock Text="{x:Bind Text}" Foreground="{ThemeResource EqOnGoldBrush}" FontFamily="{StaticResource EqUiFontSemiBold}"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                  <DataTemplate x:DataType="vm:SaleRowViewModel">
+                    <Grid MinHeight="64" Background="Transparent" Style="{StaticResource EqTableRowStyle}" Tapped="OnRowTapped"
+                          PointerEntered="OnRowPointerEntered" PointerExited="OnRowPointerExited">
+                      <Border Style="{StaticResource EqTableBandStyle}"
+                              Visibility="{x:Bind local:SalesBindings.Visible(IsAlternateRow)}" />
+                      <Border x:Name="HoverFill" Background="{ThemeResource EqHoverFillBrush}" IsHitTestVisible="False" Opacity="0">
+                        <Border.OpacityTransition>
+                          <ScalarTransition Duration="0:0:0.1" />
+                        </Border.OpacityTransition>
                       </Border>
-                      <Button Style="{StaticResource EqPlainIconButtonStyle}" Width="32" Height="32" Click="OnPageButtonClick"
-                              Visibility="{x:Bind local:SalesBindings.Visible(IsLink)}" AutomationProperties.Name="{x:Bind AutomationName}">
-                        <TextBlock Text="{x:Bind Text}" Foreground="{ThemeResource EqTextBrush}" />
-                      </Button>
-                      <TextBlock Text="{x:Bind Text}" Style="{StaticResource EqSecondaryStyle}" Width="32" TextAlignment="Center" VerticalAlignment="Center"
-                                 Visibility="{x:Bind local:SalesBindings.Visible(IsGap)}" />
+                      <Border Background="{ThemeResource EqGoldTintBrush}" IsHitTestVisible="False"
+                              Visibility="{x:Bind local:SalesBindings.Visible(IsSelected), Mode=OneWay}" />
+                      <Grid Padding="20,8,20,8" ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="110" />
+                          <ColumnDefinition Width="*" MinWidth="150" />
+                          <ColumnDefinition Width="140" />
+                          <ColumnDefinition Width="180" />
+                          <ColumnDefinition Width="140" />
+                          <ColumnDefinition Width="70" />
+                          <ColumnDefinition Width="110" />
+                          <ColumnDefinition Width="100" />
+                          <ColumnDefinition Width="40" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="{x:Bind ReceiptNumber}" Style="{StaticResource EqTableCellStrongStyle}" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Column="1" Text="{x:Bind DateText}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Column="2" Text="{x:Bind StaffText}" Style="{StaticResource EqTableCellStyle}" TextTrimming="CharacterEllipsis" />
+
+                        <!-- Payment method badge: icon or brand letter, then the name. -->
+                        <Border Grid.Column="3" Height="28" CornerRadius="14" Padding="12,0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                Background="{ThemeResource EqSurfaceElevatedBrush}" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1">
+                          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <FontIcon Glyph="{x:Bind MethodGlyph}" Style="{StaticResource EqIconStyle}" FontSize="16"
+                                      Foreground="{ThemeResource EqGoldInkBrush}" VerticalAlignment="Center"
+                                      Visibility="{x:Bind local:SalesBindings.Visible(HasMethodGlyph)}" />
+                            <Border Width="16" Height="16" CornerRadius="8" VerticalAlignment="Center" Background="{x:Bind MethodBrandBrush}"
+                                    Visibility="{x:Bind local:SalesBindings.Visible(HasMethodBrand)}">
+                              <TextBlock Text="{x:Bind MethodBrandLetter}" FontSize="10" Foreground="White"
+                                         HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <TextBlock Text="{x:Bind MethodText}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontSm}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                          </StackPanel>
+                        </Border>
+
+                        <!-- Status: the shared StatusBadge (dot plus words). -->
+                        <controls:StatusBadge Grid.Column="4" Kind="{x:Bind StatusKind}" Text="{x:Bind StatusText}" VerticalAlignment="Center" />
+
+                        <TextBlock Grid.Column="5" Text="{x:Bind ItemsText}" Style="{StaticResource EqTableCellStyle}" HorizontalAlignment="Right" />
+                        <TextBlock Grid.Column="6" Text="{x:Bind TotalText}" Style="{StaticResource EqTableCellStrongStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+
+                        <TextBlock Grid.Column="7" Text="{x:Bind TaxText}" Style="{StaticResource EqTableCellStyle}" HorizontalAlignment="Right" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+
+                        <Button Grid.Column="8" Style="{StaticResource EqPlainIconButtonStyle}" Width="32" Height="32"
+                                HorizontalAlignment="Right" VerticalAlignment="Center" Click="OnRowMenuClick"
+                                AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_RowActions')}">
+                          <FontIcon Glyph="&#xE5D4;" Style="{StaticResource EqIconStyle}" FontSize="20" />
+                        </Button>
+                      </Grid>
                     </Grid>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
-              <Button Style="{StaticResource EqPlainIconButtonStyle}" Width="32" Height="32"
-                      Command="{x:Bind ViewModel.NextPageCommand}" IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}"
-                      AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_NextPage')}">
-                <FontIcon Glyph="&#xE5CC;" Style="{StaticResource EqIconStyle}" FontSize="20" />
-              </Button>
-            </StackPanel>
+
+              <!-- Nothing to list -->
+              <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" Padding="0,40"
+                          Visibility="{x:Bind local:SalesBindings.Visible(ViewModel.IsEmpty), Mode=OneWay}">
+                <FontIcon Glyph="&#xE1A1;" FontFamily="{StaticResource EqIconFont}" FontSize="32" Foreground="{ThemeResource EqTextSecondaryBrush}" HorizontalAlignment="Center" />
+                <TextBlock Text="{x:Bind services:Loc.Get('Sales_Empty')}" Style="{StaticResource EqSecondaryStyle}" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" />
+              </StackPanel>
+            </Grid>
+          </ScrollViewer>
+
+          <!-- Footer: count of loaded rows on the left, Export of the filtered sales on the right. -->
+          <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Style="{StaticResource EqTableFooterStyle}">
+            <TextBlock Text="{x:Bind ViewModel.FooterText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center"
+                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+            <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" Content="{x:Bind services:Loc.Get('Sales_Export')}"
+                    Command="{x:Bind ViewModel.ExportCommand}"
+                    Visibility="{x:Bind local:SalesBindings.Visible(ViewModel.CanExport)}" />
           </Grid>
         </Grid>
       </Border>

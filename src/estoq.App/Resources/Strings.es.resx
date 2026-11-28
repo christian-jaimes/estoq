@@ -392,6 +392,7 @@
   <data name="Sales_ColDate" xml:space="preserve"><value>Fecha y hora</value></data>
   <data name="Sales_ColItems" xml:space="preserve"><value>Artículos</value></data>
   <data name="Sales_ColTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Sales_ColTax" xml:space="preserve"><value>Impuesto</value></data>
   <data name="Sales_ColMethod" xml:space="preserve"><value>Método de pago</value></data>
   <data name="Sales_ColStaff" xml:space="preserve"><value>Personal</value></data>
   <data name="Sales_ColStatus" xml:space="preserve"><value>Estado</value></data>
@@ -402,11 +403,8 @@
   <data name="Sales_MenuView" xml:space="preserve"><value>Ver</value></data>
   <data name="Sales_MenuPrint" xml:space="preserve"><value>Imprimir recibo</value></data>
   <data name="Sales_MenuReturn" xml:space="preserve"><value>Devolver artículos</value></data>
-  <data name="Sales_Showing" xml:space="preserve"><value>Mostrando {0}–{1} de {2} ventas</value></data>
+  <data name="Sales_Showing" xml:space="preserve"><value>Mostrando {0} de {1} ventas</value></data>
   <data name="Sales_ShowingNone" xml:space="preserve"><value>No hay ventas que mostrar</value></data>
-  <data name="Sales_PrevPage" xml:space="preserve"><value>Página anterior</value></data>
-  <data name="Sales_NextPage" xml:space="preserve"><value>Página siguiente</value></data>
-  <data name="Sales_PageN" xml:space="preserve"><value>Página {0}</value></data>
   <data name="Sales_Empty" xml:space="preserve"><value>Ninguna venta coincide con estos filtros.</value></data>
   <data name="Sales_StaffLine" xml:space="preserve"><value>Personal: {0}</value></data>
   <data name="Sales_ItemsHeader" xml:space="preserve"><value>Artículos ({0})</value></data>
