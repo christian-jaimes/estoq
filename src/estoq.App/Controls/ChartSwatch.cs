@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 namespace Estoq.App.Controls;
 
 /// <summary>A small round colour key for a chart legend, in the chart colour with the given index. Follows the theme.</summary>
-public sealed partial class ChartSwatch : Border
+public sealed partial class ChartSwatch : Grid
 {
     public static readonly DependencyProperty ColorIndexProperty =
         DependencyProperty.Register(nameof(ColorIndex), typeof(int), typeof(ChartSwatch), new PropertyMetadata(0, (d, _) => ((ChartSwatch)d).Apply()));
