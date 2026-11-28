@@ -1,4 +1,5 @@
 using System.Globalization;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Estoq.App.Services;
 using Estoq.App.ViewModels.PointOfSale;
 using Estoq.Core.Sales;
@@ -7,7 +8,7 @@ using Microsoft.UI.Xaml.Media;
 namespace Estoq.App.ViewModels.Sales;
 
 /// <summary>One row of the sales table, with every value already formatted for the current language.</summary>
-public sealed class SaleRowViewModel
+public sealed partial class SaleRowViewModel : ObservableObject
 {
     public SaleRowViewModel(SaleRecord sale, string currency, ILocalizer localizer, bool isAlternateRow)
     {
@@ -29,6 +30,10 @@ public sealed class SaleRowViewModel
     }
 
     public SaleRecord Sale { get; }
+
+    /// <summary>True while this sale's detail is open: the row takes the gold tint.</summary>
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; }
 
     /// <summary>Every second row is banded, as in every table (EqTableBandStyle).</summary>
     public bool IsAlternateRow { get; }
@@ -75,7 +80,7 @@ public sealed class SaleRowViewModel
 }
 
 /// <summary>One item line in the detail panel.</summary>
-public sealed record SaleDetailLineViewModel(string Initial, string Name, string SkuAndVariant, string QuantityAndPrice, string TotalText);
+public sealed record SaleDetailLineViewModel(string Name, string Sku, string PriceText, string QuantityText, string TotalText, bool IsAlternateRow);
 
 /// <summary>One payment in the detail panel: the method, the amount in the currency paid, and the rate snapshot when it is not the base currency.</summary>
 public sealed record SalePaymentViewModel(string MethodText, string AmountText, string RateText, bool HasRate);

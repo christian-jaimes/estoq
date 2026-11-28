@@ -424,179 +424,178 @@
           </Grid>
         </Border>
       </Grid>
+    </Grid>
 
-      <!-- Detail panel: only after a row is clicked, floating over the table. A click on another row updates it; a click outside closes it. -->
-      <Border x:Name="DetailPanel" Style="{StaticResource EqCardStyle}" Padding="20" Width="460" HorizontalAlignment="Right"
-              Canvas.ZIndex="2" Visibility="Collapsed">
-        <!-- Slides in from the right and back out; see SetPanel in the code-behind. -->
-        <Border.RenderTransform>
-          <CompositeTransform x:Name="DetailTransform" />
-        </Border.RenderTransform>
-        <Grid>
-          <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12">
+    <!-- Detail panel: only after a row is clicked, floating over the page, full height. A click on another row updates it; a click outside closes it. -->
+    <Border x:Name="DetailPanel" Grid.Row="0" Grid.RowSpan="3" Style="{StaticResource EqDetailPanelStyle}">
+      <!-- Slides in from the right and back out; see SetPanel in the code-behind. -->
+      <Border.RenderTransform>
+        <CompositeTransform x:Name="DetailTransform" />
+      </Border.RenderTransform>
+      <Grid>
+        <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12">
 
-            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-              <Border Width="84" Height="84" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqGoldTintBrush}" VerticalAlignment="Top">
-                <TextBlock Text="{x:Bind ViewModel.Detail.Initial, Mode=OneWay}" FontFamily="{StaticResource EqBrandFont}" FontSize="32"
-                           Foreground="{ThemeResource EqGoldInkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-              </Border>
-              <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
-                <TextBlock Text="{x:Bind ViewModel.Detail.Name, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis" />
-                <TextBlock Text="{x:Bind ViewModel.Detail.Code, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-              </StackPanel>
-              <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Top">
-                <!-- The icon font has no pencil, so the glyph is a vector path (Material "edit"). Opens the Add product pop-up in edit mode (managers and owners). -->
-                <Button Style="{StaticResource EqPlainIconButtonStyle}"
-                        Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.CanEdit), Mode=OneWay}"
-                        Command="{x:Bind ViewModel.EditProductCommand}"
-                        AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_EditProduct')}"
-                        ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_EditProduct')}">
-                  <!-- PathIcon draws its path at natural size (a 24-unit grid) and clips it, so a Viewbox scales it to 18 px. -->
-                  <Viewbox Width="18" Height="18">
-                    <PathIcon Width="24" Height="24"
-                              Data="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                  </Viewbox>
-                </Button>
-                <Button Style="{StaticResource EqPlainIconButtonStyle}"
-                        Command="{x:Bind ViewModel.CloseDetailCommand}"
-                        AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}"
-                        ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_Close')}">
-                  <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
-                </Button>
-              </StackPanel>
-            </Grid>
-
-            <Border Grid.Row="1" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">
-              <Grid ColumnDefinitions="*,*,*,*">
-                <RadioButton Grid.Column="0" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
-                             Content="{x:Bind services:Loc.Get('Inventory_DetailOverview')}" IsChecked="{x:Bind ViewModel.IsOverviewTab, Mode=TwoWay}" />
-                <RadioButton Grid.Column="1" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
-                             Content="{x:Bind services:Loc.Get('Inventory_DetailVariants')}" IsChecked="{x:Bind ViewModel.IsVariantsTab, Mode=TwoWay}" />
-                <RadioButton Grid.Column="2" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
-                             Content="{x:Bind services:Loc.Get('Inventory_DetailStock')}" IsChecked="{x:Bind ViewModel.IsStockTab, Mode=TwoWay}" />
-                <RadioButton Grid.Column="3" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
-                             Content="{x:Bind services:Loc.Get('Inventory_DetailHistory')}" IsChecked="{x:Bind ViewModel.IsHistoryTab, Mode=TwoWay}" />
-              </Grid>
+          <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+            <Border Width="84" Height="84" CornerRadius="{StaticResource EqRadiusLg}" Background="{ThemeResource EqGoldTintBrush}" VerticalAlignment="Top">
+              <TextBlock Text="{x:Bind ViewModel.Detail.Initial, Mode=OneWay}" FontFamily="{StaticResource EqBrandFont}" FontSize="32"
+                         Foreground="{ThemeResource EqGoldInkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
             </Border>
+            <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+              <TextBlock Text="{x:Bind ViewModel.Detail.Name, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="{x:Bind ViewModel.Detail.Code, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Top">
+              <!-- The icon font has no pencil, so the glyph is a vector path (Material "edit"). Opens the Add product pop-up in edit mode (managers and owners). -->
+              <Button Style="{StaticResource EqPlainIconButtonStyle}"
+                      Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.CanEdit), Mode=OneWay}"
+                      Command="{x:Bind ViewModel.EditProductCommand}"
+                      AutomationProperties.Name="{x:Bind services:Loc.Get('Inventory_EditProduct')}"
+                      ToolTipService.ToolTip="{x:Bind services:Loc.Get('Inventory_EditProduct')}">
+                <!-- PathIcon draws its path at natural size (a 24-unit grid) and clips it, so a Viewbox scales it to 18 px. -->
+                <Viewbox Width="18" Height="18">
+                  <PathIcon Width="24" Height="24"
+                            Data="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                </Viewbox>
+              </Button>
+              <Button Style="{StaticResource EqPlainIconButtonStyle}"
+                      Command="{x:Bind ViewModel.CloseDetailCommand}"
+                      AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}"
+                      ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_Close')}">
+                <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
+              </Button>
+            </StackPanel>
+          </Grid>
 
-            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-              <Grid>
+          <Border Grid.Row="1" BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="*,*,*,*">
+              <RadioButton Grid.Column="0" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+                           Content="{x:Bind services:Loc.Get('Inventory_DetailOverview')}" IsChecked="{x:Bind ViewModel.IsOverviewTab, Mode=TwoWay}" />
+              <RadioButton Grid.Column="1" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+                           Content="{x:Bind services:Loc.Get('Inventory_DetailVariants')}" IsChecked="{x:Bind ViewModel.IsVariantsTab, Mode=TwoWay}" />
+              <RadioButton Grid.Column="2" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+                           Content="{x:Bind services:Loc.Get('Inventory_DetailStock')}" IsChecked="{x:Bind ViewModel.IsStockTab, Mode=TwoWay}" />
+              <RadioButton Grid.Column="3" GroupName="InventoryDetailTabs" Style="{StaticResource InvTabStyle}" HorizontalAlignment="Stretch" Padding="10,9" FontSize="{StaticResource EqFontSm}"
+                           Content="{x:Bind services:Loc.Get('Inventory_DetailHistory')}" IsChecked="{x:Bind ViewModel.IsHistoryTab, Mode=TwoWay}" />
+            </Grid>
+          </Border>
 
-                <!-- Overview -->
-                <ItemsControl ItemsSource="{x:Bind ViewModel.Detail.Overview, Mode=OneWay}"
-                              Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsOverviewTab), Mode=OneWay}">
+          <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid>
+
+              <!-- Overview -->
+              <ItemsControl ItemsSource="{x:Bind ViewModel.Detail.Overview, Mode=OneWay}"
+                            Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsOverviewTab), Mode=OneWay}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:DetailLine">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" Padding="0,9">
+                      <Rectangle Grid.ColumnSpan="2" Height="1" VerticalAlignment="Top" Fill="{ThemeResource EqBorderBrush}"
+                                 Visibility="{x:Bind local:InventoryBindings.Visible(ShowDivider)}" />
+                      <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="1" Text="{x:Bind Value}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
+                                 Foreground="{ThemeResource EqTextBrush}" TextAlignment="Right" TextWrapping="Wrap" MaxWidth="200" VerticalAlignment="Center" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <!-- Variants: a visual map of colour and size only. Stock and details are in the Stock and History tabs. -->
+              <ItemsRepeater ItemsSource="{x:Bind ViewModel.Detail.Swatches, Mode=OneWay}"
+                             Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsVariantsTab), Mode=OneWay}">
+                <ItemsRepeater.Layout>
+                  <UniformGridLayout MinItemWidth="52" MinItemHeight="52" MinRowSpacing="12" MinColumnSpacing="12" ItemsStretch="None" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                  <DataTemplate x:DataType="vm:VariantSwatchViewModel">
+                    <Grid Width="52" Height="52" ToolTipService.ToolTip="{x:Bind ToolTip}" AutomationProperties.Name="{x:Bind ToolTip}">
+                      <Ellipse Fill="{x:Bind local:InventoryBindings.SwatchFill(Hex)}" Stroke="{ThemeResource EqBorderBrush}" StrokeThickness="1" />
+                      <TextBlock Text="{x:Bind SizeText}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontSm}"
+                                 Foreground="{x:Bind local:InventoryBindings.SwatchInk(UseDarkText)}" TextTrimming="Clip" TextWrapping="NoWrap"
+                                 HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="40" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+              </ItemsRepeater>
+
+              <!-- Stock: each variant with its SKU, barcode, quantity and price -->
+              <Grid RowDefinitions="Auto,*" RowSpacing="8"
+                    Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsStockTab), Mode=OneWay}">
+                <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,20,0">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition Width="76" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Inventory_ColVariant')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                  <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Inventory_ColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
+                  <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Inventory_ColPrice')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
+                </Grid>
+                <ItemsControl Grid.Row="1" ItemsSource="{x:Bind ViewModel.Detail.Variants, Mode=OneWay}">
                   <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:DetailLine">
-                      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" Padding="0,9">
-                        <Rectangle Grid.ColumnSpan="2" Height="1" VerticalAlignment="Top" Fill="{ThemeResource EqBorderBrush}"
-                                   Visibility="{x:Bind local:InventoryBindings.Visible(ShowDivider)}" />
-                        <TextBlock Text="{x:Bind Label}" Style="{StaticResource EqSecondaryStyle}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                        <TextBlock Grid.Column="1" Text="{x:Bind Value}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
-                                   Foreground="{ThemeResource EqTextBrush}" TextAlignment="Right" TextWrapping="Wrap" MaxWidth="200" VerticalAlignment="Center" />
+                    <DataTemplate x:DataType="vm:VariantRowViewModel">
+                      <Grid MinHeight="60" Style="{StaticResource EqTableRowStyle}">
+                        <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind local:InventoryBindings.Visible(IsAlternateRow)}" />
+                        <Grid Padding="12,8,20,8" ColumnSpacing="8">
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="48" />
+                            <ColumnDefinition Width="76" />
+                          </Grid.ColumnDefinitions>
+                          <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock Text="{x:Bind Title}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
+                                       Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{x:Bind Barcode}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis"
+                                       Visibility="{x:Bind local:InventoryBindings.Visible(HasBarcode)}" />
+                          </StackPanel>
+                          <TextBlock Grid.Column="1" Text="{x:Bind QuantityText}" Style="{StaticResource EqTableCellStrongStyle}" FontSize="{StaticResource EqFontMd}" />
+                          <TextBlock Grid.Column="2" Text="{x:Bind PriceText}" Style="{StaticResource EqTableCellStyle}" FontSize="{StaticResource EqFontMd}"
+                                     HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" />
+                        </Grid>
                       </Grid>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
+              </Grid>
 
-                <!-- Variants: a visual map of colour and size only. Stock and details are in the Stock and History tabs. -->
-                <ItemsRepeater ItemsSource="{x:Bind ViewModel.Detail.Swatches, Mode=OneWay}"
-                               Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsVariantsTab), Mode=OneWay}">
-                  <ItemsRepeater.Layout>
-                    <UniformGridLayout MinItemWidth="52" MinItemHeight="52" MinRowSpacing="12" MinColumnSpacing="12" ItemsStretch="None" />
-                  </ItemsRepeater.Layout>
-                  <ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="vm:VariantSwatchViewModel">
-                      <Grid Width="52" Height="52" ToolTipService.ToolTip="{x:Bind ToolTip}" AutomationProperties.Name="{x:Bind ToolTip}">
-                        <Ellipse Fill="{x:Bind local:InventoryBindings.SwatchFill(Hex)}" Stroke="{ThemeResource EqBorderBrush}" StrokeThickness="1" />
-                        <TextBlock Text="{x:Bind SizeText}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontSm}"
-                                   Foreground="{x:Bind local:InventoryBindings.SwatchInk(UseDarkText)}" TextTrimming="Clip" TextWrapping="NoWrap"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="40" />
+              <!-- History: stock movements, newest first -->
+              <Grid RowDefinitions="Auto,*" RowSpacing="8"
+                    Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsHistoryTab), Mode=OneWay}">
+                <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,20,0">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="56" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Inventory_ColMovement')}" Style="{StaticResource EqTableHeaderTextStyle}" />
+                  <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Inventory_ColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
+                </Grid>
+                <ItemsControl Grid.Row="1" ItemsSource="{x:Bind ViewModel.Detail.History, Mode=OneWay}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MovementRowViewModel">
+                      <Grid MinHeight="56" Style="{StaticResource EqTableRowStyle}">
+                        <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind local:InventoryBindings.Visible(IsAlternateRow)}" />
+                        <Grid Padding="12,8,20,8" ColumnSpacing="8">
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="56" />
+                          </Grid.ColumnDefinitions>
+                          <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock Text="{x:Bind TypeText}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
+                                       Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{x:Bind WhenText}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{x:Bind Location}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+                          </StackPanel>
+                          <TextBlock Grid.Column="1" Text="{x:Bind QuantityText}" Style="{StaticResource EqTableCellStrongStyle}" FontSize="{StaticResource EqFontMd}" />
+                        </Grid>
                       </Grid>
                     </DataTemplate>
-                  </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
-
-                <!-- Stock: each variant with its SKU, barcode, quantity and price -->
-                <Grid RowDefinitions="Auto,*" RowSpacing="8"
-                      Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsStockTab), Mode=OneWay}">
-                  <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,20,0">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="*" />
-                      <ColumnDefinition Width="48" />
-                      <ColumnDefinition Width="76" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Inventory_ColVariant')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-                    <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Inventory_ColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
-                    <TextBlock Grid.Column="2" Text="{x:Bind services:Loc.Get('Inventory_ColPrice')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
-                  </Grid>
-                  <ItemsControl Grid.Row="1" ItemsSource="{x:Bind ViewModel.Detail.Variants, Mode=OneWay}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate x:DataType="vm:VariantRowViewModel">
-                        <Grid MinHeight="60" Style="{StaticResource EqTableRowStyle}">
-                          <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind local:InventoryBindings.Visible(IsAlternateRow)}" />
-                          <Grid Padding="12,8,20,8" ColumnSpacing="8">
-                            <Grid.ColumnDefinitions>
-                              <ColumnDefinition Width="*" />
-                              <ColumnDefinition Width="48" />
-                              <ColumnDefinition Width="76" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="1">
-                              <TextBlock Text="{x:Bind Title}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
-                                         Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
-                              <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
-                              <TextBlock Text="{x:Bind Barcode}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis"
-                                         Visibility="{x:Bind local:InventoryBindings.Visible(HasBarcode)}" />
-                            </StackPanel>
-                            <TextBlock Grid.Column="1" Text="{x:Bind QuantityText}" Style="{StaticResource EqTableCellStrongStyle}" FontSize="{StaticResource EqFontMd}" />
-                            <TextBlock Grid.Column="2" Text="{x:Bind PriceText}" Style="{StaticResource EqTableCellStyle}" FontSize="{StaticResource EqFontMd}"
-                                       HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" />
-                          </Grid>
-                        </Grid>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                </Grid>
-
-                <!-- History: stock movements, newest first -->
-                <Grid RowDefinitions="Auto,*" RowSpacing="8"
-                      Visibility="{x:Bind local:InventoryBindings.Visible(ViewModel.IsHistoryTab), Mode=OneWay}">
-                  <Grid Grid.Row="0" Style="{StaticResource EqTableHeaderStyle}" Padding="12,0,20,0">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="*" />
-                      <ColumnDefinition Width="56" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="{x:Bind services:Loc.Get('Inventory_ColMovement')}" Style="{StaticResource EqTableHeaderTextStyle}" />
-                    <TextBlock Grid.Column="1" Text="{x:Bind services:Loc.Get('Inventory_ColQty')}" Style="{StaticResource EqTableHeaderTextStyle}" HorizontalAlignment="Right" />
-                  </Grid>
-                  <ItemsControl Grid.Row="1" ItemsSource="{x:Bind ViewModel.Detail.History, Mode=OneWay}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate x:DataType="vm:MovementRowViewModel">
-                        <Grid MinHeight="56" Style="{StaticResource EqTableRowStyle}">
-                          <Border Style="{StaticResource EqTableBandStyle}" Visibility="{x:Bind local:InventoryBindings.Visible(IsAlternateRow)}" />
-                          <Grid Padding="12,8,20,8" ColumnSpacing="8">
-                            <Grid.ColumnDefinitions>
-                              <ColumnDefinition Width="*" />
-                              <ColumnDefinition Width="56" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="1">
-                              <TextBlock Text="{x:Bind TypeText}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="{StaticResource EqFontMd}"
-                                         Foreground="{ThemeResource EqTextBrush}" TextTrimming="CharacterEllipsis" />
-                              <TextBlock Text="{x:Bind WhenText}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
-                              <TextBlock Text="{x:Bind Location}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
-                            </StackPanel>
-                            <TextBlock Grid.Column="1" Text="{x:Bind QuantityText}" Style="{StaticResource EqTableCellStrongStyle}" FontSize="{StaticResource EqFontMd}" />
-                          </Grid>
-                        </Grid>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                </Grid>
-
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
               </Grid>
-            </ScrollViewer>
-          </Grid>
+
+            </Grid>
+          </ScrollViewer>
         </Grid>
-      </Border>
-    </Grid>
+      </Grid>
+    </Border>
   </Grid>
 </Page>

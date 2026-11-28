@@ -98,6 +98,15 @@
     <Setter Property="Padding" Value="24" />
   </Style>
 
+  <!-- Row detail pop-up card (docs/technical/ui-implementation.md, "Detail pop-up pattern"): 460 px, right edge, above the page, hidden until a row is clicked. -->
+  <Style x:Key="EqDetailPanelStyle" TargetType="Border" BasedOn="{StaticResource EqCardStyle}">
+    <Setter Property="Padding" Value="20" />
+    <Setter Property="Width" Value="460" />
+    <Setter Property="HorizontalAlignment" Value="Right" />
+    <Setter Property="Visibility" Value="Collapsed" />
+    <Setter Property="Canvas.ZIndex" Value="2" />
+  </Style>
+
   <!-- Table standard (design system, Table): every table in the app shares this look. Only the cells differ.
        Header: 44 px rounded bar on the elevated surface, semibold 13 px titles. Rows: hairline divider, every second
        row banded. Set ColumnDefinitions on the header and the row content so the columns line up; the header and row

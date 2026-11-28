@@ -1,11 +1,11 @@
 using System.ComponentModel;
+using Estoq.App.Controls;
 using Estoq.App.ViewModels.Inventory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace Estoq.App.Views;
@@ -17,19 +17,19 @@ public sealed partial class InventoryPage : Page
     {
         ViewModel = App.Current.Services.GetRequiredService<InventoryViewModel>();
         InitializeComponent();
+        _panel = new DetailPanelController(DetailPanel, DetailTransform);
     }
 
     public InventoryViewModel ViewModel { get; }
 
-    private Storyboard? _panelStoryboard;
-    private bool _panelShown;
+    private readonly DetailPanelController _panel;
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         ViewModel.Activate();
-        SetPanel(ViewModel.HasDetail, animate: false);
+        _panel.Set(ViewModel.HasDetail, animate: false);
     }
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -43,71 +43,14 @@ public sealed partial class InventoryPage : Page
     {
         if (e.PropertyName == nameof(InventoryViewModel.HasDetail))
         {
-            SetPanel(ViewModel.HasDetail, animate: true);
+            _panel.Set(ViewModel.HasDetail, animate: true);
         }
-    }
-
-    /// <summary>Slides the detail panel in from the right, or out to the right. Changing rows while it is open does not move it.</summary>
-    private void SetPanel(bool show, bool animate)
-    {
-        if (show == _panelShown)
-        {
-            return;
-        }
-
-        _panelShown = show;
-        _panelStoryboard?.Stop();
-        var distance = DetailPanel.Width + 40;
-
-        if (!animate)
-        {
-            DetailPanel.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
-            DetailTransform.TranslateX = 0;
-            DetailPanel.Opacity = 1;
-            return;
-        }
-
-        // Stop() hands control back to the plain property values, which still hold the last end state. Set the start
-        // state explicitly, otherwise closing starts from "hidden" and the panel vanishes with no animation.
-        DetailPanel.Visibility = Visibility.Visible;
-        DetailTransform.TranslateX = show ? distance : 0;
-        DetailPanel.Opacity = show ? 0 : 1;
-
-        var duration = new Duration(TimeSpan.FromMilliseconds(100));
-        var move = new DoubleAnimation { To = show ? 0 : distance, Duration = duration, EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut } };
-        Storyboard.SetTarget(move, DetailTransform);
-        Storyboard.SetTargetProperty(move, "TranslateX");
-        var fade = new DoubleAnimation { To = show ? 1 : 0, Duration = duration, EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut } };
-        Storyboard.SetTarget(fade, DetailPanel);
-        Storyboard.SetTargetProperty(fade, "Opacity");
-
-        var storyboard = new Storyboard();
-        storyboard.Children.Add(move);
-        storyboard.Children.Add(fade);
-        storyboard.Completed += (_, _) =>
-        {
-            if (_panelStoryboard != storyboard)
-            {
-                return;
-            }
-
-            // Keep the end state as plain values, and collapse only once it has left the view so the exit is seen.
-            storyboard.Stop();
-            DetailTransform.TranslateX = _panelShown ? 0 : distance;
-            DetailPanel.Opacity = _panelShown ? 1 : 0;
-            if (!_panelShown)
-            {
-                DetailPanel.Visibility = Visibility.Collapsed;
-            }
-        };
-        _panelStoryboard = storyboard;
-        storyboard.Begin();
     }
 
     private void OnRowTapped(object sender, TappedRoutedEventArgs e)
     {
         // A tap on the row's own menu button is not a row selection.
-        if (e.OriginalSource is DependencyObject source && IsInsideButton(source, (DependencyObject)sender))
+        if (e.OriginalSource is DependencyObject source && DetailPanelController.IsInsideButton(source, (DependencyObject)sender))
         {
             return;
         }
@@ -122,30 +65,12 @@ public sealed partial class InventoryPage : Page
     /// <summary>A click anywhere that is not a row, a button or the detail panel closes the panel.</summary>
     private void OnPageTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (!ViewModel.HasDetail || e.OriginalSource is not DependencyObject source)
-        {
-            return;
-        }
-
-        if (IsInside(source, DetailPanel) || IsInsideButton(source, this))
+        if (e.OriginalSource is not DependencyObject source || !_panel.IsClosingTap(source, this))
         {
             return;
         }
 
         ViewModel.CloseDetailCommand.Execute(null);
-    }
-
-    private static bool IsInside(DependencyObject source, DependencyObject container)
-    {
-        for (var current = source; current is not null; current = VisualTreeHelper.GetParent(current))
-        {
-            if (current == container)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private void OnTypeClick(object sender, RoutedEventArgs e) =>
@@ -162,7 +87,7 @@ public sealed partial class InventoryPage : Page
 
     private void OnRowDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
-        if (e.OriginalSource is DependencyObject source && IsInsideButton(source, (DependencyObject)sender))
+        if (e.OriginalSource is DependencyObject source && DetailPanelController.IsInsideButton(source, (DependencyObject)sender))
         {
             return;
         }
@@ -245,18 +170,5 @@ public sealed partial class InventoryPage : Page
         }
 
         menu.ShowAt(anchor);
-    }
-
-    private static bool IsInsideButton(DependencyObject source, DependencyObject row)
-    {
-        for (var current = source; current is not null && current != row; current = VisualTreeHelper.GetParent(current))
-        {
-            if (current is Microsoft.UI.Xaml.Controls.Primitives.ButtonBase)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -402,15 +402,12 @@
   <data name="Sales_MenuView" xml:space="preserve"><value>View</value></data>
   <data name="Sales_MenuPrint" xml:space="preserve"><value>Print receipt</value></data>
   <data name="Sales_MenuReturn" xml:space="preserve"><value>Return items</value></data>
-  <data name="Sales_MenuVoid" xml:space="preserve"><value>Void sale</value></data>
-  <data name="Sales_VoidSoon" xml:space="preserve"><value>Voiding a sale arrives with returns and voids.</value></data>
   <data name="Sales_Showing" xml:space="preserve"><value>Showing {0}–{1} of {2} sales</value></data>
   <data name="Sales_ShowingNone" xml:space="preserve"><value>No sales to show</value></data>
   <data name="Sales_PrevPage" xml:space="preserve"><value>Previous page</value></data>
   <data name="Sales_NextPage" xml:space="preserve"><value>Next page</value></data>
   <data name="Sales_PageN" xml:space="preserve"><value>Page {0}</value></data>
   <data name="Sales_Empty" xml:space="preserve"><value>No sales match these filters.</value></data>
-  <data name="Sales_NoSelection" xml:space="preserve"><value>Select a sale to see its details.</value></data>
   <data name="Sales_StaffLine" xml:space="preserve"><value>Staff: {0}</value></data>
   <data name="Sales_ItemsHeader" xml:space="preserve"><value>Items ({0})</value></data>
   <data name="Sales_Subtotal" xml:space="preserve"><value>Subtotal</value></data>

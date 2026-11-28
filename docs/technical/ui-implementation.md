@@ -167,6 +167,23 @@ F1 to F4 and [[settings]] share one frame so staff learn one pattern.
 - Recalculate viewport-bound dimensions when the popup resizes. Put scrolling on the content that can grow (such as a long list), not on fixed headers, footers, or compact sections.
 - Preserve the intended sizing of sibling sections when changing one section. A change to a card's content should not make another card overflow or acquire unnecessary blank space.
 
+## Detail pop-up pattern
+
+The standard way to show the details of one table row. Used by [[inventory]] (product) and [[sales]] (sale). Not the F1 to F4 pop-ups: those are framed, dimmed and modal (see Pop-up pattern above).
+
+- Use it when a list page needs a read-only look at one row without leaving the page. Use a framed pop-up when the user has to fill in or complete something.
+- Card: `EqDetailPanelStyle` (a Border on `EqCardStyle`), 460 px wide, 20 px padding, right-aligned, above the page (`Canvas.ZIndex` 2), collapsed until used. It spans the full height of the page content area, from the title row to the bottom: place it in the page's root grid with `Grid.Row="0"` and `Grid.RowSpan` over every row. No scrim, no dimming; the table stays visible and usable beside it.
+- Motion: slides in from the right and out to the right in 100 ms, cubic ease in and out, fading with it. Changing rows while it is open does not move it.
+- Open and close: a single click on a row opens it. A click on another row switches it. A click on the open row, the close button (X, top right of the header) or anywhere outside the card closes it. Clicks on buttons never count as outside clicks. Row buttons (menu) never count as row clicks.
+- The open row is highlighted with `EqGoldTintBrush` and the highlight clears on close.
+- Tables inside a detail pop-up have no header row: this is the only exception to the table standard (Tables). Rows still use the shared row, band and cell styles with fixed column widths.
+- Content is the page's own: header with title and close, then scrolling body, optional footer actions. Keep it read-only apart from action buttons.
+- Adding one to a new page:
+  1. The row view model exposes `IsSelected`; the page view model exposes `HasDetail`, `ToggleRow(row)` and a `CloseDetailCommand` that clears the selection.
+  2. In the page root grid (`Background="Transparent"`, `Tapped="OnPageTapped"`) add the card: `<Border x:Name="DetailPanel" Grid.Row="0" Grid.RowSpan="N" Style="{StaticResource EqDetailPanelStyle}">` with `<CompositeTransform x:Name="DetailTransform" />` as its `RenderTransform`.
+  3. Rows: `Tapped="OnRowTapped"` on the row grid, a gold tint border bound to `IsSelected`.
+  4. Code-behind: create `new DetailPanelController(DetailPanel, DetailTransform)` after `InitializeComponent`, call `Set(show, animate)` when `HasDetail` changes (`animate: false` on first show), and in `OnPageTapped` close when `IsClosingTap(source, this)` is true. `Controls/DetailPanelController` owns the slide and the tap rules; never copy them.
+
 ## Localisation
 
 - Text lives in `Resources/Strings.resx` (English, neutral) and `Strings.es.resx` (Spanish); keys are `Area_Name`. Every key exists in both files.

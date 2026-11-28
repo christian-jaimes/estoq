@@ -103,10 +103,6 @@ public static class SalesHistory
             line.Name.Contains(text, StringComparison.OrdinalIgnoreCase)
             || line.Sku.Contains(text, StringComparison.OrdinalIgnoreCase));
 
-    /// <summary>Whether a void is still possible: same day only, completed sales only (docs/features/returns-and-voids.md).</summary>
-    public static bool CanVoid(SaleRecord sale, DateOnly today) =>
-        sale.Status == SaleStatus.Completed && DateOnly.FromDateTime(sale.SoldAt) == today;
-
     /// <summary>Whether items can still be returned from the sale. Return window checks come with the settings.</summary>
     public static bool CanReturn(SaleRecord sale) => sale.Status == SaleStatus.Completed;
 }

@@ -110,10 +110,8 @@
     </ResourceDictionary>
   </Page.Resources>
 
-  <Grid ColumnDefinitions="*,360" ColumnSpacing="24">
-
-    <!-- Left column: header, KPIs, tabs, filters, table. -->
-    <Grid Grid.Column="0" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+  <!-- Header, KPIs, tabs, filters, table; the sale detail floats over them. A click outside the detail closes it. -->
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" Background="Transparent" Tapped="OnPageTapped">
 
       <!-- Title and actions. -->
       <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="16" Margin="0,0,0,20">
@@ -296,14 +294,16 @@
                 <TextBlock Grid.Column="6" Text="{x:Bind services:Loc.Get('Sales_ColStatus')}" Style="{StaticResource EqTableHeaderTextStyle}" />
               </Grid>
 
-              <ListView Grid.Row="1" Margin="8,0,8,0" ItemsSource="{x:Bind ViewModel.Rows}" SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
-                        SelectionMode="Single" ItemContainerStyle="{StaticResource SalesRowStyle}">
+              <ListView Grid.Row="1" Margin="8,0,8,0" ItemsSource="{x:Bind ViewModel.Rows}"
+                        SelectionMode="None" ItemContainerStyle="{StaticResource SalesRowStyle}">
                 <ListView.ItemTemplate>
                   <DataTemplate x:DataType="vm:SaleRowViewModel">
                     <Grid Style="{StaticResource EqTableRowStyle}" Padding="12,0,8,0" ColumnSpacing="8" MinHeight="52"
-                          ColumnDefinitions="110,2*,80,110,170,*,140,44">
+                          ColumnDefinitions="110,2*,80,110,170,*,140,44" Background="Transparent" Tapped="OnRowTapped">
                       <Border Grid.ColumnSpan="8" Margin="-12,0,-8,0" Style="{StaticResource EqTableBandStyle}"
                               Visibility="{x:Bind local:SalesBindings.Visible(IsAlternateRow)}" />
+                      <Border Grid.ColumnSpan="8" Margin="-12,0,-8,0" Background="{ThemeResource EqGoldTintBrush}" IsHitTestVisible="False"
+                              Visibility="{x:Bind local:SalesBindings.Visible(IsSelected), Mode=OneWay}" />
                       <TextBlock Grid.Column="0" Text="{x:Bind ReceiptNumber}" Style="{StaticResource EqTableCellStyle}"
                                  FontFamily="{StaticResource EqUiFontSemiBold}" TextTrimming="CharacterEllipsis" />
                       <TextBlock Grid.Column="1" Text="{x:Bind DateText}" Style="{StaticResource EqTableCellStyle}" FontSize="13"
@@ -394,130 +394,126 @@
           </Grid>
         </Grid>
       </Border>
-    </Grid>
 
-    <!-- Detail panel of the selected sale. -->
-    <Border Grid.Column="1" Style="{StaticResource EqCardStyle}" Padding="20">
-      <Grid>
-        <TextBlock Text="{x:Bind services:Loc.Get('Sales_NoSelection')}" Style="{StaticResource EqSecondaryStyle}"
-                   HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"
-                   Visibility="{x:Bind local:SalesBindings.Hidden(ViewModel.HasSelection), Mode=OneWay}" />
+    <!-- Sale detail: only after a row is clicked, floating over the table (same behaviour as the Inventory detail). A click on another row updates it; a click outside closes it. -->
+    <Border x:Name="DetailPanel" Grid.Row="0" Grid.RowSpan="6" Style="{StaticResource EqDetailPanelStyle}">
+      <!-- Slides in from the right and back out; see SetPanel in the code-behind. -->
+      <Border.RenderTransform>
+        <CompositeTransform x:Name="DetailTransform" />
+      </Border.RenderTransform>
+      <Grid RowDefinitions="*,Auto" RowSpacing="16">
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Spacing="16" Padding="0,0,4,0">
 
-        <Grid RowDefinitions="*,Auto" RowSpacing="16"
-              Visibility="{x:Bind local:SalesBindings.Visible(ViewModel.HasSelection), Mode=OneWay}">
-          <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <StackPanel Spacing="16" Padding="0,0,4,0">
+            <!-- Receipt number, status badge, date, staff. -->
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+              <TextBlock Text="{x:Bind ViewModel.DetailReceipt, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" FontSize="22"
+                         VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+              <controls:StatusBadge Grid.Column="1" Kind="{x:Bind ViewModel.DetailStatusKind, Mode=OneWay}"
+                                    Text="{x:Bind ViewModel.DetailStatusText, Mode=OneWay}" VerticalAlignment="Center" />
+              <Button Grid.Column="2" Style="{StaticResource EqPlainIconButtonStyle}" VerticalAlignment="Top"
+                      Command="{x:Bind ViewModel.CloseDetailCommand}"
+                      AutomationProperties.Name="{x:Bind services:Loc.Get('Popup_Close')}"
+                      ToolTipService.ToolTip="{x:Bind services:Loc.Get('Popup_Close')}">
+                <FontIcon Glyph="&#xE5CD;" FontFamily="{StaticResource EqIconFont}" FontSize="{StaticResource EqFont4xl}" />
+              </Button>
+            </Grid>
 
-              <!-- Receipt number, status badge, date, staff. -->
-              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                <TextBlock Text="{x:Bind ViewModel.DetailReceipt, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" FontSize="22"
-                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                <controls:StatusBadge Grid.Column="1" Kind="{x:Bind ViewModel.DetailStatusKind, Mode=OneWay}"
-                                      Text="{x:Bind ViewModel.DetailStatusText, Mode=OneWay}" VerticalAlignment="Center" />
-              </Grid>
-
-              <StackPanel Spacing="8">
-                <StackPanel Orientation="Horizontal" Spacing="10">
-                  <FontIcon Glyph="&#xE935;" Style="{StaticResource EqIconStyle}" FontSize="18" Foreground="{ThemeResource EqTextSecondaryBrush}" />
-                  <TextBlock Text="{x:Bind ViewModel.DetailDateText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="10">
-                  <FontIcon Glyph="&#xF0D3;" Style="{StaticResource EqIconStyle}" FontSize="18" Foreground="{ThemeResource EqTextSecondaryBrush}" />
-                  <TextBlock Text="{x:Bind ViewModel.DetailStaffText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" />
-                </StackPanel>
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <FontIcon Glyph="&#xE935;" Style="{StaticResource EqIconStyle}" FontSize="18" Foreground="{ThemeResource EqTextSecondaryBrush}" />
+                <TextBlock Text="{x:Bind ViewModel.DetailDateText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" />
               </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <FontIcon Glyph="&#xF0D3;" Style="{StaticResource EqIconStyle}" FontSize="18" Foreground="{ThemeResource EqTextSecondaryBrush}" />
+                <TextBlock Text="{x:Bind ViewModel.DetailStaffText, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" />
+              </StackPanel>
+            </StackPanel>
 
-              <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
+            <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
 
-              <!-- Items: picture tile (initial until products have pictures), name, SKU and variant, quantity times price, line total. -->
-              <TextBlock Text="{x:Bind ViewModel.DetailItemsHeader, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" FontSize="16" />
+            <!-- Items: a small table without a header row (the only table that has none). Product (name, SKU below), unit price, quantity, line total. -->
+            <TextBlock Text="{x:Bind ViewModel.DetailItemsHeader, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" FontSize="16" />
+            <StackPanel Spacing="0">
               <ItemsControl ItemsSource="{x:Bind ViewModel.DetailLines}">
-                <ItemsControl.ItemsPanel>
-                  <ItemsPanelTemplate>
-                    <StackPanel Spacing="12" />
-                  </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                   <DataTemplate x:DataType="vm:SaleDetailLineViewModel">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                      <Border Width="44" Height="44" CornerRadius="{StaticResource EqRadiusMd}" Background="{ThemeResource EqSurfaceElevatedBrush}"
-                              BorderBrush="{ThemeResource EqBorderBrush}" BorderThickness="1" VerticalAlignment="Top">
-                        <TextBlock Text="{x:Bind Initial}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="18"
-                                   Foreground="{ThemeResource EqGoldInkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                      </Border>
-                      <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="{x:Bind Name}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="13" TextTrimming="CharacterEllipsis" />
-                        <TextBlock Text="{x:Bind SkuAndVariant}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
-                        <TextBlock Text="{x:Bind QuantityAndPrice}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
+                    <Grid Style="{StaticResource EqTableRowStyle}" Padding="8,8" ColumnSpacing="8" ColumnDefinitions="*,76,48,80">
+                      <Border Grid.ColumnSpan="4" Margin="-8,-8" Style="{StaticResource EqTableBandStyle}"
+                              Visibility="{x:Bind local:SalesBindings.Visible(IsAlternateRow)}" />
+                      <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Bind Name}" Style="{StaticResource EqTableCellStrongStyle}" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{x:Bind Sku}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis" />
                       </StackPanel>
-                      <TextBlock Grid.Column="2" Text="{x:Bind TotalText}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="13"
-                                 VerticalAlignment="Top" HorizontalAlignment="Right" />
-                    </Grid>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-
-              <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
-
-              <!-- Totals. -->
-              <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="12">
-                <TextBlock Grid.Row="0" Text="{x:Bind services:Loc.Get('Sales_Subtotal')}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" />
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.DetailSubtotalText, Mode=OneWay}" HorizontalAlignment="Right" />
-                <TextBlock Grid.Row="1" Text="{x:Bind services:Loc.Get('Sales_Discount')}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" />
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.DetailDiscountText, Mode=OneWay}" HorizontalAlignment="Right" />
-                <TextBlock Grid.Row="2" Text="{x:Bind ViewModel.DetailTaxLabel, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" />
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind ViewModel.DetailTaxText, Mode=OneWay}" HorizontalAlignment="Right" />
-              </Grid>
-
-              <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
-
-              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                <TextBlock Text="{x:Bind services:Loc.Get('Sales_Total')}" Style="{StaticResource EqCardTitleStyle}" FontSize="20" />
-                <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.DetailTotalText, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" FontSize="20" />
-              </Grid>
-
-              <!-- Payments: each in its own currency, with the rate snapshot when it is not the base currency. -->
-              <TextBlock Text="{x:Bind services:Loc.Get('Sales_Payments')}" Style="{StaticResource EqCardTitleStyle}" FontSize="16" />
-              <ItemsControl ItemsSource="{x:Bind ViewModel.DetailPayments}">
-                <ItemsControl.ItemsPanel>
-                  <ItemsPanelTemplate>
-                    <StackPanel Spacing="8" />
-                  </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate x:DataType="vm:SalePaymentViewModel">
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                      <StackPanel>
-                        <TextBlock Text="{x:Bind MethodText}" FontSize="13" TextTrimming="CharacterEllipsis" />
-                        <TextBlock Text="{x:Bind RateText}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis"
-                                   Visibility="{x:Bind local:SalesBindings.Visible(HasRate)}" />
-                      </StackPanel>
-                      <TextBlock Grid.Column="1" Text="{x:Bind AmountText}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="13"
-                                 VerticalAlignment="Top" />
+                      <TextBlock Grid.Column="1" Text="{x:Bind PriceText}" Style="{StaticResource EqTableCellStyle}" HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="2" Text="{x:Bind QuantityText}" Style="{StaticResource EqTableCellStyle}" HorizontalAlignment="Right" />
+                      <TextBlock Grid.Column="3" Text="{x:Bind TotalText}" Style="{StaticResource EqTableCellStrongStyle}" HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" />
                     </Grid>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
             </StackPanel>
-          </ScrollViewer>
 
-          <!-- F8 prints the receipt wherever focus is on this page. -->
-          <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-            <Button Style="{StaticResource EqSecondaryButtonStyle}" HorizontalAlignment="Stretch"
-                    Command="{x:Bind ViewModel.PrintReceiptCommand}">
-              <Button.KeyboardAccelerators>
-                <KeyboardAccelerator Key="F8" />
-              </Button.KeyboardAccelerators>
-              <StackPanel Orientation="Horizontal" Spacing="8">
-                <FontIcon Glyph="&#xEF6E;" Style="{StaticResource EqIconStyle}" FontSize="18" Foreground="{ThemeResource EqGoldInkBrush}" />
-                <TextBlock Text="{x:Bind services:Loc.Get('Sales_PrintReceiptF8')}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-              </StackPanel>
-            </Button>
-            <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" MinWidth="40" Width="40" Padding="0"
-                    Click="OnDetailMenuClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_MoreActions')}">
-              <FontIcon Glyph="&#xE5D3;" Style="{StaticResource EqIconStyle}" FontSize="20" />
-            </Button>
-          </Grid>
+            <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
+
+            <!-- Totals. -->
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="12">
+              <TextBlock Grid.Row="0" Text="{x:Bind services:Loc.Get('Sales_Subtotal')}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" />
+              <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.DetailSubtotalText, Mode=OneWay}" HorizontalAlignment="Right" />
+              <TextBlock Grid.Row="1" Text="{x:Bind services:Loc.Get('Sales_Discount')}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" />
+              <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.DetailDiscountText, Mode=OneWay}" HorizontalAlignment="Right" />
+              <TextBlock Grid.Row="2" Text="{x:Bind ViewModel.DetailTaxLabel, Mode=OneWay}" Style="{StaticResource EqSecondaryStyle}" Foreground="{ThemeResource EqTextBrush}" />
+              <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind ViewModel.DetailTaxText, Mode=OneWay}" HorizontalAlignment="Right" />
+            </Grid>
+
+            <Rectangle Height="1" Fill="{ThemeResource EqBorderBrush}" />
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+              <TextBlock Text="{x:Bind services:Loc.Get('Sales_Total')}" Style="{StaticResource EqCardTitleStyle}" FontSize="20" />
+              <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.DetailTotalText, Mode=OneWay}" Style="{StaticResource EqCardTitleStyle}" FontSize="20" />
+            </Grid>
+
+            <!-- Payments: each in its own currency, with the rate snapshot when it is not the base currency. -->
+            <TextBlock Text="{x:Bind services:Loc.Get('Sales_Payments')}" Style="{StaticResource EqCardTitleStyle}" FontSize="16" />
+            <ItemsControl ItemsSource="{x:Bind ViewModel.DetailPayments}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Spacing="8" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:SalePaymentViewModel">
+                  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <StackPanel>
+                      <TextBlock Text="{x:Bind MethodText}" FontSize="13" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{x:Bind RateText}" Style="{StaticResource EqCaptionStyle}" TextTrimming="CharacterEllipsis"
+                                 Visibility="{x:Bind local:SalesBindings.Visible(HasRate)}" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" Text="{x:Bind AmountText}" FontFamily="{StaticResource EqUiFontSemiBold}" FontSize="13"
+                               VerticalAlignment="Top" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </ScrollViewer>
+
+        <!-- F8 prints the receipt wherever focus is on this page. -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+          <Button Style="{StaticResource EqSecondaryButtonStyle}" HorizontalAlignment="Stretch"
+                  Command="{x:Bind ViewModel.PrintReceiptCommand}">
+            <Button.KeyboardAccelerators>
+              <KeyboardAccelerator Key="F8" />
+            </Button.KeyboardAccelerators>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <FontIcon Glyph="&#xEF6E;" Style="{StaticResource EqIconStyle}" FontSize="18" Foreground="{ThemeResource EqGoldInkBrush}" />
+              <TextBlock Text="{x:Bind services:Loc.Get('Sales_PrintReceiptF8')}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+          </Button>
+          <Button Grid.Column="1" Style="{StaticResource EqSecondaryButtonStyle}" MinWidth="40" Width="40" Padding="0"
+                  Click="OnDetailMenuClick" AutomationProperties.Name="{x:Bind services:Loc.Get('Sales_MoreActions')}">
+            <FontIcon Glyph="&#xE5D3;" Style="{StaticResource EqIconStyle}" FontSize="20" />
+          </Button>
         </Grid>
       </Grid>
     </Border>

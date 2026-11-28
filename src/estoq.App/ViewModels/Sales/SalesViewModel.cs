@@ -10,7 +10,7 @@ using Estoq.Core.Sales;
 namespace Estoq.App.ViewModels.Sales;
 
 /// <summary>
-/// State of the Sales page (docs/features/sales.md): KPI cards, period tabs, filters, the paged table and the detail panel.
+/// State of the Sales page (docs/features/sales.md): KPI cards, period tabs, filters, the paged table and the floating sale detail.
 /// All filtering, ranges, paging and figures come from <c>Estoq.Core.Sales</c>; this class formats them and wires the buttons.
 /// </summary>
 public sealed partial class SalesViewModel : ObservableObject, IDisposable
@@ -145,7 +145,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
 
     public bool HasNotice => NoticeText.Length > 0;
 
-    // Detail panel
+    // Sale detail (HasSelection is true while it is open)
 
     [ObservableProperty]
     public partial bool HasSelection { get; set; }
@@ -203,11 +203,21 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
 
     partial void OnNoticeTextChanged(string value) => OnPropertyChanged(nameof(HasNotice));
 
-    partial void OnSelectedChanged(SaleRowViewModel? value)
+    partial void OnSelectedChanged(SaleRowViewModel? oldValue, SaleRowViewModel? newValue)
     {
+        if (oldValue is not null)
+        {
+            oldValue.IsSelected = false;
+        }
+
+        if (newValue is not null)
+        {
+            newValue.IsSelected = true;
+        }
+
         if (!_building)
         {
-            ShowDetail(value);
+            ShowDetail(newValue);
         }
     }
 
@@ -358,7 +368,8 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         }
 
         IsEmpty = Rows.Count == 0;
-        Selected = Rows.FirstOrDefault(row => row.ReceiptNumber == previouslySelected) ?? Rows.FirstOrDefault();
+        // The detail is open only after a click: it stays on the same sale when that sale is still listed, otherwise it closes.
+        Selected = previouslySelected is null ? null : Rows.FirstOrDefault(row => row.ReceiptNumber == previouslySelected);
         _building = false;
 
         ShowDetail(Selected);
@@ -407,11 +418,12 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         foreach (var line in sale.Lines)
         {
             DetailLines.Add(new SaleDetailLineViewModel(
-                line.Name.Length > 0 ? line.Name[..1].ToUpper(culture) : string.Empty,
                 line.Name,
-                $"{line.Sku} • {line.Variant}",
-                $"{line.Quantity.ToString(culture)} × {CurrencyFormat.Amount(line.UnitPrice, Currency, culture)}",
-                CurrencyFormat.Amount(line.LineTotal, Currency, culture)));
+                line.Sku,
+                CurrencyFormat.Amount(line.UnitPrice, Currency, culture),
+                line.Quantity > 1 ? $"x{line.Quantity.ToString(culture)}" : string.Empty,
+                CurrencyFormat.Amount(line.LineTotal, Currency, culture),
+                DetailLines.Count % 2 == 1));
         }
 
         DetailSubtotalText = CurrencyFormat.Amount(sale.Totals.Subtotal, Currency, culture);
@@ -528,8 +540,15 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         NoticeText = await _printer.PrintAsync(title, text) ? string.Empty : _localizer["Sales_PrintUnavailable"];
     }
 
-    /// <summary>Selects a row (the row menu's View).</summary>
+    /// <summary>Opens the detail of a row (the row menu's View).</summary>
     public void View(SaleRowViewModel row) => Selected = row;
+
+    /// <summary>A click on a row: opens its detail, updates it from another row, or closes it when that row is already open.</summary>
+    public void ToggleRow(SaleRowViewModel row) => Selected = ReferenceEquals(Selected, row) ? null : row;
+
+    /// <summary>Closes the floating detail and clears the row highlight.</summary>
+    [RelayCommand]
+    private void CloseDetail() => Selected = null;
 
     /// <summary>Starts a return from a sale: opens the returns pop-up with this receipt already looked up.</summary>
     public void StartReturn(SaleRowViewModel row)
@@ -540,9 +559,6 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
             _popups.Show(PopupKind.Returns);
         }
     }
-
-    /// <summary>Placeholder until voids exist: tells the user where the feature stands instead of doing nothing.</summary>
-    public void StartVoid(SaleRowViewModel row) => NoticeText = _localizer["Sales_VoidSoon"];
 
     /// <summary>Whether the row menu offers a return for this sale.</summary>
     public static bool CanReturn(SaleRowViewModel row) => SalesHistory.CanReturn(row.Sale);

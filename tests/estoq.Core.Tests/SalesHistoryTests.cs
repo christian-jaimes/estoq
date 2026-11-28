@@ -124,14 +124,6 @@ public class SalesHistoryTests
     }
 
     [Fact]
-    public void OnlyCompletedSalesOfTodayCanBeVoided()
-    {
-        Assert.True(SalesHistory.CanVoid(Sample()[0], Today));
-        Assert.False(SalesHistory.CanVoid(Sample()[1], Today));
-        Assert.False(SalesHistory.CanVoid(Sample()[2], Today));
-    }
-
-    [Fact]
     public void PrimaryMethodIsTheOneThatPaidMost()
     {
         var totals = new SaleTotals(30m, 0m, 0m, 30m);

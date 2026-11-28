@@ -1,8 +1,11 @@
+using Estoq.App.Controls;
 using Estoq.App.Services;
 using Estoq.App.ViewModels.Sales;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using System.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 
 namespace Estoq.App.Views.Sales;
@@ -13,9 +16,53 @@ public sealed partial class SalesPage : Page
     {
         ViewModel = App.Current.Services.GetRequiredService<SalesViewModel>();
         InitializeComponent();
+        _panel = new DetailPanelController(DetailPanel, DetailTransform);
+
+        ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        _panel.Set(ViewModel.HasSelection, animate: false);
 
         // The view model listens for language changes; release it when the page goes away.
-        Unloaded += (_, _) => ViewModel.Dispose();
+        Unloaded += (_, _) =>
+        {
+            ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            ViewModel.Dispose();
+        };
+    }
+
+    private readonly DetailPanelController _panel;
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SalesViewModel.HasSelection))
+        {
+            _panel.Set(ViewModel.HasSelection, animate: true);
+        }
+    }
+
+    private void OnRowTapped(object sender, TappedRoutedEventArgs e)
+    {
+        // A tap on the row's own menu button is not a row selection.
+        if (e.OriginalSource is DependencyObject source && DetailPanelController.IsInsideButton(source, (DependencyObject)sender))
+        {
+            return;
+        }
+
+        if (sender is FrameworkElement { DataContext: SaleRowViewModel row })
+        {
+            ViewModel.ToggleRow(row);
+            e.Handled = true;
+        }
+    }
+
+    /// <summary>A click anywhere that is not a row, a button or the detail closes it.</summary>
+    private void OnPageTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (e.OriginalSource is not DependencyObject source || !_panel.IsClosingTap(source, this))
+        {
+            return;
+        }
+
+        ViewModel.CloseDetailCommand.Execute(null);
     }
 
     public SalesViewModel ViewModel { get; }
@@ -45,7 +92,7 @@ public sealed partial class SalesPage : Page
         }
     }
 
-    /// <summary>The row menu: view, print receipt, return, void (docs/features/sales.md). Built here because menu items cannot bind to a row template.</summary>
+    /// <summary>The row menu: view, print receipt, return (docs/features/sales.md). Built here because menu items cannot bind to a row template.</summary>
     private void ShowMenu(FrameworkElement anchor, SaleRowViewModel row)
     {
         var menu = new MenuFlyout();
@@ -53,9 +100,6 @@ public sealed partial class SalesPage : Page
         menu.Items.Add(MenuItem("Sales_MenuPrint", "", () => _ = ViewModel.PrintReceiptOfAsync(row), isEnabled: true));
         menu.Items.Add(new MenuFlyoutSeparator());
         menu.Items.Add(MenuItem("Sales_MenuReturn", "", () => ViewModel.StartReturn(row), SalesViewModel.CanReturn(row)));
-
-        // Voids are specified in docs/features/returns-and-voids.md and built with the returns work.
-        menu.Items.Add(MenuItem("Sales_MenuVoid", "", () => ViewModel.StartVoid(row), isEnabled: true));
         menu.ShowAt(anchor);
     }
 

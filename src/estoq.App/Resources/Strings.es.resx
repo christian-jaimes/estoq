@@ -402,15 +402,12 @@
   <data name="Sales_MenuView" xml:space="preserve"><value>Ver</value></data>
   <data name="Sales_MenuPrint" xml:space="preserve"><value>Imprimir recibo</value></data>
   <data name="Sales_MenuReturn" xml:space="preserve"><value>Devolver artículos</value></data>
-  <data name="Sales_MenuVoid" xml:space="preserve"><value>Anular venta</value></data>
-  <data name="Sales_VoidSoon" xml:space="preserve"><value>Anular una venta llegará con devoluciones y anulaciones.</value></data>
   <data name="Sales_Showing" xml:space="preserve"><value>Mostrando {0}–{1} de {2} ventas</value></data>
   <data name="Sales_ShowingNone" xml:space="preserve"><value>No hay ventas que mostrar</value></data>
   <data name="Sales_PrevPage" xml:space="preserve"><value>Página anterior</value></data>
   <data name="Sales_NextPage" xml:space="preserve"><value>Página siguiente</value></data>
   <data name="Sales_PageN" xml:space="preserve"><value>Página {0}</value></data>
   <data name="Sales_Empty" xml:space="preserve"><value>Ninguna venta coincide con estos filtros.</value></data>
-  <data name="Sales_NoSelection" xml:space="preserve"><value>Selecciona una venta para ver sus detalles.</value></data>
   <data name="Sales_StaffLine" xml:space="preserve"><value>Personal: {0}</value></data>
   <data name="Sales_ItemsHeader" xml:space="preserve"><value>Artículos ({0})</value></data>
   <data name="Sales_Subtotal" xml:space="preserve"><value>Subtotal</value></data>
