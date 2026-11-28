@@ -1,4 +1,5 @@
 using System.Globalization;
+using Estoq.Core.Returns;
 using Estoq.Core.Sales;
 using Estoq.Core.Setup;
 
@@ -48,9 +49,14 @@ public sealed class SampleSalesService : ISalesService
     private static readonly string[] Staff = ["Maria P.", "John D.", "Luis R."];
 
     private readonly ISessionService _session;
+    private readonly ISaleHistory _history;
     private IReadOnlyList<SaleRecord>? _sales;
 
-    public SampleSalesService(ISessionService session) => _session = session;
+    public SampleSalesService(ISessionService session, ISaleHistory history)
+    {
+        _session = session;
+        _history = history;
+    }
 
     public string BaseCurrency => Rates.BaseCurrency;
 
@@ -109,7 +115,30 @@ public sealed class SampleSalesService : ISalesService
                 BuildPayments(number, totals.Total)));
         }
 
+        RegisterForReturns(sales);
         return sales;
+    }
+
+    /// <summary>
+    /// Lets the return flow find every sale listed here by its receipt number. Voided sales are left out (nothing to return);
+    /// a sale marked Returned is registered as fully returned, so it cannot be returned twice.
+    /// </summary>
+    private void RegisterForReturns(IEnumerable<SaleRecord> sales)
+    {
+        foreach (var sale in sales.Where(sale => sale.Status != SaleStatus.Voided))
+        {
+            var returned = sale.Status == SaleStatus.Returned;
+            var lines = sale.Lines
+                .Select(line => new SoldLine(line.Sku, line.Name, line.Sku, line.Variant, line.UnitPrice, line.Quantity, returned ? line.Quantity : 0))
+                .ToList();
+            _history.Record(new SettledSale(
+                sale.ReceiptNumber[2..],
+                sale.SoldAt,
+                lines,
+                sale.Totals.Subtotal,
+                sale.Totals.Total,
+                returned ? sale.Totals.Total : 0m));
+        }
     }
 
     private static List<SalePaymentRecord> BuildPayments(int number, decimal total)

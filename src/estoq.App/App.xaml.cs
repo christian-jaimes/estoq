@@ -87,7 +87,6 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddSingleton<RecoveryStepViewModel>();
         services.AddSingleton<SetupWizardViewModel>();
         services.AddSingleton<ISalesService, SampleSalesService>();
-        services.AddSingleton<ISalesExporter, SalesExporter>();
         services.AddTransient<SalesViewModel>();
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<PlaceholderViewModel>();

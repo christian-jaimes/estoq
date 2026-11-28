@@ -3,6 +3,7 @@ using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Estoq.App.Services;
+using Estoq.App.ViewModels.Returns;
 using Estoq.Core.Roles;
 using Estoq.Core.Sales;
 
@@ -20,9 +21,10 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
     private readonly ISalesService _sales;
     private readonly ISessionService _session;
     private readonly IPopupService _popups;
+    private readonly ReturnsViewModel _returns;
     private readonly ILocalizer _localizer;
     private readonly IReceiptPrinter _printer;
-    private readonly ISalesExporter _exporter;
+    private readonly ICsvExportService _exporter;
 
     private IReadOnlyList<SaleRecord> _filtered = [];
     private SalesPeriod _period = SalesPeriod.All;
@@ -36,13 +38,15 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
         ISalesService sales,
         ISessionService session,
         IPopupService popups,
+        ReturnsViewModel returns,
         ILocalizer localizer,
         IReceiptPrinter printer,
-        ISalesExporter exporter)
+        ICsvExportService exporter)
     {
         _sales = sales;
         _session = session;
         _popups = popups;
+        _returns = returns;
         _localizer = localizer;
         _printer = printer;
         _exporter = exporter;
@@ -452,7 +456,7 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
             method => _localizer["Pos_Method_" + method],
             status => _localizer["Sales_Status_" + status]);
 
-        var fileName = await _exporter.SaveCsvAsync(_localizer["Sales_ExportFileName"], _localizer["Sales_CsvFileType"], csv);
+        var fileName = await _exporter.SaveAsync(_localizer["Sales_ExportFileName"], csv);
         if (fileName is null)
         {
             return;
@@ -523,11 +527,12 @@ public sealed partial class SalesViewModel : ObservableObject, IDisposable
     /// <summary>Selects a row (the row menu's View).</summary>
     public void View(SaleRowViewModel row) => Selected = row;
 
-    /// <summary>Starts a return from a sale. Opens the returns pop-up; picking the sale there comes with the returns work.</summary>
+    /// <summary>Starts a return from a sale: opens the returns pop-up with this receipt already looked up.</summary>
     public void StartReturn(SaleRowViewModel row)
     {
         if (SalesHistory.CanReturn(row.Sale))
         {
+            _returns.PreloadReceipt(row.ReceiptNumber);
             _popups.Show(PopupKind.Returns);
         }
     }

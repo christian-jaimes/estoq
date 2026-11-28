@@ -424,7 +424,6 @@
   <data name="Sales_ReceiptTitle" xml:space="preserve"><value>Receipt {0}</value></data>
   <data name="Sales_ReportTitle" xml:space="preserve"><value>Sales report</value></data>
   <data name="Sales_ExportFileName" xml:space="preserve"><value>sales</value></data>
-  <data name="Sales_CsvFileType" xml:space="preserve"><value>CSV file</value></data>
   <data name="Sales_Exported" xml:space="preserve"><value>Exported {0} sales to {1}.</value></data>
   <data name="Sales_PrintUnavailable" xml:space="preserve"><value>Printing is not available on this computer.</value></data>
   <!-- Inventory page -->

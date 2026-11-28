@@ -39,6 +39,8 @@ public sealed partial class ReturnsViewModel : ObservableObject
     }
 
     /// <summary>Raised when the confirmation is dismissed; the pop-up closes.</summary>
+    private string? _pendingReceipt;
+
     public event EventHandler? CloseRequested;
 
     public ObservableCollection<ReturnLineViewModel> Lines { get; } = [];
@@ -164,6 +166,9 @@ public sealed partial class ReturnsViewModel : ObservableObject
 
     public bool ShowDoneTaken => DoneTaken.Count > 0;
 
+    /// <summary>Makes the next Reset look this receipt up straight away (used by "Return items" on the Sales page).</summary>
+    public void PreloadReceipt(string receiptNumber) => _pendingReceipt = receiptNumber;
+
     /// <summary>Starts a fresh return: nothing found, nothing ticked, Return mode selected.</summary>
     public void Reset()
     {
@@ -193,6 +198,13 @@ public sealed partial class ReturnsViewModel : ObservableObject
         IsCompleted = false;
         _isResetting = false;
         Recalculate();
+
+        if (_pendingReceipt is { } pending)
+        {
+            _pendingReceipt = null;
+            ReceiptText = pending;
+            FindSale();
+        }
     }
 
     [RelayCommand]
