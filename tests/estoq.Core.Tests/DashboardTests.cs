@@ -45,7 +45,7 @@ public class DashboardTests
     }
 
     [Fact]
-    public void TotalsCountTransactionsSalesItemsReturnsAndRefunds()
+    public void TotalsCountTransactionsSalesRefundsAndItems()
     {
         var lines = new[]
         {
@@ -54,12 +54,30 @@ public class DashboardTests
             Sale("000002", "2026-11-11", "A", 1, 58m, 20m),
             Sale("000003", "2026-10-30", "A", 5, 58m, 20m), // outside the period
             Return("000001", "2026-11-12", "A", 1, 58m, 20m),
-            Return("000001", "2026-11-12", "B", 1, 116m, 50m), // same return, second item
-            Return("000002", "2026-11-13", "A", 1, 58m, 20m),
+            Return("000001", "2026-11-12", "B", 1, 116m, 50m),
             Return("000009", "2026-10-20", "A", 1, 58m, 20m), // outside the period
         };
         var totals = DashboardCalculator.Totals(lines, Month, Sixteen, TaxMode.Included);
-        Assert.Equal(new DashboardTotals(Transactions: 2, Sales: 290m, Returns: 2, Refunds: 232m, ItemsSold: 4), totals);
+        Assert.Equal(2, totals.Transactions);
+        Assert.Equal(290m, totals.Sales);
+        Assert.Equal(174m, totals.Refunds);
+        Assert.Equal(4, totals.ItemsSold);
+    }
+
+    [Fact]
+    public void GrossProfitIsBeforeTaxMinusCostAndReturnsComeOff()
+    {
+        // 116 including 16 % tax is 100 before tax; cost 40 leaves 60.
+        var lines = new[]
+        {
+            Sale("000001", "2026-11-10", "A", 1, 116m, 40m),
+            Return("000001", "2026-11-12", "A", 1, 116m, 40m),
+            Sale("000002", "2026-11-12", "B", 1, 116m, 40m),
+        };
+        var totals = DashboardCalculator.Totals(lines, Month, Sixteen, TaxMode.Included);
+        Assert.Equal(232m, totals.Sales);
+        Assert.Equal(116m, totals.Refunds);
+        Assert.Equal(60m, totals.GrossProfit);
     }
 
     [Fact]
@@ -81,6 +99,7 @@ public class DashboardTests
     {
         var line = Sale("000001", "2026-11-10", "A", 1, 100m, 40m);
         Assert.Equal(116m, DashboardCalculator.Gross(line, Sixteen, TaxMode.Excluded));
+        Assert.Equal(100m, DashboardCalculator.Net(line, Sixteen, TaxMode.Excluded));
         Assert.Equal(100m, DashboardCalculator.Gross(line, Sixteen, TaxMode.Included));
     }
 
@@ -193,13 +212,13 @@ public class DashboardTests
     }
 
     [Theory]
-    [InlineData(UserRole.Cashier, true, false, false)]
-    [InlineData(UserRole.Manager, false, true, true)]
-    [InlineData(UserRole.Owner, false, true, true)]
-    public void AccessFollowsTheRoleTable(UserRole role, bool own, bool charts, bool export)
+    [InlineData(UserRole.Cashier, true, false, false, false)]
+    [InlineData(UserRole.Manager, false, true, true, true)]
+    [InlineData(UserRole.Owner, false, true, true, true)]
+    public void AccessFollowsTheRoleTable(UserRole role, bool own, bool profit, bool charts, bool export)
     {
         var access = DashboardAccess.For(role);
-        Assert.Equal((own, charts, export), (access.OwnFiguresOnly, access.ShowCharts, access.CanExport));
+        Assert.Equal((own, profit, charts, export), (access.OwnFiguresOnly, access.ShowGrossProfit, access.ShowCharts, access.CanExport));
     }
 
     [Fact]

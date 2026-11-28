@@ -572,7 +572,7 @@
   <data name="Dash_KpiSales" xml:space="preserve"><value>Ventas</value></data>
   <data name="Dash_KpiTransactions" xml:space="preserve"><value>Transacciones</value></data>
   <data name="Dash_KpiItems" xml:space="preserve"><value>Artículos vendidos</value></data>
-  <data name="Dash_KpiReturns" xml:space="preserve"><value>Devoluciones</value></data>
+  <data name="Dash_KpiProfit" xml:space="preserve"><value>Ganancia bruta</value></data>
   <data name="Dash_KpiRefunds" xml:space="preserve"><value>Reembolsos</value></data>
   <data name="Dash_PaymentOther" xml:space="preserve"><value>Otros métodos</value></data>
   <data name="Dash_LowStockCount" xml:space="preserve"><value>{0} artículos con poco stock</value></data>

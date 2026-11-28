@@ -4,10 +4,10 @@ using Estoq.Core.Setup;
 namespace Estoq.Core.Dashboard;
 
 /// <param name="Transactions">Sales rung up.</param>
-/// <param name="Returns">Returns taken (one per receipt returned against, or per return logged without one).</param>
-public sealed record DashboardTotals(int Transactions, decimal Sales, int Returns, decimal Refunds, int ItemsSold)
+/// <param name="GrossProfit">Amount before tax minus the cost of the goods, for what was sold less what came back.</param>
+public sealed record DashboardTotals(int Transactions, decimal Sales, decimal Refunds, int ItemsSold, decimal GrossProfit)
 {
-    public static DashboardTotals Empty { get; } = new(0, 0m, 0, 0m, 0);
+    public static DashboardTotals Empty { get; } = new(0, 0m, 0m, 0, 0m);
 }
 
 public enum SeriesGranularity
@@ -28,6 +28,7 @@ public sealed record TopProduct(int Rank, string ArticleId, string Name, string 
 /// <summary>
 /// The dashboard figures. Pure functions over <see cref="DashboardLine"/>s. Amounts are in the store's default currency.
 /// "Sales" is what customers paid (tax included), before refunds; refunds are shown beside it, not subtracted from it.
+/// Gross profit is on the amount before tax, after the cost of the goods, for what was sold minus what came back.
 /// </summary>
 public static class DashboardCalculator
 {
@@ -37,6 +38,16 @@ public static class DashboardCalculator
         var listed = line.UnitPrice * line.Units;
         return Money.Round(mode == TaxMode.Included ? listed : listed * (1m + rate.Fraction));
     }
+
+    /// <summary>The line's amount before tax.</summary>
+    public static decimal Net(DashboardLine line, TaxRate rate, TaxMode mode)
+    {
+        var listed = line.UnitPrice * line.Units;
+        return Money.Round(mode == TaxMode.Included ? listed / (1m + rate.Fraction) : listed);
+    }
+
+    private static decimal Margin(DashboardLine line, TaxRate rate, TaxMode mode) =>
+        Net(line, rate, mode) - Money.Round(line.UnitCost * line.Units);
 
     public static IReadOnlyList<DashboardLine> InPeriod(IEnumerable<DashboardLine> lines, DatePeriod period) =>
         [.. lines.Where(line => period.Contains(line.At))];
@@ -58,9 +69,9 @@ public static class DashboardCalculator
         return new DashboardTotals(
             sold.Select(line => line.Transaction).Distinct(StringComparer.OrdinalIgnoreCase).Count(),
             sold.Sum(line => Gross(line, rate, mode)),
-            returned.Select(line => line.Transaction).Distinct(StringComparer.OrdinalIgnoreCase).Count(),
             returned.Sum(line => Gross(line, rate, mode)),
-            sold.Sum(line => line.Units));
+            sold.Sum(line => line.Units),
+            sold.Sum(line => Margin(line, rate, mode)) - returned.Sum(line => Margin(line, rate, mode)));
     }
 
     /// <summary>Change against the previous period as a percentage (12.5 means +12.5 %). Null when there is nothing before to compare with.</summary>

@@ -235,9 +235,12 @@ public sealed partial class DashboardViewModel : ObservableObject
 
         Add("\uEF6E", "Dash_KpiTransactions", now.Transactions.ToString("N0", culture), now.Transactions, before.Transactions);
         Add("\uE8CC", "Dash_KpiSales", Money(now.Sales), now.Sales, before.Sales);
-        Add("\uE8D4", "Dash_KpiReturns", now.Returns.ToString("N0", culture), now.Returns, before.Returns, risingIsBad: true);
         Add("\uEF63", "Dash_KpiRefunds", Money(now.Refunds), now.Refunds, before.Refunds, risingIsBad: true);
         Add("\uE53B", "Dash_KpiItems", now.ItemsSold.ToString("N0", culture), now.ItemsSold, before.ItemsSold);
+        if (_access.ShowGrossProfit)
+        {
+            Add("\uE8E5", "Dash_KpiProfit", Money(now.GrossProfit), now.GrossProfit, before.GrossProfit);
+        }
     }
 
     private void BuildCharts(IReadOnlyList<DashboardLine> lines, DatePeriod period, TaxRate rate, TaxMode mode, string currency, CultureInfo culture)
