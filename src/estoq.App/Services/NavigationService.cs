@@ -29,6 +29,7 @@ public sealed class NavigationService : INavigationService
         var page = route switch
         {
             AppRoute.Dashboard => typeof(DashboardPage),
+            AppRoute.Inventory => typeof(InventoryPage),
             _ => typeof(PlaceholderPage),
         };
 

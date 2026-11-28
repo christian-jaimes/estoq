@@ -38,7 +38,7 @@ public sealed partial class PopupViewModel : ObservableObject
         {
             if (e.PropertyName == nameof(AddProductViewModel.Name) && _popups.Current == PopupKind.AddItems)
             {
-                Title = _addProduct.Name.Length == 0 ? Text("Items", "Title") : $"{Text("Items", "Title")} – {_addProduct.Name}";
+                Title = AddProductTitle();
             }
             if (e.PropertyName is nameof(AddProductViewModel.CanSave) or nameof(AddProductViewModel.IsCompleted) && _popups.Current == PopupKind.AddItems)
             {
@@ -192,6 +192,12 @@ public sealed partial class PopupViewModel : ObservableObject
         _hintTimer.Start();
     }
 
+    private string AddProductTitle()
+    {
+        var title = Text("Items", _addProduct.IsEditing ? "EditTitle" : "Title");
+        return _addProduct.Name.Length == 0 ? title : $"{title} – {_addProduct.Name}";
+    }
+
     private string Text(string popup, string part) => _localizer[$"Popup_{popup}_{part}"];
 
     private void Refresh()
@@ -294,8 +300,9 @@ public sealed partial class PopupViewModel : ObservableObject
 
         if (kind == PopupKind.AddItems)
         {
-            Title = _addProduct.Name.Length == 0 ? Text("Items", "Title") : $"{Text("Items", "Title")} – {_addProduct.Name}";
-            Subtitle = Text("Items", "Subtitle");
+            Title = AddProductTitle();
+            Subtitle = Text("Items", _addProduct.IsEditing ? "EditSubtitle" : "Subtitle");
+            PrimaryText = Text("Items", _addProduct.IsEditing ? "EditPrimary" : "Primary");
         }
 
         // Only the shortcut key is temporary: it shows for four seconds on a fresh open, the subtitle always stays.

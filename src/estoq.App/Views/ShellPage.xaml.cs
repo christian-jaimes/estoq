@@ -286,6 +286,13 @@ public sealed partial class ShellPage : Page
 
     private void OnScrimTapped(object sender, TappedRoutedEventArgs e) => PopupState.CloseCommand.Execute(null);
 
+    /// <summary>
+    /// "Keep editing" hides only the Confirm changes card. Hiding it inside the click would let the tap that follows land on the
+    /// scrim under it and close the whole pop-up, so the card is hidden after the tap has finished.
+    /// </summary>
+    private void OnKeepEditingClick(object sender, RoutedEventArgs e) =>
+        DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => PopupState.AddProduct.CancelConfirmCommand.Execute(null));
+
     /// <summary>Clicks inside the pop-up must not reach the scrim, which would close it.</summary>
     private void OnPopupTapped(object sender, TappedRoutedEventArgs e) => e.Handled = true;
 }
